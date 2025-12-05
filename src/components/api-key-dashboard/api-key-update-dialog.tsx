@@ -12,7 +12,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/shadcn/dialog';
-import { type UserAPIKey, useUserAPIKeyStore } from '@/store/api-key-store';
+import { type APIKey, useAPIKeyStore } from '@/store/api-key-store';
 import { Button } from '../shadcn/button';
 import { Input } from '../shadcn/input';
 
@@ -31,10 +31,10 @@ const UserAPIKeyUpdateDialog = ({
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }) => {
-  const apiKey = useUserAPIKeyStore((state) =>
+  const apiKey = useAPIKeyStore((state) =>
     state.apiKeys.find((key) => key.id === apikeyId)
   );
-  const updateAPIKey = useUserAPIKeyStore((state) => state.updateAPIKey);
+  const updateAPIKey = useAPIKeyStore((state) => state.updateAPIKey);
 
   const {
     register,
@@ -50,7 +50,7 @@ const UserAPIKeyUpdateDialog = ({
 
     const name = data.name;
 
-    const newKey: Pick<UserAPIKey, 'name' | 'permissions'> = {
+    const newKey: Pick<APIKey, 'name' | 'permissions'> = {
       name,
       permissions: ['read', 'write'],
     };

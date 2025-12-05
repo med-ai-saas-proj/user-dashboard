@@ -12,7 +12,7 @@ interface CreateApiKeyResponse {
   key: string;
 }
 
-export const useCreateUserApiKey = () => {
+export const useCreateApiKey = () => {
   return useMutation({
     mutationFn: async (credentials: CreateApiKeyRequest) => {
       const { data } = await apiClient.post<CreateApiKeyResponse>(
@@ -24,7 +24,7 @@ export const useCreateUserApiKey = () => {
   });
 };
 
-export const useUpdateUserApiKey = () => {
+export const useUpdateApiKey = () => {
   return useMutation({
     mutationFn: async (credentials: {
       apikeyId: string;
@@ -43,7 +43,7 @@ export const useUpdateUserApiKey = () => {
   });
 };
 
-export const useDeleteUserApiKey = () => {
+export const useDeleteApiKey = () => {
   return useMutation({
     mutationFn: async (apikeyId: string) => {
       const { data } = await apiClient.delete(

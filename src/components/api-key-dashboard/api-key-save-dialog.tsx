@@ -8,7 +8,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/shadcn/dialog';
-import { useUserAPIKeyStore } from '@/store/api-key-store';
+import { useAPIKeyStore } from '@/store/api-key-store';
 import InputCopy from '../shadcn/input-copy';
 
 const UserAPIKeySaveDialog = ({
@@ -18,7 +18,7 @@ const UserAPIKeySaveDialog = ({
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
 }) => {
-  const newKey = useUserAPIKeyStore((state) => state.apiKeys.at(-1)?.secretKey);
+  const newKey = useAPIKeyStore((state) => state.apiKeys.at(-1)?.secretKey);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>

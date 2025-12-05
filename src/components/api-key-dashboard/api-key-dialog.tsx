@@ -14,9 +14,8 @@ import {
 } from '@/components/shadcn/dialog';
 import { Input } from '@/components/shadcn/input';
 import { Label } from '@/components/shadcn/label';
-import { useCreateUserApiKey } from '@/hooks/api-key-hooks';
-import { useUserAPIKeyStore } from '@/store/api-key-store';
-import type { UserAPIKey } from '@/types/api-key';
+import { useCreateApiKey } from '@/hooks/api-key-hooks';
+import { type APIKey, useAPIKeyStore } from '@/store/api-key-store';
 import { UserAPIKeySaveDialog } from './api-key-save-dialog';
 
 const apiCreationSchema = z.object({
@@ -32,8 +31,8 @@ const UserAPIKeyDialog = ({
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }) => {
-  const addAPIKey = useUserAPIKeyStore((state) => state.addAPIKey);
-  const createApiKeyMutation = useCreateUserApiKey();
+  const addAPIKey = useAPIKeyStore((state) => state.addAPIKey);
+  const createApiKeyMutation = useCreateApiKey();
 
   const [openSave, setOpenSave] = useState(false);
 
@@ -52,7 +51,7 @@ const UserAPIKeyDialog = ({
       permissions: ['placeholder'],
     });
 
-    const newKey: Omit<UserAPIKey, 'id' | 'createdAt' | 'lastUsed'> = {
+    const newKey: Omit<APIKey, 'id' | 'createdAt' | 'lastUsed'> = {
       name: data.name,
       secretKey: response.key,
       createdBy: 'Current User',

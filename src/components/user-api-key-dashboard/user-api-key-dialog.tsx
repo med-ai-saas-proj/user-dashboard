@@ -65,7 +65,7 @@ const UserAPIKeyDialog = ({
   };
 
   return (
-    <>
+    <div>
       <Dialog open={open} onOpenChange={onOpenChange}>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
@@ -106,7 +106,7 @@ const UserAPIKeyDialog = ({
       </Dialog>
 
       <UserAPIKeySaveDialog open={openSave} onOpenChange={setOpenSave} />
-    </>
+    </div>
   );
 };
 

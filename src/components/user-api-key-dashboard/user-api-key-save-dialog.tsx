@@ -21,33 +21,31 @@ const UserAPIKeySaveDialog = ({
   const newKey = useUserAPIKeyStore((state) => state.apiKeys.at(-1)?.secretKey);
 
   return (
-    <>
-      <Dialog open={open} onOpenChange={onOpenChange}>
-        <form>
-          <DialogContent className="sm:max-w-[425px]">
-            <DialogHeader>
-              <DialogTitle>Save your key</DialogTitle>
-              <DialogDescription>
-                Please save your secret key in a safe place since you won't be
-                able to view it again. Keep it secure, as anyone with your API
-                key can make requests on your behalf. If you do lose it, you'll
-                need to generate a new one.
-              </DialogDescription>
-            </DialogHeader>
-            <div className="grid gap-4">
-              <div className="grid gap-3">
-                <InputCopy copiedValue={newKey ?? ''} />
-              </div>
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <form>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Save your key</DialogTitle>
+            <DialogDescription>
+              Please save your secret key in a safe place since you won't be
+              able to view it again. Keep it secure, as anyone with your API key
+              can make requests on your behalf. If you do lose it, you'll need
+              to generate a new one.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4">
+            <div className="grid gap-3">
+              <InputCopy copiedValue={newKey ?? ''} />
             </div>
-            <DialogFooter>
-              <DialogClose asChild>
-                <Button variant="outline">Done</Button>
-              </DialogClose>
-            </DialogFooter>
-          </DialogContent>
-        </form>
-      </Dialog>
-    </>
+          </div>
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button variant="outline">Done</Button>
+            </DialogClose>
+          </DialogFooter>
+        </DialogContent>
+      </form>
+    </Dialog>
   );
 };
 

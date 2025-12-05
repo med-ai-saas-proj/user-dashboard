@@ -1,8 +1,8 @@
 import { Plus } from 'lucide-react';
 import { useState } from 'react';
+import UserAPIKeyDashboard from '@/components/api-key-dashboard/api-key-dashboard';
+import UserAPIKeyDialog from '@/components/api-key-dashboard/api-key-dialog';
 import { Button } from '@/components/shadcn/button';
-import UserAPIKeyDashboard from '@/components/user-api-key-dashboard/user-api-key-dashboard';
-import UserAPIKeyDialog from '@/components/user-api-key-dashboard/user-api-key-dialog';
 import DashboardLayout from '@/layouts/dashboard-layout';
 
 export default function APIKeysPage() {

@@ -12,10 +12,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/shadcn/dialog';
-import {
-  type UserAPIKey,
-  useUserAPIKeyStore,
-} from '@/store/user-api-key-store';
+import { type UserAPIKey, useUserAPIKeyStore } from '@/store/api-key-store';
 import { Button } from '../shadcn/button';
 import { Input } from '../shadcn/input';
 

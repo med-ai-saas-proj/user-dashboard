@@ -1,8 +1,8 @@
 import { Lock, Plus } from 'lucide-react';
 import { Activity } from 'react';
 import { Button } from '@/components/shadcn/button';
-import { useUserAPIKeyStore } from '@/store/user-api-key-store';
-import UserAPIKeyTable from './user-api-key-table';
+import { useUserAPIKeyStore } from '@/store/api-key-store';
+import UserAPIKeyTable from './api-key-table';
 
 const UserAPIKeyDashboard = () => {
   const apiKeys = useUserAPIKeyStore((state) => state.apiKeys);

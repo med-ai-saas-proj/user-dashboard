@@ -8,9 +8,9 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/shadcn/table';
-import { useUserAPIKeyStore } from '@/store/user-api-key-store';
-import type { UserAPIKey } from '@/types/user-api-key';
-import UserAPIKeyUpdateDialog from './user-api-key-update-dialog';
+import { useUserAPIKeyStore } from '@/store/api-key-store';
+import type { UserAPIKey } from '@/types/api-key';
+import UserAPIKeyUpdateDialog from './api-key-update-dialog';
 
 const UserAPIKeyTable = ({ apiKeys }: { apiKeys: UserAPIKey[] }) => {
   const deleteAPIKey = useUserAPIKeyStore((state) => state.deleteAPIKey);

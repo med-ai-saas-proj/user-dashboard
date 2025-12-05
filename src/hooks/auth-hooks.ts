@@ -61,6 +61,7 @@ export const useSignOut = () => {
 
   return useMutation({
     mutationFn: async () => {
+      logout();
       await apiClient.post(API_ENDPOINTS.auth.LOGOUT);
     },
     onSuccess: () => {

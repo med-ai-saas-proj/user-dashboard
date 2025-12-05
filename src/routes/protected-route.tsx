@@ -12,14 +12,14 @@ export const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   const location = useLocation();
 
   // TODO: Temporary handler for expired token, improve later
-  // if (isTokenExpired()) {
-  //   logout();
-  // }
+  if (isTokenExpired()) {
+    logout();
+  }
 
-  // if (!token) {
-  //   // Redirect to login but save the attempted location
-  //   return <Navigate to="/login" state={{ from: location }} replace />;
-  // }
+  if (!token) {
+    // Redirect to login but save the attempted location
+    return <Navigate to="/login" state={{ from: location }} replace />;
+  }
 
   return <>{children}</>;
 };

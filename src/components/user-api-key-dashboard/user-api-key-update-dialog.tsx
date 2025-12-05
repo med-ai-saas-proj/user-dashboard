@@ -70,41 +70,39 @@ const UserAPIKeyUpdateDialog = ({
   }, [apiKey, reset]);
 
   return (
-    <>
-      <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent className="sm:max-w-[425px]">
-          <DialogHeader>
-            <DialogTitle>Edit secret key</DialogTitle>
-            <DialogDescription>Edit your api key information</DialogDescription>
-          </DialogHeader>
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <div className="grid gap-4">
-              <div className="grid gap-3">
-                <Label>Name</Label>
-                <Input
-                  id="name"
-                  aria-invalid={!!errors.name}
-                  {...register('name')}
-                />
-                <div className="h-5 mt-1.5 px-4">
-                  {errors.name && (
-                    <p className="text-destructive text-xs">
-                      {errors.name.message}
-                    </p>
-                  )}
-                </div>
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>Edit secret key</DialogTitle>
+          <DialogDescription>Edit your api key information</DialogDescription>
+        </DialogHeader>
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <div className="grid gap-4">
+            <div className="grid gap-3">
+              <Label>Name</Label>
+              <Input
+                id="name"
+                aria-invalid={!!errors.name}
+                {...register('name')}
+              />
+              <div className="h-5 mt-1.5 px-4">
+                {errors.name && (
+                  <p className="text-destructive text-xs">
+                    {errors.name.message}
+                  </p>
+                )}
               </div>
             </div>
-            <DialogFooter>
-              <DialogClose asChild>
-                <Button variant="outline">Cancel</Button>
-              </DialogClose>
-              <Button type="submit">Save</Button>
-            </DialogFooter>
-          </form>
-        </DialogContent>
-      </Dialog>
-    </>
+          </div>
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button variant="outline">Cancel</Button>
+            </DialogClose>
+            <Button type="submit">Save</Button>
+          </DialogFooter>
+        </form>
+      </DialogContent>
+    </Dialog>
   );
 };
 

@@ -16,7 +16,7 @@ export const useCreateUserApiKey = () => {
   return useMutation({
     mutationFn: async (credentials: CreateApiKeyRequest) => {
       const { data } = await apiClient.post<CreateApiKeyResponse>(
-        API_ENDPOINTS.API_KEYS,
+        API_ENDPOINTS.app.API_KEYS,
         credentials
       );
       return data;
@@ -32,7 +32,7 @@ export const useUpdateUserApiKey = () => {
       permissions?: string[];
     }) => {
       const { data } = await apiClient.put(
-        `${API_ENDPOINTS.API_KEYS}/${credentials.apikeyId}`,
+        `${API_ENDPOINTS.app.API_KEYS}/${credentials.apikeyId}`,
         {
           name: credentials.name,
           permissions: credentials.permissions,
@@ -47,7 +47,7 @@ export const useDeleteUserApiKey = () => {
   return useMutation({
     mutationFn: async (apikeyId: string) => {
       const { data } = await apiClient.delete(
-        `${API_ENDPOINTS.API_KEYS}/${apikeyId}`
+        `${API_ENDPOINTS.app.API_KEYS}/${apikeyId}`
       );
       return data;
     },

@@ -1,5 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
-import { API_ENDPOINTS } from '@/hooks/endponts';
+import { API_ENDPOINTS } from '@/hooks/api-uris';
 import apiClient from '@/query/api-client';
 
 interface CreateApiKeyRequest {

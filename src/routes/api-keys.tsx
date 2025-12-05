@@ -1,7 +1,7 @@
 import { Plus } from 'lucide-react';
 import useCreateKeyDialog from '@/components/user-api-key-dashboard/useCreateKeyDialog';
 import UserAPIKeyDashboard from '@/components/user-api-key-dashboard/user-api-key-dashboard';
-import DashboardLayout from '@/layouts/DashboardLayout';
+import DashboardLayout from '@/layouts/dashboard-layout';
 
 export default function APIKeysPage() {
   const { open, setOpen, Trigger } = useCreateKeyDialog();

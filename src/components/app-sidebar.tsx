@@ -4,6 +4,7 @@ import {
   AlignEndHorizontal,
   AudioLines,
   AudioWaveform,
+  Book,
   Bot,
   Command,
   Database,
@@ -95,6 +96,11 @@ const data = {
       name: 'API keys',
       url: '/api-keys',
       icon: KeyRound,
+    },
+    {
+      name: 'API Reference',
+      url: '/api-reference',
+      icon: Book,
     },
     {
       name: 'Logs',

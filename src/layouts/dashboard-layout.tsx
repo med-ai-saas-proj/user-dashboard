@@ -1,5 +1,4 @@
 import type { PropsWithChildren } from 'react';
-import { AppSidebar } from '@/components/app-sidebar';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -14,6 +13,7 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from '@/components/shadcn/sidebar';
+import { AppSidebar } from '@/components/sidebar/app-sidebar';
 
 const DashboardLayout = ({
   children,

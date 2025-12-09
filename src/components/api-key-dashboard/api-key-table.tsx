@@ -8,12 +8,11 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/shadcn/table';
-import { useUserAPIKeyStore } from '@/store/user-api-key-store';
-import type { UserAPIKey } from '@/types/user-api-key';
-import UserAPIKeyUpdateDialog from './user-api-key-update-dialog';
+import { type APIKey, useAPIKeyStore } from '@/store/api-key-store';
+import UserAPIKeyUpdateDialog from './api-key-update-dialog';
 
-const UserAPIKeyTable = ({ apiKeys }: { apiKeys: UserAPIKey[] }) => {
-  const deleteAPIKey = useUserAPIKeyStore((state) => state.deleteAPIKey);
+const UserAPIKeyTable = ({ apiKeys }: { apiKeys: APIKey[] }) => {
+  const deleteAPIKey = useAPIKeyStore((state) => state.deleteAPIKey);
   const [openUpdateUserAPIKeyDialog, setOpenUpdateUserAPIKeyDialog] =
     React.useState(false);
   const [selectedApiKeyId, setSelectedApiKeyId] = useState<string | null>(null);

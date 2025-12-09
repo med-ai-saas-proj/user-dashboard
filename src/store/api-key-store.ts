@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 
-export type UserAPIKey = {
+export type APIKey = {
   id: string;
   name: string;
   secretKey: string;
@@ -10,22 +10,19 @@ export type UserAPIKey = {
   permissions: string[];
 };
 
-interface UserAPIKeyState {
-  apiKeys: UserAPIKey[];
+interface APIKeyState {
+  apiKeys: APIKey[];
 }
 
-interface UserAPIKeyActions {
-  addAPIKey: (key: Omit<UserAPIKey, 'id' | 'createdAt' | 'lastUsed'>) => void;
-  updateAPIKey: (
-    id: string,
-    key: Pick<UserAPIKey, 'name' | 'permissions'>
-  ) => void;
+interface APIKeyActions {
+  addAPIKey: (key: Omit<APIKey, 'id' | 'createdAt' | 'lastUsed'>) => void;
+  updateAPIKey: (id: string, key: Pick<APIKey, 'name' | 'permissions'>) => void;
   deleteAPIKey: (id: string) => void;
 }
 
-type UserAPIKeyStore = UserAPIKeyState & UserAPIKeyActions;
+type APIKeyStore = APIKeyState & APIKeyActions;
 
-export const useUserAPIKeyStore = create<UserAPIKeyStore>((set) => ({
+export const useAPIKeyStore = create<APIKeyStore>((set) => ({
   apiKeys: [],
 
   addAPIKey: (newKeyData) =>

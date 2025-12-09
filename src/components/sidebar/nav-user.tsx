@@ -27,6 +27,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from '@/components/shadcn/sidebar';
+import { useSignOut } from '@/hooks/auth-hooks';
 
 export function NavUser({
   user,
@@ -38,6 +39,7 @@ export function NavUser({
   };
 }) {
   const { isMobile } = useSidebar();
+  const { mutate: signOut } = useSignOut();
 
   return (
     <SidebarMenu>
@@ -100,7 +102,7 @@ export function NavUser({
               </DropdownMenuItem>
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem onClick={() => signOut()}>
               <LogOut />
               Log out
             </DropdownMenuItem>

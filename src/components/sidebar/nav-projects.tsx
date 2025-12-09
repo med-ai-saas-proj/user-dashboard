@@ -1,8 +1,7 @@
 'use client';
 
-import { type LucideIcon, MoreHorizontal } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 import { NavLink, useLocation } from 'react-router-dom';
-
 import {
   SidebarGroup,
   SidebarGroupLabel,
@@ -36,12 +35,6 @@ export function NavProjects({
             </SidebarMenuButton>
           </SidebarMenuItem>
         ))}
-        <SidebarMenuItem>
-          <SidebarMenuButton className="text-sidebar-foreground/70">
-            <MoreHorizontal className="text-sidebar-foreground/70" />
-            <span>More</span>
-          </SidebarMenuButton>
-        </SidebarMenuItem>
       </SidebarMenu>
     </SidebarGroup>
   );

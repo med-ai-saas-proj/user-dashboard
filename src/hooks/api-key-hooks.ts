@@ -1,5 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
-import { API_ENDPOINTS } from '@/hooks/endponts';
+import { API_ROUTES } from '@/config/api-routes';
 import apiClient from '@/query/api-client';
 
 interface CreateApiKeyRequest {
@@ -12,11 +12,11 @@ interface CreateApiKeyResponse {
   key: string;
 }
 
-export const useCreateUserApiKey = () => {
+export const useCreateApiKey = () => {
   return useMutation({
     mutationFn: async (credentials: CreateApiKeyRequest) => {
       const { data } = await apiClient.post<CreateApiKeyResponse>(
-        API_ENDPOINTS.API_KEYS,
+        API_ROUTES.APP.API_KEYS,
         credentials
       );
       return data;
@@ -24,7 +24,7 @@ export const useCreateUserApiKey = () => {
   });
 };
 
-export const useUpdateUserApiKey = () => {
+export const useUpdateApiKey = () => {
   return useMutation({
     mutationFn: async (credentials: {
       apikeyId: string;
@@ -32,7 +32,7 @@ export const useUpdateUserApiKey = () => {
       permissions?: string[];
     }) => {
       const { data } = await apiClient.put(
-        `${API_ENDPOINTS.API_KEYS}/${credentials.apikeyId}`,
+        `${API_ROUTES.APP.API_KEYS}/${credentials.apikeyId}`,
         {
           name: credentials.name,
           permissions: credentials.permissions,
@@ -43,11 +43,11 @@ export const useUpdateUserApiKey = () => {
   });
 };
 
-export const useDeleteUserApiKey = () => {
+export const useDeleteApiKey = () => {
   return useMutation({
     mutationFn: async (apikeyId: string) => {
       const { data } = await apiClient.delete(
-        `${API_ENDPOINTS.API_KEYS}/${apikeyId}`
+        `${API_ROUTES.APP.API_KEYS}/${apikeyId}`
       );
       return data;
     },

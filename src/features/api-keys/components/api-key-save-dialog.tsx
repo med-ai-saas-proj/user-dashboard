@@ -8,8 +8,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/shadcn/dialog';
-import { useAPIKeyStore } from '@/store/api-key-store';
-import InputCopy from '../shadcn/input-copy';
+import InputCopy from '@/components/shadcn/input-copy';
+import { useAPIKeyStore } from '@/features/api-keys/store/api-key.store';
 
 const UserAPIKeySaveDialog = ({
   open,

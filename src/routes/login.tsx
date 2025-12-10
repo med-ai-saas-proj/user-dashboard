@@ -5,7 +5,8 @@ import { useNavigate } from 'react-router-dom';
 import { z } from 'zod';
 import { Button } from '@/components/shadcn/button';
 import { Input } from '@/components/shadcn/input';
-import { useAuthStatus, useLogin } from '@/hooks/auth-hooks';
+import { useAuthStatus } from '@/features/auth/hooks/use-auth-status';
+import { useLogin } from '@/features/auth/hooks/use-sign-in';
 
 const login_schema = z.object({
   email: z.email('Invalid email address'),

@@ -8,7 +8,8 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/shadcn/table';
-import { type APIKey, useAPIKeyStore } from '@/store/api-key-store';
+import type { APIKey } from '@/features/api-keys/api-key.type';
+import { useAPIKeyStore } from '@/features/api-keys/store/api-key.store';
 import UserAPIKeyUpdateDialog from './api-key-update-dialog';
 
 const UserAPIKeyTable = ({ apiKeys }: { apiKeys: APIKey[] }) => {

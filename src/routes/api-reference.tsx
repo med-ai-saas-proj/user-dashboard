@@ -1,5 +1,5 @@
 import { ApiReferenceReact } from '@scalar/api-reference-react';
-import DashboardLayout from '@/layouts/DashboardLayout';
+import DashboardLayout from '@/layouts/dashboard-layout';
 import '@scalar/api-reference-react/style.css';
 
 export default function APIReferencePage() {

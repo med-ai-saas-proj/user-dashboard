@@ -2,6 +2,7 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { query_client } from '@/query/query-client';
 import APIKeysPage from '@/routes/api-keys';
+import APIReferencePage from '@/routes/api-reference';
 import DashboardPage from '@/routes/home';
 import LoginPage from '@/routes/login';
 import { ProtectedRoute } from '@/routes/protected-route';
@@ -23,17 +24,25 @@ function App() {
           <Route
             path="/"
             element={
-              <ProtectedRoute>
-                <DashboardPage />
-              </ProtectedRoute>
+              // <ProtectedRoute>
+              <DashboardPage />
+              // </ProtectedRoute>
             }
           />
           <Route
             path="/api-keys"
             element={
-              <ProtectedRoute>
-                <APIKeysPage />
-              </ProtectedRoute>
+              // <ProtectedRoute>
+              <APIKeysPage />
+              // </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/api-reference"
+            element={
+              // <ProtectedRoute>
+              <APIReferencePage />
+              // </ProtectedRoute>
             }
           />
           {/* Catch all - redirect to home */}

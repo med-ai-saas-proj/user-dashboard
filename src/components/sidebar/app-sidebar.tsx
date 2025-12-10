@@ -1,6 +1,6 @@
 'use client';
 
-import { GalleryVerticalEnd, KeyRound } from 'lucide-react';
+import { Book, GalleryVerticalEnd, KeyRound } from 'lucide-react';
 import type * as React from 'react';
 import {
   Sidebar,
@@ -31,6 +31,11 @@ const data = {
       name: 'API keys',
       url: '/api-keys',
       icon: KeyRound,
+    },
+    {
+      name: 'API Reference',
+      url: '/api-reference',
+      icon: Book,
     },
   ],
 };

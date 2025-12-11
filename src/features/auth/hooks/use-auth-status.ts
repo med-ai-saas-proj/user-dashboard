@@ -1,7 +1,8 @@
+import { useKeycloak } from '@/features/auth/providers/keycloak-provider';
 import { useAuthStore } from '@/features/auth/store/auth-store';
 
-// TODO: Improve this hook later
 export const useAuthStatus = () => {
+  const { authenticated } = useKeycloak();
   const token = useAuthStore((state) => state.token);
-  return !!token;
+  return authenticated || !!token;
 };

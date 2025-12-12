@@ -27,7 +27,7 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from '@/components/shadcn/sidebar';
-import { useSignOut } from '@/hooks/auth-hooks';
+import { useSignOut } from '@/features/auth/hooks/use-sign-out';
 
 export function NavUser({
   user,

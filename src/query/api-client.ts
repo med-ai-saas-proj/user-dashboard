@@ -1,7 +1,7 @@
 import axios from 'axios';
+import { BASE_API_URL } from '@/config/api-routes';
 import keycloak from '@/config/keycloak';
 import { useAuthStore } from '@/features/auth/store/auth-store';
-import { BASE_API_URL } from '@/query/api-routes';
 
 const apiClient = axios.create({
   baseURL: BASE_API_URL,

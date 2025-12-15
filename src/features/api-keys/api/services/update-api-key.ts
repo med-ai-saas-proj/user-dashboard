@@ -1,6 +1,6 @@
+import { API_ROUTES } from '@/config/api-routes';
 import type { UpdateApiKeyRequest } from '@/features/api-keys/api/api-key.dto';
 import apiClient from '@/query/api-client';
-import { API_ROUTES } from '@/query/api-routes';
 
 export const updateApiKey = async (params: UpdateApiKeyRequest) => {
   const { data } = await apiClient.put(

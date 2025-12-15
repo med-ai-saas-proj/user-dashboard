@@ -1,5 +1,5 @@
+import { API_ROUTES } from '@/config/api-routes';
 import apiClient from '@/query/api-client';
-import { API_ROUTES } from '@/query/api-routes';
 
 export const deleteApiKey = async (apikeyId: string) => {
   const { data } = await apiClient.delete(

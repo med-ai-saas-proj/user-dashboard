@@ -21,7 +21,7 @@ export const PublicRoute = ({ children }: PublicRouteProps) => {
   }
 
   if (authenticated) {
-    const from = (location.state as any)?.from?.pathname || '/';
+    const from = location.state?.from?.pathname || '/';
     return <Navigate to={from} replace />;
   }
 

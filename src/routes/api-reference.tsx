@@ -1,6 +1,7 @@
 import { ApiReferenceReact } from '@scalar/api-reference-react';
 import DashboardLayout from '@/layouts/dashboard-layout';
 import '@scalar/api-reference-react/style.css';
+import { API_ROUTES } from '@/config/api-routes';
 
 export default function APIReferencePage() {
   return (
@@ -8,7 +9,7 @@ export default function APIReferencePage() {
       <div>
         <ApiReferenceReact
           configuration={{
-            url: 'http://localhost:8000/docs/openapi.json',
+            url: API_ROUTES.MANAGEMENT.DOCS_OPENAI,
             theme: 'default',
             darkMode: false,
             hideModels: true,

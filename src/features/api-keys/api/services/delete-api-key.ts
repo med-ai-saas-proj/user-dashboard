@@ -3,7 +3,7 @@ import apiClient from '@/query/api-client';
 
 export const deleteApiKey = async (apikeyId: string) => {
   const { data } = await apiClient.delete(
-    `${API_ROUTES.APP.API_KEYS}/${apikeyId}`
+    `${API_ROUTES.MANAGEMENT.API_KEYS}/${apikeyId}`
   );
   return data;
 };

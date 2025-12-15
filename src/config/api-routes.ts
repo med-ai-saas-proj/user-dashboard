@@ -19,8 +19,9 @@ export const API_ROUTES = {
     REFRESH_TOKEN: `/api/${API_VERSION}/auth/refresh`,
   },
 
-  APP: {
-    API_KEYS: `/api/${API_VERSION}/api_keys`,
+  MANAGEMENT: {
+    API_KEYS: `/management/api/${API_VERSION}/api_keys`,
+    DOCS_OPENAI: `/management/docs/openai.json`,
   },
 } as const;
 

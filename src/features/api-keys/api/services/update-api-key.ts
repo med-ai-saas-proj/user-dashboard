@@ -4,7 +4,7 @@ import apiClient from '@/query/api-client';
 
 export const updateApiKey = async (params: UpdateApiKeyRequest) => {
   const { data } = await apiClient.put(
-    `${API_ROUTES.APP.API_KEYS}/${params.apikeyId}`,
+    `${API_ROUTES.MANAGEMENT.API_KEYS}/${params.apikeyId}`,
     {
       name: params.name,
       permissions: params.permissions,

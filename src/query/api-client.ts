@@ -21,6 +21,7 @@ apiClient.interceptors.request.use(
       } catch (error) {
         console.error('Failed to refresh token', error);
       }
+
       config.headers.Authorization = `Bearer ${keycloak.token}`;
     } else {
       // Fallback to stored token

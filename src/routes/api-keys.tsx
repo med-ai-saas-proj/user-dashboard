@@ -1,8 +1,8 @@
 import { LockIcon, Plus } from 'lucide-react';
 import { Activity, useState } from 'react';
 import { Button } from '@/components/shadcn/button';
-import UserAPIKeyDialog from '@/features/api-keys/components/api-key-dialog';
-import UserAPIKeyTable from '@/features/api-keys/components/api-key-table';
+import APIKeyDialog from '@/features/api-keys/components/api-key-dialog';
+import APIKeyTable from '@/features/api-keys/components/api-key-table';
 import { useAPIKeyStore } from '@/features/api-keys/store/api-key.store';
 import DashboardLayout from '@/layouts/dashboard-layout';
 
@@ -47,11 +47,11 @@ export default function APIKeysPage() {
         </Activity>
 
         <Activity mode={hasKeys ? 'visible' : 'hidden'}>
-          <UserAPIKeyTable apiKeys={apiKeys} />
+          <APIKeyTable apiKeys={apiKeys} />
         </Activity>
       </div>
 
-      <UserAPIKeyDialog
+      <APIKeyDialog
         open={openApiKeyDialog}
         onOpenChange={setOpenApiKeyDialog}
       />

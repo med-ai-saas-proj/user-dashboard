@@ -17,7 +17,7 @@ import { Label } from '@/components/shadcn/label';
 import type { APIKey } from '@/features/api-keys/api-key.type';
 import { useCreateApiKey } from '@/features/api-keys/hooks/use-create-api-key';
 import { useAPIKeyStore } from '@/features/api-keys/store/api-key.store';
-import { UserAPIKeySaveDialog } from './api-key-save-dialog';
+import { APIKeySaveDialog } from './api-key-save-dialog';
 
 const apiCreationSchema = z.object({
   name: z.string().min(1, 'Name must be at least 1 character long'),
@@ -25,7 +25,7 @@ const apiCreationSchema = z.object({
 
 type ApiCreationFormData = z.infer<typeof apiCreationSchema>;
 
-const UserAPIKeyDialog = ({
+const APIKeyDialog = ({
   open,
   onOpenChange,
 }: {
@@ -54,7 +54,7 @@ const UserAPIKeyDialog = ({
 
     const newKey: Omit<APIKey, 'id' | 'createdAt' | 'lastUsed'> = {
       name: data.name,
-      secretKey: response.key,
+      secretKey: response.secretKey,
       createdBy: 'Current User',
       permissions: ['placeholder'],
     };
@@ -105,9 +105,9 @@ const UserAPIKeyDialog = ({
         </DialogContent>
       </Dialog>
 
-      <UserAPIKeySaveDialog open={openSave} onOpenChange={setOpenSave} />
+      <APIKeySaveDialog open={openSave} onOpenChange={setOpenSave} />
     </div>
   );
 };
 
-export default UserAPIKeyDialog;
+export default APIKeyDialog;

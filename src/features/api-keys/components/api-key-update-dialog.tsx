@@ -23,7 +23,7 @@ const apiUpdateSchema = z.object({
 
 type ApiUpdateFormData = z.infer<typeof apiUpdateSchema>;
 
-const UserAPIKeyUpdateDialog = ({
+const APIKeyUpdateDialog = ({
   apikeyId,
   open,
   onOpenChange,
@@ -104,4 +104,4 @@ const UserAPIKeyUpdateDialog = ({
   );
 };
 
-export default UserAPIKeyUpdateDialog;
+export default APIKeyUpdateDialog;

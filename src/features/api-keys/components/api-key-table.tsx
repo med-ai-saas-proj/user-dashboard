@@ -10,11 +10,11 @@ import {
 } from '@/components/shadcn/table';
 import type { APIKey } from '@/features/api-keys/api-key.type';
 import { useAPIKeyStore } from '@/features/api-keys/store/api-key.store';
-import UserAPIKeyUpdateDialog from './api-key-update-dialog';
+import APIKeyUpdateDialog from './api-key-update-dialog';
 
-const UserAPIKeyTable = ({ apiKeys }: { apiKeys: APIKey[] }) => {
+const APIKeyTable = ({ apiKeys }: { apiKeys: APIKey[] }) => {
   const deleteAPIKey = useAPIKeyStore((state) => state.deleteAPIKey);
-  const [openUpdateUserAPIKeyDialog, setOpenUpdateUserAPIKeyDialog] =
+  const [openUpdateAPIKeyDialog, setOpenUpdateAPIKeyDialog] =
     React.useState(false);
   const [selectedApiKeyId, setSelectedApiKeyId] = useState<string | null>(null);
 
@@ -22,8 +22,8 @@ const UserAPIKeyTable = ({ apiKeys }: { apiKeys: APIKey[] }) => {
     deleteAPIKey(apikeyId);
   };
 
-  const onOpenUpdateUserAPIKeyDialog = (selectedApiKeyId: string) => {
-    setOpenUpdateUserAPIKeyDialog(true);
+  const onOpenUpdateAPIKeyDialog = (selectedApiKeyId: string) => {
+    setOpenUpdateAPIKeyDialog(true);
     setSelectedApiKeyId(selectedApiKeyId);
   };
 
@@ -66,7 +66,7 @@ const UserAPIKeyTable = ({ apiKeys }: { apiKeys: APIKey[] }) => {
             <TableCell>
               <SquarePen
                 size={16}
-                onClick={() => onOpenUpdateUserAPIKeyDialog(apiKey.id)}
+                onClick={() => onOpenUpdateAPIKeyDialog(apiKey.id)}
               />
             </TableCell>
             <TableCell>
@@ -80,14 +80,14 @@ const UserAPIKeyTable = ({ apiKeys }: { apiKeys: APIKey[] }) => {
         ))}
       </TableBody>
       {selectedApiKeyId && (
-        <UserAPIKeyUpdateDialog
+        <APIKeyUpdateDialog
           apikeyId={selectedApiKeyId}
-          open={openUpdateUserAPIKeyDialog}
-          onOpenChange={() => setOpenUpdateUserAPIKeyDialog(false)}
+          open={openUpdateAPIKeyDialog}
+          onOpenChange={() => setOpenUpdateAPIKeyDialog(false)}
         />
       )}
     </Table>
   );
 };
 
-export default UserAPIKeyTable;
+export default APIKeyTable;

@@ -11,7 +11,7 @@ import {
 import InputCopy from '@/components/shadcn/input-copy';
 import { useAPIKeyStore } from '@/features/api-keys/store/api-key.store';
 
-const UserAPIKeySaveDialog = ({
+const APIKeySaveDialog = ({
   open,
   onOpenChange,
 }: {
@@ -49,4 +49,4 @@ const UserAPIKeySaveDialog = ({
   );
 };
 
-export { UserAPIKeySaveDialog };
+export { APIKeySaveDialog };

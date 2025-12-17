@@ -3,6 +3,7 @@ import { Label } from '@radix-ui/react-label';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import z from 'zod';
+import { Button } from '@/components/shadcn/button';
 import {
   Dialog,
   DialogClose,
@@ -12,9 +13,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/shadcn/dialog';
-import { type APIKey, useAPIKeyStore } from '@/store/api-key-store';
-import { Button } from '../shadcn/button';
-import { Input } from '../shadcn/input';
+import { Input } from '@/components/shadcn/input';
+import type { APIKey } from '@/features/api-keys/api-key.type';
+import { useAPIKeyStore } from '@/features/api-keys/store/api-key.store';
 
 const apiUpdateSchema = z.object({
   name: z.string().min(1, 'Name must be at least 1 character long'),

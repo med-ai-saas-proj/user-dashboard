@@ -1,10 +1,10 @@
 import { LockIcon, Plus } from 'lucide-react';
 import { Activity, useState } from 'react';
-import UserAPIKeyDialog from '@/components/api-key-dashboard/api-key-dialog';
-import UserAPIKeyTable from '@/components/api-key-dashboard/api-key-table';
 import { Button } from '@/components/shadcn/button';
+import UserAPIKeyDialog from '@/features/api-keys/components/api-key-dialog';
+import UserAPIKeyTable from '@/features/api-keys/components/api-key-table';
+import { useAPIKeyStore } from '@/features/api-keys/store/api-key.store';
 import DashboardLayout from '@/layouts/dashboard-layout';
-import { useAPIKeyStore } from '@/store/api-key-store';
 
 export default function APIKeysPage() {
   const [openApiKeyDialog, setOpenApiKeyDialog] = useState(false);

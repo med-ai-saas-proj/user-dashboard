@@ -1,14 +1,5 @@
 import { create } from 'zustand';
-
-export type APIKey = {
-  id: string;
-  name: string;
-  secretKey: string;
-  createdAt: Date;
-  lastUsed: Date | null;
-  createdBy: string;
-  permissions: string[];
-};
+import type { APIKey } from '@/features/api-keys/api-key.type';
 
 interface APIKeyState {
   apiKeys: APIKey[];

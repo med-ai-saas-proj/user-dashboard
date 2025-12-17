@@ -1,4 +1,4 @@
-export type UserAPIKey = {
+export type APIKey = {
   id: string;
   name: string;
   secretKey: string;

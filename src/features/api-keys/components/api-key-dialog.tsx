@@ -14,8 +14,9 @@ import {
 } from '@/components/shadcn/dialog';
 import { Input } from '@/components/shadcn/input';
 import { Label } from '@/components/shadcn/label';
-import { useCreateApiKey } from '@/hooks/api-key-hooks';
-import { type APIKey, useAPIKeyStore } from '@/store/api-key-store';
+import type { APIKey } from '@/features/api-keys/api-key.type';
+import { useCreateApiKey } from '@/features/api-keys/hooks/use-create-api-key';
+import { useAPIKeyStore } from '@/features/api-keys/store/api-key.store';
 import { UserAPIKeySaveDialog } from './api-key-save-dialog';
 
 const apiCreationSchema = z.object({

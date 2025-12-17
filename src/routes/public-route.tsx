@@ -1,18 +1,27 @@
 import { Navigate, useLocation } from 'react-router-dom';
-import { useAuthStore } from '@/store/auth-store';
+import { useKeycloak } from '@/features/auth/providers/keycloak-provider';
 
 interface PublicRouteProps {
   children: React.ReactNode;
 }
 
 export const PublicRoute = ({ children }: PublicRouteProps) => {
-  const token = useAuthStore((state) => state.token);
+  const { authenticated, initialized } = useKeycloak();
   const location = useLocation();
 
-  if (token) {
-    // If already logged in, redirect to the page they were trying to access
-    // or to home page
-    const from = (location.state as any)?.from?.pathname || '/';
+  if (!initialized) {
+    return (
+      <div className="flex min-h-screen items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto" />
+          <p className="mt-4 text-muted-foreground">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (authenticated) {
+    const from = location.state?.from?.pathname || '/';
     return <Navigate to={from} replace />;
   }
 

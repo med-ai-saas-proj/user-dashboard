@@ -5,18 +5,23 @@
 
 const API_VERSION = 'v1';
 
-export const BASE_API_URL =
-  import.meta.env.VITE_API_URL || 'http://localhost:8000';
+if (!import.meta.env.VITE_BASE_API_URL) {
+  throw new Error('VITE_BASE_API_URL is not defined in environment variables');
+}
+
+export const BASE_API_URL = import.meta.env.VITE_BASE_API_URL;
 
 export const API_ROUTES = {
   AUTH: {
-    LOGIN: `/api/${API_VERSION}/auth/login`,
-    LOGOUT: `/api/${API_VERSION}/auth/logout`,
+    SIGN_IN: `/api/${API_VERSION}/auth/login`,
+    SIGN_OUT: `/api/${API_VERSION}/auth/logout`,
+    REGISTER: `/api/${API_VERSION}/auth/register`,
     REFRESH_TOKEN: `/api/${API_VERSION}/auth/refresh`,
   },
 
-  APP: {
-    API_KEYS: `/api/${API_VERSION}/api_keys`,
+  MANAGEMENT: {
+    API_KEYS: `/management/api/${API_VERSION}/api_keys`,
+    DOCS_OPENAI: `/management/docs/openai.json`,
   },
 } as const;
 

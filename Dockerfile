@@ -10,8 +10,8 @@ COPY . .
 
 RUN --mount=type=cache,id=med-ai-saas-pnpm,target=/pnpm/store pnpm install --frozen-lockfile
 RUN pnpm run -r build
-RUN pnpm deploy --filter=app1 --prod /prod/app1
+RUN pnpm deploy --filter=user-dashboard --prod /prod/user-dashboard --legacy
 
 # New Stage for Exporting
 FROM scratch AS export-stage
-COPY --from=builder /prod/app1 /
+COPY --from=builder /prod/user-dashboard/dist /

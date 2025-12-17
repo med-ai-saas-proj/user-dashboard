@@ -42,3 +42,5 @@ coverage/
 *.temp
 *.swp
 *.swo
+
+build-output/

@@ -38,6 +38,13 @@ const data = {
       icon: Book,
     },
   ],
+  playground: [
+    {
+      name: 'EHR Summary',
+      url: '/ehr-summary',
+      icon: Book,
+    },
+  ],
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
@@ -47,7 +54,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <TeamSwitcher teams={data.teams} />
       </SidebarHeader>
       <SidebarContent>
-        <NavProjects projects={data.management} />
+        <NavProjects projects={data.management} label="Management" />
+        <NavProjects projects={data.playground} label="Playground" />
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={data.user} />

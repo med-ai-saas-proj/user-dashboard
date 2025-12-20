@@ -6,6 +6,7 @@ import APIKeysPage from '@/routes/api-keys';
 import APIReferencePage from '@/routes/api-reference';
 import DashboardPage from '@/routes/home';
 import LoginPage from '@/routes/login';
+import EHRSummaryPage from '@/routes/pg-ehr-summary';
 import { ProtectedRoute } from '@/routes/protected-route';
 import { PublicRoute } from '@/routes/public-route';
 
@@ -44,6 +45,14 @@ function App() {
               element={
                 <ProtectedRoute>
                   <APIReferencePage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/ehr-summary"
+              element={
+                <ProtectedRoute>
+                  <EHRSummaryPage />
                 </ProtectedRoute>
               }
             />

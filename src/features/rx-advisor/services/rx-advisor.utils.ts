@@ -1,10 +1,6 @@
-// ehr-summary.mapper.ts
-
-import type {
-  EHRSummaryRequest,
-  RxAdvisorRequest,
-} from '@/features/pg-ehr-summary/api/ehr-summary.dto';
 import type { EHRFormData } from '@/features/pg-ehr-summary/ehr-form.type';
+import type { EHRSummaryRequest } from '@/features/pg-ehr-summary/services/ehr-summary.dto';
+import type { RxAdvisorRequest } from '@/features/rx-advisor/services/rx-advisor.dto';
 
 export const ehrFormToSummaryRequest = (
   data: EHRFormData

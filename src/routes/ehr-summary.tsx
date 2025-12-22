@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { ehrFormToSummaryRequest } from '@/features/pg-ehr-summary/api/ehr-summary.mapper';
 import EHRForm from '@/features/pg-ehr-summary/components/ehr-form';
 import { SummaryResponse } from '@/features/pg-ehr-summary/components/summary-response';
 import type { EHRFormData } from '@/features/pg-ehr-summary/ehr-form.type';
 import { useSummarizeEHR } from '@/features/pg-ehr-summary/hooks/use-summarize-ehr';
+import { ehrFormToSummaryRequest } from '@/features/rx-advisor/services/rx-advisor.utils';
 import DashboardLayout from '@/layouts/dashboard-layout';
 
 const EHRSummaryPage = () => {

@@ -1,7 +1,7 @@
 import type {
   EHRSummaryRequest,
   EHRSummaryResponse,
-} from '@/features/pg-ehr-summary/api/ehr-summary.dto';
+} from '@/features/pg-ehr-summary/services/ehr-summary.dto';
 import apiClient from '@/query/api-client';
 
 export const summarizeEHR = async (

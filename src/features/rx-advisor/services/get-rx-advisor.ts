@@ -1,8 +1,5 @@
-import type {
-  RxAdvisorRequest,
-  RxAdvisorResponse,
-} from '@/features/pg-ehr-summary/api/ehr-summary.dto';
 import apiClient from '@/query/api-client';
+import type { RxAdvisorRequest, RxAdvisorResponse } from './rx-advisor.dto';
 
 export const getRxAdvisor = async (
   request: RxAdvisorRequest

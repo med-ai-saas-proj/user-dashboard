@@ -1,9 +1,9 @@
 import { useState } from 'react';
-import { ehrFormToRxAdvisorRequest } from '@/features/pg-ehr-summary/api/ehr-summary.mapper';
 import EHRForm from '@/features/pg-ehr-summary/components/ehr-form';
 import type { EHRFormData } from '@/features/pg-ehr-summary/ehr-form.type';
 import { AnalysisResponse } from '@/features/rx-advisor/components/analysis-response';
 import { useRxAdvisor } from '@/features/rx-advisor/hooks/use-rx-advisor';
+import { ehrFormToRxAdvisorRequest } from '@/features/rx-advisor/services/rx-advisor.utils';
 import DashboardLayout from '@/layouts/dashboard-layout';
 
 const RxAdvisorPage = () => {

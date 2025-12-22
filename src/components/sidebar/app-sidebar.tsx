@@ -1,6 +1,11 @@
 'use client';
 
-import { Book, GalleryVerticalEnd, KeyRound } from 'lucide-react';
+import {
+  Book,
+  GalleryVerticalEnd,
+  KeyRound,
+  MessageCircle,
+} from 'lucide-react';
 import type * as React from 'react';
 import {
   Sidebar,
@@ -9,7 +14,7 @@ import {
   SidebarHeader,
   SidebarRail,
 } from '@/components/shadcn/sidebar';
-import { NavProjects } from '@/components/sidebar/nav-projects';
+import { type NavItem, NavProjects } from '@/components/sidebar/nav-projects';
 import { NavUser } from '@/components/sidebar/nav-user';
 import { TeamSwitcher } from '@/components/sidebar/team-switcher';
 
@@ -37,6 +42,20 @@ const data = {
       url: '/api-reference',
       icon: Book,
     },
+    {
+      name: 'Play Ground',
+      icon: MessageCircle,
+      items: [
+        {
+          name: 'Chat',
+          url: '/play-ground/chat',
+        },
+        {
+          name: 'AI Search',
+          url: '/play-ground/ai-search',
+        },
+      ],
+    },
   ],
 };
 
@@ -47,7 +66,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <TeamSwitcher teams={data.teams} />
       </SidebarHeader>
       <SidebarContent>
-        <NavProjects projects={data.management} />
+        <NavProjects projects={data.management as NavItem[]} />
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={data.user} />

@@ -8,6 +8,8 @@ import DashboardPage from '@/routes/home';
 import LoginPage from '@/routes/login';
 import { ProtectedRoute } from '@/routes/protected-route';
 import { PublicRoute } from '@/routes/public-route';
+import PlaygroundAISearchPage from './routes/playground-AI-search';
+import PlaygroundChatPage from './routes/playground-chat';
 
 function App() {
   return (
@@ -47,6 +49,12 @@ function App() {
                 </ProtectedRoute>
               }
             />
+            <Route path="/play-ground">
+              <Route index element={<Navigate to="chat" replace />} />
+              <Route path="chat" element={<PlaygroundChatPage />} />
+              <Route path="ai-search" element={<PlaygroundAISearchPage />} />
+            </Route>
+
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </BrowserRouter>

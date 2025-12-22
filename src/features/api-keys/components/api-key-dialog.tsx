@@ -17,6 +17,7 @@ import { Label } from '@/components/shadcn/label';
 import type { APIKey } from '@/features/api-keys/api-key.type';
 import { useCreateApiKey } from '@/features/api-keys/hooks/use-create-api-key';
 import { useAPIKeyStore } from '@/features/api-keys/store/api-key.store';
+import { useServiceApiKeyStore } from '@/features/api-keys/store/service-api-key.store';
 import { APIKeySaveDialog } from './api-key-save-dialog';
 
 const apiCreationSchema = z.object({
@@ -33,9 +34,13 @@ const APIKeyDialog = ({
   onOpenChange: (open: boolean) => void;
 }) => {
   const addAPIKey = useAPIKeyStore((state) => state.addAPIKey);
+  const setSelectedApiKey = useServiceApiKeyStore(
+    (state) => state.setSelectedApiKey
+  );
   const createApiKeyMutation = useCreateApiKey();
 
   const [openSave, setOpenSave] = useState(false);
+  const [createdKey, setCreatedKey] = useState<string>('');
 
   const {
     register,
@@ -60,6 +65,11 @@ const APIKeyDialog = ({
     };
 
     addAPIKey(newKey);
+
+    // Automatically set this as the service API key
+    setSelectedApiKey(response.secretKey);
+    setCreatedKey(response.secretKey);
+
     setOpenSave(true);
     onOpenChange(false);
   };
@@ -82,7 +92,7 @@ const APIKeyDialog = ({
                 <Label>Name</Label>
                 <Input
                   id="name"
-                  defaultValue="Pedro Duarte"
+                  placeholder="My API Key"
                   aria-invalid={!!errors.name}
                   {...register('name')}
                 />
@@ -99,13 +109,21 @@ const APIKeyDialog = ({
               <DialogClose asChild>
                 <Button variant="outline">Cancel</Button>
               </DialogClose>
-              <Button type="submit">Create secret key</Button>
+              <Button type="submit" disabled={createApiKeyMutation.isPending}>
+                {createApiKeyMutation.isPending
+                  ? 'Creating...'
+                  : 'Create secret key'}
+              </Button>
             </DialogFooter>
           </form>
         </DialogContent>
       </Dialog>
 
-      <APIKeySaveDialog open={openSave} onOpenChange={setOpenSave} />
+      <APIKeySaveDialog
+        open={openSave}
+        onOpenChange={setOpenSave}
+        apiKey={createdKey}
+      />
     </div>
   );
 };

@@ -1,3 +1,4 @@
+import { API_ROUTES } from '@/config/api-routes';
 import type {
   EHRSummaryRequest,
   EHRSummaryResponse,
@@ -8,7 +9,7 @@ export const summarizeEHR = async (
   request: EHRSummaryRequest
 ): Promise<EHRSummaryResponse> => {
   const { data } = await apiClient.post<EHRSummaryResponse>(
-    '/api/v1/ehr_summarize',
+    API_ROUTES.SERVICE.EHR_SUMMARIZE,
     request
   );
   return data;

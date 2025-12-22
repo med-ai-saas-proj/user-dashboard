@@ -1,5 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
-import { updateApiKey } from '@/features/api-keys/api/services/update-api-key';
+import { updateApiKey } from '@/features/api-keys/services/update-api-key';
 
 export const useUpdateApiKey = () => {
   return useMutation({

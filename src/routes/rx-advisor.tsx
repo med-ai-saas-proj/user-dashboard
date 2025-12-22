@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { ApiKeyRequiredDialog } from '@/features/api-keys/components/api-key-required-dialog';
+import { useServiceApiKeyStore } from '@/features/api-keys/store/service-api-key.store';
 import EHRForm from '@/features/pg-ehr-summary/components/ehr-form';
 import type { EHRFormData } from '@/features/pg-ehr-summary/ehr-form.type';
 import { AnalysisResponse } from '@/features/rx-advisor/components/analysis-response';
@@ -11,9 +13,17 @@ const RxAdvisorPage = () => {
     analysis: string;
     reasoning: string | null;
   }>();
+  const [showApiKeyDialog, setShowApiKeyDialog] = useState(false);
   const rxAdvisorMutation = useRxAdvisor();
+  const { selectedApiKey } = useServiceApiKeyStore();
 
   const handleSubmit = async (data: EHRFormData) => {
+    // Check if API key is selected
+    if (!selectedApiKey) {
+      setShowApiKeyDialog(true);
+      return;
+    }
+
     try {
       const request = ehrFormToRxAdvisorRequest(data);
       const response = await rxAdvisorMutation.mutateAsync(request);
@@ -42,6 +52,11 @@ const RxAdvisorPage = () => {
           error={rxAdvisorMutation.error}
         />
       </div>
+
+      <ApiKeyRequiredDialog
+        open={showApiKeyDialog}
+        onOpenChange={setShowApiKeyDialog}
+      />
     </DashboardLayout>
   );
 };

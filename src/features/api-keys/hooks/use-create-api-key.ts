@@ -1,5 +1,5 @@
 import { useMutation } from '@tanstack/react-query';
-import { createApiKey } from '@/features/api-keys/api/services/create-api-key';
+import { createApiKey } from '@/features/api-keys/services/create-api-key';
 import type { CreateApiKeyRequest } from '../services/api-key.dto';
 
 export const useCreateApiKey = () => {

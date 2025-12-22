@@ -1,6 +1,8 @@
+// ehr-form.tsx (updated)
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { Button } from '@/components/shadcn/button';
+import { Spinner } from '@/components/shadcn/spinner';
 import type { EHRFormData } from '@/features/pg-ehr-summary/ehr-form.type';
 import { ehrFormSchema } from '@/features/pg-ehr-summary/schemas/ehr-form.schema';
 import { ClinicalProgressSection } from './clinical-progress-section';
@@ -107,7 +109,17 @@ const defaultValues: EHRFormData = {
   ],
 };
 
-const EHRForm = () => {
+type EHRFormProps = {
+  onSubmit: (data: EHRFormData) => void;
+  isSubmitting?: boolean;
+  submitButtonText?: string;
+};
+
+export function EHRForm({
+  onSubmit,
+  isSubmitting = false,
+  submitButtonText = 'Submit',
+}: EHRFormProps) {
   const {
     register,
     handleSubmit,
@@ -145,11 +157,6 @@ const EHRForm = () => {
     name: 'dien_bien_lam_sang',
   });
 
-  const onSubmit = (data: EHRFormData) => {
-    console.log('Form submitted:', data);
-    // Handle form submission here
-  };
-
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
       <PatientInfoSection register={register} errors={errors} />
@@ -179,13 +186,19 @@ const EHRForm = () => {
       />
 
       <div className="flex justify-end gap-4">
-        <Button type="button" variant="outline">
-          Cancel
+        <Button type="submit" disabled={isSubmitting}>
+          {isSubmitting ? (
+            <>
+              <Spinner className="mr-2" />
+              Processing
+            </>
+          ) : (
+            submitButtonText
+          )}
         </Button>
-        <Button type="submit">Submit</Button>
       </div>
     </form>
   );
-};
+}
 
 export default EHRForm;

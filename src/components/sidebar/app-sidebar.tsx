@@ -1,6 +1,12 @@
 'use client';
 
-import { Book, GalleryVerticalEnd, KeyRound } from 'lucide-react';
+import {
+  Book,
+  ClipboardPlusIcon,
+  GalleryVerticalEnd,
+  KeyRound,
+  PillIcon,
+} from 'lucide-react';
 import type * as React from 'react';
 import {
   Sidebar,
@@ -42,7 +48,12 @@ const data = {
     {
       name: 'EHR Summary',
       url: '/ehr-summary',
-      icon: Book,
+      icon: ClipboardPlusIcon,
+    },
+    {
+      name: 'Rx Advisor',
+      url: '/rx-advisor',
+      icon: PillIcon,
     },
   ],
 };

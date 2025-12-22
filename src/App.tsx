@@ -4,11 +4,12 @@ import { KeycloakProvider } from '@/features/auth/providers/keycloak-provider';
 import { query_client } from '@/query/query-client';
 import APIKeysPage from '@/routes/api-keys';
 import APIReferencePage from '@/routes/api-reference';
+import EHRSummaryPage from '@/routes/ehr-summary';
 import DashboardPage from '@/routes/home';
 import LoginPage from '@/routes/login';
-import EHRSummaryPage from '@/routes/pg-ehr-summary';
 import { ProtectedRoute } from '@/routes/protected-route';
 import { PublicRoute } from '@/routes/public-route';
+import RxAdvisorPage from '@/routes/rx-advisor';
 
 function App() {
   return (
@@ -56,6 +57,15 @@ function App() {
                 </ProtectedRoute>
               }
             />
+            <Route
+              path="/rx-advisor"
+              element={
+                <ProtectedRoute>
+                  <RxAdvisorPage />
+                </ProtectedRoute>
+              }
+            />
+
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </BrowserRouter>

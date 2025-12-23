@@ -41,10 +41,12 @@ apiClient.interceptors.request.use(
         } catch (error) {
           console.error('Failed to refresh token', error);
         }
+        console.log('Using Keycloak auth token', keycloak.token);
 
         config.headers.Authorization = `Bearer ${keycloak.token}`;
       } else {
         // Fallback to stored token
+        console.log('Using fallback auth token from store');
         const token = useAuthStore.getState().token;
         if (token) {
           config.headers.Authorization = `Bearer ${token}`;

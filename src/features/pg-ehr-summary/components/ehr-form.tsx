@@ -15,13 +15,13 @@ const defaultValues: EHRFormData = {
     ma_lk: '70223256',
     ma_bn: '70223256',
     ho_ten: 'Mai Lý Thị',
-    ngay_sinh: '1961-08-20',
+    ngay_sinh: '1961-08-20', // YYYY-MM-DD format for HTML5 date input
     gioi_tinh: 2,
     ma_quoctich: 'VN',
     ma_nghe_nghiep: 'GV',
     dia_chi: 'Số 47 Phố Tràng Tiền, Tòa tháp A, Tây Hồ, Hà Nội, Việt Nam',
     dien_thoai: '0039 512 62 01',
-    ngay_vao: '2023-05-15 07:30',
+    ngay_vao: '2023-05-15T07:30', // YYYY-MM-DDTHH:mm format for datetime-local input
     chan_doan_rv: 'Bệnh đái tháo đường không phụ thuộc insulin',
     ma_benh_chinh: 'E11',
     ket_qua_dtri: 1,
@@ -38,7 +38,7 @@ const defaultValues: EHRFormData = {
       lieu_dung: '1 viên/lần',
       cach_dung: 'Uống',
       so_luong: '1',
-      ngay_yl: '2023-05-15 09:10',
+      ngay_yl: '2023-05-15T09:10', // YYYY-MM-DDTHH:mm format
       ma_bac_si: 'Mai Thanh Dung',
     },
     {
@@ -49,7 +49,7 @@ const defaultValues: EHRFormData = {
       lieu_dung: '1 viên/lần',
       cach_dung: 'Uống',
       so_luong: '1',
-      ngay_yl: '2023-05-15 09:10',
+      ngay_yl: '2023-05-15T09:10',
       ma_bac_si: 'Mai Thanh Dung',
     },
     {
@@ -60,7 +60,7 @@ const defaultValues: EHRFormData = {
       lieu_dung: '1 viên/lần',
       cach_dung: 'Uống',
       so_luong: '2',
-      ngay_yl: '2023-05-15 09:10',
+      ngay_yl: '2023-05-15T09:10',
       ma_bac_si: 'Mai Thanh Dung',
     },
   ],
@@ -71,7 +71,7 @@ const defaultValues: EHRFormData = {
       ten_chi_so: 'Glucose máu',
       gia_tri: '9.5',
       don_vi_do: 'mmol/L',
-      ngay_kq: '2023-05-15 07:33',
+      ngay_kq: '2023-05-15T07:33', // YYYY-MM-DDTHH:mm format
     },
     {
       ma_lk: '70223256',
@@ -79,7 +79,7 @@ const defaultValues: EHRFormData = {
       ten_chi_so: 'Cholesterol toàn phần',
       gia_tri: '5.78',
       don_vi_do: 'mmol/L',
-      ngay_kq: '2023-05-15 07:33',
+      ngay_kq: '2023-05-15T07:33',
     },
     {
       ma_lk: '70223256',
@@ -87,7 +87,7 @@ const defaultValues: EHRFormData = {
       ten_chi_so: 'Triglycerid',
       gia_tri: '1.26',
       don_vi_do: 'mmol/L',
-      ngay_kq: '2023-05-15 07:33',
+      ngay_kq: '2023-05-15T07:33',
     },
     {
       ma_lk: '70223256',
@@ -95,7 +95,7 @@ const defaultValues: EHRFormData = {
       ten_chi_so: 'Creatinin máu',
       gia_tri: '86',
       don_vi_do: 'µmol/L',
-      ngay_kq: '2023-05-15 07:33',
+      ngay_kq: '2023-05-15T07:33',
     },
   ],
   dien_bien_lam_sang: [
@@ -103,7 +103,7 @@ const defaultValues: EHRFormData = {
       ma_lk: '70223256',
       stt: 1,
       dien_bien_ls: 'Bệnh nhân tỉnh, sinh hiệu ổn định, đường huyết tăng.',
-      thoi_diem_dbls: '2023-05-15 07:30',
+      thoi_diem_dbls: '2023-05-15T07:30', // YYYY-MM-DDTHH:mm format
       nguoi_thuc_hien: 'Lý Thùy Hoa',
     },
   ],

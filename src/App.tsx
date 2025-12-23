@@ -51,8 +51,22 @@ function App() {
             />
             <Route path="/play-ground">
               <Route index element={<Navigate to="chat" replace />} />
-              <Route path="chat" element={<PlaygroundChatPage />} />
-              <Route path="ai-search" element={<PlaygroundAISearchPage />} />
+              <Route
+                path="chat"
+                element={
+                  <ProtectedRoute>
+                    <PlaygroundChatPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="ai-search"
+                element={
+                  <ProtectedRoute>
+                    <PlaygroundAISearchPage />
+                  </ProtectedRoute>
+                }
+              />
             </Route>
 
             <Route path="*" element={<Navigate to="/" replace />} />

@@ -1,4 +1,5 @@
 import { CheckCircle2Icon, ClipboardIcon } from 'lucide-react';
+import Markdown from 'react-markdown';
 import { Button } from '@/components/shadcn/button';
 import {
   FieldContent,
@@ -8,7 +9,6 @@ import {
   FieldSet,
 } from '@/components/shadcn/field';
 import { Spinner } from '@/components/shadcn/spinner';
-import { Textarea } from '@/components/shadcn/textarea';
 import { useCopyToClipboard } from '@/hooks/use-copy-to-clipboard';
 
 type SummaryResponseProps = {
@@ -75,25 +75,25 @@ export function SummaryResponse({
           {isCopied ? (
             <>
               <CheckCircle2Icon className="size-4" />
-              Đã sao chép
+              Copied
             </>
           ) : (
             <>
               <ClipboardIcon className="size-4" />
-              Sao chép
+              Copy
             </>
           )}
         </Button>
       </div>
       <FieldGroup>
         <div>
-          <FieldLabel>Nội dung tóm tắt</FieldLabel>
+          <FieldLabel className="text-lg font-bold underline underline-offset-2">
+            Summary Content
+          </FieldLabel>
           <FieldContent>
-            <Textarea
-              value={summary}
-              readOnly
-              className="min-h-[300px] resize-none bg-muted/30"
-            />
+            <div className="prose">
+              <Markdown>{summary}</Markdown>
+            </div>
           </FieldContent>
         </div>
       </FieldGroup>

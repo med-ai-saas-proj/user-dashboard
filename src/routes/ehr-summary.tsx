@@ -5,7 +5,7 @@ import EHRForm from '@/features/pg-ehr-summary/components/ehr-form';
 import { SummaryResponseDialog } from '@/features/pg-ehr-summary/components/summary-response-dialog';
 import type { EHRFormData } from '@/features/pg-ehr-summary/ehr-form.type';
 import { useSummarizeEHR } from '@/features/pg-ehr-summary/hooks/use-summarize-ehr';
-import { ehrFormToSummaryRequest } from '@/features/rx-advisor/services/rx-advisor.utils';
+import { ehrFormToSummaryRequest } from '@/features/pg-ehr-summary/utils/ehr-summary.utils';
 import DashboardLayout from '@/layouts/dashboard-layout';
 
 const EHRSummaryPage = () => {

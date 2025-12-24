@@ -10,7 +10,8 @@ export function toVnMohDateFormat(dateString: string): string {
 
   // If it's a date-only format (YYYY-MM-DD becomes YYYYMMDD)
   if (cleanDate.length === 8) {
-    return cleanDate + '0000'; // Add default time 00:00
+    // Add default time 00:00
+    return `${cleanDate}0000`;
   }
 
   // If it's datetime format (YYYY-MM-DDTHH:MM becomes YYYYMMDDHHMM)

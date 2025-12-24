@@ -6,17 +6,18 @@ import {
   InputGroupTextarea,
 } from '@/components/shadcn/input-group';
 
-function ChatInput() {
+const ChatInput = () => {
   return (
-    <div className="sticky bottom-0 w-full z-50 bg-white pb-4">
-      <div className="w-full flex items-center justify-center">
-        <InputGroup className="max-w-4xl">
+    <div className="sticky bottom-0 w-full z-50 bg-background pb-4">
+      <div className="w-full flex items-center">
+        <InputGroup className="w-full mx-auto">
           <InputGroupTextarea placeholder="Type your message..." />
           <InputGroupAddon align="block-end">
             <InputGroupButton
               variant="outline"
               className="rounded-full mr-2"
               size="icon-sm"
+              hidden
             >
               <Plus />
             </InputGroupButton>
@@ -32,6 +33,6 @@ function ChatInput() {
       </div>
     </div>
   );
-}
+};
 
 export default ChatInput;

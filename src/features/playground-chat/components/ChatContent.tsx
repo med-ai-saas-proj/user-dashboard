@@ -1,7 +1,9 @@
 import ChatReceiver from './ChatReceiver';
 import ChatSender from './ChatSender';
 
-function ChatContent() {
+const ChatContent = () => {
+  const dummyText = `Hello, how can I help you? lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem, ipsum dolor sit amet consectetur adipisicing elit. Alias at ad, laboriosam odio minus commodi suscipit quam exercitationem amet facilis fugiat. Voluptatum similique fuga ullam dolorem eveniet dignissimos maiores molestias!`;
+
   const dummyMarkdownText = `# Introduction
 
 This content is coming from the **backend**.
@@ -28,11 +30,11 @@ Thank you for using our service!
 `;
 
   return (
-    <div className="w-4xl h-full">
-      <ChatSender message="Hello, how can I help you? lorem ipsum dolor sit amet, consectetur adipiscing elit." />
+    <div className="h-full pb-24">
+      <ChatSender message={dummyText} />
       <ChatReceiver message={dummyMarkdownText} />
     </div>
   );
-}
+};
 
 export default ChatContent;

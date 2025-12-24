@@ -2,8 +2,8 @@ import { MarkdownCustom } from './MarkdownCustom';
 
 function ChatReceiver({ message }: { message: string }) {
   return (
-    <div className="h-full flex items-start">
-      <div className="text-black p-3 max-w-[70%]">
+    <div className="h-fit flex items-start">
+      <div className="w-full mt-12">
         <MarkdownCustom content={message} />
       </div>
     </div>

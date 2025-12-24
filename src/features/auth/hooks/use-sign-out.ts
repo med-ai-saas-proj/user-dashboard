@@ -12,7 +12,7 @@ export const useSignOut = () => {
       logout();
       // Logout from Keycloak
       await keycloak.logout({
-        redirectUri: window.location.origin + '/login',
+        redirectUri: `${window.location.origin}/login`,
       });
     },
   });

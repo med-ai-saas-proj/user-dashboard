@@ -20,13 +20,15 @@ export const API_ROUTES = {
   },
 
   MANAGEMENT: {
-    API_KEYS: `/management/api/${API_VERSION}/api-keys`,
+    API_KEYS: `/management/api/${API_VERSION}/api_keys`,
     DOCS_OPENAI: `/management/docs/openai.json`,
   },
 
-  SERVICE: {
-    EHR_SUMMARIZE: `service/api/${API_VERSION}/ehr_summarize`,
-    RX_ADVISOR: `service/api/${API_VERSION}/rx_advisor`,
+  SERVICES: {
+    EHR_SUMMARIZE: `/api/${API_VERSION}/ehr_summarize`,
+    RX_ADVISOR: `/api/${API_VERSION}/rx_advisor`,
+    AI_SEARCH: `/api/${API_VERSION}/ai_search`,
+    CHAT: `/api/${API_VERSION}/chat`,
   },
 } as const;
 

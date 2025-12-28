@@ -9,7 +9,7 @@ export const summarizeEHR = async (
   request: EHRSummaryRequest
 ): Promise<EHRSummaryResponse> => {
   const { data } = await apiClient.post<EHRSummaryResponse>(
-    API_ROUTES.SERVICE.EHR_SUMMARIZE,
+    API_ROUTES.SERVICES.EHR_SUMMARIZE,
     request
   );
   return data;

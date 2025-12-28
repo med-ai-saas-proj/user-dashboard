@@ -1,38 +1,53 @@
+import { useEffect, useRef } from 'react';
+import { Spinner } from '@/components/shadcn/spinner';
+import { useChatStore } from '../store/chat.store';
 import ChatReceiver from './ChatReceiver';
 import ChatSender from './ChatSender';
 
-const ChatContent = () => {
-  const dummyText = `Hello, how can I help you? lorem ipsum dolor sit amet, consectetur adipiscing elit. Lorem, ipsum dolor sit amet consectetur adipisicing elit. Alias at ad, laboriosam odio minus commodi suscipit quam exercitationem amet facilis fugiat. Voluptatum similique fuga ullam dolorem eveniet dignissimos maiores molestias!`;
+type ChatContentProps = {
+  isLoading?: boolean;
+};
 
-  const dummyMarkdownText = `# Introduction
+const ChatContent = ({ isLoading = false }: ChatContentProps) => {
+  const messages = useChatStore((state) => state.messages);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
-This content is coming from the **backend**.
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
 
-### Features
-* Dynamic rendering
-* Tailwind styling
-* Shadcn integration
+  // biome-ignore lint/correctness/useExhaustiveDependencies: Messages as dependency is intentional to trigger scroll on new message
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
-Here is some code:
-\`\`\`js
-console.log("Hello from the API!");
-\`\`\`
-
-Lorem ipsum, dolor sit amet consectetur adipisicing elit. Similique asperiores non, ipsam nostrum aperiam beatae. Deleniti, id nesciunt eum perspiciatis recusandae earum vel ex nisi rerum natus iusto? Qui, totam?
-
-### Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatum vel itaque, totam provident rerum exercitationem assumenda id incidunt, vitae dolor asperiores omnis. Repudiandae corporis, consequatur nulla doloribus quidem eaque optio.
-
-Thank you for using our service!
-
-### For more information, visit [our website](https://example.com).
-
-## Lorem ipsum dolor sit amet consectetur, adipisicing elit. Repudiandae sit ipsum possimus facilis excepturi ullam quas consectetur, qui laboriosam voluptatem provident beatae? Fuga recusandae tenetur distinctio nam suscipit cum doloremque!
-`;
+  if (messages.length === 0) {
+    return (
+      <div className="h-full flex items-center justify-center pb-24">
+        <div className="text-center text-muted-foreground">
+          <p className="text-lg">Start a conversation</p>
+          <p className="text-sm mt-2">Type a message below to begin</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="h-full pb-24">
-      <ChatSender message={dummyText} />
-      <ChatReceiver message={dummyMarkdownText} />
+    <div className="h-full pb-24 overflow-y-auto">
+      {messages.map((message, index) =>
+        message.role === 'user' ? (
+          <ChatSender key={index} message={message.content} />
+        ) : (
+          <ChatReceiver key={index} message={message.content} />
+        )
+      )}
+      {isLoading && (
+        <div className="flex items-center gap-2 p-4">
+          <Spinner className="size-4" />
+          <span className="text-sm text-muted-foreground">Thinking...</span>
+        </div>
+      )}
+      <div ref={messagesEndRef} />
     </div>
   );
 };

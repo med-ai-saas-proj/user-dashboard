@@ -10,6 +10,8 @@ import LoginPage from '@/routes/login';
 import { ProtectedRoute } from '@/routes/protected-route';
 import { PublicRoute } from '@/routes/public-route';
 import RxAdvisorPage from '@/routes/rx-advisor';
+import PlaygroundAISearchPage from './routes/playground-AI-search';
+import PlaygroundChatPage from './routes/playground-chat';
 
 function App() {
   return (
@@ -50,6 +52,22 @@ function App() {
               }
             />
             <Route
+              path="/chat"
+              element={
+                <ProtectedRoute>
+                  <PlaygroundChatPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/ai-search"
+              element={
+                <ProtectedRoute>
+                  <PlaygroundAISearchPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
               path="/ehr-summary"
               element={
                 <ProtectedRoute>
@@ -57,6 +75,7 @@ function App() {
                 </ProtectedRoute>
               }
             />
+
             <Route
               path="/rx-advisor"
               element={

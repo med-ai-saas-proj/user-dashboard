@@ -2,10 +2,12 @@
 
 import {
   Book,
+  BotIcon,
   ClipboardPlusIcon,
   GalleryVerticalEnd,
   KeyRound,
   PillIcon,
+  SearchIcon,
 } from 'lucide-react';
 import type * as React from 'react';
 import {
@@ -54,6 +56,16 @@ const data = {
       name: 'Rx Advisor',
       url: '/rx-advisor',
       icon: PillIcon,
+    },
+    {
+      name: 'Chatbot',
+      url: '/chat',
+      icon: BotIcon,
+    },
+    {
+      name: 'AI Search',
+      url: '/ai-search',
+      icon: SearchIcon,
     },
   ],
 };

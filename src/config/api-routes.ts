@@ -25,10 +25,10 @@ export const API_ROUTES = {
   },
 
   SERVICES: {
-    EHR_SUMMARIZE: `/api/${API_VERSION}/ehr_summarize`,
-    RX_ADVISOR: `/api/${API_VERSION}/rx_advisor`,
-    AI_SEARCH: `/api/${API_VERSION}/ai_search`,
-    CHAT: `/api/${API_VERSION}/chat`,
+    EHR_SUMMARIZE: `service/api/${API_VERSION}/ehr_summarize`,
+    RX_ADVISOR: `service/api/${API_VERSION}/rx_advisor`,
+    AI_SEARCH: `service/api/${API_VERSION}/ai_search`,
+    CHAT: `service/api/${API_VERSION}/chat`,
   },
 } as const;
 

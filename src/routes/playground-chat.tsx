@@ -5,7 +5,7 @@ import { useChatStore } from '@/features/playground-chat/store/chat.store';
 import DashboardLayout from '@/layouts/dashboard-layout';
 
 export default function PlaygroundChatPage() {
-  const { conversationId, model, setConversationId, addMessage } =
+  const { conversationId, model, messages, setConversationId, addMessage } =
     useChatStore();
   const chatMutation = useSendChatMessage();
 
@@ -45,7 +45,7 @@ export default function PlaygroundChatPage() {
   return (
     <DashboardLayout pageTitle="Chat" className="pb-0">
       <div className="w-full h-full flex flex-col items-stretch justify-between px-4 sm:px-6 md:px-12 lg:px-24 xl:px-64 relative">
-        <ChatContent isLoading={chatMutation.isPending} />
+        <ChatContent messages={messages} isLoading={chatMutation.isPending} />
         <ChatInput
           onSendMessage={handleSendMessage}
           isLoading={chatMutation.isPending}

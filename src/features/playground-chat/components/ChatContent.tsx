@@ -1,21 +1,20 @@
 import { useEffect, useRef } from 'react';
 import { Spinner } from '@/components/shadcn/spinner';
-import { useChatStore } from '../store/chat.store';
+import type { ChatMessage } from '../services/chat.dto';
 import ChatReceiver from './ChatReceiver';
 import ChatSender from './ChatSender';
 
 type ChatContentProps = {
+  messages: ChatMessage[];
   isLoading?: boolean;
 };
 
-const ChatContent = ({ isLoading = false }: ChatContentProps) => {
-  const messages = useChatStore((state) => state.messages);
+const ChatContent = ({ messages, isLoading = false }: ChatContentProps) => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
-
   // biome-ignore lint/correctness/useExhaustiveDependencies: Messages as dependency is intentional to trigger scroll on new message
   useEffect(() => {
     scrollToBottom();
@@ -33,14 +32,17 @@ const ChatContent = ({ isLoading = false }: ChatContentProps) => {
   }
 
   return (
-    <div className="h-full pb-24 overflow-y-auto">
-      {messages.map((message, index) =>
-        message.role === 'user' ? (
-          <ChatSender key={index} message={message.content} />
-        ) : (
-          <ChatReceiver key={index} message={message.content} />
-        )
-      )}
+    <div className="h-full pb-24 overflow-y-hidden">
+      <div className="h-full space-y-6">
+        {messages.map((message, index) =>
+          message.role === 'user' ? (
+            <ChatSender key={index} message={message.content} />
+          ) : (
+            <ChatReceiver key={index} message={message.content} />
+          )
+        )}
+      </div>
+
       {isLoading && (
         <div className="flex items-center gap-2 p-4">
           <Spinner className="size-4" />

@@ -4,10 +4,12 @@ import { KeycloakProvider } from '@/features/auth/providers/keycloak-provider';
 import { query_client } from '@/query/query-client';
 import APIKeysPage from '@/routes/api-keys';
 import APIReferencePage from '@/routes/api-reference';
+import EHRSummaryPage from '@/routes/ehr-summary';
 import DashboardPage from '@/routes/home';
 import LoginPage from '@/routes/login';
 import { ProtectedRoute } from '@/routes/protected-route';
 import { PublicRoute } from '@/routes/public-route';
+import RxAdvisorPage from '@/routes/rx-advisor';
 import PlaygroundAISearchPage from './routes/playground-AI-search';
 import PlaygroundChatPage from './routes/playground-chat';
 
@@ -49,25 +51,39 @@ function App() {
                 </ProtectedRoute>
               }
             />
-            <Route path="/play-ground">
-              <Route index element={<Navigate to="chat" replace />} />
-              <Route
-                path="chat"
-                element={
-                  <ProtectedRoute>
-                    <PlaygroundChatPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="ai-search"
-                element={
-                  <ProtectedRoute>
-                    <PlaygroundAISearchPage />
-                  </ProtectedRoute>
-                }
-              />
-            </Route>
+            <Route
+              path="/chat"
+              element={
+                <ProtectedRoute>
+                  <PlaygroundChatPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/ai-search"
+              element={
+                <ProtectedRoute>
+                  <PlaygroundAISearchPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/ehr-summary"
+              element={
+                <ProtectedRoute>
+                  <EHRSummaryPage />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/rx-advisor"
+              element={
+                <ProtectedRoute>
+                  <RxAdvisorPage />
+                </ProtectedRoute>
+              }
+            />
 
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>

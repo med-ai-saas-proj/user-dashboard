@@ -2,9 +2,12 @@
 
 import {
   Book,
+  BotIcon,
+  ClipboardPlusIcon,
   GalleryVerticalEnd,
   KeyRound,
-  MessageCircle,
+  PillIcon,
+  SearchIcon,
 } from 'lucide-react';
 import type * as React from 'react';
 import {
@@ -14,7 +17,7 @@ import {
   SidebarHeader,
   SidebarRail,
 } from '@/components/shadcn/sidebar';
-import { type NavItem, NavProjects } from '@/components/sidebar/nav-projects';
+import { NavProjects } from '@/components/sidebar/nav-projects';
 import { NavUser } from '@/components/sidebar/nav-user';
 import { TeamSwitcher } from '@/components/sidebar/team-switcher';
 
@@ -42,19 +45,27 @@ const data = {
       url: '/api-reference',
       icon: Book,
     },
+  ],
+  playground: [
     {
-      name: 'Play Ground',
-      icon: MessageCircle,
-      items: [
-        {
-          name: 'Chat',
-          url: '/play-ground/chat',
-        },
-        {
-          name: 'AI Search',
-          url: '/play-ground/ai-search',
-        },
-      ],
+      name: 'EHR Summary',
+      url: '/ehr-summary',
+      icon: ClipboardPlusIcon,
+    },
+    {
+      name: 'Rx Advisor',
+      url: '/rx-advisor',
+      icon: PillIcon,
+    },
+    {
+      name: 'Chatbot',
+      url: '/chat',
+      icon: BotIcon,
+    },
+    {
+      name: 'AI Search',
+      url: '/ai-search',
+      icon: SearchIcon,
     },
   ],
 };
@@ -66,7 +77,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <TeamSwitcher teams={data.teams} />
       </SidebarHeader>
       <SidebarContent>
-        <NavProjects projects={data.management as NavItem[]} />
+        <NavProjects projects={data.management} label="Management" />
+        <NavProjects projects={data.playground} label="Playground" />
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={data.user} />

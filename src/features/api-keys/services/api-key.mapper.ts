@@ -1,5 +1,5 @@
-import type { CreateApiKeyResponse } from '@/features/api-keys/api/api-key.dto';
 import type { APIKey } from '@/features/api-keys/api-key.type';
+import type { CreateApiKeyResponse } from '@/features/api-keys/services/api-key.dto';
 
 export const apiKeyMapper = (response: CreateApiKeyResponse): APIKey => {
   return {

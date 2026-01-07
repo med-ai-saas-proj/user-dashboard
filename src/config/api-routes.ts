@@ -20,7 +20,7 @@ export const API_ROUTES = {
   },
 
   MANAGEMENT: {
-    API_KEYS: `/management/api/${API_VERSION}/api_keys`,
+    API_KEYS: `/management/api/${API_VERSION}/api-keys`,
     DOCS_OPENAI: `/management/docs/openai.json`,
   },
 

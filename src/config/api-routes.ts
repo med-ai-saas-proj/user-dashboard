@@ -13,22 +13,46 @@ export const BASE_API_URL = import.meta.env.VITE_BASE_API_URL;
 
 export const API_ROUTES = {
   AUTH: {
-    SIGN_IN: `/api/${API_VERSION}/auth/login`,
-    SIGN_OUT: `/api/${API_VERSION}/auth/logout`,
-    REGISTER: `/api/${API_VERSION}/auth/register`,
-    REFRESH_TOKEN: `/api/${API_VERSION}/auth/refresh`,
+    SIGN_IN: new URL(`/api/${API_VERSION}/auth/login`, BASE_API_URL).toString(),
+    SIGN_OUT: new URL(
+      `/api/${API_VERSION}/auth/logout`,
+      BASE_API_URL
+    ).toString(),
+    REGISTER: new URL(
+      `/api/${API_VERSION}/auth/register`,
+      BASE_API_URL
+    ).toString(),
+    REFRESH_TOKEN: new URL(
+      `/api/${API_VERSION}/auth/refresh`,
+      BASE_API_URL
+    ).toString(),
   },
 
   MANAGEMENT: {
-    API_KEYS: `/management/api/${API_VERSION}/api-keys`,
-    DOCS_OPENAI: `/management/docs/openai.json`,
+    API_KEYS: new URL(
+      `/management/api/${API_VERSION}/api-keys`,
+      BASE_API_URL
+    ).toString(),
+    DOCS_OPENAI: new URL(
+      `/management/docs/openapi.json`,
+      BASE_API_URL
+    ).toString(),
   },
 
   SERVICES: {
-    EHR_SUMMARIZE: `service/api/${API_VERSION}/ehr_summarize`,
-    RX_ADVISOR: `service/api/${API_VERSION}/rx_advisor`,
-    AI_SEARCH: `service/api/${API_VERSION}/ai_search`,
-    CHAT: `service/api/${API_VERSION}/chat`,
+    EHR_SUMMARIZE: new URL(
+      `service/api/${API_VERSION}/ehr_summarize`,
+      BASE_API_URL
+    ).toString(),
+    RX_ADVISOR: new URL(
+      `service/api/${API_VERSION}/rx_advisor`,
+      BASE_API_URL
+    ).toString(),
+    AI_SEARCH: new URL(
+      `service/api/${API_VERSION}/ai_search`,
+      BASE_API_URL
+    ).toString(),
+    CHAT: new URL(`service/api/${API_VERSION}/chat`, BASE_API_URL).toString(),
   },
 } as const;
 
@@ -38,17 +62,11 @@ export const buildUrl = (
   endpoint: string,
   params?: Record<string, string | number | boolean>
 ): string => {
-  if (!params) return endpoint;
-
-  const queryString = new URLSearchParams(
-    Object.entries(params).reduce(
-      (acc, [key, value]) => {
-        acc[key] = String(value);
-        return acc;
-      },
-      {} as Record<string, string>
-    )
-  ).toString();
-
-  return `${endpoint}?${queryString}`;
+  const url = new URL(endpoint);
+  if (params) {
+    Object.entries(params).forEach(([key, value]) => {
+      url.searchParams.append(key, String(value));
+    });
+  }
+  return url.toString();
 };

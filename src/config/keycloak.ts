@@ -18,4 +18,20 @@ const keycloakConfig = {
 
 const keycloak = new Keycloak(keycloakConfig);
 
+// Initialize Keycloak outside React component lifecycle
+// to avoid multiple initializations
+let initPromise: Promise<boolean> | null = null;
+
+export const initKeycloak = () => {
+  if (!initPromise) {
+    initPromise = keycloak.init({
+      onLoad: 'check-sso',
+      silentCheckSsoRedirectUri:
+        window.location.origin + '/silent-check-sso.html',
+      pkceMethod: 'S256',
+    });
+  }
+  return initPromise;
+};
+
 export default keycloak;

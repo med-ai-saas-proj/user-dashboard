@@ -5,7 +5,7 @@ import {
   useEffect,
   useState,
 } from 'react';
-import keycloak from '@/config/keycloak';
+import keycloak, { initKeycloak } from '@/config/keycloak';
 import { useAuthStore } from '@/features/auth/store/auth-store';
 
 interface KeycloakContextType {
@@ -23,14 +23,9 @@ export const KeycloakProvider = ({ children }: { children: ReactNode }) => {
   const [authenticated, setAuthenticated] = useState(false);
   const { setAuth, logout } = useAuthStore();
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: This is intended to run only once on mount
   useEffect(() => {
-    keycloak
-      .init({
-        onLoad: 'check-sso',
-        silentCheckSsoRedirectUri:
-          window.location.origin + '/silent-check-sso.html',
-        pkceMethod: 'S256',
-      })
+    initKeycloak()
       .then((auth) => {
         setAuthenticated(auth);
         setInitialized(true);
@@ -64,7 +59,7 @@ export const KeycloakProvider = ({ children }: { children: ReactNode }) => {
         console.error('Keycloak initialization failed', error);
         setInitialized(true);
       });
-  }, [setAuth, logout]);
+  }, []);
 
   return (
     <KeycloakContext.Provider value={{ keycloak, initialized, authenticated }}>

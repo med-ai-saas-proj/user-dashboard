@@ -33,8 +33,8 @@ export const API_ROUTES = {
       `/management/api/${API_VERSION}/api-keys`,
       BASE_API_URL
     ).toString(),
-    DOCS_OPENAI: new URL(
-      `/management/docs/openapi.json`,
+    DOCS_OPENAPI: new URL(
+      `/service/docs/openapi.json`,
       BASE_API_URL
     ).toString(),
   },

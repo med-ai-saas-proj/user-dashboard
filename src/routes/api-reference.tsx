@@ -9,7 +9,7 @@ export default function APIReferencePage() {
       <div>
         <ApiReferenceReact
           configuration={{
-            url: `${BASE_API_URL}/${API_ROUTES.MANAGEMENT.DOCS_OPENAI}`,
+            url: API_ROUTES.MANAGEMENT.DOCS_OPENAPI,
             theme: 'default',
             darkMode: false,
             hideModels: true,

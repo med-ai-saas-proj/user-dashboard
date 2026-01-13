@@ -1,35 +1,29 @@
+// src/i18n.ts
 import i18n from 'i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
+import HttpBackend from 'i18next-http-backend';
 import { initReactI18next } from 'react-i18next';
-import apiKeysEN from '@/locales/en/api-keys.json';
-import commonEN from '@/locales/en/common.json';
-import sidebarEN from '@/locales/en/sidebar.json';
-import apiKeysVI from '@/locales/vi/api-keys.json';
-import commonVI from '@/locales/vi/common.json';
-import sidebarVI from '@/locales/vi/sidebar.json';
-
-const resources = {
-  en: {
-    common: commonEN,
-    sidebar: sidebarEN,
-    apiKeys: apiKeysEN,
-  },
-  vi: {
-    common: commonVI,
-    sidebar: sidebarVI,
-    apiKeys: apiKeysVI,
-  },
-};
 
 i18n
+  // load translations from http -> /public/locales
+  .use(HttpBackend)
+  // detect user language
   .use(LanguageDetector)
+  // pass the i18n instance to react-i18next.
   .use(initReactI18next)
+  // init i18next
   .init({
-    resources,
+    // fallback language is used when a translation is missing
     fallbackLng: 'en',
-    defaultNS: 'common',
+    // default namespace
+    defaultNS: 'translation',
+    // key separator is "." by default
+    keySeparator: false,
     interpolation: {
       escapeValue: false,
+    },
+    backend: {
+      loadPath: '/locales/{{lng}}/{{ns}}.json',
     },
   });
 

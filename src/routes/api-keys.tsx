@@ -1,5 +1,6 @@
 import { LockIcon, Plus } from 'lucide-react';
 import { Activity, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/shadcn/button';
 import APIKeyDialog from '@/features/api-keys/components/api-key-dialog';
 import APIKeyTable from '@/features/api-keys/components/api-key-table';
@@ -7,6 +8,7 @@ import { useAPIKeyStore } from '@/features/api-keys/store/api-key.store';
 import DashboardLayout from '@/layouts/dashboard-layout';
 
 export default function APIKeysPage() {
+  const { t } = useTranslation('apiKeys');
   const [openApiKeyDialog, setOpenApiKeyDialog] = useState(false);
   const apiKeys = useAPIKeyStore((state) => state.apiKeys);
   const hasKeys = apiKeys.length > 0;
@@ -16,7 +18,7 @@ export default function APIKeysPage() {
       pageTitle="API Keys"
       headerRight={
         <Button onClick={() => setOpenApiKeyDialog(true)}>
-          <Plus /> Create new secret key
+          <Plus /> {t('create')}
         </Button>
       }
     >

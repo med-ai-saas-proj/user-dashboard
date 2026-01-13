@@ -1,3 +1,5 @@
+import './config/i18n';
+
 import { QueryClientProvider } from '@tanstack/react-query';
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { KeycloakProvider } from '@/features/auth/providers/keycloak-provider';

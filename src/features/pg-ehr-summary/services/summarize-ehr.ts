@@ -3,46 +3,11 @@ import type {
   EHRSummaryRequest,
   EHRSummaryResponse,
 } from '@/features/pg-ehr-summary/services/ehr-summary.dto';
+import type {
+  ChatRequest,
+  ChatResponse,
+} from '@/features/playground-chat/services/chat.dto';
 import apiClient from '@/query/api-client';
-
-export type ChatMessage = {
-  role: 'user' | 'assistant';
-  content: string;
-};
-
-export type ChatRequest = {
-  conversation_id?: string | null;
-  model: string;
-  stream?: boolean;
-  input_ehr: EHRSummaryRequest['ehr'];
-};
-
-export type ModelResponseContent = {
-  type: 'text' | 'thinking';
-  content: string;
-  citations?: Array<{
-    reference_type: string;
-    reference_url: string;
-    reference_text: string;
-  }>;
-};
-
-export type ChatResponse = {
-  id: string;
-  conversation_id: string;
-  status: 'completed' | 'failed' | 'processing';
-  error?: {
-    code: string;
-    message: string;
-    reason?: string;
-  };
-  output: ModelResponseContent[];
-  usage: {
-    input_tokens: number;
-    output_tokens: number;
-    total_tokens: number;
-  };
-};
 
 export const summarizeEHR = async (
   request: EHRSummaryRequest
@@ -57,5 +22,5 @@ export const summarizeEHR = async (
     API_ROUTES.SERVICES.EHR_SUMMARIZE,
     req
   );
-  return { summary: data.output.at(-1)?.content ?? 'Error, pls try again' };
+  return { summary: data.output.at(-1)?.content ?? 'Error, please try again' };
 };

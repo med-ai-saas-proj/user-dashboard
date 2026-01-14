@@ -9,34 +9,37 @@ if (!import.meta.env.VITE_BASE_API_URL) {
   throw new Error('VITE_BASE_API_URL is not defined in environment variables');
 }
 
-export const BASE_API_URL = import.meta.env.VITE_BASE_API_URL;
+export let BASE_API_URL = import.meta.env.VITE_BASE_API_URL;
+
+// Ensure BASE_API_URL ends with a slash, since URL constructor requires it for relative paths
+// See: https://developer.mozilla.org/en-US/docs/Web/API/URL_API/Resolving_relative_references
+if (!BASE_API_URL.endsWith('/')) {
+  BASE_API_URL += '/';
+}
 
 export const API_ROUTES = {
   AUTH: {
-    SIGN_IN: new URL(`/api/${API_VERSION}/auth/login`, BASE_API_URL).toString(),
+    SIGN_IN: new URL(`api/${API_VERSION}/auth/login`, BASE_API_URL).toString(),
     SIGN_OUT: new URL(
-      `/api/${API_VERSION}/auth/logout`,
+      `api/${API_VERSION}/auth/logout`,
       BASE_API_URL
     ).toString(),
     REGISTER: new URL(
-      `/api/${API_VERSION}/auth/register`,
+      `api/${API_VERSION}/auth/register`,
       BASE_API_URL
     ).toString(),
     REFRESH_TOKEN: new URL(
-      `/api/${API_VERSION}/auth/refresh`,
+      `api/${API_VERSION}/auth/refresh`,
       BASE_API_URL
     ).toString(),
   },
 
   MANAGEMENT: {
     API_KEYS: new URL(
-      `/management/api/${API_VERSION}/api-keys`,
+      `management/api/${API_VERSION}/api-keys`,
       BASE_API_URL
     ).toString(),
-    DOCS_OPENAPI: new URL(
-      `/service/docs/openapi.json`,
-      BASE_API_URL
-    ).toString(),
+    DOCS_OPENAPI: new URL(`service/docs/openapi.json`, BASE_API_URL).toString(),
   },
 
   SERVICES: {

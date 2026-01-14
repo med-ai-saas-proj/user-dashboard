@@ -18,6 +18,7 @@ import {
   SidebarHeader,
   SidebarRail,
 } from '@/components/shadcn/sidebar';
+import { LocaleSwitcher } from '@/components/sidebar/locale-switcher';
 import { NavProjects } from '@/components/sidebar/nav-projects';
 import { NavUser } from '@/components/sidebar/nav-user';
 import { TeamSwitcher } from '@/components/sidebar/team-switcher';
@@ -83,7 +84,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <NavProjects projects={data.management} label={t('management.title')} />
         <NavProjects projects={data.playground} label={t('playground.title')} />
       </SidebarContent>
+
       <SidebarFooter>
+        <LocaleSwitcher className="mx-auto" />
         <NavUser user={data.user} />
       </SidebarFooter>
       <SidebarRail />

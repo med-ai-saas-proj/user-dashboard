@@ -1,5 +1,6 @@
 import { ChevronUp, Plus } from 'lucide-react';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   InputGroup,
   InputGroupAddon,
@@ -13,6 +14,8 @@ type ChatInputProps = {
 };
 
 const ChatInput = ({ onSendMessage, isLoading = false }: ChatInputProps) => {
+  const { t } = useTranslation('chatbot');
+
   const [message, setMessage] = useState('');
 
   const handleSend = () => {
@@ -34,7 +37,7 @@ const ChatInput = ({ onSendMessage, isLoading = false }: ChatInputProps) => {
       <div className="w-full flex items-center">
         <InputGroup className="w-full mx-auto">
           <InputGroupTextarea
-            placeholder="Type your message..."
+            placeholder={t('input.placeholder')}
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             onKeyDown={handleKeyDown}

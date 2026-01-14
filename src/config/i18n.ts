@@ -1,4 +1,3 @@
-// src/i18n.ts
 import i18n from 'i18next';
 import LanguageDetector from 'i18next-browser-languagedetector';
 import HttpBackend from 'i18next-http-backend';
@@ -15,13 +14,6 @@ i18n
   .init({
     // fallback language is used when a translation is missing
     fallbackLng: 'en',
-    // default namespace
-    defaultNS: 'translation',
-    // key separator is "." by default
-    keySeparator: false,
-    interpolation: {
-      escapeValue: false,
-    },
     backend: {
       loadPath: '/locales/{{lng}}/{{ns}}.json',
     },

@@ -1,0 +1,18 @@
+{
+  "title": "Thuốc",
+  "legend": "Chi tiết thuốc",
+  "entryTitle": "Thuốc {{index}}",
+  "hasError": "(Lỗi)",
+  "fields": {
+    "name": "Tên thuốc",
+    "strength": "Hàm lượng",
+    "dose": "Liều dùng",
+    "route": "Đường dùng",
+    "quantity": "Số lượng",
+    "prescriberId": "ID người kê đơn"
+  },
+  "action": {
+    "addEntry": "Thêm thuốc",
+    "removeEntry": "Xóa thuốc"
+  }
+}

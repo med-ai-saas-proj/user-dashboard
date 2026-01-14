@@ -1,4 +1,5 @@
 import { CheckCircle2Icon, ClipboardIcon } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import Markdown from 'react-markdown';
 import { Button } from '@/components/shadcn/button';
 import {
@@ -27,6 +28,7 @@ export function SummaryResponseDialog({
   error,
 }: SummaryResponseDialogProps) {
   const { copy, isCopied } = useCopyToClipboard();
+  const { t } = useTranslation('summary-response');
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -34,10 +36,8 @@ export function SummaryResponseDialog({
         <DialogHeader>
           <div className="flex items-center justify-between gap-4">
             <div>
-              <DialogTitle>Tóm tắt hồ sơ bệnh án</DialogTitle>
-              <DialogDescription>
-                Kết quả tóm tắt tự động từ AI
-              </DialogDescription>
+              <DialogTitle>{t('dialogTitle')}</DialogTitle>
+              <DialogDescription>{t('dialogDescription')}</DialogDescription>
             </div>
             {summary && !isLoading && !error && (
               <Button
@@ -50,12 +50,12 @@ export function SummaryResponseDialog({
                 {isCopied ? (
                   <>
                     <CheckCircle2Icon className="size-4" />
-                    Đã sao chép
+                    {t('actions.copied')}
                   </>
                 ) : (
                   <>
                     <ClipboardIcon className="size-4" />
-                    Sao chép
+                    {t('actions.copy')}
                   </>
                 )}
               </Button>
@@ -69,7 +69,7 @@ export function SummaryResponseDialog({
               <div className="flex flex-col items-center gap-3">
                 <Spinner className="size-8" />
                 <p className="text-muted-foreground text-sm">
-                  Đang tóm tắt hồ sơ...
+                  {t('summarizing')}
                 </p>
               </div>
             </div>
@@ -78,7 +78,7 @@ export function SummaryResponseDialog({
           {error && (
             <div className="p-4 border border-destructive rounded-lg bg-destructive/10">
               <p className="text-destructive text-sm font-medium">
-                Lỗi: {error.message}
+                {t('errors.summaryFailed', { message: error.message })}
               </p>
             </div>
           )}

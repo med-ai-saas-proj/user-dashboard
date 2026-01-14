@@ -1,4 +1,5 @@
 import type { FieldErrors, UseFormRegister } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import {
   Field,
   FieldContent,
@@ -22,13 +23,15 @@ export function PatientInfoSection({
   register,
   errors,
 }: PatientInfoSectionProps) {
+  const { t } = useTranslation('patient-info');
+
   return (
     <FieldSet>
-      <FieldLegend>Thông tin bệnh nhân</FieldLegend>
+      <FieldLegend>{t('legend')}</FieldLegend>
       <FieldGroup>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <Field>
-            <FieldLabel htmlFor="ma_lk">Mã liên kết</FieldLabel>
+            <FieldLabel htmlFor="ma_lk">{t('fields.ma_lk')}</FieldLabel>
             <FieldContent>
               <Input
                 id="ma_lk"
@@ -40,7 +43,7 @@ export function PatientInfoSection({
           </Field>
 
           <Field>
-            <FieldLabel htmlFor="ma_bn">Mã bệnh nhân</FieldLabel>
+            <FieldLabel htmlFor="ma_bn">{t('fields.ma_bn')}</FieldLabel>
             <FieldContent>
               <Input
                 id="ma_bn"
@@ -52,7 +55,7 @@ export function PatientInfoSection({
           </Field>
 
           <Field>
-            <FieldLabel htmlFor="ho_ten">Họ tên</FieldLabel>
+            <FieldLabel htmlFor="ho_ten">{t('fields.ho_ten')}</FieldLabel>
             <FieldContent>
               <Input
                 id="ho_ten"
@@ -64,7 +67,7 @@ export function PatientInfoSection({
           </Field>
 
           <Field>
-            <FieldLabel htmlFor="ngay_sinh">Ngày sinh</FieldLabel>
+            <FieldLabel htmlFor="ngay_sinh">{t('fields.ngay_sinh')}</FieldLabel>
             <FieldContent>
               <Input
                 id="ngay_sinh"
@@ -77,7 +80,7 @@ export function PatientInfoSection({
           </Field>
 
           <Field>
-            <FieldLabel htmlFor="gioi_tinh">Giới tính</FieldLabel>
+            <FieldLabel htmlFor="gioi_tinh">{t('fields.gioi_tinh')}</FieldLabel>
             <FieldContent>
               <Input
                 id="gioi_tinh"
@@ -85,13 +88,17 @@ export function PatientInfoSection({
                 aria-invalid={!!errors.tong_hop?.gioi_tinh}
                 {...register('tong_hop.gioi_tinh', { valueAsNumber: true })}
               />
-              <FieldDescription>1: Nam, 2: Nữ</FieldDescription>
+              <FieldDescription>
+                {t('fields.genderDescription')}
+              </FieldDescription>
               <FieldError errors={[errors.tong_hop?.gioi_tinh]} />
             </FieldContent>
           </Field>
 
           <Field>
-            <FieldLabel htmlFor="ma_quoctich">Mã quốc tịch</FieldLabel>
+            <FieldLabel htmlFor="ma_quoctich">
+              {t('fields.ma_quoctich')}
+            </FieldLabel>
             <FieldContent>
               <Input
                 id="ma_quoctich"
@@ -103,7 +110,9 @@ export function PatientInfoSection({
           </Field>
 
           <Field>
-            <FieldLabel htmlFor="ma_nghe_nghiep">Mã nghề nghiệp</FieldLabel>
+            <FieldLabel htmlFor="ma_nghe_nghiep">
+              {t('fields.ma_nghe_nghiep')}
+            </FieldLabel>
             <FieldContent>
               <Input
                 id="ma_nghe_nghiep"
@@ -115,7 +124,9 @@ export function PatientInfoSection({
           </Field>
 
           <Field>
-            <FieldLabel htmlFor="dien_thoai">Điện thoại</FieldLabel>
+            <FieldLabel htmlFor="dien_thoai">
+              {t('fields.dien_thoai')}
+            </FieldLabel>
             <FieldContent>
               <Input
                 id="dien_thoai"
@@ -128,7 +139,7 @@ export function PatientInfoSection({
           </Field>
 
           <Field className="md:col-span-2">
-            <FieldLabel htmlFor="dia_chi">Địa chỉ</FieldLabel>
+            <FieldLabel htmlFor="dia_chi">{t('fields.dia_chi')}</FieldLabel>
             <FieldContent>
               <Textarea
                 id="dia_chi"
@@ -140,7 +151,7 @@ export function PatientInfoSection({
           </Field>
 
           <Field>
-            <FieldLabel htmlFor="ngay_vao">Ngày vào</FieldLabel>
+            <FieldLabel htmlFor="ngay_vao">{t('fields.ngay_vao')}</FieldLabel>
             <FieldContent>
               <Input
                 id="ngay_vao"
@@ -153,7 +164,7 @@ export function PatientInfoSection({
           </Field>
 
           <Field>
-            <FieldLabel htmlFor="can_nang">Cân nặng (kg)</FieldLabel>
+            <FieldLabel htmlFor="can_nang">{t('fields.can_nang')}</FieldLabel>
             <FieldContent>
               <Input
                 id="can_nang"
@@ -165,7 +176,9 @@ export function PatientInfoSection({
           </Field>
 
           <Field className="md:col-span-2">
-            <FieldLabel htmlFor="chan_doan_rv">Chẩn đoán</FieldLabel>
+            <FieldLabel htmlFor="chan_doan_rv">
+              {t('fields.chan_doan_rv')}
+            </FieldLabel>
             <FieldContent>
               <Textarea
                 id="chan_doan_rv"
@@ -177,7 +190,9 @@ export function PatientInfoSection({
           </Field>
 
           <Field>
-            <FieldLabel htmlFor="ma_benh_chinh">Mã bệnh chính</FieldLabel>
+            <FieldLabel htmlFor="ma_benh_chinh">
+              {t('fields.ma_benh_chinh')}
+            </FieldLabel>
             <FieldContent>
               <Input
                 id="ma_benh_chinh"
@@ -189,7 +204,9 @@ export function PatientInfoSection({
           </Field>
 
           <Field>
-            <FieldLabel htmlFor="ket_qua_dtri">Kết quả điều trị</FieldLabel>
+            <FieldLabel htmlFor="ket_qua_dtri">
+              {t('fields.ket_qua_dtri')}
+            </FieldLabel>
             <FieldContent>
               <Input
                 id="ket_qua_dtri"
@@ -204,7 +221,9 @@ export function PatientInfoSection({
           </Field>
 
           <Field>
-            <FieldLabel htmlFor="ma_loai_kcb">Mã loại KCB</FieldLabel>
+            <FieldLabel htmlFor="ma_loai_kcb">
+              {t('fields.ma_loai_kcb')}
+            </FieldLabel>
             <FieldContent>
               <Input
                 id="ma_loai_kcb"
@@ -219,7 +238,7 @@ export function PatientInfoSection({
           </Field>
 
           <Field>
-            <FieldLabel htmlFor="ma_cskcb">Mã cơ sở KCB</FieldLabel>
+            <FieldLabel htmlFor="ma_cskcb">{t('fields.ma_cskcb')}</FieldLabel>
             <FieldContent>
               <Input
                 id="ma_cskcb"

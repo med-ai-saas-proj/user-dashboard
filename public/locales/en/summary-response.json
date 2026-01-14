@@ -1,0 +1,13 @@
+{
+  "title": "Summary",
+  "dialogTitle": "Patient Summary",
+  "dialogDescription": "Automatically generated summary from AI",
+  "actions": {
+    "copy": "Copy",
+    "copied": "Copied"
+  },
+  "summarizing": "Summarizing record...",
+  "errors": {
+    "summaryFailed": "Error: {{message}}"
+  }
+}

@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Spinner } from '@/components/shadcn/spinner';
 import type { ChatMessage } from '../services/chat.dto';
 import ChatReceiver from './ChatReceiver';
@@ -10,6 +11,7 @@ type ChatContentProps = {
 };
 
 const ChatContent = ({ messages, isLoading = false }: ChatContentProps) => {
+  const { t } = useTranslation('chatbot');
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -24,8 +26,8 @@ const ChatContent = ({ messages, isLoading = false }: ChatContentProps) => {
     return (
       <div className="h-full flex items-center justify-center pb-24">
         <div className="text-center text-muted-foreground">
-          <p className="text-lg">Start a conversation</p>
-          <p className="text-sm mt-2">Type a message below to begin</p>
+          <p className="text-lg">{t('emptyState.title')}</p>
+          <p className="text-sm mt-2">{t('emptyState.subtitle')}</p>
         </div>
       </div>
     );
@@ -46,7 +48,9 @@ const ChatContent = ({ messages, isLoading = false }: ChatContentProps) => {
       {isLoading && (
         <div className="flex items-center gap-2 p-4">
           <Spinner className="size-4" />
-          <span className="text-sm text-muted-foreground">Thinking...</span>
+          <span className="text-sm text-muted-foreground">
+            {t('messages.thinking')}
+          </span>
         </div>
       )}
       <div ref={messagesEndRef} />

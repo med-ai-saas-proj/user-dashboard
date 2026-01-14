@@ -1,0 +1,23 @@
+{
+  "title": "Thông Tin Bệnh Nhân",
+  "legend": "Thông Tin Bệnh Nhân",
+  "fields": {
+    "ma_lk": "Mã Liên Kết",
+    "ma_bn": "Mã Bệnh Nhân",
+    "ho_ten": "Họ và Tên",
+    "ngay_sinh": "Ngày Sinh",
+    "gioi_tinh": "Giới Tính",
+    "genderDescription": "1: Nam, 2: Nữ",
+    "ma_quoctich": "Mã Quốc Tịch",
+    "ma_nghe_nghiep": "Mã Nghề Nghiệp",
+    "dien_thoai": "Điện Thoại",
+    "dia_chi": "Địa Chỉ",
+    "ngay_vao": "Thời Gian Nhập Viện",
+    "can_nang": "Cân Nặng (kg)",
+    "chan_doan_rv": "Chẩn Đoán",
+    "ma_benh_chinh": "Mã Bệnh Chính",
+    "ket_qua_dtri": "Kết Quả Điều Trị",
+    "ma_loai_kcb": "Mã Loại Khám Chữa Bệnh",
+    "ma_cskcb": "Mã Cơ Sở Khám Chữa Bệnh"
+  }
+}

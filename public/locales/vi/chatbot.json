@@ -1,0 +1,31 @@
+{
+  "title": "Trò chuyện",
+  "emptyState": {
+    "title": "Bắt đầu cuộc trò chuyện",
+    "subtitle": "Nhập tin nhắn bên dưới để bắt đầu"
+  },
+  "input": {
+    "placeholder": "Nhập tin nhắn...",
+    "send": "Gửi",
+    "sending": "Đang gửi..."
+  },
+  "actions": {
+    "stop": "Dừng",
+    "regenerate": "Tạo lại",
+    "copy": "Sao chép",
+    "copied": "Đã sao chép"
+  },
+  "messages": {
+    "userLabel": "Bạn",
+    "assistantLabel": "Trợ lý",
+    "thinking": "Đang suy nghĩ..."
+  },
+  "markdown": {
+    "copyCode": "Sao chép mã",
+    "copiedCode": "Đã sao chép mã",
+    "openInNewTab": "Mở trong tab mới"
+  },
+  "errors": {
+    "sendFailed": "Gửi tin nhắn thất bại: {{message}}"
+  }
+}

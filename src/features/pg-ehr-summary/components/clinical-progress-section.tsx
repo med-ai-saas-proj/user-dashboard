@@ -6,6 +6,7 @@ import type {
   UseFieldArrayReturn,
   UseFormRegister,
 } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import {
   Accordion,
   AccordionContent,
@@ -41,6 +42,8 @@ export function ClinicalProgressSection({
   append,
   remove,
 }: ClinicalProgressSectionProps) {
+  const { t } = useTranslation('clinical-progress');
+
   const handleAddProgress = () => {
     append({
       ma_lk: '',
@@ -54,7 +57,7 @@ export function ClinicalProgressSection({
   return (
     <FieldSet>
       <div className="flex items-center justify-between mb-3">
-        <FieldLegend>Diễn biến lâm sàng</FieldLegend>
+        <FieldLegend>{t('legend')}</FieldLegend>
         <Button
           type="button"
           size="sm"
@@ -62,7 +65,7 @@ export function ClinicalProgressSection({
           className="gap-2"
         >
           <PlusIcon className="size-4" />
-          Thêm diễn biến
+          {t('action.addEntry')}
         </Button>
       </div>
       <FieldGroup>
@@ -71,9 +74,11 @@ export function ClinicalProgressSection({
             <AccordionItem key={field.id} value={`progress-${index}`}>
               <AccordionTrigger>
                 <div className="flex items-center gap-2">
-                  <span>Diễn biến {index + 1}</span>
+                  <span>{t('entryTitle', { index: index + 1 })}</span>
                   {errors.dien_bien_lam_sang?.[index] && (
-                    <span className="text-destructive text-xs">(Có lỗi)</span>
+                    <span className="text-destructive text-xs">
+                      {t('hasError')}
+                    </span>
                   )}
                 </div>
               </AccordionTrigger>
@@ -83,7 +88,7 @@ export function ClinicalProgressSection({
                     <FieldLabel
                       htmlFor={`dien_bien_lam_sang.${index}.dien_bien_ls`}
                     >
-                      Diễn biến lâm sàng
+                      {t('fields.clinicalProgress')}
                     </FieldLabel>
                     <FieldContent>
                       <Textarea
@@ -108,7 +113,7 @@ export function ClinicalProgressSection({
                       <FieldLabel
                         htmlFor={`dien_bien_lam_sang.${index}.thoi_diem_dbls`}
                       >
-                        Thời điểm
+                        {t('fields.time')}
                       </FieldLabel>
                       <FieldContent>
                         <Input
@@ -133,7 +138,7 @@ export function ClinicalProgressSection({
                       <FieldLabel
                         htmlFor={`dien_bien_lam_sang.${index}.nguoi_thuc_hien`}
                       >
-                        Người thực hiện
+                        {t('fields.performedBy')}
                       </FieldLabel>
                       <FieldContent>
                         <Input
@@ -164,7 +169,7 @@ export function ClinicalProgressSection({
                       className="gap-2"
                     >
                       <Trash2Icon className="size-4" />
-                      Xóa diễn biến
+                      {t('action.removeEntry')}
                     </Button>
                   </div>
                 </div>

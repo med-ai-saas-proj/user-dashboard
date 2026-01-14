@@ -1,0 +1,13 @@
+{
+  "title": "Tóm tắt",
+  "dialogTitle": "Tóm tắt bệnh nhân",
+  "dialogDescription": "Tóm tắt được tạo tự động từ AI",
+  "actions": {
+    "copy": "Sao chép",
+    "copied": "Đã sao chép"
+  },
+  "summarizing": "Đang tóm tắt hồ sơ...",
+  "errors": {
+    "summaryFailed": "Lỗi: {{message}}"
+  }
+}

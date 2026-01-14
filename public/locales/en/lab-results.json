@@ -1,0 +1,15 @@
+{
+  "title": "Lab Results",
+  "legend": "Lab Details",
+  "entryTitle": "Test {{index}}",
+  "hasError": "(Error)",
+  "fields": {
+    "testName": "Test name",
+    "value": "Value",
+    "unit": "Unit"
+  },
+  "action": {
+    "addEntry": "Add test",
+    "removeEntry": "Remove test"
+  }
+}

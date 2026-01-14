@@ -1,3 +1,11 @@
 {
-  "close": "Đóng"
+  "aiResponse": {
+    "error": "Xin lỗi, tôi đã gặp lỗi. Vui lòng thử lại."
+  },
+  "action": {
+    "close": "Đóng",
+    "cancel": "Hủy",
+    "done": "Hoàn tất",
+    "save": "Lưu"
+  }
 }

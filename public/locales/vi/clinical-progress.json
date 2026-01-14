@@ -1,0 +1,15 @@
+{
+  "title": "Tiến Trình Lâm Sàng",
+  "legend": "Tiến Trình Lâm Sàng",
+  "entryTitle": "Tiến Trình {{index}}",
+  "hasError": "(Lỗi)",
+  "fields": {
+    "clinicalProgress": "Tiến trình lâm sàng",
+    "time": "Thời gian",
+    "performedBy": "Thực hiện bởi"
+  },
+  "action": {
+    "addEntry": "Thêm tiến trình",
+    "removeEntry": "Xóa tiến trình"
+  }
+}

@@ -6,6 +6,7 @@ import type {
   UseFieldArrayReturn,
   UseFormRegister,
 } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import {
   Accordion,
   AccordionContent,
@@ -40,6 +41,8 @@ export function MedicationSection({
   append,
   remove,
 }: MedicationSectionProps) {
+  const { t } = useTranslation('medication');
+
   const handleAddMedication = () => {
     append({
       ma_lk: '',
@@ -57,7 +60,7 @@ export function MedicationSection({
   return (
     <FieldSet>
       <div className="flex items-center justify-between mb-3">
-        <FieldLegend>Chi tiết thuốc</FieldLegend>
+        <FieldLegend>{t('legend')}</FieldLegend>
         <Button
           type="button"
           size="sm"
@@ -65,7 +68,7 @@ export function MedicationSection({
           className="gap-2"
         >
           <PlusIcon className="size-4" />
-          Thêm thuốc
+          {t('action.addEntry')}
         </Button>
       </div>
       <FieldGroup>
@@ -74,9 +77,11 @@ export function MedicationSection({
             <AccordionItem key={field.id} value={`medication-${index}`}>
               <AccordionTrigger>
                 <div className="flex items-center gap-2">
-                  <span>Thuốc {index + 1}</span>
+                  <span>{t('entryTitle', { index: index + 1 })}</span>
                   {errors.chi_tiet_thuoc?.[index] && (
-                    <span className="text-destructive text-xs">(Có lỗi)</span>
+                    <span className="text-destructive text-xs">
+                      {t('hasError')}
+                    </span>
                   )}
                 </div>
               </AccordionTrigger>
@@ -85,7 +90,7 @@ export function MedicationSection({
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <Field>
                       <FieldLabel htmlFor={`chi_tiet_thuoc.${index}.ten_thuoc`}>
-                        Tên thuốc
+                        {t('fields.name')}
                       </FieldLabel>
                       <FieldContent>
                         <Input
@@ -103,7 +108,7 @@ export function MedicationSection({
 
                     <Field>
                       <FieldLabel htmlFor={`chi_tiet_thuoc.${index}.ham_luong`}>
-                        Hàm lượng
+                        {t('fields.strength')}
                       </FieldLabel>
                       <FieldContent>
                         <Input
@@ -121,7 +126,7 @@ export function MedicationSection({
 
                     <Field>
                       <FieldLabel htmlFor={`chi_tiet_thuoc.${index}.lieu_dung`}>
-                        Liều dùng
+                        {t('fields.dose')}
                       </FieldLabel>
                       <FieldContent>
                         <Input
@@ -139,7 +144,7 @@ export function MedicationSection({
 
                     <Field>
                       <FieldLabel htmlFor={`chi_tiet_thuoc.${index}.cach_dung`}>
-                        Cách dùng
+                        {t('fields.route')}
                       </FieldLabel>
                       <FieldContent>
                         <Input
@@ -157,7 +162,7 @@ export function MedicationSection({
 
                     <Field>
                       <FieldLabel htmlFor={`chi_tiet_thuoc.${index}.so_luong`}>
-                        Số lượng
+                        {t('fields.quantity')}
                       </FieldLabel>
                       <FieldContent>
                         <Input
@@ -175,7 +180,7 @@ export function MedicationSection({
 
                     <Field>
                       <FieldLabel htmlFor={`chi_tiet_thuoc.${index}.ma_bac_si`}>
-                        Mã bác sĩ
+                        {t('fields.prescriberId')}
                       </FieldLabel>
                       <FieldContent>
                         <Input
@@ -201,7 +206,7 @@ export function MedicationSection({
                       className="gap-2"
                     >
                       <Trash2Icon className="size-4" />
-                      Xóa thuốc
+                      {t('action.removeEntry')}
                     </Button>
                   </div>
                 </div>

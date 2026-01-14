@@ -1,0 +1,23 @@
+{
+  "title": "Patient Information",
+  "legend": "Patient Information",
+  "fields": {
+    "ma_lk": "Link ID",
+    "ma_bn": "Patient ID",
+    "ho_ten": "Full name",
+    "ngay_sinh": "Date of birth",
+    "gioi_tinh": "Sex",
+    "genderDescription": "1: Male, 2: Female",
+    "ma_quoctich": "Nationality code",
+    "ma_nghe_nghiep": "Occupation code",
+    "dien_thoai": "Phone",
+    "dia_chi": "Address",
+    "ngay_vao": "Admission time",
+    "can_nang": "Weight (kg)",
+    "chan_doan_rv": "Diagnosis",
+    "ma_benh_chinh": "Primary diagnosis code",
+    "ket_qua_dtri": "Treatment outcome",
+    "ma_loai_kcb": "Type of care code",
+    "ma_cskcb": "Facility code"
+  }
+}

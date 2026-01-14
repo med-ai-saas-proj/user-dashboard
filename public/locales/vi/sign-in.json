@@ -1,9 +1,9 @@
 {
   "greetings": {
-    "welcome": "Welcome",
-    "hero": "Sign in to access your dashboard"
+    "welcome": "Chào mừng",
+    "hero": "Đăng nhập để truy cập Dashboard của bạn"
   },
   "action": {
-    "signIn": "Sign In"
+    "signIn": "Đăng nhập"
   }
 }

@@ -1,0 +1,15 @@
+{
+  "title": "Clinical Progress",
+  "legend": "Clinical Progress",
+  "entryTitle": "Progress {{index}}",
+  "hasError": "(Error)",
+  "fields": {
+    "clinicalProgress": "Clinical progress",
+    "time": "Time",
+    "performedBy": "Performed by"
+  },
+  "action": {
+    "addEntry": "Add progress",
+    "removeEntry": "Remove progress"
+  }
+}

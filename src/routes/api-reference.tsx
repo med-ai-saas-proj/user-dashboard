@@ -1,7 +1,7 @@
 import { ApiReferenceReact } from '@scalar/api-reference-react';
+import { API_ROUTES } from '@/config/api-routes';
 import DashboardLayout from '@/layouts/dashboard-layout';
 import '@scalar/api-reference-react/style.css';
-import { API_ROUTES, BASE_API_URL } from '@/config/api-routes';
 
 export default function APIReferencePage() {
   return (

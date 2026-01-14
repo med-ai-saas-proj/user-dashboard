@@ -1,6 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import { z } from 'zod';
 import { Button } from '@/components/shadcn/button';
 import {
@@ -33,6 +34,9 @@ const APIKeyDialog = ({
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }) => {
+  const { t: tApiKeys } = useTranslation('api-keys');
+  const { t: tCommon } = useTranslation('common');
+
   const addAPIKey = useAPIKeyStore((state) => state.addAPIKey);
   const setSelectedApiKey = useServiceApiKeyStore(
     (state) => state.setSelectedApiKey
@@ -79,20 +83,18 @@ const APIKeyDialog = ({
       <Dialog open={open} onOpenChange={onOpenChange}>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle>Create new secret key</DialogTitle>
+            <DialogTitle>{tApiKeys('dialog.title')}</DialogTitle>
             <DialogDescription>
-              This API key is tied to your user and can make requests against
-              the selected project. If you are removed from the organiation or
-              project, this key will be disabled.
+              {tApiKeys('dialog.description')}
             </DialogDescription>
           </DialogHeader>
           <form onSubmit={handleSubmit(onSubmit)}>
             <div className="grid gap-4">
               <div className="grid gap-3">
-                <Label>Name</Label>
+                <Label>{tApiKeys('dialog.form.nameLabel')}</Label>
                 <Input
                   id="name"
-                  placeholder="My API Key"
+                  placeholder={tApiKeys('dialog.form.namePlaceholder')}
                   aria-invalid={!!errors.name}
                   {...register('name')}
                 />
@@ -107,12 +109,12 @@ const APIKeyDialog = ({
             </div>
             <DialogFooter>
               <DialogClose asChild>
-                <Button variant="outline">Cancel</Button>
+                <Button variant="outline">{tCommon('action.cancel')}</Button>
               </DialogClose>
               <Button type="submit" disabled={createApiKeyMutation.isPending}>
                 {createApiKeyMutation.isPending
-                  ? 'Creating...'
-                  : 'Create secret key'}
+                  ? tApiKeys('dialog.form.action.creating')
+                  : tApiKeys('dialog.form.action.create')}
               </Button>
             </DialogFooter>
           </form>

@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import ChatContent from '@/features/playground-chat/components/ChatContent';
 import ChatInput from '@/features/playground-chat/components/ChatInput';
 import { useSendChatMessage } from '@/features/playground-chat/hooks/use-send-chat-message';
@@ -5,6 +6,8 @@ import { useChatStore } from '@/features/playground-chat/store/chat.store';
 import DashboardLayout from '@/layouts/dashboard-layout';
 
 export default function PlaygroundChatPage() {
+  const { t } = useTranslation('common');
+
   const { conversationId, model, messages, setConversationId, addMessage } =
     useChatStore();
   const chatMutation = useSendChatMessage();
@@ -37,7 +40,7 @@ export default function PlaygroundChatPage() {
       // Add error message
       addMessage({
         role: 'assistant',
-        content: 'Sorry, I encountered an error. Please try again.',
+        content: t('aiResponse.error'),
       });
     }
   };

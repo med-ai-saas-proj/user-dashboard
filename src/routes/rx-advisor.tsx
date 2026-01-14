@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ApiKeyRequiredDialog } from '@/features/api-keys/components/api-key-required-dialog';
 import { useServiceApiKeyStore } from '@/features/api-keys/store/service-api-key.store';
 import EHRForm from '@/features/pg-ehr-summary/components/ehr-form';
@@ -9,6 +10,8 @@ import { ehrFormToRxAdvisorRequest } from '@/features/rx-advisor/utils/rx-adviso
 import DashboardLayout from '@/layouts/dashboard-layout';
 
 const RxAdvisorPage = () => {
+  const { t } = useTranslation('playground-rx-advisor');
+
   const [analysis, setAnalysis] = useState<{
     analysis: string;
     reasoning: string | null;
@@ -39,12 +42,12 @@ const RxAdvisorPage = () => {
   };
 
   return (
-    <DashboardLayout pageTitle="Tư vấn đơn thuốc">
+    <DashboardLayout pageTitle={t('pageTitle')}>
       <div className="px-6 space-y-8">
         <EHRForm
           onSubmit={handleSubmit}
           isSubmitting={rxAdvisorMutation.isPending}
-          submitButtonText="Phân tích đơn thuốc"
+          submitButtonText={t('action.submit')}
         />
       </div>
 

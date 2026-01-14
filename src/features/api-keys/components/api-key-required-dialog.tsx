@@ -1,4 +1,5 @@
 import { KeyIcon } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/shadcn/button';
 import {
@@ -19,13 +20,16 @@ export function ApiKeyRequiredDialog({
   open,
   onOpenChange,
 }: ApiKeyRequiredDialogProps) {
+  const { t: tCommon } = useTranslation('common');
+  const { t: tApiKeys } = useTranslation('api-keys');
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
-          <DialogTitle>API Key Required</DialogTitle>
+          <DialogTitle>{tApiKeys('requiredDialog.title')}</DialogTitle>
           <DialogDescription>
-            You need an API key to use this feature.
+            {tApiKeys('requiredDialog.description')}
           </DialogDescription>
         </DialogHeader>
         <div className="py-8">
@@ -34,19 +38,21 @@ export function ApiKeyRequiredDialog({
               <KeyIcon className="size-12" />
             </div>
             <div className="text-center space-y-2">
-              <p className="font-medium">No API Key</p>
+              <p className="font-medium">
+                {tApiKeys('requiredDialog.noKeyState.title')}
+              </p>
               <p className="text-sm text-muted-foreground max-w-sm">
-                Please create an API key to access this feature.
+                {tApiKeys('requiredDialog.noKeyState.description')}
               </p>
             </div>
           </div>
         </div>
         <DialogFooter className="flex-col sm:flex-row gap-2">
           <Button variant="outline" onClick={() => onOpenChange(false)}>
-            Close
+            {tCommon('action.close')}
           </Button>
           <Button asChild>
-            <Link to="/api-keys">Create API Key</Link>
+            <Link to="/api-keys">{tApiKeys('actions.create')}</Link>
           </Button>
         </DialogFooter>
       </DialogContent>

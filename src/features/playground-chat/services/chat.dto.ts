@@ -9,6 +9,13 @@ export type ChatRequest = {
   conversation_id?: string | null;
   model: string;
   stream?: boolean;
+  input: string;
+};
+
+export type EHRChatRequest = {
+  conversation_id?: string | null;
+  model: string;
+  stream?: boolean;
   input_ehr: EHRSummaryRequest['ehr'];
 };
 

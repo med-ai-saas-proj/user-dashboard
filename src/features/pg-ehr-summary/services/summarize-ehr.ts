@@ -4,15 +4,15 @@ import type {
   EHRSummaryResponse,
 } from '@/features/pg-ehr-summary/services/ehr-summary.dto';
 import type {
-  ChatRequest,
   ChatResponse,
+  EHRChatRequest,
 } from '@/features/playground-chat/services/chat.dto';
 import apiClient from '@/query/api-client';
 
 export const summarizeEHR = async (
   request: EHRSummaryRequest
 ): Promise<EHRSummaryResponse> => {
-  const req: ChatRequest = {
+  const req: EHRChatRequest = {
     model: '',
     conversation_id: null,
     stream: request.stream,

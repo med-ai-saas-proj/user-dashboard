@@ -1,8 +1,8 @@
 import { useTranslation } from 'react-i18next';
-import { useSendAISearch } from '@/features/playground-ai-search/hooks/use-send-ai-search';
-import { useAISearchStore } from '@/features/playground-ai-search/store/ai-search.store';
-import ChatContent from '@/features/playground-chat/components/ChatContent';
-import ChatInput from '@/features/playground-chat/components/ChatInput';
+import { useSendAISearch } from '@/features/pg-ai-search/hooks/use-send-ai-search';
+import { useAISearchStore } from '@/features/pg-ai-search/store/ai-search.store';
+import ChatContent from '@/features/pg-chat/components/ChatContent';
+import ChatInput from '@/features/pg-chat/components/ChatInput';
 import DashboardLayout from '@/layouts/dashboard-layout';
 
 export default function PlaygroundAISearchPage() {

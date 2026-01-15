@@ -1,4 +1,3 @@
-// analysis-response-dialog.tsx
 import { CheckCircle2Icon, ClipboardIcon } from 'lucide-react';
 import Markdown from 'react-markdown';
 import { Button } from '@/components/shadcn/button';

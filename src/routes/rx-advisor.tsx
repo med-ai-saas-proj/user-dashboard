@@ -4,9 +4,9 @@ import { ApiKeyRequiredDialog } from '@/features/api-keys/components/api-key-req
 import { useServiceApiKeyStore } from '@/features/api-keys/store/service-api-key.store';
 import EHRForm from '@/features/pg-ehr-summary/components/ehr-form';
 import type { EHRFormData } from '@/features/pg-ehr-summary/ehr-form.type';
-import { AnalysisResponseDialog } from '@/features/rx-advisor/components/analysis-response-dialog';
-import { useRxAdvisor } from '@/features/rx-advisor/hooks/use-rx-advisor';
-import { ehrFormToRxAdvisorRequest } from '@/features/rx-advisor/utils/rx-advisor.utils';
+import { AnalysisResponseDialog } from '@/features/pg-rx-advisor/components/analysis-response-dialog';
+import { useRxAdvisor } from '@/features/pg-rx-advisor/hooks/use-rx-advisor';
+import { ehrFormToRxAdvisorRequest } from '@/features/pg-rx-advisor/utils/rx-advisor.utils';
 import DashboardLayout from '@/layouts/dashboard-layout';
 
 const RxAdvisorPage = () => {

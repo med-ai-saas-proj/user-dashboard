@@ -45,3 +45,12 @@ export type ChatResponse = {
     total_tokens: number;
   };
 };
+
+export type StreamChatMessageParams = {
+  request: ChatRequest;
+  signal: AbortSignal;
+  onOpen?: (response: Response) => void;
+  onMessage: (response: ChatResponse) => void;
+  onError?: (error: unknown) => void;
+  onClose?: () => void;
+};

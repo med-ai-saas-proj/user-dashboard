@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/shadcn/button';
+import { LocaleSwitcher } from '@/components/sidebar/locale-switcher';
 import { useKeycloak } from '@/features/auth/providers/keycloak-provider';
 
 const LoginPage = () => {
@@ -24,7 +25,8 @@ const LoginPage = () => {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
-      <div className="w-full max-w-md space-y-8">
+      <LocaleSwitcher className="absolute top-4 right-4" />
+      <div className="w-full max-w-md space-y-8 flex flex-col items-center">
         <div className="text-center space-y-2">
           <h1 className="text-4xl font-bold tracking-tight">
             {t('greetings.welcome')}
@@ -34,7 +36,7 @@ const LoginPage = () => {
         <Button
           onClick={handleKeycloakLogin}
           size="lg"
-          className="w-full rounded-full"
+          className="sm:w-full rounded-full w-60 mx-auto"
         >
           {t('action.signIn')}
         </Button>

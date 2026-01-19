@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import type { ChatMessage } from '@/features/playground-chat/services/chat.dto';
+import type { ChatMessage } from '@/features/pg-chat/services/chat.dto';
 
 type AISearchStore = {
   conversationId: string | null;

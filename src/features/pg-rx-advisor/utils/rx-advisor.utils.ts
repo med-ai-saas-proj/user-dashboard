@@ -3,7 +3,7 @@ import {
   toVnMohDateFormat,
   toVnMohDateTimeFormat,
 } from '@/features/pg-ehr-summary/utils/ehr-date.utils';
-import type { RxAdvisorRequest } from '@/features/rx-advisor/services/rx-advisor.dto';
+import type { RxAdvisorRequest } from '@/features/pg-rx-advisor/services/rx-advisor.dto';
 
 export const ehrFormToRxAdvisorRequest = (
   data: EHRFormData

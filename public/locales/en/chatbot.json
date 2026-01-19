@@ -1,0 +1,31 @@
+{
+  "title": "Chat",
+  "emptyState": {
+    "title": "Start a conversation",
+    "subtitle": "Type a message below to begin"
+  },
+  "input": {
+    "placeholder": "Type a message...",
+    "send": "Send",
+    "sending": "Sending..."
+  },
+  "actions": {
+    "stop": "Stop",
+    "regenerate": "Regenerate",
+    "copy": "Copy",
+    "copied": "Copied"
+  },
+  "messages": {
+    "userLabel": "You",
+    "assistantLabel": "Assistant",
+    "thinking": "Thinking..."
+  },
+  "markdown": {
+    "copyCode": "Copy code",
+    "copiedCode": "Copied code",
+    "openInNewTab": "Open in new tab"
+  },
+  "errors": {
+    "sendFailed": "Failed to send message: {{message}}"
+  }
+}

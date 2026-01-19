@@ -1,0 +1,26 @@
+{
+  "playground": {
+    "title": "Sân chơi",
+    "ehrSummary": {
+      "title": "Tóm tắt EHR"
+    },
+    "rxAdvisor": {
+      "title": "Cố vấn Rx"
+    },
+    "chatBot": {
+      "title": "Chatbot"
+    },
+    "aiSearch": {
+      "title": "Tìm kiếm AI"
+    }
+  },
+  "management": {
+    "title": "Quản lý",
+    "apiKeys": {
+      "title": "Khóa API"
+    },
+    "apiReference": {
+      "title": "Tham chiếu API"
+    }
+  }
+}

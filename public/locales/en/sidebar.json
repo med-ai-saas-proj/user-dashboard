@@ -1,0 +1,26 @@
+{
+  "playground": {
+    "title": "Playground",
+    "ehrSummary": {
+      "title": "EHR Summary"
+    },
+    "rxAdvisor": {
+      "title": "Rx Advisor"
+    },
+    "chatBot": {
+      "title": "Chatbot"
+    },
+    "aiSearch": {
+      "title": "AI Search"
+    }
+  },
+  "management": {
+    "title": "Management",
+    "apiKeys": {
+      "title": "API Keys"
+    },
+    "apiReference": {
+      "title": "API Reference"
+    }
+  }
+}

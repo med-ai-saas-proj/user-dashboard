@@ -1,0 +1,11 @@
+{
+  "aiResponse": {
+    "error": "Sorry, I encountered an error. Please try again."
+  },
+  "action": {
+    "close": "Close",
+    "cancel": "Cancel",
+    "done": "Done",
+    "save": "Save"
+  }
+}

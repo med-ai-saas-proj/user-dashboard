@@ -2,6 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Label } from '@radix-ui/react-label';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import z from 'zod';
 import { Button } from '@/components/shadcn/button';
 import {
@@ -32,6 +33,9 @@ const APIKeyUpdateDialog = ({
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }) => {
+  const { t: tApiKeys } = useTranslation('api-keys');
+  const { t: tCommon } = useTranslation('common');
+
   const apiKey = useAPIKeyStore((state) =>
     state.apiKeys.find((key) => key.id === apikeyId)
   );
@@ -71,13 +75,15 @@ const APIKeyUpdateDialog = ({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Edit secret key</DialogTitle>
-          <DialogDescription>Edit your api key information</DialogDescription>
+          <DialogTitle>{tApiKeys('editDialog.title')}</DialogTitle>
+          <DialogDescription>
+            {tApiKeys('editDialog.description')}
+          </DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="grid gap-4">
             <div className="grid gap-3">
-              <Label>Name</Label>
+              <Label>{tApiKeys('editDialog.form.nameLabel')}</Label>
               <Input
                 id="name"
                 aria-invalid={!!errors.name}
@@ -94,9 +100,9 @@ const APIKeyUpdateDialog = ({
           </div>
           <DialogFooter>
             <DialogClose asChild>
-              <Button variant="outline">Cancel</Button>
+              <Button variant="outline">{tCommon('action.cancel')}</Button>
             </DialogClose>
-            <Button type="submit">Save</Button>
+            <Button type="submit">{tCommon('action.save')}</Button>
           </DialogFooter>
         </form>
       </DialogContent>

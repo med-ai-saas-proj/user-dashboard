@@ -6,6 +6,7 @@ import type {
   UseFieldArrayReturn,
   UseFormRegister,
 } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import {
   Accordion,
   AccordionContent,
@@ -40,6 +41,8 @@ export function LabResultsSection({
   append,
   remove,
 }: LabResultsSectionProps) {
+  const { t } = useTranslation('lab-results');
+
   const handleAddLabResult = () => {
     append({
       ma_lk: '',
@@ -54,7 +57,7 @@ export function LabResultsSection({
   return (
     <FieldSet>
       <div className="flex items-center justify-between mb-3">
-        <FieldLegend>Chi tiết cận lâm sàng</FieldLegend>
+        <FieldLegend>{t('legend')}</FieldLegend>
         <Button
           type="button"
           size="sm"
@@ -62,7 +65,7 @@ export function LabResultsSection({
           className="gap-2"
         >
           <PlusIcon className="size-4" />
-          Thêm xét nghiệm
+          {t('action.addEntry')}
         </Button>
       </div>
       <FieldGroup>
@@ -71,9 +74,11 @@ export function LabResultsSection({
             <AccordionItem key={field.id} value={`lab-result-${index}`}>
               <AccordionTrigger>
                 <div className="flex items-center gap-2">
-                  <span>Xét nghiệm {index + 1}</span>
+                  <span>{t('entryTitle', { index: index + 1 })}</span>
                   {errors.chi_tiet_cls?.[index] && (
-                    <span className="text-destructive text-xs">(Có lỗi)</span>
+                    <span className="text-destructive text-xs">
+                      {t('hasError')}
+                    </span>
                   )}
                 </div>
               </AccordionTrigger>
@@ -82,7 +87,7 @@ export function LabResultsSection({
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <Field>
                       <FieldLabel htmlFor={`chi_tiet_cls.${index}.ten_chi_so`}>
-                        Tên chỉ số
+                        {t('fields.testName')}
                       </FieldLabel>
                       <FieldContent>
                         <Input
@@ -100,7 +105,7 @@ export function LabResultsSection({
 
                     <Field>
                       <FieldLabel htmlFor={`chi_tiet_cls.${index}.gia_tri`}>
-                        Giá trị
+                        {t('fields.value')}
                       </FieldLabel>
                       <FieldContent>
                         <Input
@@ -116,7 +121,7 @@ export function LabResultsSection({
 
                     <Field>
                       <FieldLabel htmlFor={`chi_tiet_cls.${index}.don_vi_do`}>
-                        Đơn vị đo
+                        {t('fields.unit')}
                       </FieldLabel>
                       <FieldContent>
                         <Input
@@ -142,7 +147,7 @@ export function LabResultsSection({
                       className="gap-2"
                     >
                       <Trash2Icon className="size-4" />
-                      Xóa xét nghiệm
+                      {t('action.removeEntry')}
                     </Button>
                   </div>
                 </div>

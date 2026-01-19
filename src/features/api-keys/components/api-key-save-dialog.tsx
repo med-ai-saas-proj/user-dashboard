@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/shadcn/button';
 import {
   Dialog,
@@ -21,29 +22,29 @@ export function APIKeySaveDialog({
   onOpenChange,
   apiKey = '',
 }: APIKeySaveDialogProps) {
+  const { t: tCommon } = useTranslation('common');
+  const { t: tApiKeys } = useTranslation('api-keys');
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
-          <DialogTitle>Save your key</DialogTitle>
+          <DialogTitle>{tApiKeys('saveDialog.title')}</DialogTitle>
           <DialogDescription>
-            Please save this secret key somewhere safe and accessible. For
-            security reasons, you won't be able to view it again through your
-            Venera account. If you lose this secret key, you'll need to generate
-            a new one.
+            {tApiKeys('saveDialog.description')}
           </DialogDescription>
         </DialogHeader>
         <div className="space-y-4">
           <InputCopy copiedValue={apiKey} />
           <div className="bg-muted/50 p-3 rounded-md">
             <p className="text-sm text-muted-foreground">
-              This key has been automatically set for AI services
+              {tApiKeys('saveDialog.keySet')}
             </p>
           </div>
         </div>
         <DialogFooter>
           <DialogClose asChild>
-            <Button variant="outline">Done</Button>
+            <Button variant="outline">{tCommon('action.done')}</Button>
           </DialogClose>
         </DialogFooter>
       </DialogContent>

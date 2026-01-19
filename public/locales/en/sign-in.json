@@ -1,0 +1,9 @@
+{
+  "greetings": {
+    "welcome": "Welcome",
+    "hero": "Sign in to access your dashboard"
+  },
+  "action": {
+    "signIn": "Sign In"
+  }
+}

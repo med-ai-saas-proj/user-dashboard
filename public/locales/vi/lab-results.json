@@ -1,0 +1,15 @@
+{
+  "title": "Kết Quả Xét Nghiệm",
+  "legend": "Chi Tiết Xét Nghiệm",
+  "entryTitle": "Xét Nghiệm {{index}}",
+  "hasError": "(Lỗi)",
+  "fields": {
+    "testName": "Tên xét nghiệm",
+    "value": "Giá trị",
+    "unit": "Đơn vị"
+  },
+  "action": {
+    "addEntry": "Thêm xét nghiệm",
+    "removeEntry": "Xóa xét nghiệm"
+  }
+}

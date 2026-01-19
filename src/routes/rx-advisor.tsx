@@ -1,14 +1,17 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { ApiKeyRequiredDialog } from '@/features/api-keys/components/api-key-required-dialog';
 import { useServiceApiKeyStore } from '@/features/api-keys/store/service-api-key.store';
 import EHRForm from '@/features/pg-ehr-summary/components/ehr-form';
 import type { EHRFormData } from '@/features/pg-ehr-summary/ehr-form.type';
-import { AnalysisResponseDialog } from '@/features/rx-advisor/components/analysis-response-dialog';
-import { useRxAdvisor } from '@/features/rx-advisor/hooks/use-rx-advisor';
-import { ehrFormToRxAdvisorRequest } from '@/features/rx-advisor/utils/rx-advisor.utils';
+import { AnalysisResponseDialog } from '@/features/pg-rx-advisor/components/analysis-response-dialog';
+import { useRxAdvisor } from '@/features/pg-rx-advisor/hooks/use-rx-advisor';
+import { ehrFormToRxAdvisorRequest } from '@/features/pg-rx-advisor/utils/rx-advisor.utils';
 import DashboardLayout from '@/layouts/dashboard-layout';
 
 const RxAdvisorPage = () => {
+  const { t } = useTranslation('playground-rx-advisor');
+
   const [analysis, setAnalysis] = useState<{
     analysis: string;
     reasoning: string | null;
@@ -39,12 +42,12 @@ const RxAdvisorPage = () => {
   };
 
   return (
-    <DashboardLayout pageTitle="Tư vấn đơn thuốc">
+    <DashboardLayout pageTitle={t('pageTitle')}>
       <div className="px-6 space-y-8">
         <EHRForm
           onSubmit={handleSubmit}
           isSubmitting={rxAdvisorMutation.isPending}
-          submitButtonText="Phân tích đơn thuốc"
+          submitButtonText={t('action.submit')}
         />
       </div>
 

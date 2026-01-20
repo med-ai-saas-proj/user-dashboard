@@ -1,12 +1,13 @@
 import { API_ROUTES } from '@/config/api-routes';
 import type {
+  ChatResponse,
+  EHRChatRequest,
+} from '@/features/pg-chat/services/chat.dto';
+import type {
   EHRSummaryRequest,
   EHRSummaryResponse,
 } from '@/features/pg-ehr-summary/services/ehr-summary.dto';
-import type {
-  ChatResponse,
-  EHRChatRequest,
-} from '@/features/playground-chat/services/chat.dto';
+
 import apiClient from '@/query/api-client';
 
 export const summarizeEHR = async (

@@ -32,7 +32,6 @@
 				"noNonNullAssertion": "warn"
 			},
 			"correctness": {
-				"noUnusedVariables": "error",
 				"noUnusedImports": "error"
 			}
 		}

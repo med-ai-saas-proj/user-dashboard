@@ -1,3 +1,5 @@
+import type { EHRSummaryRequest } from '@/features/pg-ehr-summary/services/ehr-summary.dto';
+
 export type ChatMessage = {
   role: 'user' | 'assistant';
   content: string;
@@ -14,7 +16,7 @@ export type EHRChatRequest = {
   conversation_id?: string | null;
   model: string;
   stream?: boolean;
-  input: string;
+  input_ehr: EHRSummaryRequest['ehr'];
 };
 
 export type ModelResponseContent = {

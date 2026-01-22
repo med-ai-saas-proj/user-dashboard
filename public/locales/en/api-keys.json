@@ -32,6 +32,21 @@
     }
   },
 
+  "table": {
+    "header": {
+      "name": "Name",
+      "description": "Description",
+      "secretKey": "Secret Key",
+      "permissions": "Permissions",
+      "createdAt": "Created at",
+      "actions": "Actions"
+    },
+    "actions": {
+      "edit": "Edit",
+      "delete": "Delete"
+    }
+  },
+
   "saveDialog": {
     "title": "Save your key",
     "description": "Please save this secret key somewhere safe and accessible. For security reasons, you won't be able to view it again through your Venera account. If you lose this secret key, you'll need to generate a new one.",

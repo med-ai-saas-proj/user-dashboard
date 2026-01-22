@@ -1,7 +1,5 @@
 {
-  "aiResponse": {
-    "error": "Xin lỗi, tôi đã gặp lỗi. Vui lòng thử lại."
-  },
+  "error": "Có lỗi xảy ra. Vui lòng thử lại sau.",
   "action": {
     "close": "Đóng",
     "cancel": "Hủy",

@@ -7,6 +7,7 @@ import type {
   StreamChatMessageParams,
 } from './chat.dto';
 import { createSSE } from './sse';
+import type { ChatStreamEvent } from './stream-chat.dto';
 
 export const sendChatMessage = async (
   request: ChatRequest
@@ -32,16 +33,13 @@ export const streamChatMessage = ({
     throw new Error('Authentication token is missing');
   }
 
-  return createSSE<{ data: ChatResponse }>({
+  return createSSE<ChatStreamEvent>({
     url: API_ROUTES.SERVICES.CHAT,
     token,
     signal,
     payload: { ...request, stream: true },
     onOpen,
-    onMessage: (payload) => {
-      if (!payload?.data) return;
-      onMessage(payload.data);
-    },
+    onMessage,
     onError,
     onClose,
   });

@@ -1,5 +1,6 @@
 import type { EventSourceMessage } from '@microsoft/fetch-event-source';
 import { fetchEventSource } from '@microsoft/fetch-event-source';
+import type { StreamEventType } from '@/enums/stream-chat.enum';
 import type { ChatRequest } from './chat.dto';
 
 type CreateSSEParams<T> = {
@@ -37,16 +38,23 @@ export function createSSE<T>({
     },
 
     onmessage(event) {
+      if (!event.data) return;
+
       // Ignore connection event
       if (event.event === 'connected') {
-        console.log(event.data); // "Connected to product stream"
         return;
       }
 
       // Parse only JSON payloads
       try {
-        const parsed = JSON.parse(event.data) as T;
-        onMessage(parsed, event);
+        const parsedData = JSON.parse(event.data) as T;
+
+        const fullEvent = {
+          event: event.event as StreamEventType,
+          data: parsedData,
+        } as T;
+
+        onMessage(fullEvent, event);
       } catch (err) {
         console.warn('Non-JSON SSE message:', event.data);
       }

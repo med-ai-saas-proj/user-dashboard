@@ -1,4 +1,5 @@
 import type { EHRSummaryRequest } from '@/features/pg-ehr-summary/services/ehr-summary.dto';
+import type { ChatStreamEvent } from './stream-chat.dto';
 
 export type ChatMessage = {
   role: 'user' | 'assistant';
@@ -50,7 +51,7 @@ export type StreamChatMessageParams = {
   request: ChatRequest;
   signal: AbortSignal;
   onOpen?: (response: Response) => void;
-  onMessage: (response: ChatResponse) => void;
+  onMessage: (event: ChatStreamEvent) => void;
   onError?: (error: unknown) => void;
   onClose?: () => void;
 };

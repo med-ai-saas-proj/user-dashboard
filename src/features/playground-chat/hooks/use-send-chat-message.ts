@@ -1,10 +1,12 @@
 import { useMutation } from '@tanstack/react-query';
 import { useCallback, useEffect, useRef, useState } from 'react';
-import type { ChatRequest, ChatResponse } from '../services/chat.dto';
+import { StreamEventType } from '@/enums/stream-chat.enum';
+import type { ChatRequest } from '../services/chat.dto';
 import {
   sendChatMessage,
   streamChatMessage,
 } from '../services/send-chat-message';
+import type { ChatStreamEvent } from '../services/stream-chat.dto';
 
 export const useSendChatMessage = () => {
   return useMutation({
@@ -14,9 +16,9 @@ export const useSendChatMessage = () => {
 
 type StartStreamParams = {
   request: ChatRequest;
-  onMessage: (response: ChatResponse) => void;
+  onMessage: (response: ChatStreamEvent) => void;
   onError?: (error: unknown) => void;
-  onComplete?: (response?: ChatResponse) => void;
+  onComplete?: (response?: ChatStreamEvent) => void;
   onOpen?: (response: Response) => void;
 };
 
@@ -26,11 +28,11 @@ export const useStreamChatMessage = () => {
   const [isStreaming, setIsStreaming] = useState(false);
 
   const finalize = useCallback(
-    (onComplete?: StartStreamParams['onComplete'], response?: ChatResponse) => {
+    (onComplete?: StartStreamParams['onComplete'], event?: ChatStreamEvent) => {
       if (finishedRef.current) return;
       finishedRef.current = true;
       setIsStreaming(false);
-      onComplete?.(response);
+      onComplete?.(event);
       controllerRef.current = null;
     },
     []
@@ -73,13 +75,10 @@ export const useStreamChatMessage = () => {
             request,
             signal: controller.signal,
             onOpen,
-            onMessage: (response) => {
-              onMessage(response);
-              if (
-                response.status === 'completed' ||
-                response.status === 'failed'
-              ) {
-                finalize(onComplete, response);
+            onMessage: (event) => {
+              onMessage(event);
+              if (event.event === StreamEventType.FinalResult) {
+                finalize(onComplete, event);
               }
             },
             onError: handleError,

@@ -1,5 +1,3 @@
-import { SquarePen, Trash } from 'lucide-react';
-import React, { useState } from 'react';
 import {
 	Table,
 	TableBody,
@@ -9,20 +7,23 @@ import {
 	TableRow,
 } from '@/components/shadcn/table';
 import type { APIKey } from '@/features/api-keys/api-key.type';
-import { useAPIKeyStore } from '@/features/api-keys/store/api-key.store';
-import APIKeyUpdateDialog from './api-key-update-dialog';
+import { useDeleteApiKey } from '@/features/api-keys/hooks/use-delete-api-key';
+import { SquarePen, Trash } from 'lucide-react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import APIKeyUpdateDialog from './api-key-update-dialog';
 
 const APIKeyTable = ({ apiKeys }: { apiKeys: APIKey[] }) => {
 	const { t } = useTranslation('api-keys');
 
-	const deleteAPIKey = useAPIKeyStore((state) => state.deleteAPIKey);
+	const deleteAPIKeyMutation = useDeleteApiKey();
 	const [openUpdateAPIKeyDialog, setOpenUpdateAPIKeyDialog] =
 		React.useState(false);
 	const [selectedApiKeyId, setSelectedApiKeyId] = useState<string | null>(null);
 
 	const onDeleteApiKey = (apikeyId: string) => {
-		deleteAPIKey(apikeyId);
+		console.log('Deleting API Key with ID:', apikeyId);
+		deleteAPIKeyMutation.mutate(apikeyId);
 	};
 
 	const onOpenUpdateAPIKeyDialog = (selectedApiKeyId: string) => {

@@ -1,23 +1,28 @@
 export type CreateApiKeyRequest = {
-  name: string | null;
-  project_id: string;
-  permissions: string[];
+	name: string;
+	description?: string;
+	project_id: string;
+	permissions: string[];
 };
+
 export type CreateApiKeyResponse = {
-  key: string;
+	key: string;
+	hint: string;
 };
 
 export type UpdateApiKeyRequest = {
-  apikeyId: string;
-  name?: string;
-  permissions?: string[];
+	apikeyId: string;
+	name?: string;
+	permissions?: string[];
 };
 
-export type GetApiKeyResponse = {
-  id: string;
-  secretKey: string;
-  name: string | null;
-  project_id: string;
-  createdAt: string;
-  permissions: string[];
-}[];
+export type ApiKeyOutput = {
+	id: string;
+	name: string;
+	description: string;
+	hint: string;
+	created_at: string;
+	permissions: string[];
+};
+
+export type GetApiKeyResponse = ApiKeyOutput[];

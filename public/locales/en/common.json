@@ -1,7 +1,5 @@
 {
-  "aiResponse": {
-    "error": "Sorry, I encountered an error. Please try again."
-  },
+  "error": "Something went wrong. Please try again later.",
   "action": {
     "close": "Close",
     "cancel": "Cancel",

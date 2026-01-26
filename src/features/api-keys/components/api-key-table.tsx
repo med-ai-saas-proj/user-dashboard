@@ -1,93 +1,88 @@
-import { SquarePen, Trash } from 'lucide-react';
-import React, { useState } from 'react';
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
+	Table,
+	TableBody,
+	TableCell,
+	TableHead,
+	TableHeader,
+	TableRow,
 } from '@/components/shadcn/table';
 import type { APIKey } from '@/features/api-keys/api-key.type';
-import { useAPIKeyStore } from '@/features/api-keys/store/api-key.store';
+import { useDeleteApiKey } from '@/features/api-keys/hooks/use-delete-api-key';
+import { SquarePen, Trash } from 'lucide-react';
+import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import APIKeyUpdateDialog from './api-key-update-dialog';
+import { cn } from '@/lib/utils';
 
 const APIKeyTable = ({ apiKeys }: { apiKeys: APIKey[] }) => {
-  const deleteAPIKey = useAPIKeyStore((state) => state.deleteAPIKey);
-  const [openUpdateAPIKeyDialog, setOpenUpdateAPIKeyDialog] =
-    React.useState(false);
-  const [selectedApiKeyId, setSelectedApiKeyId] = useState<string | null>(null);
+	const { t } = useTranslation('api-keys');
 
-  const onDeleteApiKey = (apikeyId: string) => {
-    deleteAPIKey(apikeyId);
-  };
+	const deleteAPIKeyMutation = useDeleteApiKey();
+	const [openUpdateAPIKeyDialog, setOpenUpdateAPIKeyDialog] =
+		React.useState(false);
+	const [selectedApiKeyId, setSelectedApiKeyId] = useState<string | null>(null);
 
-  const onOpenUpdateAPIKeyDialog = (selectedApiKeyId: string) => {
-    setOpenUpdateAPIKeyDialog(true);
-    setSelectedApiKeyId(selectedApiKeyId);
-  };
+	const onDeleteApiKey = (apikeyId: string) => {
+		deleteAPIKeyMutation.mutate(apikeyId);
+	};
 
-  const maskKey = (key: string, maskLength = 10): string => {
-    if (key.length <= maskLength) return key;
+	const onOpenUpdateAPIKeyDialog = (selectedApiKeyId: string) => {
+		setOpenUpdateAPIKeyDialog(true);
+		setSelectedApiKeyId(selectedApiKeyId);
+	};
 
-    const visibleStart = key.slice(0, 4);
-    const visibleEnd = key.slice(-4);
-
-    const mask = '*'.repeat(maskLength);
-
-    return `${visibleStart}${mask}${visibleEnd}`;
-  };
-
-  return (
-    <Table className="mt-6">
-      <TableHeader>
-        <TableRow>
-          <TableHead className="w-[40%]">NAME</TableHead>
-          <TableHead>SECRET KEY</TableHead>
-          <TableHead>CREATED</TableHead>
-          <TableHead>LAST USED</TableHead>
-          <TableHead>CREATED BY</TableHead>
-          <TableHead>PERMISSIONS</TableHead>
-          <TableHead></TableHead>
-          <TableHead></TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {apiKeys.map((apiKey) => (
-          <TableRow key={apiKey.id}>
-            <TableCell className="font-medium">{apiKey.name}</TableCell>
-            <TableCell>{maskKey(apiKey.secretKey)}</TableCell>
-            <TableCell>{apiKey.createdAt.toLocaleDateString()}</TableCell>
-            <TableCell>
-              {apiKey.lastUsed ? apiKey.lastUsed.toLocaleDateString() : 'Never'}
-            </TableCell>
-            <TableCell>{apiKey.createdBy}</TableCell>
-            <TableCell>{apiKey.permissions.join(', ')}</TableCell>
-            <TableCell>
-              <SquarePen
-                size={16}
-                onClick={() => onOpenUpdateAPIKeyDialog(apiKey.id)}
-              />
-            </TableCell>
-            <TableCell>
-              <Trash
-                size={16}
-                color="#ce4034"
-                onClick={() => onDeleteApiKey(apiKey.id)}
-              />
-            </TableCell>
-          </TableRow>
-        ))}
-      </TableBody>
-      {selectedApiKeyId && (
-        <APIKeyUpdateDialog
-          apikeyId={selectedApiKeyId}
-          open={openUpdateAPIKeyDialog}
-          onOpenChange={() => setOpenUpdateAPIKeyDialog(false)}
-        />
-      )}
-    </Table>
-  );
+	return (
+		<Table className="mt-6">
+			<TableHeader>
+				<TableRow>
+					<TableHead className="w-[30%]">{t('table.header.name')}</TableHead>
+					<TableHead>{t('table.header.description')}</TableHead>
+					<TableHead>{t('table.header.secretKey')}</TableHead>
+					<TableHead>{t('table.header.createdAt')}</TableHead>
+					<TableHead>{t('table.header.permissions')}</TableHead>
+					<TableHead></TableHead>
+					<TableHead></TableHead>
+				</TableRow>
+			</TableHeader>
+			<TableBody>
+				{apiKeys.map((apiKey) => (
+					<TableRow key={apiKey.id}>
+						<TableCell className="font-medium">{apiKey.name}</TableCell>
+						<TableCell>{apiKey.description}</TableCell>
+						<TableCell>{apiKey.hint}</TableCell>
+						<TableCell>{apiKey.createdAt.toLocaleDateString()}</TableCell>
+						<TableCell>{apiKey.permissions.join(', ')}</TableCell>
+						<TableCell>
+							<SquarePen
+								size={16}
+								className="cursor-pointer"
+								onClick={() => onOpenUpdateAPIKeyDialog(apiKey.id)}
+							/>
+						</TableCell>
+						<TableCell>
+							<Trash
+								size={16}
+								color="#ce4034"
+								className={cn(
+									'cursor-pointer',
+									deleteAPIKeyMutation.isPending &&
+										'opacity-50 pointer-events-none'
+								)}
+								onClick={() => onDeleteApiKey(apiKey.id)}
+							/>
+						</TableCell>
+					</TableRow>
+				))}
+			</TableBody>
+			{selectedApiKeyId && (
+				<APIKeyUpdateDialog
+					apikeyId={selectedApiKeyId}
+					open={openUpdateAPIKeyDialog}
+					onOpenChange={() => setOpenUpdateAPIKeyDialog(false)}
+				/>
+			)}
+		</Table>
+	);
 };
 
 export default APIKeyTable;

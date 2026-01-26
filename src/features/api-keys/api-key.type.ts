@@ -1,9 +1,8 @@
 export type APIKey = {
-  id: string;
-  name: string;
-  secretKey: string;
-  createdAt: Date;
-  lastUsed: Date | null;
-  createdBy: string;
-  permissions: string[];
+	id: string;
+	name: string;
+	description: string;
+	hint: string; // Masked secret key from API
+	createdAt: Date;
+	permissions: string[];
 };

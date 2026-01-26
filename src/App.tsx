@@ -14,85 +14,87 @@ import { PublicRoute } from '@/routes/public-route';
 import RxAdvisorPage from '@/routes/rx-advisor';
 import PlaygroundAISearchPage from './routes/playground-AI-search';
 import PlaygroundChatPage from './routes/playground-chat';
+import { Toaster } from 'sonner';
 
 function App() {
-  return (
-    <QueryClientProvider client={query_client}>
-      <KeycloakProvider>
-        <BrowserRouter>
-          <Routes>
-            <Route
-              path="/login"
-              element={
-                <PublicRoute>
-                  <LoginPage />
-                </PublicRoute>
-              }
-            />
-            <Route
-              path="/"
-              element={
-                <ProtectedRoute>
-                  <DashboardPage />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/api-keys"
-              element={
-                <ProtectedRoute>
-                  <APIKeysPage />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/api-reference"
-              element={
-                <ProtectedRoute>
-                  <APIReferencePage />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/chat"
-              element={
-                <ProtectedRoute>
-                  <PlaygroundChatPage />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/ai-search"
-              element={
-                <ProtectedRoute>
-                  <PlaygroundAISearchPage />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/ehr-summary"
-              element={
-                <ProtectedRoute>
-                  <EHRSummaryPage />
-                </ProtectedRoute>
-              }
-            />
+	return (
+		<QueryClientProvider client={query_client}>
+			<KeycloakProvider>
+				<BrowserRouter>
+					<Toaster />
+					<Routes>
+						<Route
+							path="/login"
+							element={
+								<PublicRoute>
+									<LoginPage />
+								</PublicRoute>
+							}
+						/>
+						<Route
+							path="/"
+							element={
+								<ProtectedRoute>
+									<DashboardPage />
+								</ProtectedRoute>
+							}
+						/>
+						<Route
+							path="/api-keys"
+							element={
+								<ProtectedRoute>
+									<APIKeysPage />
+								</ProtectedRoute>
+							}
+						/>
+						<Route
+							path="/api-reference"
+							element={
+								<ProtectedRoute>
+									<APIReferencePage />
+								</ProtectedRoute>
+							}
+						/>
+						<Route
+							path="/chat"
+							element={
+								<ProtectedRoute>
+									<PlaygroundChatPage />
+								</ProtectedRoute>
+							}
+						/>
+						<Route
+							path="/ai-search"
+							element={
+								<ProtectedRoute>
+									<PlaygroundAISearchPage />
+								</ProtectedRoute>
+							}
+						/>
+						<Route
+							path="/ehr-summary"
+							element={
+								<ProtectedRoute>
+									<EHRSummaryPage />
+								</ProtectedRoute>
+							}
+						/>
 
-            <Route
-              path="/rx-advisor"
-              element={
-                <ProtectedRoute>
-                  <RxAdvisorPage />
-                </ProtectedRoute>
-              }
-            />
+						<Route
+							path="/rx-advisor"
+							element={
+								<ProtectedRoute>
+									<RxAdvisorPage />
+								</ProtectedRoute>
+							}
+						/>
 
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
-        </BrowserRouter>
-      </KeycloakProvider>
-    </QueryClientProvider>
-  );
+						<Route path="*" element={<Navigate to="/" replace />} />
+					</Routes>
+				</BrowserRouter>
+			</KeycloakProvider>
+		</QueryClientProvider>
+	);
 }
 
 export default App;

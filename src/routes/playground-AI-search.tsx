@@ -6,57 +6,57 @@ import ChatInput from '@/features/pg-chat/components/ChatInput';
 import DashboardLayout from '@/layouts/dashboard-layout';
 
 export default function PlaygroundAISearchPage() {
-  const { t } = useTranslation('common');
+	const { t } = useTranslation('common');
 
-  const { conversationId, model, messages, setConversationId, addMessage } =
-    useAISearchStore();
-  const aiSearchMutation = useSendAISearch();
+	const { conversationId, model, messages, setConversationId, addMessage } =
+		useAISearchStore();
+	const aiSearchMutation = useSendAISearch();
 
-  const handleSendMessage = async (query: string) => {
-    // Add user message to store
-    addMessage({ role: 'user', content: query });
+	const handleSendMessage = async (query: string) => {
+		// Add user message to store
+		addMessage({ role: 'user', content: query });
 
-    try {
-      const response = await aiSearchMutation.mutateAsync({
-        conversation_id: conversationId,
-        model,
-        query,
-        stream: false,
-      });
+		try {
+			const response = await aiSearchMutation.mutateAsync({
+				conversation_id: conversationId,
+				model,
+				query,
+				stream: false,
+			});
 
-      // Update conversation ID
-      setConversationId(response.conversation_id);
+			// Update conversation ID
+			setConversationId(response.conversation_id);
 
-      // Extract text content from response
-      const textContent = response.output
-        .filter((item) => item.type === 'text')
-        .map((item) => item.content)
-        .join('\n\n');
+			// Extract text content from response
+			const textContent = response.output
+				.filter((item) => item.type === 'text')
+				.map((item) => item.content)
+				.join('\n\n');
 
-      // Add assistant message to store
-      addMessage({ role: 'assistant', content: textContent });
-    } catch (error) {
-      console.error('Failed to search:', error);
-      // Add error message
-      addMessage({
-        role: 'assistant',
-        content: t('aiResponse.error'),
-      });
-    }
-  };
+			// Add assistant message to store
+			addMessage({ role: 'assistant', content: textContent });
+		} catch (error) {
+			console.error('Failed to search:', error);
+			// Add error message
+			addMessage({
+				role: 'assistant',
+				content: t('error'),
+			});
+		}
+	};
 
-  return (
-    <DashboardLayout pageTitle="AI Search" className="pb-0">
-      <div className="w-full h-full flex flex-col items-stretch justify-between px-4 sm:px-6 md:px-12 lg:px-24 xl:px-64 relative">
-        <ChatContent
-          messages={messages}
-          isLoading={aiSearchMutation.isPending}
-        />
-        <ChatInput
-          onSendMessage={handleSendMessage}
-          isLoading={aiSearchMutation.isPending}
-        />
-      </div>
-    </DashboardLayout>
-  );
+	return (
+		<DashboardLayout pageTitle="AI Search" className="pb-0">
+			<div className="w-full h-full flex flex-col items-stretch justify-between px-4 sm:px-6 md:px-12 lg:px-24 xl:px-64 relative">
+				<ChatContent
+					messages={messages}
+					isLoading={aiSearchMutation.isPending}
+				/>
+				<ChatInput
+					onSendMessage={handleSendMessage}
+					isLoading={aiSearchMutation.isPending}
+				/>
+			</div>
+		</DashboardLayout>
+	);
 }

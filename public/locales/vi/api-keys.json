@@ -32,6 +32,25 @@
     }
   },
 
+  "table": {
+    "header": {
+      "name": "Tên",
+      "description": "Mô tả",
+      "secretKey": "Khóa bí mật",
+      "permissions": "Quyền",
+      "createdAt": "Ngày tạo",
+      "actions": "Hành động"
+    },
+    "actions": {
+      "edit": "Chỉnh sửa",
+      "delete": "Xóa"
+    },
+    "successMessages": {
+      "delete": "Xóa khóa API thành công.",
+      "update": "Cập nhật khóa API thành công."
+    }
+  },
+
   "saveDialog": {
     "title": "Lưu khóa của bạn",
     "description": "Vui lòng lưu khóa bí mật này ở nơi an toàn và dễ truy cập. Vì lý do bảo mật, bạn sẽ không thể xem lại nó qua tài khoản Venera của mình. Nếu bạn làm mất khóa bí mật này, bạn sẽ cần tạo một khóa mới.",

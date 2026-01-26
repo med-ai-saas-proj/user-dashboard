@@ -44,6 +44,10 @@
     "actions": {
       "edit": "Chỉnh sửa",
       "delete": "Xóa"
+    },
+    "successMessages": {
+      "delete": "Xóa khóa API thành công.",
+      "update": "Cập nhật khóa API thành công."
     }
   },
 

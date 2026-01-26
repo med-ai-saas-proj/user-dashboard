@@ -12,6 +12,7 @@ import { SquarePen, Trash } from 'lucide-react';
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import APIKeyUpdateDialog from './api-key-update-dialog';
+import { cn } from '@/lib/utils';
 
 const APIKeyTable = ({ apiKeys }: { apiKeys: APIKey[] }) => {
 	const { t } = useTranslation('api-keys');
@@ -22,7 +23,6 @@ const APIKeyTable = ({ apiKeys }: { apiKeys: APIKey[] }) => {
 	const [selectedApiKeyId, setSelectedApiKeyId] = useState<string | null>(null);
 
 	const onDeleteApiKey = (apikeyId: string) => {
-		console.log('Deleting API Key with ID:', apikeyId);
 		deleteAPIKeyMutation.mutate(apikeyId);
 	};
 
@@ -63,7 +63,11 @@ const APIKeyTable = ({ apiKeys }: { apiKeys: APIKey[] }) => {
 							<Trash
 								size={16}
 								color="#ce4034"
-								className="cursor-pointer"
+								className={cn(
+									'cursor-pointer',
+									deleteAPIKeyMutation.isPending &&
+										'opacity-50 pointer-events-none'
+								)}
 								onClick={() => onDeleteApiKey(apiKey.id)}
 							/>
 						</TableCell>

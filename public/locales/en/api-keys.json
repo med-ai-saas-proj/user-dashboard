@@ -44,6 +44,10 @@
     "actions": {
       "edit": "Edit",
       "delete": "Delete"
+    },
+    "successMessages": {
+      "delete": "API key deleted successfully.",
+      "update": "API key updated successfully."
     }
   },
 

@@ -1,20 +1,19 @@
 import './config/i18n';
 
-import { QueryClientProvider } from '@tanstack/react-query';
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { KeycloakProvider } from '@/features/auth/providers/keycloak-provider';
 import { query_client } from '@/query/query-client';
 import APIKeysPage from '@/routes/api-keys';
 import APIReferencePage from '@/routes/api-reference';
 import EHRSummaryPage from '@/routes/ehr-summary';
-import DashboardPage from '@/routes/home';
 import LoginPage from '@/routes/login';
 import { ProtectedRoute } from '@/routes/protected-route';
 import { PublicRoute } from '@/routes/public-route';
 import RxAdvisorPage from '@/routes/rx-advisor';
+import { QueryClientProvider } from '@tanstack/react-query';
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
+import { Toaster } from 'sonner';
 import PlaygroundAISearchPage from './routes/playground-AI-search';
 import PlaygroundChatPage from './routes/playground-chat';
-import { Toaster } from 'sonner';
 
 function App() {
 	return (
@@ -31,14 +30,8 @@ function App() {
 								</PublicRoute>
 							}
 						/>
-						<Route
-							path="/"
-							element={
-								<ProtectedRoute>
-									<DashboardPage />
-								</ProtectedRoute>
-							}
-						/>
+						{/* TODO: Replace with main home page later, temporarily redirecting to /chat for now */}
+						<Route path="/" element={<Navigate to="/chat" replace />} />
 						<Route
 							path="/api-keys"
 							element={

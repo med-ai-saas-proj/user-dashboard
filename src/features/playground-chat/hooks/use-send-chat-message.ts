@@ -6,20 +6,15 @@ import {
   sendChatMessage,
   streamChatMessage,
 } from '../services/send-chat-message';
-import type { ChatStreamEvent } from '../services/stream-chat.dto';
+import type {
+  ChatStreamEvent,
+  StartStreamParams,
+} from '../services/stream-chat.dto';
 
 export const useSendChatMessage = () => {
   return useMutation({
     mutationFn: (request: ChatRequest) => sendChatMessage(request),
   });
-};
-
-type StartStreamParams = {
-  request: ChatRequest;
-  onMessage: (response: ChatStreamEvent) => void;
-  onError?: (error: unknown) => void;
-  onComplete?: (response?: ChatStreamEvent) => void;
-  onOpen?: (response: Response) => void;
 };
 
 export const useStreamChatMessage = () => {

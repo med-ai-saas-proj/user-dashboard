@@ -1,18 +1,6 @@
-import type { EventSourceMessage } from '@microsoft/fetch-event-source';
 import { fetchEventSource } from '@microsoft/fetch-event-source';
 import type { StreamEventType } from '@/enums/stream-chat.enum';
-import type { ChatRequest } from './chat.dto';
-
-type CreateSSEParams<T> = {
-  url: string;
-  token?: string;
-  signal: AbortSignal;
-  payload?: ChatRequest;
-  onOpen?: (response: Response) => void;
-  onMessage: (data: T, raw: EventSourceMessage) => void;
-  onError?: (error: unknown) => void;
-  onClose?: () => void;
-};
+import type { CreateSSEParams } from '@/features/playground-chat/services/stream-chat.dto';
 
 export function createSSE<T>({
   url,

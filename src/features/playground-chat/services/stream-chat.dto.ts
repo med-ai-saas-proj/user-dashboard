@@ -1,4 +1,17 @@
 import type { StreamEventType, StreamPartType } from '@_types/stream-chat.enum';
+import type { EventSourceMessage } from '@microsoft/fetch-event-source';
+import type { ChatRequest } from './chat.dto';
+
+export type CreateSSEParams<T> = {
+  url: string;
+  token?: string;
+  signal: AbortSignal;
+  payload?: ChatRequest;
+  onOpen?: (response: Response) => void;
+  onMessage: (data: T, raw: EventSourceMessage) => void;
+  onError?: (error: unknown) => void;
+  onClose?: () => void;
+};
 
 // Base structure for SSE
 export interface StreamEvent<T = any> {
@@ -54,3 +67,11 @@ export type ChatStreamEvent =
   | { event: StreamEventType.PartStart; data: StreamPartType }
   | { event: StreamEventType.PartDelta; data: PartDeltaData }
   | { event: StreamEventType.FinalResult; data: FinalResultData };
+
+export type StartStreamParams = {
+  request: ChatRequest;
+  onMessage: (response: ChatStreamEvent) => void;
+  onError?: (error: unknown) => void;
+  onComplete?: (response?: ChatStreamEvent) => void;
+  onOpen?: (response: Response) => void;
+};

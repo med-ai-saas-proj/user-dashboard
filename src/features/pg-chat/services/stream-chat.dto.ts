@@ -26,16 +26,16 @@ export interface ConversationStartData {
 
 // 2. Part Delta (The most common event)
 export type PartDeltaData =
-	| { type: StreamPartType.Output; delta: string; citation?: Citation }
-	| { type: StreamPartType.Thinking; delta: string }
+	| { type: StreamPartType; delta: string; citation?: Citation }
+	| { type: StreamPartType; delta: string }
 	| {
-			type: StreamPartType.BuiltinToolCall;
+			type: StreamPartType;
 			tool_call_id: string;
 			hinted_tool_name?: string;
 			hinted_args?: string;
 	  }
 	| {
-			type: StreamPartType.BuiltinToolResult;
+			type: StreamPartType;
 			tool_call_id: string;
 			hinted_result?: string;
 	  };
@@ -63,10 +63,10 @@ export interface Citation {
 
 // Exhaustive Union for Type Narrowing
 export type ChatStreamEvent =
-	| { event: StreamEventType.ConversationStart; data: ConversationStartData }
-	| { event: StreamEventType.PartStart; data: StreamPartType }
-	| { event: StreamEventType.PartDelta; data: PartDeltaData }
-	| { event: StreamEventType.FinalResult; data: FinalResultData };
+	| { event: StreamEventType; data: ConversationStartData }
+	| { event: StreamEventType; data: StreamPartType }
+	| { event: StreamEventType; data: PartDeltaData }
+	| { event: StreamEventType; data: FinalResultData };
 
 export type StartStreamParams = {
 	request: ChatRequest;

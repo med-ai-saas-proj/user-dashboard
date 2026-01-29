@@ -1,58 +1,133 @@
-import { useTranslation } from 'react-i18next';
+import { useRef } from 'react';
+import { StreamEventType, StreamPartType } from '@/enums/stream-chat.enum';
 import ChatContent from '@/features/pg-chat/components/ChatContent';
 import ChatInput from '@/features/pg-chat/components/ChatInput';
-import { useSendChatMessage } from '@/features/pg-chat/hooks/use-send-chat-message';
+import { useStreamChatMessage } from '@/features/pg-chat/hooks/use-send-chat-message';
+import type { ChatRequest } from '@/features/pg-chat/services/chat.dto';
+import type {
+	ChatStreamEvent,
+	FinalResultData,
+	PartDeltaData,
+} from '@/features/pg-chat/services/stream-chat.dto';
 import { useChatStore } from '@/features/pg-chat/store/chat.store';
 import DashboardLayout from '@/layouts/dashboard-layout';
 
 export default function PlaygroundChatPage() {
-	const { t } = useTranslation('common');
+	const {
+		conversationId,
+		model,
+		messages,
+		setConversationId,
+		addMessage,
+		updateLastAssistantMessage,
+	} = useChatStore();
+	const { startStream, isStreaming } = useStreamChatMessage();
+	const streamingBufferRef = useRef<string>('');
 
-	const { conversationId, model, messages, setConversationId, addMessage } =
-		useChatStore();
-	const chatMutation = useSendChatMessage();
-
-	const handleSendMessage = async (message: string) => {
+	const handleSendMessage = (message: string) => {
 		// Add user message to store
 		addMessage({ role: 'user', content: message });
 
-		try {
-			const response = await chatMutation.mutateAsync({
-				conversation_id: conversationId,
-				model,
-				input: message,
-				stream: false,
-			});
+		const request: ChatRequest = {
+			conversation_id: conversationId,
+			model,
+			input: message,
+			stream: true,
+		};
 
-			// Update conversation ID
-			setConversationId(response.conversation_id);
+		const appendDelta = (delta: string) => {
+			if (!delta) return;
+			streamingBufferRef.current = `${streamingBufferRef.current}${delta}`;
+			updateLastAssistantMessage(streamingBufferRef.current);
+		};
 
-			// Extract text content from response
-			const textContent = response.output
-				.filter((item) => item.type === 'text')
-				.map((item) => item.content)
-				.join('\n\n');
+		const maybeUpdateConversationId = (event: ChatStreamEvent) => {
+			const data = event.data as { conversation_id?: string } | null;
+			if (data && typeof data === 'object' && data.conversation_id) {
+				setConversationId(data.conversation_id);
+			}
+		};
 
-			// Add assistant message to store
-			addMessage({ role: 'assistant', content: textContent });
-		} catch (error) {
-			console.error('Failed to send message:', error);
-			// Add error message
-			addMessage({
-				role: 'assistant',
-				content: t('error'),
-			});
-		}
+		const handlePartDelta = (data: PartDeltaData) => {
+			if (data.type === StreamPartType.Output && 'delta' in data) {
+				appendDelta(data.delta);
+			}
+		};
+
+		const extractTextFromOutput = (output: unknown) => {
+			if (!output) return '';
+			if (typeof output === 'string') return output;
+			if (Array.isArray(output)) {
+				return output
+					.filter(
+						(item): item is { type: string; content: string } =>
+							typeof item === 'object' &&
+							item !== null &&
+							'type' in item &&
+							'content' in item &&
+							item.type === 'text' &&
+							typeof item.content === 'string'
+					)
+					.map((item) => item.content)
+					.join('\n\n');
+			}
+			return '';
+		};
+
+		const handleFinalResult = (data: FinalResultData) => {
+			if (data.status === 'error') {
+				const fallback = extractTextFromOutput(data.output);
+				streamingBufferRef.current =
+					fallback || 'Sorry, I encountered an error. Please try again.';
+				updateLastAssistantMessage(streamingBufferRef.current);
+				return;
+			}
+
+			if (!streamingBufferRef.current) {
+				const finalText = extractTextFromOutput(data.output);
+				if (finalText) {
+					streamingBufferRef.current = finalText;
+					updateLastAssistantMessage(streamingBufferRef.current);
+				}
+			}
+		};
+
+		// Stream assistant response via SSE
+		addMessage({ role: 'assistant', content: '' });
+		streamingBufferRef.current = '';
+
+		startStream({
+			request,
+			onMessage: (event) => {
+				maybeUpdateConversationId(event);
+
+				if (event.event === StreamEventType.PartDelta) {
+					handlePartDelta(event.data as PartDeltaData);
+				}
+			},
+			onError: (error) => {
+				console.error('Streaming chat error:', error);
+				streamingBufferRef.current =
+					'Sorry, the stream was interrupted. Please try again.';
+				updateLastAssistantMessage(streamingBufferRef.current);
+			},
+			onComplete: (event) => {
+				if (!event) return;
+
+				maybeUpdateConversationId(event);
+
+				if (event.event === StreamEventType.FinalResult) {
+					handleFinalResult(event.data as FinalResultData);
+				}
+			},
+		});
 	};
 
 	return (
 		<DashboardLayout pageTitle="Chat" className="pb-0">
 			<div className="w-full h-full flex flex-col items-stretch justify-between px-4 sm:px-6 md:px-12 lg:px-24 xl:px-64 relative">
-				<ChatContent messages={messages} isLoading={chatMutation.isPending} />
-				<ChatInput
-					onSendMessage={handleSendMessage}
-					isLoading={chatMutation.isPending}
-				/>
+				<ChatContent messages={messages} isLoading={isStreaming} />
+				<ChatInput onSendMessage={handleSendMessage} isLoading={isStreaming} />
 			</div>
 		</DashboardLayout>
 	);

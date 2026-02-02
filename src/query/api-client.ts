@@ -1,5 +1,5 @@
 import axios from "axios";
-import { BASE_API_URL } from "@/config/api-routes";
+import { BASE_API_URL, isServiceEndpoint } from "@/config/api-routes";
 import keycloak from "@/config/keycloak";
 import { useServiceApiKeyStore } from "@/features/api-keys/store/service-api-key.store";
 import { useAuthStore } from "@/features/auth/store/auth-store";
@@ -14,20 +14,8 @@ const apiClient = axios.create({
 // Request interceptor for adding auth token
 apiClient.interceptors.request.use(
 	async (config) => {
-		// Check if this is a service endpoint that requires API key
-		// TODO: Refactor to avoid direct store access in api-client
-		const serviceEndpoints = [
-			"/api/v1/ehr_summarize",
-			"/api/v1/rx_advisor",
-			"/api/v1/ai_search",
-		];
-
-		const isServiceEndpoint = serviceEndpoints.some((endpoint) =>
-			config.url?.includes(endpoint)
-		);
-
+		// Handle authentication token
 		if (keycloak.authenticated && keycloak.token) {
-			// Refresh token
 			try {
 				await keycloak.updateToken(30);
 			} catch (error) {
@@ -35,14 +23,14 @@ apiClient.interceptors.request.use(
 			}
 			config.headers.Authorization = `Bearer ${keycloak.token}`;
 		} else {
-			// Fallback to stored token
 			const token = useAuthStore.getState().token;
 			if (token) {
 				config.headers.Authorization = `Bearer ${token}`;
 			}
 		}
-		if (isServiceEndpoint) {
-			// Add API key for service endpoints
+
+		// Add API key for service endpoints
+		if (isServiceEndpoint(config.url)) {
 			const selectedApiKey = useServiceApiKeyStore.getState().selectedApiKey;
 			if (selectedApiKey) {
 				config.headers["X-Api-Key"] = selectedApiKey;

@@ -1,27 +1,31 @@
-import { fetchEventSource } from '@microsoft/fetch-event-source';
-import type { StreamEventType } from '@/enums/stream-chat.enum';
-import type { CreateSSEParams } from '@/features/pg-chat/services/stream-chat.dto';
+import { fetchEventSource } from "@microsoft/fetch-event-source";
+import type { StreamEventType } from "@/enums/stream-chat.enum";
+import { getAuthHeaders, handleUnauthorized } from "@/lib/auth-headers";
+import type { CreateSSEParams } from "@/features/pg-chat/services/stream-chat.dto";
 
-export function createSSE<T>({
+export async function createSSE<T>({
 	url,
-	token,
 	signal,
 	payload,
 	onOpen,
 	onMessage,
 	onError,
 	onClose,
-}: CreateSSEParams<T>) {
+}: Omit<CreateSSEParams<T>, "token">) {
+	const headers = await getAuthHeaders(url);
+
 	return fetchEventSource(url, {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json',
-			...(token ? { Authorization: `Bearer ${token}` } : {}),
-		},
+		method: "POST",
+		headers,
 		body: JSON.stringify(payload),
 		signal,
 
 		onopen(response) {
+			// Handle 401 errors using shared logic
+			if (response.status === 401) {
+				handleUnauthorized();
+				throw new Error("Unauthorized");
+			}
 			return Promise.resolve(onOpen?.(response));
 		},
 
@@ -29,7 +33,7 @@ export function createSSE<T>({
 			if (!event.data) return;
 
 			// Ignore connection event
-			if (event.event === 'connected') {
+			if (event.event === "connected") {
 				return;
 			}
 
@@ -44,7 +48,8 @@ export function createSSE<T>({
 
 				onMessage(fullEvent, event);
 			} catch (err) {
-				console.warn('Non-JSON SSE message:', event.data);
+				console.warn("Non-JSON SSE message:", event.data);
+				console.error(err);
 			}
 		},
 

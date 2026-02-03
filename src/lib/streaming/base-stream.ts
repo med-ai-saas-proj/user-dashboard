@@ -1,5 +1,4 @@
 import { StreamEventType, StreamPartType } from "@/enums/stream-chat.enum";
-import { useAuthStore } from "@/features/auth/store/auth-store";
 import { createSSE } from "@/features/pg-chat/services/sse";
 import type {
 	ChatStreamEvent,
@@ -35,6 +34,7 @@ export type StreamConfig<
 /**
  * Base streaming hook that provides core streaming functionality
  * Can be used directly or extended for specific use cases
+ * Uses the same authentication logic as api-client
  */
 export function useBaseStream() {
 	const controllerRef = useRef<AbortController | null>(null);
@@ -82,15 +82,6 @@ export function useBaseStream() {
 			controllerRef.current = controller;
 			setIsStreaming(true);
 
-			const token = useAuthStore.getState().token;
-
-			if (!token) {
-				const error = new Error("Authentication token is missing");
-				onError?.(error);
-				finalize(onComplete);
-				return;
-			}
-
 			const handleError = (error: unknown) => {
 				onError?.(error);
 				finalize(onComplete);
@@ -100,7 +91,6 @@ export function useBaseStream() {
 				try {
 					await createSSE<ChatStreamEvent>({
 						url,
-						token,
 						signal: controller.signal,
 						payload: { ...request, stream: true },
 						onOpen,

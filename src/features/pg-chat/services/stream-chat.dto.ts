@@ -1,12 +1,11 @@
-import type { StreamEventType, StreamPartType } from "@_types/stream-chat.enum";
+import type { StreamEventType, StreamPartType } from "@/enums/stream-chat.enum";
 import type { EventSourceMessage } from "@microsoft/fetch-event-source";
 import type { ChatRequest } from "./chat.dto";
 
 export type CreateSSEParams<T> = {
 	url: string;
-	token?: string;
 	signal: AbortSignal;
-	payload?: any;
+	payload?: any; // TODO: Remove any, make generic
 	onOpen?: (response: Response) => void;
 	onMessage: (data: T, raw: EventSourceMessage) => void;
 	onError?: (error: unknown) => void;

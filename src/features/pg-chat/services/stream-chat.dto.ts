@@ -1,12 +1,12 @@
-import type { StreamEventType, StreamPartType } from '@_types/stream-chat.enum';
-import type { EventSourceMessage } from '@microsoft/fetch-event-source';
-import type { ChatRequest } from './chat.dto';
+import type { StreamEventType, StreamPartType } from "@_types/stream-chat.enum";
+import type { EventSourceMessage } from "@microsoft/fetch-event-source";
+import type { ChatRequest } from "./chat.dto";
 
 export type CreateSSEParams<T> = {
 	url: string;
 	token?: string;
 	signal: AbortSignal;
-	payload?: ChatRequest;
+	payload?: any;
 	onOpen?: (response: Response) => void;
 	onMessage: (data: T, raw: EventSourceMessage) => void;
 	onError?: (error: unknown) => void;
@@ -43,7 +43,7 @@ export type PartDeltaData =
 // 3. Final Result
 export interface FinalResultData {
 	id: string;
-	status: 'completed' | 'error';
+	status: "completed" | "error";
 	usage: {
 		input_tokens: number;
 		output_tokens: number;
@@ -55,7 +55,7 @@ export interface FinalResultData {
 export interface Citation {
 	start_index: number;
 	end_index: number;
-	reference_type: 'document' | 'webpage' | 'inline_text';
+	reference_type: "document" | "webpage" | "inline_text";
 	title: string;
 	src: string;
 	content: string;

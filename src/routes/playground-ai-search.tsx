@@ -1,10 +1,10 @@
+import { useStreamAISearch } from "@/features/pg-ai-search/hooks/use-stream-ai-search";
+import { useAISearchStore } from "@/features/pg-ai-search/store/ai-search.store";
 import ChatContent from "@/features/pg-chat/components/ChatContent";
 import ChatInput from "@/features/pg-chat/components/ChatInput";
-import { useStreamChat } from "@/features/pg-chat/hooks/use-stream-chat";
-import { useChatStore } from "@/features/pg-chat/store/chat.store";
 import DashboardLayout from "@/layouts/dashboard-layout";
 
-export default function PlaygroundChatPage() {
+export default function PlaygroundAISearchPage() {
 	const {
 		conversationId,
 		model,
@@ -12,17 +12,17 @@ export default function PlaygroundChatPage() {
 		setConversationId,
 		addMessage,
 		updateLastAssistantMessage,
-	} = useChatStore();
-	const { startChatStream, isStreaming } = useStreamChat();
+	} = useAISearchStore();
+	const { startSearchStream, isStreaming } = useStreamAISearch();
 
-	const handleSendMessage = (message: string) => {
+	const handleSendMessage = (query: string) => {
 		// Add user message to store
-		addMessage({ role: "user", content: message });
+		addMessage({ role: "user", content: query });
 
 		// Initialize empty assistant message
 		addMessage({ role: "assistant", content: "" });
 
-		startChatStream(message, model, conversationId, {
+		startSearchStream(query, model, conversationId, {
 			onConversationIdUpdate: (convId) => {
 				setConversationId(convId);
 			},
@@ -30,7 +30,7 @@ export default function PlaygroundChatPage() {
 				updateLastAssistantMessage(content);
 			},
 			onError: (error) => {
-				console.error("Chat streaming error:", error);
+				console.error("AI search streaming error:", error);
 			},
 			onComplete: () => {
 				// Stream completed
@@ -39,7 +39,7 @@ export default function PlaygroundChatPage() {
 	};
 
 	return (
-		<DashboardLayout pageTitle="Chat" className="pb-0">
+		<DashboardLayout pageTitle="AI Search" className="pb-0">
 			<div className="w-full h-full flex flex-col items-stretch justify-between px-4 sm:px-6 md:px-12 lg:px-24 xl:px-64 relative">
 				<ChatContent messages={messages} isLoading={isStreaming} />
 				<ChatInput onSendMessage={handleSendMessage} isLoading={isStreaming} />

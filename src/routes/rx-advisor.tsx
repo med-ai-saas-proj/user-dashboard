@@ -10,9 +10,11 @@ import type { RxAdvisorStreamRequest } from "@/features/pg-rx-advisor/services/r
 import { ehrFormToRxAdvisorStreamRequest } from "@/features/pg-rx-advisor/utils/rx-advisor.utils";
 import DashboardLayout from "@/layouts/dashboard-layout";
 import { useStream } from "@/lib/streaming/use-stream";
+import { toast } from "sonner";
 
 const RxAdvisorPage = () => {
 	const { t } = useTranslation("playground-rx-advisor");
+	const { t: tCommon } = useTranslation("common");
 
 	const [analysis, setAnalysis] = useState<string>("");
 	const [reasoning, setReasoning] = useState<string | null>(null);
@@ -55,7 +57,7 @@ const RxAdvisorPage = () => {
 					console.error("RX Advisor streaming error:", error);
 				},
 				onComplete: () => {
-					// Stream completed
+					toast.success(tCommon("requestDone"));
 				},
 			}
 		);

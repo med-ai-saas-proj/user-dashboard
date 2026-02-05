@@ -9,8 +9,11 @@ import type { EHRSummaryStreamRequest } from "@/features/pg-ehr-summary/services
 import { ehrFormToStreamRequest } from "@/features/pg-ehr-summary/utils/ehr-summary.utils";
 import DashboardLayout from "@/layouts/dashboard-layout";
 import { useStream } from "@/lib/streaming/use-stream";
+import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 
 const EHRSummaryPage = () => {
+	const { t: tCommon } = useTranslation("common");
 	const [summary, setSummary] = useState<string>("");
 	const [conversationId, setConversationId] = useState<string | null>(null);
 	const [showApiKeyDialog, setShowApiKeyDialog] = useState(false);
@@ -47,7 +50,7 @@ const EHRSummaryPage = () => {
 					console.error("EHR summary streaming error:", error);
 				},
 				onComplete: () => {
-					// Stream completed
+					toast.success(tCommon("requestDone"));
 				},
 			}
 		);

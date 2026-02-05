@@ -24,6 +24,7 @@ export type StreamRequestConfig<TRequest extends BaseStreamRequest> = {
 /**
  * Universal streaming hook that works with any endpoint returning ChatStreamEvent format
  * Handles all common streaming logic: conversation IDs, content deltas, errors, completion
+ * See https://docs.ag-ui.com/concepts/events for ChatStreamEvent details
  *
  * @example
  * // For chat

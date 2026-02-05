@@ -5,6 +5,23 @@ import type {
 	TongHop,
 } from "@/features/pg-ehr-summary/ehr-form.type";
 
+export type RxAdvisorRequest = {
+	ehr: {
+		type: "vn_moh";
+		vn_moh: {
+			tong_hop: TongHop;
+			chi_tiet_thuoc: ChiTietThuoc[];
+			chi_tiet_cls: ChiTietCLS[];
+			dien_bien_lam_sang: DienBienLamSang[];
+		};
+	};
+	prescription: {
+		type: "vn_moh";
+		vn_moh: ChiTietThuoc[];
+	};
+	stream?: boolean;
+};
+
 export type RxChatRequest = {
 	conversation_id?: string | null;
 	model: string;
@@ -46,23 +63,6 @@ export type RxChatResponse = {
 		output_tokens: number;
 		total_tokens: number;
 	};
-};
-
-export type RxAdvisorRequest = {
-	ehr: {
-		type: "vn_moh";
-		vn_moh: {
-			tong_hop: TongHop;
-			chi_tiet_thuoc: ChiTietThuoc[];
-			chi_tiet_cls: ChiTietCLS[];
-			dien_bien_lam_sang: DienBienLamSang[];
-		};
-	};
-	prescription: {
-		type: "vn_moh";
-		vn_moh: ChiTietThuoc[];
-	};
-	stream?: boolean;
 };
 
 export type UsedTool = {

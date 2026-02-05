@@ -34,7 +34,6 @@ export type StreamConfig<
 /**
  * Base streaming hook that provides core streaming functionality
  * Can be used directly or extended for specific use cases
- * Uses the same authentication logic as api-client
  */
 export function useBaseStream() {
 	const controllerRef = useRef<AbortController | null>(null);

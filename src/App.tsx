@@ -13,7 +13,7 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { Toaster } from "sonner";
 import PlaygroundChatPage from "./routes/playground-chat";
-import PlaygroundAISearchPage from "@/routes/playground-AI-search";
+import PlaygroundAISearchPage from "@/routes/playground-ai-search";
 
 function App() {
 	return (

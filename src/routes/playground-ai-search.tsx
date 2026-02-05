@@ -1,7 +1,9 @@
-import { useStreamAISearch } from "@/features/pg-ai-search/hooks/use-stream-ai-search";
+import { API_ROUTES } from "@/config/api-routes";
+import type { AISearchRequest } from "@/features/pg-ai-search/services/ai-search.dto";
 import { useAISearchStore } from "@/features/pg-ai-search/store/ai-search.store";
 import ChatContent from "@/features/pg-chat/components/ChatContent";
 import ChatInput from "@/features/pg-chat/components/ChatInput";
+import { useStream } from "@/lib/streaming/use-stream";
 import DashboardLayout from "@/layouts/dashboard-layout";
 
 export default function PlaygroundAISearchPage() {
@@ -13,7 +15,7 @@ export default function PlaygroundAISearchPage() {
 		addMessage,
 		updateLastAssistantMessage,
 	} = useAISearchStore();
-	const { startSearchStream, isStreaming } = useStreamAISearch();
+	const { startStream, isStreaming } = useStream<AISearchRequest>();
 
 	const handleSendMessage = (query: string) => {
 		// Add user message to store
@@ -22,20 +24,30 @@ export default function PlaygroundAISearchPage() {
 		// Initialize empty assistant message
 		addMessage({ role: "assistant", content: "" });
 
-		startSearchStream(query, model, conversationId, {
-			onConversationIdUpdate: (convId) => {
-				setConversationId(convId);
+		startStream(
+			{
+				url: API_ROUTES.SERVICES.AI_SEARCH,
+				request: {
+					conversation_id: conversationId,
+					model,
+					query,
+				},
 			},
-			onContentUpdate: (content) => {
-				updateLastAssistantMessage(content);
-			},
-			onError: (error) => {
-				console.error("AI search streaming error:", error);
-			},
-			onComplete: () => {
-				// Stream completed
-			},
-		});
+			{
+				onConversationIdUpdate: (convId) => {
+					setConversationId(convId);
+				},
+				onContentUpdate: (content) => {
+					updateLastAssistantMessage(content);
+				},
+				onError: (error) => {
+					console.error("AI search streaming error:", error);
+				},
+				onComplete: () => {
+					// Stream completed
+				},
+			}
+		);
 	};
 
 	return (

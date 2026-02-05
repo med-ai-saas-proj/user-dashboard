@@ -1,49 +1,62 @@
-import { API_ROUTES } from "@/config/api-routes";
+import { useCallback, useRef } from "react";
 import {
 	extractConversationId,
 	extractDelta,
 	extractFinalResult,
 	extractTextFromOutput,
 	useBaseStream,
+	type BaseStreamRequest,
 	type StreamConfig,
-} from "@/lib/streaming/base-stream";
-import { useCallback, useRef } from "react";
-import type { ChatRequest } from "../services/chat.dto";
+} from "./base-stream";
 
-export type ChatStreamHandlers = {
+export type StreamHandlers = {
 	onConversationIdUpdate?: (conversationId: string) => void;
 	onContentUpdate?: (content: string) => void;
 	onError?: (error: unknown) => void;
 	onComplete?: () => void;
 };
 
+export type StreamRequestConfig<TRequest extends BaseStreamRequest> = {
+	url: string;
+	request: TRequest;
+};
+
 /**
- * Chat-specific streaming hook
- * Handles the specifics of chat requests (input field)
+ * Universal streaming hook that works with any endpoint returning ChatStreamEvent format
+ * Handles all common streaming logic: conversation IDs, content deltas, errors, completion
+ *
+ * @example
+ * // For chat
+ * const { startStream, isStreaming } = useStream<ChatRequest>();
+ * startStream({
+ *   url: API_ROUTES.SERVICES.CHAT,
+ *   request: { model, input, conversation_id }
+ * }, handlers);
+ *
+ * @example
+ * // For AI search
+ * const { startStream, isStreaming } = useStream<AISearchRequest>();
+ * startStream({
+ *   url: API_ROUTES.SERVICES.AI_SEARCH,
+ *   request: { model, query, conversation_id }
+ * }, handlers);
  */
-export function useStreamChat() {
+export function useStream<
+	TRequest extends BaseStreamRequest = BaseStreamRequest,
+>() {
 	const baseStream = useBaseStream();
 	const contentBufferRef = useRef<string>("");
 
-	const startChatStream = useCallback(
+	const startStream = useCallback(
 		(
-			input: string,
-			model: string,
-			conversationId: string | null,
-			handlers: ChatStreamHandlers
+			{ url, request }: StreamRequestConfig<TRequest>,
+			handlers: StreamHandlers
 		) => {
 			contentBufferRef.current = "";
 
-			const request: ChatRequest = {
-				conversation_id: conversationId,
-				model,
-				input,
-				stream: true,
-			};
-
-			const config: StreamConfig<ChatRequest> = {
-				url: API_ROUTES.SERVICES.CHAT,
-				request,
+			const config: StreamConfig<TRequest> = {
+				url,
+				request: { ...request, stream: true } as TRequest,
 				onMessage: (event) => {
 					// Extract and update conversation ID
 					const convId = extractConversationId(event);
@@ -59,7 +72,7 @@ export function useStreamChat() {
 					}
 				},
 				onError: (error) => {
-					console.error("Streaming chat error:", error);
+					console.error("Streaming error:", error);
 					contentBufferRef.current =
 						"Sorry, the stream was interrupted. Please try again.";
 					handlers.onContentUpdate?.(contentBufferRef.current);
@@ -109,7 +122,7 @@ export function useStreamChat() {
 	);
 
 	return {
-		startChatStream,
+		startStream,
 		stopStream: baseStream.stopStream,
 		isStreaming: baseStream.isStreaming,
 	};

@@ -1,7 +1,9 @@
+import { API_ROUTES } from "@/config/api-routes";
 import ChatContent from "@/features/pg-chat/components/ChatContent";
 import ChatInput from "@/features/pg-chat/components/ChatInput";
-import { useStreamChat } from "@/features/pg-chat/hooks/use-stream-chat";
+import type { ChatRequest } from "@/features/pg-chat/services/chat.dto";
 import { useChatStore } from "@/features/pg-chat/store/chat.store";
+import { useStream } from "@/lib/streaming/use-stream";
 import DashboardLayout from "@/layouts/dashboard-layout";
 
 export default function PlaygroundChatPage() {
@@ -13,7 +15,7 @@ export default function PlaygroundChatPage() {
 		addMessage,
 		updateLastAssistantMessage,
 	} = useChatStore();
-	const { startChatStream, isStreaming } = useStreamChat();
+	const { startStream, isStreaming } = useStream<ChatRequest>();
 
 	const handleSendMessage = (message: string) => {
 		// Add user message to store
@@ -22,20 +24,30 @@ export default function PlaygroundChatPage() {
 		// Initialize empty assistant message
 		addMessage({ role: "assistant", content: "" });
 
-		startChatStream(message, model, conversationId, {
-			onConversationIdUpdate: (convId) => {
-				setConversationId(convId);
+		startStream(
+			{
+				url: API_ROUTES.SERVICES.CHAT,
+				request: {
+					conversation_id: conversationId,
+					model,
+					input: message,
+				},
 			},
-			onContentUpdate: (content) => {
-				updateLastAssistantMessage(content);
-			},
-			onError: (error) => {
-				console.error("Chat streaming error:", error);
-			},
-			onComplete: () => {
-				// Stream completed
-			},
-		});
+			{
+				onConversationIdUpdate: (convId) => {
+					setConversationId(convId);
+				},
+				onContentUpdate: (content) => {
+					updateLastAssistantMessage(content);
+				},
+				onError: (error) => {
+					console.error("Chat streaming error:", error);
+				},
+				onComplete: () => {
+					// Stream completed
+				},
+			}
+		);
 	};
 
 	return (

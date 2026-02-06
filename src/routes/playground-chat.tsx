@@ -1,16 +1,16 @@
-import { useRef } from 'react';
-import { StreamEventType, StreamPartType } from '@/enums/stream-chat.enum';
-import ChatContent from '@/features/pg-chat/components/ChatContent';
-import ChatInput from '@/features/pg-chat/components/ChatInput';
-import { useStreamChatMessage } from '@/features/pg-chat/hooks/use-send-chat-message';
-import type { ChatRequest } from '@/features/pg-chat/services/chat.dto';
+import { useRef } from "react";
+import { StreamEventType, StreamPartType } from "@/enums/stream-chat.enum";
+import ChatContent from "@/features/pg-chat/components/ChatContent";
+import ChatInput from "@/features/pg-chat/components/ChatInput";
+import { useStreamChatMessage } from "@/features/pg-chat/hooks/use-send-chat-message";
+import type { ChatRequest } from "@/features/pg-chat/services/chat.dto";
 import type {
 	ChatStreamEvent,
 	FinalResultData,
 	PartDeltaData,
-} from '@/features/pg-chat/services/stream-chat.dto';
-import { useChatStore } from '@/features/pg-chat/store/chat.store';
-import DashboardLayout from '@/layouts/dashboard-layout';
+} from "@/features/pg-chat/services/stream-chat.dto";
+import { useChatStore } from "@/features/pg-chat/store/chat.store";
+import DashboardLayout from "@/layouts/dashboard-layout";
 
 export default function PlaygroundChatPage() {
 	const {
@@ -22,11 +22,11 @@ export default function PlaygroundChatPage() {
 		updateLastAssistantMessage,
 	} = useChatStore();
 	const { startStream, isStreaming } = useStreamChatMessage();
-	const streamingBufferRef = useRef<string>('');
+	const streamingBufferRef = useRef<string>("");
 
 	const handleSendMessage = (message: string) => {
 		// Add user message to store
-		addMessage({ role: 'user', content: message });
+		addMessage({ role: "user", content: message });
 
 		const request: ChatRequest = {
 			conversation_id: conversationId,
@@ -43,42 +43,42 @@ export default function PlaygroundChatPage() {
 
 		const maybeUpdateConversationId = (event: ChatStreamEvent) => {
 			const data = event.data as { conversation_id?: string } | null;
-			if (data && typeof data === 'object' && data.conversation_id) {
+			if (data && typeof data === "object" && data.conversation_id) {
 				setConversationId(data.conversation_id);
 			}
 		};
 
 		const handlePartDelta = (data: PartDeltaData) => {
-			if (data.type === StreamPartType.Output && 'delta' in data) {
+			if (data.type === StreamPartType.Output && "delta" in data) {
 				appendDelta(data.delta);
 			}
 		};
 
 		const extractTextFromOutput = (output: unknown) => {
-			if (!output) return '';
-			if (typeof output === 'string') return output;
+			if (!output) return "";
+			if (typeof output === "string") return output;
 			if (Array.isArray(output)) {
 				return output
 					.filter(
 						(item): item is { type: string; content: string } =>
-							typeof item === 'object' &&
+							typeof item === "object" &&
 							item !== null &&
-							'type' in item &&
-							'content' in item &&
-							item.type === 'text' &&
-							typeof item.content === 'string'
+							"type" in item &&
+							"content" in item &&
+							item.type === "text" &&
+							typeof item.content === "string"
 					)
 					.map((item) => item.content)
-					.join('\n\n');
+					.join("\n\n");
 			}
-			return '';
+			return "";
 		};
 
 		const handleFinalResult = (data: FinalResultData) => {
-			if (data.status === 'error') {
+			if (data.status === "error") {
 				const fallback = extractTextFromOutput(data.output);
 				streamingBufferRef.current =
-					fallback || 'Sorry, I encountered an error. Please try again.';
+					fallback || "Sorry, I encountered an error. Please try again.";
 				updateLastAssistantMessage(streamingBufferRef.current);
 				return;
 			}
@@ -93,8 +93,8 @@ export default function PlaygroundChatPage() {
 		};
 
 		// Stream assistant response via SSE
-		addMessage({ role: 'assistant', content: '' });
-		streamingBufferRef.current = '';
+		addMessage({ role: "assistant", content: "" });
+		streamingBufferRef.current = "";
 
 		startStream({
 			request,
@@ -106,9 +106,9 @@ export default function PlaygroundChatPage() {
 				}
 			},
 			onError: (error) => {
-				console.error('Streaming chat error:', error);
+				console.error("Streaming chat error:", error);
 				streamingBufferRef.current =
-					'Sorry, the stream was interrupted. Please try again.';
+					"Sorry, the stream was interrupted. Please try again.";
 				updateLastAssistantMessage(streamingBufferRef.current);
 			},
 			onComplete: (event) => {

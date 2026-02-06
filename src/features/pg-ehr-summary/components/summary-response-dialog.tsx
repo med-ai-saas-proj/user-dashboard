@@ -1,95 +1,95 @@
-import { CheckCircle2Icon, ClipboardIcon } from 'lucide-react';
-import { useTranslation } from 'react-i18next';
-import Markdown from 'react-markdown';
-import { Button } from '@/components/shadcn/button';
+import { CheckCircle2Icon, ClipboardIcon } from "lucide-react";
+import { useTranslation } from "react-i18next";
+import Markdown from "react-markdown";
+import { Button } from "@/components/shadcn/button";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/shadcn/dialog';
-import { Spinner } from '@/components/shadcn/spinner';
-import { useCopyToClipboard } from '@/hooks/use-copy-to-clipboard';
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogHeader,
+	DialogTitle,
+} from "@/components/shadcn/dialog";
+import { Spinner } from "@/components/shadcn/spinner";
+import { useCopyToClipboard } from "@/hooks/use-copy-to-clipboard";
 
 type SummaryResponseDialogProps = {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  summary?: string;
-  isLoading?: boolean;
-  error?: Error | null;
+	open: boolean;
+	onOpenChange: (open: boolean) => void;
+	summary?: string;
+	isLoading?: boolean;
+	error?: Error | null;
 };
 
 export function SummaryResponseDialog({
-  open,
-  onOpenChange,
-  summary,
-  isLoading,
-  error,
+	open,
+	onOpenChange,
+	summary,
+	isLoading,
+	error,
 }: SummaryResponseDialogProps) {
-  const { copy, isCopied } = useCopyToClipboard();
-  const { t } = useTranslation('summary-response');
+	const { copy, isCopied } = useCopyToClipboard();
+	const { t } = useTranslation("summary-response");
 
-  return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-4xl max-h-[85vh] overflow-hidden flex flex-col">
-        <DialogHeader>
-          <div className="flex items-center justify-between gap-4">
-            <div>
-              <DialogTitle>{t('dialogTitle')}</DialogTitle>
-              <DialogDescription>{t('dialogDescription')}</DialogDescription>
-            </div>
-            {summary && !isLoading && !error && (
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={() => copy(summary)}
-                className="gap-2 shrink-0"
-              >
-                {isCopied ? (
-                  <>
-                    <CheckCircle2Icon className="size-4" />
-                    {t('actions.copied')}
-                  </>
-                ) : (
-                  <>
-                    <ClipboardIcon className="size-4" />
-                    {t('actions.copy')}
-                  </>
-                )}
-              </Button>
-            )}
-          </div>
-        </DialogHeader>
+	return (
+		<Dialog open={open} onOpenChange={onOpenChange}>
+			<DialogContent className="max-w-4xl max-h-[85vh] overflow-hidden flex flex-col">
+				<DialogHeader>
+					<div className="flex items-center justify-between gap-4">
+						<div>
+							<DialogTitle>{t("dialogTitle")}</DialogTitle>
+							<DialogDescription>{t("dialogDescription")}</DialogDescription>
+						</div>
+						{summary && !isLoading && !error && (
+							<Button
+								type="button"
+								variant="outline"
+								size="sm"
+								onClick={() => copy(summary)}
+								className="gap-2 shrink-0"
+							>
+								{isCopied ? (
+									<>
+										<CheckCircle2Icon className="size-4" />
+										{t("actions.copied")}
+									</>
+								) : (
+									<>
+										<ClipboardIcon className="size-4" />
+										{t("actions.copy")}
+									</>
+								)}
+							</Button>
+						)}
+					</div>
+				</DialogHeader>
 
-        <div className="flex-1 overflow-y-auto pr-2">
-          {isLoading && (
-            <div className="flex items-center justify-center p-12">
-              <div className="flex flex-col items-center gap-3">
-                <Spinner className="size-8" />
-                <p className="text-muted-foreground text-sm">
-                  {t('summarizing')}
-                </p>
-              </div>
-            </div>
-          )}
+				<div className="flex-1 overflow-y-auto pr-2">
+					{isLoading && (
+						<div className="flex items-center justify-center p-12">
+							<div className="flex flex-col items-center gap-3">
+								<Spinner className="size-8" />
+								<p className="text-muted-foreground text-sm">
+									{t("summarizing")}
+								</p>
+							</div>
+						</div>
+					)}
 
-          {error && (
-            <div className="p-4 border border-destructive rounded-lg bg-destructive/10">
-              <p className="text-destructive text-sm font-medium">
-                {t('errors.summaryFailed', { message: error.message })}
-              </p>
-            </div>
-          )}
+					{error && (
+						<div className="p-4 border border-destructive rounded-lg bg-destructive/10">
+							<p className="text-destructive text-sm font-medium">
+								{t("errors.summaryFailed", { message: error.message })}
+							</p>
+						</div>
+					)}
 
-          {summary && !isLoading && !error && (
-            <div className="prose prose-sm max-w-none dark:prose-invert">
-              <Markdown>{summary}</Markdown>
-            </div>
-          )}
-        </div>
-      </DialogContent>
-    </Dialog>
-  );
+					{summary && !isLoading && !error && (
+						<div className="prose prose-sm max-w-none dark:prose-invert">
+							<Markdown>{summary}</Markdown>
+						</div>
+					)}
+				</div>
+			</DialogContent>
+		</Dialog>
+	);
 }

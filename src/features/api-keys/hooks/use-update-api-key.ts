@@ -1,19 +1,19 @@
-import { useMutation } from '@tanstack/react-query';
-import { updateApiKey } from '@/features/api-keys/services/update-api-key';
+import { useMutation } from "@tanstack/react-query";
+import { updateApiKey } from "@/features/api-keys/services/update-api-key";
 
 export const useUpdateApiKey = () => {
-  return useMutation({
-    mutationFn: async (credentials: {
-      apikeyId: string;
-      name?: string;
-      permissions?: string[];
-    }) => {
-      const data = await updateApiKey({
-        apikeyId: credentials.apikeyId,
-        name: credentials.name,
-        permissions: credentials.permissions,
-      });
-      return data;
-    },
-  });
+	return useMutation({
+		mutationFn: async (credentials: {
+			apikeyId: string;
+			name?: string;
+			permissions?: string[];
+		}) => {
+			const data = await updateApiKey({
+				apikeyId: credentials.apikeyId,
+				name: credentials.name,
+				permissions: credentials.permissions,
+			});
+			return data;
+		},
+	});
 };

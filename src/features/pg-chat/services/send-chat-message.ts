@@ -1,13 +1,13 @@
-import { API_ROUTES } from '@/config/api-routes';
-import { useAuthStore } from '@/features/auth/store/auth-store';
-import apiClient from '@/query/api-client';
+import { API_ROUTES } from "@/config/api-routes";
+import { useAuthStore } from "@/features/auth/store/auth-store";
+import apiClient from "@/query/api-client";
 import type {
 	ChatRequest,
 	ChatResponse,
 	StreamChatMessageParams,
-} from './chat.dto';
-import { createSSE } from './sse';
-import type { ChatStreamEvent } from './stream-chat.dto';
+} from "./chat.dto";
+import { createSSE } from "./sse";
+import type { ChatStreamEvent } from "./stream-chat.dto";
 
 export const sendChatMessage = async (
 	request: ChatRequest
@@ -30,7 +30,7 @@ export const streamChatMessage = ({
 	const token = useAuthStore.getState().token;
 
 	if (!token) {
-		throw new Error('Authentication token is missing');
+		throw new Error("Authentication token is missing");
 	}
 
 	return createSSE<ChatStreamEvent>({

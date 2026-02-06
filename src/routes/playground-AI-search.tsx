@@ -1,12 +1,12 @@
-import { useTranslation } from 'react-i18next';
-import { useSendAISearch } from '@/features/pg-ai-search/hooks/use-send-ai-search';
-import { useAISearchStore } from '@/features/pg-ai-search/store/ai-search.store';
-import ChatContent from '@/features/pg-chat/components/ChatContent';
-import ChatInput from '@/features/pg-chat/components/ChatInput';
-import DashboardLayout from '@/layouts/dashboard-layout';
+import { useTranslation } from "react-i18next";
+import { useSendAISearch } from "@/features/pg-ai-search/hooks/use-send-ai-search";
+import { useAISearchStore } from "@/features/pg-ai-search/store/ai-search.store";
+import ChatContent from "@/features/pg-chat/components/ChatContent";
+import ChatInput from "@/features/pg-chat/components/ChatInput";
+import DashboardLayout from "@/layouts/dashboard-layout";
 
 export default function PlaygroundAISearchPage() {
-	const { t } = useTranslation('common');
+	const { t } = useTranslation("common");
 
 	const { conversationId, model, messages, setConversationId, addMessage } =
 		useAISearchStore();
@@ -14,7 +14,7 @@ export default function PlaygroundAISearchPage() {
 
 	const handleSendMessage = async (query: string) => {
 		// Add user message to store
-		addMessage({ role: 'user', content: query });
+		addMessage({ role: "user", content: query });
 
 		try {
 			const response = await aiSearchMutation.mutateAsync({
@@ -29,18 +29,18 @@ export default function PlaygroundAISearchPage() {
 
 			// Extract text content from response
 			const textContent = response.output
-				.filter((item) => item.type === 'text')
+				.filter((item) => item.type === "text")
 				.map((item) => item.content)
-				.join('\n\n');
+				.join("\n\n");
 
 			// Add assistant message to store
-			addMessage({ role: 'assistant', content: textContent });
+			addMessage({ role: "assistant", content: textContent });
 		} catch (error) {
-			console.error('Failed to search:', error);
+			console.error("Failed to search:", error);
 			// Add error message
 			addMessage({
-				role: 'assistant',
-				content: t('error'),
+				role: "assistant",
+				content: t("error"),
 			});
 		}
 	};

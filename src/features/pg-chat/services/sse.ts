@@ -1,6 +1,6 @@
-import { fetchEventSource } from '@microsoft/fetch-event-source';
-import type { StreamEventType } from '@/enums/stream-chat.enum';
-import type { CreateSSEParams } from '@/features/pg-chat/services/stream-chat.dto';
+import { fetchEventSource } from "@microsoft/fetch-event-source";
+import type { StreamEventType } from "@/enums/stream-chat.enum";
+import type { CreateSSEParams } from "@/features/pg-chat/services/stream-chat.dto";
 
 export function createSSE<T>({
 	url,
@@ -13,9 +13,9 @@ export function createSSE<T>({
 	onClose,
 }: CreateSSEParams<T>) {
 	return fetchEventSource(url, {
-		method: 'POST',
+		method: "POST",
 		headers: {
-			'Content-Type': 'application/json',
+			"Content-Type": "application/json",
 			...(token ? { Authorization: `Bearer ${token}` } : {}),
 		},
 		body: JSON.stringify(payload),
@@ -29,7 +29,7 @@ export function createSSE<T>({
 			if (!event.data) return;
 
 			// Ignore connection event
-			if (event.event === 'connected') {
+			if (event.event === "connected") {
 				return;
 			}
 
@@ -44,7 +44,7 @@ export function createSSE<T>({
 
 				onMessage(fullEvent, event);
 			} catch (err) {
-				console.warn('Non-JSON SSE message:', event.data);
+				console.warn("Non-JSON SSE message:", event.data);
 			}
 		},
 

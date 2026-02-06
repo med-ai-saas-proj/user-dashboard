@@ -1,15 +1,15 @@
-import { useMutation } from '@tanstack/react-query';
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { StreamEventType } from '@/enums/stream-chat.enum';
-import type { ChatRequest } from '../services/chat.dto';
+import { useMutation } from "@tanstack/react-query";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { StreamEventType } from "@/enums/stream-chat.enum";
+import type { ChatRequest } from "../services/chat.dto";
 import {
 	sendChatMessage,
 	streamChatMessage,
-} from '../services/send-chat-message';
+} from "../services/send-chat-message";
 import type {
 	ChatStreamEvent,
 	StartStreamParams,
-} from '../services/stream-chat.dto';
+} from "../services/stream-chat.dto";
 
 export const useSendChatMessage = () => {
 	return useMutation({
@@ -23,7 +23,7 @@ export const useStreamChatMessage = () => {
 	const [isStreaming, setIsStreaming] = useState(false);
 
 	const finalize = useCallback(
-		(onComplete?: StartStreamParams['onComplete'], event?: ChatStreamEvent) => {
+		(onComplete?: StartStreamParams["onComplete"], event?: ChatStreamEvent) => {
 			if (finishedRef.current) return;
 			finishedRef.current = true;
 			setIsStreaming(false);

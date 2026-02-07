@@ -1,71 +1,92 @@
-import { useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { ApiKeyRequiredDialog } from '@/features/api-keys/components/api-key-required-dialog';
-import { useServiceApiKeyStore } from '@/features/api-keys/store/service-api-key.store';
-import EHRForm from '@/features/pg-ehr-summary/components/ehr-form';
-import type { EHRFormData } from '@/features/pg-ehr-summary/ehr-form.type';
-import { AnalysisResponseDialog } from '@/features/pg-rx-advisor/components/analysis-response-dialog';
-import { useRxAdvisor } from '@/features/pg-rx-advisor/hooks/use-rx-advisor';
-import { ehrFormToRxAdvisorRequest } from '@/features/pg-rx-advisor/utils/rx-advisor.utils';
-import DashboardLayout from '@/layouts/dashboard-layout';
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { API_ROUTES } from "@/config/api-routes";
+import { ApiKeyRequiredDialog } from "@/features/api-keys/components/api-key-required-dialog";
+import { useServiceApiKeyStore } from "@/features/api-keys/store/service-api-key.store";
+import EHRForm from "@/features/pg-ehr-summary/components/ehr-form";
+import type { EHRFormData } from "@/features/pg-ehr-summary/ehr-form.type";
+import { AnalysisResponseDialog } from "@/features/pg-rx-advisor/components/analysis-response-dialog";
+import type { RxAdvisorStreamRequest } from "@/features/pg-rx-advisor/services/rx-advisor.dto";
+import { ehrFormToRxAdvisorStreamRequest } from "@/features/pg-rx-advisor/utils/rx-advisor.utils";
+import DashboardLayout from "@/layouts/dashboard-layout";
+import { useStream } from "@/lib/streaming/use-stream";
+import { toast } from "sonner";
 
 const RxAdvisorPage = () => {
-  const { t } = useTranslation('playground-rx-advisor');
+	const { t } = useTranslation("playground-rx-advisor");
+	const { t: tCommon } = useTranslation("common");
 
-  const [analysis, setAnalysis] = useState<{
-    analysis: string;
-    reasoning: string | null;
-  }>();
-  const [showApiKeyDialog, setShowApiKeyDialog] = useState(false);
-  const [showResultDialog, setShowResultDialog] = useState(false);
-  const rxAdvisorMutation = useRxAdvisor();
-  const { selectedApiKey } = useServiceApiKeyStore();
+	const [analysis, setAnalysis] = useState<string>("");
+	const [reasoning, setReasoning] = useState<string | null>(null);
+	const [conversationId, setConversationId] = useState<string | null>(null);
+	const [showApiKeyDialog, setShowApiKeyDialog] = useState(false);
+	const [showResultDialog, setShowResultDialog] = useState(false);
+	const { startStream, isStreaming } = useStream<RxAdvisorStreamRequest>();
+	const { selectedApiKey } = useServiceApiKeyStore();
 
-  const handleSubmit = async (data: EHRFormData) => {
-    if (!selectedApiKey) {
-      setShowApiKeyDialog(true);
-      return;
-    }
+	const handleSubmit = (data: EHRFormData) => {
+		if (!selectedApiKey) {
+			setShowApiKeyDialog(true);
+			return;
+		}
 
-    try {
-      const request = ehrFormToRxAdvisorRequest(data);
-      const response = await rxAdvisorMutation.mutateAsync(request);
-      setAnalysis({
-        analysis: response.analysis,
-        reasoning: response.reasoning,
-      });
-      setShowResultDialog(true);
-    } catch (error) {
-      console.error('Failed to get prescription advice:', error);
-      setShowResultDialog(true);
-    }
-  };
+		// Reset content and show dialog
+		setAnalysis("");
+		setReasoning(null);
+		setShowResultDialog(true);
 
-  return (
-    <DashboardLayout pageTitle={t('pageTitle')}>
-      <div className="px-6 space-y-8">
-        <EHRForm
-          onSubmit={handleSubmit}
-          isSubmitting={rxAdvisorMutation.isPending}
-          submitButtonText={t('action.submit')}
-        />
-      </div>
+		const request = ehrFormToRxAdvisorStreamRequest(
+			data,
+			"gpt-4o-mini",
+			conversationId
+		);
 
-      <ApiKeyRequiredDialog
-        open={showApiKeyDialog}
-        onOpenChange={setShowApiKeyDialog}
-      />
+		startStream(
+			{
+				url: API_ROUTES.SERVICES.RX_ADVISOR,
+				request,
+			},
+			{
+				onConversationIdUpdate: (convId) => {
+					setConversationId(convId);
+				},
+				onContentUpdate: (content) => {
+					setAnalysis(content);
+				},
+				onError: (error) => {
+					console.error("RX Advisor streaming error:", error);
+				},
+				onComplete: () => {
+					toast.success(tCommon("requestDone"));
+				},
+			}
+		);
+	};
 
-      <AnalysisResponseDialog
-        open={showResultDialog}
-        onOpenChange={setShowResultDialog}
-        analysis={analysis?.analysis}
-        reasoning={analysis?.reasoning}
-        isLoading={rxAdvisorMutation.isPending}
-        error={rxAdvisorMutation.error}
-      />
-    </DashboardLayout>
-  );
+	return (
+		<DashboardLayout pageTitle={t("pageTitle")}>
+			<div className="px-6 space-y-8">
+				<EHRForm
+					onSubmit={handleSubmit}
+					isSubmitting={isStreaming}
+					submitButtonText={t("action.submit")}
+				/>
+			</div>
+
+			<ApiKeyRequiredDialog
+				open={showApiKeyDialog}
+				onOpenChange={setShowApiKeyDialog}
+			/>
+
+			<AnalysisResponseDialog
+				open={showResultDialog}
+				onOpenChange={setShowResultDialog}
+				analysis={analysis}
+				reasoning={reasoning}
+				isLoading={isStreaming}
+			/>
+		</DashboardLayout>
+	);
 };
 
 export default RxAdvisorPage;

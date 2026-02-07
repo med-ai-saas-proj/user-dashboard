@@ -1,19 +1,19 @@
-import './config/i18n';
+import "./config/i18n";
 
-import { KeycloakProvider } from '@/features/auth/providers/keycloak-provider';
-import { query_client } from '@/query/query-client';
-import APIKeysPage from '@/routes/api-keys';
-import APIReferencePage from '@/routes/api-reference';
-import EHRSummaryPage from '@/routes/ehr-summary';
-import LoginPage from '@/routes/login';
-import { ProtectedRoute } from '@/routes/protected-route';
-import { PublicRoute } from '@/routes/public-route';
-import RxAdvisorPage from '@/routes/rx-advisor';
-import { QueryClientProvider } from '@tanstack/react-query';
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
-import { Toaster } from 'sonner';
-import PlaygroundAISearchPage from './routes/playground-AI-search';
-import PlaygroundChatPage from './routes/playground-chat';
+import { KeycloakProvider } from "@/features/auth/providers/keycloak-provider";
+import { query_client } from "@/query/query-client";
+import APIKeysPage from "@/routes/api-keys";
+import APIReferencePage from "@/routes/api-reference";
+import EHRSummaryPage from "@/routes/ehr-summary";
+import LoginPage from "@/routes/login";
+import { ProtectedRoute } from "@/routes/protected-route";
+import { PublicRoute } from "@/routes/public-route";
+import RxAdvisorPage from "@/routes/rx-advisor";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { Toaster } from "sonner";
+import PlaygroundChatPage from "./routes/playground-chat";
+import PlaygroundAISearchPage from "@/routes/playground-ai-search";
 
 function App() {
 	return (

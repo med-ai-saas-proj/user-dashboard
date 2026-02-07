@@ -1,12 +1,12 @@
 import { API_ROUTES } from "@/config/api-routes";
+import type { AISearchRequest } from "@/features/pg-ai-search/services/ai-search.dto";
+import { useAISearchStore } from "@/features/pg-ai-search/store/ai-search.store";
 import ChatContent from "@/features/pg-chat/components/ChatContent";
 import ChatInput from "@/features/pg-chat/components/ChatInput";
-import type { ChatRequest } from "@/features/pg-chat/services/chat.dto";
-import { useChatStore } from "@/features/pg-chat/store/chat.store";
 import { useStream } from "@/lib/streaming/use-stream";
 import DashboardLayout from "@/layouts/dashboard-layout";
 
-export default function PlaygroundChatPage() {
+export default function PlaygroundAISearchPage() {
 	const {
 		conversationId,
 		model,
@@ -14,23 +14,23 @@ export default function PlaygroundChatPage() {
 		setConversationId,
 		addMessage,
 		updateLastAssistantMessage,
-	} = useChatStore();
-	const { startStream, isStreaming } = useStream<ChatRequest>();
+	} = useAISearchStore();
+	const { startStream, isStreaming } = useStream<AISearchRequest>();
 
-	const handleSendMessage = (message: string) => {
+	const handleSendMessage = (query: string) => {
 		// Add user message to store
-		addMessage({ role: "user", content: message });
+		addMessage({ role: "user", content: query });
 
 		// Initialize empty assistant message
 		addMessage({ role: "assistant", content: "" });
 
 		startStream(
 			{
-				url: API_ROUTES.SERVICES.CHAT,
+				url: API_ROUTES.SERVICES.AI_SEARCH,
 				request: {
 					conversation_id: conversationId,
 					model,
-					input: message,
+					query,
 				},
 			},
 			{
@@ -41,7 +41,7 @@ export default function PlaygroundChatPage() {
 					updateLastAssistantMessage(content);
 				},
 				onError: (error) => {
-					console.error("Chat streaming error:", error);
+					console.error("AI search streaming error:", error);
 				},
 				onComplete: () => {
 					// Stream completed
@@ -51,7 +51,7 @@ export default function PlaygroundChatPage() {
 	};
 
 	return (
-		<DashboardLayout pageTitle="Chat" className="pb-0">
+		<DashboardLayout pageTitle="AI Search" className="pb-0">
 			<div className="w-full h-full flex flex-col items-stretch justify-between px-4 sm:px-6 md:px-12 lg:px-24 xl:px-64 relative">
 				<ChatContent messages={messages} isLoading={isStreaming} />
 				<ChatInput onSendMessage={handleSendMessage} isLoading={isStreaming} />

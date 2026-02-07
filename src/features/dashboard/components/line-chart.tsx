@@ -1,4 +1,4 @@
-import { CartesianGrid, Line, LineChart, XAxis } from "recharts";
+import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
 import {
 	type ChartConfig,
 	ChartContainer,
@@ -8,6 +8,7 @@ import {
 	ChartTooltipContent,
 } from "@/components/shadcn/chart";
 import type { ChartDataset } from "../dashboard.type";
+import { useMemo } from "react";
 
 type LineChartProps = {
 	configuration: ChartConfig;
@@ -15,6 +16,15 @@ type LineChartProps = {
 };
 
 const LineChartDashboard = ({ configuration, datasets }: LineChartProps) => {
+	const formattedDatasets = useMemo(
+		() =>
+			datasets.map((data) => ({
+				...data,
+				total: Number(data.requests) + Number(data.cost),
+			})),
+		[datasets]
+	);
+
 	return (
 		<ChartContainer
 			config={configuration}
@@ -22,7 +32,7 @@ const LineChartDashboard = ({ configuration, datasets }: LineChartProps) => {
 		>
 			<LineChart
 				accessibilityLayer={true}
-				data={datasets}
+				data={formattedDatasets}
 				margin={{
 					left: 12,
 					right: 12,
@@ -42,6 +52,24 @@ const LineChartDashboard = ({ configuration, datasets }: LineChartProps) => {
 							day: "numeric",
 						});
 					}}
+				/>
+				<YAxis
+					yAxisId="left"
+					dataKey="requests"
+					tickLine={false}
+					axisLine={false}
+					tickMargin={8}
+					minTickGap={32}
+					orientation="left"
+				/>
+				<YAxis
+					yAxisId="right"
+					dataKey="cost"
+					tickLine={false}
+					axisLine={false}
+					tickMargin={8}
+					minTickGap={32}
+					orientation="right"
 				/>
 				<ChartTooltip
 					content={
@@ -63,6 +91,7 @@ const LineChartDashboard = ({ configuration, datasets }: LineChartProps) => {
 					stroke={`var(--chart-1)`}
 					strokeWidth={2}
 					dot={false}
+					yAxisId="left"
 				/>
 				<Line
 					dataKey={"cost"}
@@ -70,6 +99,7 @@ const LineChartDashboard = ({ configuration, datasets }: LineChartProps) => {
 					stroke={`var(--chart-2)`}
 					strokeWidth={2}
 					dot={false}
+					yAxisId="right"
 				/>
 				<ChartLegend content={<ChartLegendContent />} />
 			</LineChart>

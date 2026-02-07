@@ -6,28 +6,37 @@ import {
 	CardTitle,
 } from "@/components/shadcn/card";
 import { FormatValue } from "../utils/format-stat.utils";
+import type { StatCardData } from "../dashboard.type";
+import { ArrowDown, ArrowUp } from "lucide-react";
 
 type KPICardProps = {
-	title: string;
-	value: number;
-	changedValue: string;
+	stats: StatCardData;
 };
 
-const KPICard = ({ title, value, changedValue }: KPICardProps) => {
-	const formattedValue = FormatValue(value, "compact");
+const KPICard = ({ stats }: KPICardProps) => {
+	const formattedValue = FormatValue(stats.value, stats.format || "compact");
 
 	return (
 		<Card>
 			<CardHeader>
 				<CardTitle>
-					<p className="font-medium text-muted-foreground">{title}</p>
+					<p className="font-medium text-muted-foreground">{stats.title}</p>
 				</CardTitle>
 			</CardHeader>
 			<CardContent>
 				<p className="font-bold text-4xl">{formattedValue}</p>
 			</CardContent>
 			<CardFooter>
-				<p className="text-muted-foreground">{changedValue}</p>
+				<div className="flex items-center">
+					{stats.change?.type === "increase" ? (
+						<ArrowUp className="mr-1 text-muted-foreground" size={16} />
+					) : (
+						<ArrowDown className="mr-1 text-muted-foreground" size={16} />
+					)}
+					<p className="text-muted-foreground">
+						{stats.change?.value}% {stats.change?.compareLabel}
+					</p>
+				</div>
 			</CardFooter>
 		</Card>
 	);

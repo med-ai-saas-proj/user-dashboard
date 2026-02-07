@@ -2,10 +2,11 @@ import type { ChartConfig } from "@/components/shadcn/chart";
 import AreaChartDashboard from "@/features/dashboard/components/area-chart";
 import DashboardChart from "@/features/dashboard/components/dashboard-chart";
 import KPICard from "@/features/dashboard/components/kpi-card";
+import type { StatCardData } from "@/features/dashboard/dashboard.type";
 import DashboardLayout from "@/layouts/dashboard-layout";
 
 const chartData = [
-	{ date: "2024-04-01", requests: 222, cost: 150 },
+	{ date: "2024-04-01", requests: 222, cost: 1500 },
 	{ date: "2024-04-02", requests: 97, cost: 180 },
 	{ date: "2024-04-03", requests: 167, cost: 120 },
 	{ date: "2024-04-04", requests: 242, cost: 260 },
@@ -115,21 +116,37 @@ const chartConfigurationTokenUsage = {
 	datasets: chartData,
 };
 
+const totalRequestsKPI: StatCardData = {
+	id: "1",
+	title: "Total Requests",
+	value: 403500,
+	format: "compact",
+	change: {
+		value: 12.5,
+		type: "increase",
+		compareLabel: "vs last week",
+	},
+};
+
+const totalCostKPI: StatCardData = {
+	id: "2",
+	title: "Total Cost",
+	value: 1112,
+	format: "currency",
+	change: {
+		value: 8.3,
+		type: "decrease",
+		compareLabel: "vs last week",
+	},
+};
+
 const DashboardPage = () => {
 	return (
 		<DashboardLayout pageTitle="Dashboard">
 			<div className="px-6">
 				<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mb-4">
-					<KPICard
-						title="Total Requests"
-						value={403500}
-						changedValue="12.5% increase vs last week"
-					/>
-					<KPICard
-						title="Total Cost"
-						value={1112}
-						changedValue="8.3% increase vs last week"
-					/>
+					<KPICard stats={totalRequestsKPI} />
+					<KPICard stats={totalCostKPI} />
 				</div>
 				<div className="flex flex-col gap-4">
 					<DashboardChart

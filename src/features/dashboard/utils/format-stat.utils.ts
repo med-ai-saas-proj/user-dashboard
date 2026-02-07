@@ -12,6 +12,7 @@ export const FormatValue = (value: number, format?: "compact" | "currency") => {
 			return new Intl.NumberFormat("en", {
 				style: "currency",
 				currency: "USD",
+				maximumFractionDigits: 2,
 			}).format(value);
 
 		default:

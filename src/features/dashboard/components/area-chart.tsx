@@ -1,4 +1,4 @@
-import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
+import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
 import {
 	type ChartConfig,
 	ChartContainer,
@@ -8,6 +8,7 @@ import {
 	ChartTooltipContent,
 } from "@/components/shadcn/chart";
 import type { ChartDataset } from "../dashboard.type";
+import { useMemo } from "react";
 
 type AreaChartProps = {
 	configuration: ChartConfig;
@@ -15,6 +16,15 @@ type AreaChartProps = {
 };
 
 const AreaChartDashboard = ({ configuration, datasets }: AreaChartProps) => {
+	const formattedDatasets = useMemo(
+		() =>
+			datasets.map((data) => ({
+				...data,
+				total: Number(data.requests) + Number(data.cost),
+			})),
+		[datasets]
+	);
+
 	return (
 		<ChartContainer
 			config={configuration}
@@ -22,7 +32,7 @@ const AreaChartDashboard = ({ configuration, datasets }: AreaChartProps) => {
 		>
 			<AreaChart
 				accessibilityLayer={true}
-				data={datasets}
+				data={formattedDatasets}
 				margin={{
 					left: 12,
 					right: 12,
@@ -42,6 +52,13 @@ const AreaChartDashboard = ({ configuration, datasets }: AreaChartProps) => {
 							day: "numeric",
 						});
 					}}
+				/>
+				<YAxis
+					dataKey="total"
+					tickLine={false}
+					axisLine={false}
+					tickMargin={8}
+					minTickGap={32}
 				/>
 				<ChartTooltip
 					content={

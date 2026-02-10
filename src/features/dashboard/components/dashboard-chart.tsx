@@ -25,6 +25,8 @@ const DashboardChart = ({
 					<LineChartDashboard
 						configuration={chartConfiguration.config}
 						datasets={chartConfiguration.datasets}
+						xKey={chartConfiguration.xKey}
+						series={chartConfiguration.series}
 					/>
 				) : null}
 			</CardContent>

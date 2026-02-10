@@ -7,15 +7,26 @@ import {
 	ChartTooltip,
 	ChartTooltipContent,
 } from "@/components/shadcn/chart";
-import type { ChartDataset } from "../dashboard.type";
+import type { ChartDataset, Series } from "../dashboard.type";
 import { useMemo } from "react";
 
 type AreaChartProps = {
 	configuration: ChartConfig;
 	datasets: ChartDataset[];
+	xKey?: string; // default 'date'
+	series?: Series[]; // dynamic series configuration
+	height?: number;
+	isTotalOnly?: boolean; // indicate total only mode in one y-axis
 };
 
-const AreaChartDashboard = ({ configuration, datasets }: AreaChartProps) => {
+const AreaChartDashboard = ({
+	configuration,
+	datasets,
+	xKey = "date",
+	series = [],
+	height = 250,
+	isTotalOnly = false,
+}: AreaChartProps) => {
 	const formattedDatasets = useMemo(
 		() =>
 			datasets.map((data) => ({
@@ -25,10 +36,16 @@ const AreaChartDashboard = ({ configuration, datasets }: AreaChartProps) => {
 		[datasets]
 	);
 
+	// compute unique axes (left/right) used by series
+	const axisIds = useMemo(
+		() => Array.from(new Set(series.map((s) => s.yAxisId ?? "left"))),
+		[series]
+	);
+
 	return (
 		<ChartContainer
 			config={configuration}
-			className="aspect-auto h-[250px] w-full"
+			className={`aspect-auto h-[${height}px] w-full`}
 		>
 			<AreaChart
 				accessibilityLayer={true}
@@ -40,7 +57,7 @@ const AreaChartDashboard = ({ configuration, datasets }: AreaChartProps) => {
 			>
 				<CartesianGrid vertical={false} />
 				<XAxis
-					dataKey="date"
+					dataKey={xKey}
 					tickLine={false}
 					axisLine={false}
 					tickMargin={8}
@@ -53,13 +70,31 @@ const AreaChartDashboard = ({ configuration, datasets }: AreaChartProps) => {
 						});
 					}}
 				/>
-				<YAxis
-					dataKey="total"
-					tickLine={false}
-					axisLine={false}
-					tickMargin={8}
-					minTickGap={32}
-				/>
+				{isTotalOnly && (
+					<YAxis
+						dataKey={"total"}
+						yAxisId={"left"}
+						tickLine={false}
+						axisLine={false}
+						tickMargin={8}
+						minTickGap={32}
+						orientation={"left"}
+					/>
+				)}
+				{!isTotalOnly &&
+					axisIds.map((id, index) => (
+						<YAxis
+							key={id}
+							dataKey={series[index].dataKey}
+							yAxisId={id}
+							tickLine={false}
+							axisLine={false}
+							tickMargin={8}
+							minTickGap={32}
+							orientation={id as "left" | "right"}
+						/>
+					))}
+
 				<ChartTooltip
 					content={
 						<ChartTooltipContent
@@ -76,20 +111,19 @@ const AreaChartDashboard = ({ configuration, datasets }: AreaChartProps) => {
 					}
 				/>
 
-				<Area
-					dataKey={"requests"}
-					type="monotone"
-					dot={false}
-					stroke={`var(--chart-1)`}
-					fill={`var(--chart-1)`}
-				/>
-				<Area
-					dataKey={"cost"}
-					type="monotone"
-					dot={false}
-					stroke={`var(--chart-2)`}
-					fill={`var(--chart-2)`}
-				/>
+				{series.map((s, idx) => (
+					<Area
+						key={s.dataKey + idx}
+						dataKey={s.dataKey}
+						type="natural"
+						dot={s.dot ?? false}
+						stroke={s.stroke ?? `var(--chart-${(idx % 6) + 1})`}
+						fill={s.stroke ?? `var(--chart-${(idx % 6) + 1})`}
+						stackId={"a"}
+						yAxisId={isTotalOnly ? "left" : (s.yAxisId ?? "left")}
+						name={s.name ?? s.dataKey}
+					/>
+				))}
 				<ChartLegend content={<ChartLegendContent />} />
 			</AreaChart>
 		</ChartContainer>

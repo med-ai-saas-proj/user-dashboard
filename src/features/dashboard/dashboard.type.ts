@@ -17,8 +17,20 @@ export type ChartDataset = {
 	[key: string]: number | string;
 };
 
+export type Series = {
+	dataKey: string;
+	name?: string;
+	yAxisId?: "left" | "right";
+	stroke?: string;
+	dot?: boolean;
+	strokeWidth?: number;
+};
+
 export type ChartConfiguration = {
 	title: string;
 	config: ChartConfig;
 	datasets: ChartDataset[];
+	// Which key to use for X axis and the series to render
+	xKey: string;
+	series: Series[];
 };

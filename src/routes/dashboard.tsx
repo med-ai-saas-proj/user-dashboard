@@ -2,7 +2,10 @@ import type { ChartConfig } from "@/components/shadcn/chart";
 import AreaChartDashboard from "@/features/dashboard/components/area-chart";
 import DashboardChart from "@/features/dashboard/components/dashboard-chart";
 import KPICard from "@/features/dashboard/components/kpi-card";
-import type { StatCardData } from "@/features/dashboard/dashboard.type";
+import type {
+	ChartConfiguration,
+	StatCardData,
+} from "@/features/dashboard/dashboard.type";
 import DashboardLayout from "@/layouts/dashboard-layout";
 
 const chartData = [
@@ -108,13 +111,51 @@ const chartConfigurationVolumeAndCost = {
 	title: "Request Volume & Cost Chart",
 	config: requestVolumeAndCostChartConfig,
 	datasets: chartData,
-};
+	xKey: "date",
+	series: [
+		{
+			dataKey: "requests",
+			name: "Requests",
+			yAxisId: "left",
+			stroke: "var(--chart-1)",
+			dot: false,
+			strokeWidth: 2,
+		},
+		{
+			dataKey: "cost",
+			name: "Cost",
+			yAxisId: "right",
+			stroke: "var(--chart-2)",
+			dot: false,
+			strokeWidth: 2,
+		},
+	],
+} satisfies ChartConfiguration;
 
 const chartConfigurationTokenUsage = {
 	title: "Token Usage Over Time",
 	config: requestVolumeAndCostChartConfig,
 	datasets: chartData,
-};
+	xKey: "date",
+	series: [
+		{
+			dataKey: "requests",
+			name: "Requests",
+			yAxisId: "left",
+			stroke: "var(--chart-1)",
+			dot: false,
+			strokeWidth: 2,
+		},
+		{
+			dataKey: "cost",
+			name: "Cost",
+			yAxisId: "right",
+			stroke: "var(--chart-2)",
+			dot: false,
+			strokeWidth: 2,
+		},
+	],
+} satisfies ChartConfiguration;
 
 const totalRequestsKPI: StatCardData = {
 	id: "1",
@@ -157,6 +198,8 @@ const DashboardPage = () => {
 						<AreaChartDashboard
 							configuration={chartConfigurationTokenUsage.config}
 							datasets={chartConfigurationTokenUsage.datasets}
+							series={chartConfigurationTokenUsage.series}
+							isTotalOnly={true}
 						/>
 					</DashboardChart>
 				</div>

@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
 import {
 	type ChartConfig,
@@ -8,7 +9,6 @@ import {
 	ChartTooltipContent,
 } from "@/components/shadcn/chart";
 import type { ChartDataset, Series } from "../dashboard.type";
-import { useMemo } from "react";
 
 type AreaChartProps = {
 	configuration: ChartConfig;

@@ -1,3 +1,4 @@
+import { ArrowDown, ArrowUp } from "lucide-react";
 import {
 	Card,
 	CardContent,
@@ -5,9 +6,8 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/shadcn/card";
-import { FormatValue } from "../utils/format-stat.utils";
 import type { StatCardData } from "../dashboard.type";
-import { ArrowDown, ArrowUp } from "lucide-react";
+import { FormatValue } from "../utils/format-stat.utils";
 
 type KPICardProps = {
 	stats: StatCardData;

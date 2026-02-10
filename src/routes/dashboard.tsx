@@ -1,6 +1,7 @@
 import type { ChartConfig } from "@/components/shadcn/chart";
 import AreaChartDashboard from "@/features/dashboard/components/area-chart";
 import DashboardChart from "@/features/dashboard/components/dashboard-chart";
+import DashboardTimePicker from "@/features/dashboard/components/dashboard-time-picker";
 import KPICard from "@/features/dashboard/components/kpi-card";
 import type {
 	ChartConfiguration,
@@ -188,6 +189,7 @@ const DashboardPage = () => {
 				<div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mb-4">
 					<KPICard stats={totalRequestsKPI} />
 					<KPICard stats={totalCostKPI} />
+					<DashboardTimePicker />
 				</div>
 				<div className="flex flex-col gap-4">
 					<DashboardChart

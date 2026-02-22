@@ -15,7 +15,7 @@ type AISearchStore = {
 export const useAISearchStore = create<AISearchStore>((set) => ({
 	conversationId: null,
 	messages: [],
-	model: "gpt-4o-mini",
+	model: "gpt-4o-2",
 
 	setConversationId: (id) => set({ conversationId: id }),
 

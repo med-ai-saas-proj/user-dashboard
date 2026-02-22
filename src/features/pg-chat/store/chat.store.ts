@@ -1,5 +1,5 @@
-import { create } from 'zustand';
-import type { ChatMessage } from '../services/chat.dto';
+import { create } from "zustand";
+import type { ChatMessage } from "../services/chat.dto";
 
 type ChatStore = {
 	conversationId: string | null;
@@ -15,7 +15,7 @@ type ChatStore = {
 export const useChatStore = create<ChatStore>((set) => ({
 	conversationId: null,
 	messages: [],
-	model: 'gpt-4o-mini',
+	model: "gpt-4o-2",
 
 	setConversationId: (id) => set({ conversationId: id }),
 
@@ -28,7 +28,7 @@ export const useChatStore = create<ChatStore>((set) => ({
 		set((state) => {
 			const messages = [...state.messages];
 			for (let index = messages.length - 1; index >= 0; index -= 1) {
-				if (messages[index]?.role === 'assistant') {
+				if (messages[index]?.role === "assistant") {
 					messages[index] = { ...messages[index], content };
 					break;
 				}

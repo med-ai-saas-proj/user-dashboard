@@ -55,6 +55,10 @@ export const API_ROUTES = {
 			`service/api/${API_VERSION}/ehr_converter/validate`,
 			BASE_API_URL
 		).toString(),
+		EHR_CONVERTER_DOCUMENT: new URL(
+			`service/api/${API_VERSION}/ehr_converter/convert/document`,
+			BASE_API_URL
+		).toString(),
 		EHR_CONVERTER_BATCH: new URL(
 			`service/api/${API_VERSION}/ehr_converter/convert/batch`,
 			BASE_API_URL

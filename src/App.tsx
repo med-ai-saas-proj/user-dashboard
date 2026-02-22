@@ -14,6 +14,7 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { Toaster } from "sonner";
 import PlaygroundChatPage from "./routes/playground-chat";
 import PlaygroundAISearchPage from "@/routes/playground-ai-search";
+import EhrConverterPage from "@/routes/ehr-converter";
 
 function App() {
 	return (
@@ -78,6 +79,15 @@ function App() {
 							element={
 								<ProtectedRoute>
 									<RxAdvisorPage />
+								</ProtectedRoute>
+							}
+						/>
+
+						<Route
+							path="/ehr-converter"
+							element={
+								<ProtectedRoute>
+									<EhrConverterPage />
 								</ProtectedRoute>
 							}
 						/>

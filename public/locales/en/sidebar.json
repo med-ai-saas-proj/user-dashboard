@@ -1,6 +1,9 @@
 {
   "playground": {
     "title": "Playground",
+    "ehrConverter": {
+      "title": "EHR Converter"
+    },
     "ehrSummary": {
       "title": "EHR Summary"
     },

@@ -1,6 +1,9 @@
 {
   "playground": {
     "title": "Sân chơi",
+    "ehrConverter": {
+      "title": "Chuyển đổi EHR"
+    },
     "ehrSummary": {
       "title": "Tóm tắt EHR"
     },

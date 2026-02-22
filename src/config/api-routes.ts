@@ -24,25 +24,45 @@ export const API_ROUTES = {
 	},
 	MANAGEMENT: {
 		API_KEYS: new URL(
-			`management/${API_VERSION}/api-keys`,
+			`management/api/${API_VERSION}/api-keys`,
 			BASE_API_URL
 		).toString(),
 		DOCS_OPENAPI: new URL(`service/docs/openapi.json`, BASE_API_URL).toString(),
 	},
 	SERVICES: {
 		EHR_SUMMARIZE: new URL(
-			`service/${API_VERSION}/ehr_summarize`,
+			`service/api/${API_VERSION}/ehr_summarize`,
 			BASE_API_URL
 		).toString(),
 		RX_ADVISOR: new URL(
-			`service/${API_VERSION}/rx_advisor`,
+			`service/api/${API_VERSION}/rx_advisor`,
 			BASE_API_URL
 		).toString(),
 		AI_SEARCH: new URL(
-			`service/${API_VERSION}/ai_search`,
+			`service/api/${API_VERSION}/ai_search`,
 			BASE_API_URL
 		).toString(),
-		CHAT: new URL(`service/${API_VERSION}/chat`, BASE_API_URL).toString(),
+		CHAT: new URL(`service/api/${API_VERSION}/chat`, BASE_API_URL).toString(),
+		EHR_CONVERTER_CONVERT: new URL(
+			`service/api/${API_VERSION}/ehr_converter/convert`,
+			BASE_API_URL
+		).toString(),
+		EHR_CONVERTER_REVERSE: new URL(
+			`service/api/${API_VERSION}/ehr_converter/convert/fhir-to-hl7v2`,
+			BASE_API_URL
+		).toString(),
+		EHR_CONVERTER_VALIDATE: new URL(
+			`service/api/${API_VERSION}/ehr_converter/validate`,
+			BASE_API_URL
+		).toString(),
+		EHR_CONVERTER_BATCH: new URL(
+			`service/api/${API_VERSION}/ehr_converter/convert/batch`,
+			BASE_API_URL
+		).toString(),
+		EHR_CONVERTER_HEALTH: new URL(
+			`service/api/${API_VERSION}/ehr_converter/health`,
+			BASE_API_URL
+		).toString(),
 	},
 } as const;
 

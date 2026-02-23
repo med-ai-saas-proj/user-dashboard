@@ -15,6 +15,16 @@ import { Toaster } from "sonner";
 import PlaygroundChatPage from "./routes/playground-chat";
 import PlaygroundAISearchPage from "@/routes/playground-ai-search";
 import EhrConverterPage from "@/routes/ehr-converter";
+import DocumentToFhirPage from "@/routes/document-to-fhir";
+import KnowledgeBasePage from "@/routes/knowledge-base";
+import BhxhValidatorPage from "@/routes/bhxh-validator";
+import VoiceTranscribePage from "@/routes/voice-transcribe";
+import MedicalImagePage from "@/routes/medical-image";
+import HealthScorePage from "@/routes/health-score";
+import DataMaskingPage from "@/routes/data-masking";
+import SettingsPage from "@/routes/settings";
+import BillingPage from "@/routes/billing";
+import UpgradePage from "@/routes/upgrade";
 
 function App() {
 	return (
@@ -88,6 +98,96 @@ function App() {
 							element={
 								<ProtectedRoute>
 									<EhrConverterPage />
+								</ProtectedRoute>
+							}
+						/>
+
+						<Route
+							path="/document-to-fhir"
+							element={
+								<ProtectedRoute>
+									<DocumentToFhirPage />
+								</ProtectedRoute>
+							}
+						/>
+
+						<Route
+							path="/knowledge-base"
+							element={
+								<ProtectedRoute>
+									<KnowledgeBasePage />
+								</ProtectedRoute>
+							}
+						/>
+
+						<Route
+							path="/bhxh-validator"
+							element={
+								<ProtectedRoute>
+									<BhxhValidatorPage />
+								</ProtectedRoute>
+							}
+						/>
+
+						<Route
+							path="/voice-transcribe"
+							element={
+								<ProtectedRoute>
+									<VoiceTranscribePage />
+								</ProtectedRoute>
+							}
+						/>
+
+						<Route
+							path="/medical-image"
+							element={
+								<ProtectedRoute>
+									<MedicalImagePage />
+								</ProtectedRoute>
+							}
+						/>
+
+						<Route
+							path="/health-score"
+							element={
+								<ProtectedRoute>
+									<HealthScorePage />
+								</ProtectedRoute>
+							}
+						/>
+
+						<Route
+							path="/data-masking"
+							element={
+								<ProtectedRoute>
+									<DataMaskingPage />
+								</ProtectedRoute>
+							}
+						/>
+
+						<Route
+							path="/settings"
+							element={
+								<ProtectedRoute>
+									<SettingsPage />
+								</ProtectedRoute>
+							}
+						/>
+
+						<Route
+							path="/billing"
+							element={
+								<ProtectedRoute>
+									<BillingPage />
+								</ProtectedRoute>
+							}
+						/>
+
+						<Route
+							path="/upgrade"
+							element={
+								<ProtectedRoute>
+									<UpgradePage />
 								</ProtectedRoute>
 							}
 						/>

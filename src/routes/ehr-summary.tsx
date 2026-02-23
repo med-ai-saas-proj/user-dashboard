@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { API_ROUTES } from "@/config/api-routes";
 import { ApiKeyRequiredDialog } from "@/features/api-keys/components/api-key-required-dialog";
 import { useServiceApiKeyStore } from "@/features/api-keys/store/service-api-key.store";
@@ -8,6 +8,8 @@ import {
 	type DetectedFormat,
 } from "@/features/pg-ehr-converter/components/converter-form";
 import { Button } from "@/components/shadcn/button";
+import { MarkdownCustom } from "@/features/pg-chat/components/MarkdownCustom";
+import { ViewCodeDialog } from "@/components/view-code-dialog";
 import DashboardLayout from "@/layouts/dashboard-layout";
 import { getAuthHeaders } from "@/lib/auth-headers";
 import { toast } from "sonner";
@@ -111,6 +113,7 @@ const EhrSummaryPage = () => {
 	const [showApiKeyDialog, setShowApiKeyDialog] = useState(false);
 	const [conversionTime, setConversionTime] = useState<number | null>(null);
 	const { selectedApiKey } = useServiceApiKeyStore();
+	const fileInputRef = useRef<HTMLInputElement>(null);
 
 	const addEntry = (label?: string, data?: string, facility?: string) => {
 		const id = nextId++;
@@ -147,6 +150,29 @@ const EhrSummaryPage = () => {
 		const id = nextId++;
 		setEntries([{ id, label, data, facility: "Example Facility" }]);
 		setSelectedEntry(id);
+	};
+
+	const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const files = e.target.files;
+		if (!files) return;
+		for (const file of Array.from(files)) {
+			const reader = new FileReader();
+			reader.onload = () => {
+				const id = nextId++;
+				setEntries((prev) => [
+					...prev,
+					{
+						id,
+						label: file.name.replace(/\.[^.]+$/, ""),
+						data: reader.result as string,
+						facility: "",
+					},
+				]);
+				setSelectedEntry(id);
+			};
+			reader.readAsText(file);
+		}
+		e.target.value = "";
 	};
 
 	const standardizeToFhir = async (
@@ -276,14 +302,14 @@ const EhrSummaryPage = () => {
 	return (
 		<DashboardLayout pageTitle="EHR Summary">
 			<div className="flex flex-col h-[calc(100vh-4rem)] overflow-hidden">
-				<div className="flex-1 grid grid-cols-1 lg:grid-cols-2 overflow-hidden">
+				<div className="flex-1 flex flex-col lg:grid lg:grid-cols-2 overflow-hidden">
 					{/* Left: Multi-source input */}
-					<div className="border-r flex flex-col overflow-hidden">
-						<div className="flex items-center justify-between px-4 py-3 border-b bg-muted/30">
+					<div className="border-b lg:border-b-0 lg:border-r flex flex-col overflow-hidden min-h-0 lg:min-h-full">
+						<div className="flex items-center justify-between px-4 py-3 border-b bg-muted/30 gap-2 flex-wrap">
 							<h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
 								EHR Sources ({entries.length})
 							</h2>
-							<div className="flex items-center gap-1.5">
+							<div className="flex items-center gap-1.5 flex-wrap">
 								<Button
 									variant="ghost"
 									size="sm"
@@ -296,11 +322,27 @@ const EhrSummaryPage = () => {
 									variant="ghost"
 									size="sm"
 									className="h-7 text-xs"
+									onClick={() => fileInputRef.current?.click()}
+								>
+									Upload EHR
+								</Button>
+								<Button
+									variant="ghost"
+									size="sm"
+									className="h-7 text-xs"
 									onClick={() => addEntry()}
 								>
 									+ Add Source
 								</Button>
 							</div>
+							<input
+								ref={fileInputRef}
+								type="file"
+								accept=".json,.txt,.hl7,.xml,.cda"
+								multiple
+								className="hidden"
+								onChange={handleFileUpload}
+							/>
 						</div>
 
 						{entries.length === 0 ? (
@@ -318,6 +360,14 @@ const EhrSummaryPage = () => {
 											onClick={loadMultiSourceExample}
 										>
 											Load Multi-Source Demo (3 facilities)
+										</Button>
+										<Button
+											variant="outline"
+											size="sm"
+											className="w-full text-xs"
+											onClick={() => fileInputRef.current?.click()}
+										>
+											Upload EHR File(s)
 										</Button>
 										<div className="flex flex-wrap gap-1.5 justify-center">
 											{[
@@ -422,13 +472,13 @@ const EhrSummaryPage = () => {
 							</>
 						)}
 
-						<div className="flex items-center justify-between px-4 py-2.5 border-t bg-muted/30">
-							<span className="text-[11px] text-muted-foreground/60">
+						<div className="flex items-center justify-between px-4 py-2.5 border-t bg-muted/30 gap-2 flex-wrap">
+							<span className="text-[11px] text-muted-foreground/60 hidden sm:inline">
 								{entries.length} source(s) — standardize → merge → summarize
 							</span>
 							<Button
 								size="sm"
-								className="h-8 text-xs"
+								className="h-8 text-xs ml-auto"
 								onClick={handleSummarize}
 								disabled={
 									entries.length === 0 ||
@@ -449,7 +499,7 @@ const EhrSummaryPage = () => {
 					</div>
 
 					{/* Right: Output */}
-					<div className="flex flex-col overflow-hidden">
+					<div className="flex flex-col overflow-hidden min-h-0 lg:min-h-full">
 						{hasResult ? (
 							<>
 								<div className="flex items-center justify-between px-4 py-3 border-b bg-muted/30">
@@ -478,26 +528,46 @@ const EhrSummaryPage = () => {
 								</div>
 								<div className="flex-1 overflow-auto p-4">
 									{activeTab === "summary" && summary && (
-										<div className="prose prose-sm dark:prose-invert max-w-none whitespace-pre-wrap text-[13px] leading-relaxed">
-											{summary}
-										</div>
+										<MarkdownCustom content={summary} />
 									)}
 									{activeTab === "fhir" && mergedFhir && (
-										<pre className="text-[12px] font-mono whitespace-pre-wrap leading-relaxed">
+										<pre className="text-[12px] font-mono whitespace-pre-wrap leading-relaxed break-all">
 											{JSON.stringify(mergedFhir, null, 2)}
 										</pre>
 									)}
 								</div>
 								<div className="flex justify-end gap-2 px-4 py-2.5 border-t bg-muted/30">
 									{activeTab === "summary" && summary && (
-										<Button
-											variant="outline"
-											size="sm"
-											className="h-7 text-xs"
-											onClick={() => navigator.clipboard.writeText(summary)}
-										>
-											Copy Summary
-										</Button>
+										<>
+											<ViewCodeDialog
+												endpoint={API_ROUTES.SERVICES.EHR_SUMMARIZE}
+												method="POST"
+												body={{
+													input_ehr: {
+														type: "custom_json",
+														custom_json: {
+															sources: ["Hospital A", "Lab B"],
+															merged_fhir_bundle: {
+																resourceType: "Bundle",
+																type: "collection",
+																entry: [],
+															},
+														},
+													},
+													model: "gpt-4o-2",
+													stream: false,
+												}}
+												description="Generate clinical summary from merged FHIR data"
+											/>
+											<Button
+												variant="outline"
+												size="sm"
+												className="h-7 text-xs"
+												onClick={() => navigator.clipboard.writeText(summary)}
+											>
+												Copy Summary
+											</Button>
+										</>
 									)}
 									{activeTab === "fhir" && mergedFhir && (
 										<>

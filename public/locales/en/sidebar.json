@@ -4,6 +4,9 @@
     "ehrConverter": {
       "title": "EHR Converter"
     },
+    "documentToFhir": {
+      "title": "Document → FHIR"
+    },
     "ehrSummary": {
       "title": "EHR Summary"
     },
@@ -15,6 +18,15 @@
     },
     "aiSearch": {
       "title": "AI Search"
+    },
+    "voiceTranscribe": {
+      "title": "Voice Transcribe"
+    },
+    "medicalImage": {
+      "title": "Medical Image"
+    },
+    "healthScore": {
+      "title": "Health Score"
     }
   },
   "management": {
@@ -24,6 +36,30 @@
     },
     "apiReference": {
       "title": "API Reference"
+    }
+  },
+  "tools": {
+    "title": "Tools",
+    "knowledgeBase": {
+      "title": "Knowledge Base"
+    },
+    "bhxhValidator": {
+      "title": "BHXH Validator"
+    },
+    "dataMasking": {
+      "title": "Data Masking"
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "settings": {
+      "title": "Settings"
+    },
+    "billing": {
+      "title": "Billing"
+    },
+    "upgrade": {
+      "title": "Upgrade to Pro"
     }
   }
 }

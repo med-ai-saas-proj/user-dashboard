@@ -1,0 +1,33 @@
+{
+  "pageTitle": "Upgrade",
+  "hero": {
+    "title": "Choose the right plan for you",
+    "subtitle": "Start free and scale as you grow. Upgrade anytime to unlock more powerful models, unlimited usage, and priority support."
+  },
+  "plans": {
+    "month": "mo",
+    "free": {
+      "name": "Free",
+      "tagline": "For individuals getting started",
+      "cta": "Current Plan"
+    },
+    "pro": {
+      "name": "Pro",
+      "tagline": "For professionals who need more",
+      "popular": "Most Popular",
+      "cta": "Upgrade Now",
+      "toast": "Upgrade initiated! Stripe checkout coming soon."
+    },
+    "enterprise": {
+      "name": "Enterprise",
+      "tagline": "For teams and organizations",
+      "contactPrice": "Contact us",
+      "cta": "Contact Sales",
+      "toast": "Our sales team will reach out shortly."
+    }
+  },
+  "comparison": {
+    "title": "Full Feature Comparison",
+    "feature": "Feature"
+  }
+}

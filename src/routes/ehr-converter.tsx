@@ -5,10 +5,6 @@ import { useServiceApiKeyStore } from "@/features/api-keys/store/service-api-key
 import { ConverterForm } from "@/features/pg-ehr-converter/components/converter-form";
 import { ConvertResultPanel } from "@/features/pg-ehr-converter/components/convert-result-panel";
 import { BatchPanel } from "@/features/pg-ehr-converter/components/batch-panel";
-import {
-	DocumentPanel,
-	type DocumentConvertResult,
-} from "@/features/pg-ehr-converter/components/document-panel";
 import type {
 	ConvertResponse,
 	ReverseConvertResponse,
@@ -16,6 +12,7 @@ import type {
 	BatchConvertResponse,
 } from "@/features/pg-ehr-converter/services/ehr-converter.dto";
 import DashboardLayout from "@/layouts/dashboard-layout";
+import { ViewCodeDialog } from "@/components/view-code-dialog";
 import { getAuthHeaders } from "@/lib/auth-headers";
 import { toast } from "sonner";
 
@@ -34,11 +31,6 @@ const EhrConverterPage = () => {
 		null
 	);
 	const [showBatch, setShowBatch] = useState(false);
-	const [showDocument, setShowDocument] = useState(false);
-	const [docLoading, setDocLoading] = useState(false);
-	const [docResult, setDocResult] = useState<DocumentConvertResult | null>(
-		null
-	);
 	const { selectedApiKey } = useServiceApiKeyStore();
 
 	const requireApiKey = (): boolean => {
@@ -215,48 +207,6 @@ const EhrConverterPage = () => {
 		}
 	};
 
-	const handleDocumentConvert = async (files: File[]) => {
-		if (!requireApiKey()) return;
-		setDocLoading(true);
-
-		try {
-			const formData = new FormData();
-			for (const f of files) {
-				formData.append("files", f);
-			}
-
-			const headers = await getAuthHeaders(
-				API_ROUTES.SERVICES.EHR_CONVERTER_DOCUMENT
-			);
-			delete headers["Content-Type"];
-			const resp = await fetch(API_ROUTES.SERVICES.EHR_CONVERTER_DOCUMENT, {
-				method: "POST",
-				headers,
-				body: formData,
-			});
-
-			if (!resp.ok) {
-				const errText = await resp.text();
-				throw new Error(`HTTP ${resp.status}: ${errText}`);
-			}
-
-			const json: DocumentConvertResult = await resp.json();
-			setDocResult(json);
-
-			if (json.success) {
-				toast.success(
-					`Extracted ${json.resource_count} FHIR resources from ${files.length} file(s)`
-				);
-			} else {
-				toast.error(json.errors.join(", ") || "Document conversion failed");
-			}
-		} catch (err) {
-			toast.error(err instanceof Error ? err.message : "Request failed");
-		} finally {
-			setDocLoading(false);
-		}
-	};
-
 	const hasResult = result || reverseResult || validateResult;
 
 	return (
@@ -277,12 +227,25 @@ const EhrConverterPage = () => {
 					{/* Right: Output */}
 					<div className="flex flex-col overflow-hidden">
 						{hasResult ? (
-							<ConvertResultPanel
-								result={result}
-								reverseResult={reverseResult}
-								validateResult={validateResult}
-								conversionTime={conversionTime}
-							/>
+							<>
+								<ConvertResultPanel
+									result={result}
+									reverseResult={reverseResult}
+									validateResult={validateResult}
+									conversionTime={conversionTime}
+								/>
+								<div className="flex justify-end gap-2 px-4 py-2 border-t bg-muted/30">
+									<ViewCodeDialog
+										endpoint={API_ROUTES.SERVICES.EHR_CONVERTER_CONVERT}
+										method="POST"
+										body={{
+											data: "<HL7v2 or CDA or FHIR data>",
+											validate_output: true,
+										}}
+										description="Convert healthcare data to FHIR R4"
+									/>
+								</div>
+							</>
 						) : (
 							<div className="flex-1 flex items-center justify-center p-8">
 								<div className="text-center space-y-3 max-w-sm">
@@ -340,37 +303,6 @@ const EhrConverterPage = () => {
 								onBatchConvert={handleBatchConvert}
 								isLoading={batchLoading}
 								batchResult={batchResult}
-							/>
-						</div>
-					)}
-				</div>
-				{/* Document conversion section */}
-				<div className="flex-shrink-0">
-					<button
-						type="button"
-						onClick={() => setShowDocument(!showDocument)}
-						className="w-full flex items-center gap-2 px-4 py-2 text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-muted/30 transition-colors"
-					>
-						<svg
-							width="12"
-							height="12"
-							fill="none"
-							stroke="currentColor"
-							strokeWidth="2"
-							className={`transition-transform ${showDocument ? "rotate-90" : ""}`}
-							aria-hidden="true"
-						>
-							<title>Toggle</title>
-							<path d="M4 2l5 4-5 4" />
-						</svg>
-						Document → FHIR (GPT-4o Vision)
-					</button>
-					{showDocument && (
-						<div className="px-4 pb-4">
-							<DocumentPanel
-								onConvert={handleDocumentConvert}
-								isLoading={docLoading}
-								result={docResult}
 							/>
 						</div>
 					)}

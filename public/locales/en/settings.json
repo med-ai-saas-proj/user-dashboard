@@ -1,0 +1,26 @@
+{
+  "pageTitle": "Settings",
+  "profile": {
+    "title": "Profile",
+    "description": "Your profile information is managed by Keycloak and cannot be edited here.",
+    "name": "Name",
+    "email": "Email"
+  },
+  "model": {
+    "title": "Model Configuration",
+    "description": "Select which LLM model tier to use for your API requests.",
+    "provider": "Provider",
+    "tier": "Model Tier",
+    "tierSelected": "Switched to {{tier}}"
+  },
+  "usage": {
+    "title": "API Usage",
+    "description": "Your current API usage across different time periods."
+  },
+  "danger": {
+    "title": "Danger Zone",
+    "description": "Once you delete your account, there is no going back. All your API keys, knowledge bases, and data will be permanently removed.",
+    "deleteAccount": "Delete Account",
+    "toast": "Account deletion is not available yet."
+  }
+}

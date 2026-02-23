@@ -1,0 +1,26 @@
+{
+  "pageTitle": "Cài đặt",
+  "profile": {
+    "title": "Hồ sơ",
+    "description": "Thông tin hồ sơ của bạn được quản lý bởi Keycloak và không thể chỉnh sửa tại đây.",
+    "name": "Tên",
+    "email": "Email"
+  },
+  "model": {
+    "title": "Cấu hình mô hình",
+    "description": "Chọn cấp mô hình LLM để sử dụng cho các yêu cầu API của bạn.",
+    "provider": "Nhà cung cấp",
+    "tier": "Cấp mô hình",
+    "tierSelected": "Đã chuyển sang {{tier}}"
+  },
+  "usage": {
+    "title": "Sử dụng API",
+    "description": "Mức sử dụng API hiện tại của bạn trong các khoảng thời gian khác nhau."
+  },
+  "danger": {
+    "title": "Vùng nguy hiểm",
+    "description": "Khi bạn xóa tài khoản, không thể hoàn tác. Tất cả khóa API, cơ sở tri thức và dữ liệu sẽ bị xóa vĩnh viễn.",
+    "deleteAccount": "Xóa tài khoản",
+    "toast": "Tính năng xóa tài khoản chưa khả dụng."
+  }
+}

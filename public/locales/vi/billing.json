@@ -1,0 +1,36 @@
+{
+  "pageTitle": "Thanh toán",
+  "currentPlan": {
+    "title": "Gói hiện tại",
+    "free": "Miễn phí",
+    "active": "Đang hoạt động",
+    "description": "Bạn đang dùng gói Miễn phí. Nâng cấp để mở khóa thêm tính năng.",
+    "upgrade": "Nâng cấp Pro"
+  },
+  "comparison": {
+    "title": "So sánh gói"
+  },
+  "plans": {
+    "month": "tháng",
+    "free": {
+      "name": "Miễn phí",
+      "current": "Gói hiện tại"
+    },
+    "pro": {
+      "name": "Pro",
+      "popular": "Phổ biến nhất",
+      "upgrade": "Nâng cấp ngay"
+    }
+  },
+  "payment": {
+    "title": "Phương thức thanh toán",
+    "description": "Chưa có phương thức thanh toán. Thêm phương thức thanh toán để nâng cấp gói.",
+    "connectStripe": "Kết nối Stripe",
+    "stripeToast": "Tích hợp Stripe sẽ sớm ra mắt"
+  },
+  "invoices": {
+    "title": "Lịch sử hóa đơn",
+    "empty": "Chưa có hóa đơn",
+    "emptyDescription": "Hóa đơn sẽ xuất hiện tại đây khi bạn đăng ký gói trả phí."
+  }
+}

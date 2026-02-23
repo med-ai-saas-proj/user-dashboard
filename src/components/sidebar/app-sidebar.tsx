@@ -4,10 +4,20 @@ import {
 	Book,
 	BotIcon,
 	ClipboardPlusIcon,
+	CreditCardIcon,
+	DatabaseIcon,
+	EyeOffIcon,
+	FileTextIcon,
 	GalleryVerticalEnd,
+	HeartPulseIcon,
+	ImageIcon,
 	KeyRound,
+	MicIcon,
 	PillIcon,
 	SearchIcon,
+	Settings2Icon,
+	ShieldCheckIcon,
+	SparklesIcon,
 	FileJson2Icon,
 } from "lucide-react";
 import type * as React from "react";
@@ -16,9 +26,15 @@ import {
 	Sidebar,
 	SidebarContent,
 	SidebarFooter,
+	SidebarGroup,
+	SidebarGroupContent,
 	SidebarHeader,
+	SidebarMenu,
+	SidebarMenuButton,
+	SidebarMenuItem,
 	SidebarRail,
 } from "@/components/shadcn/sidebar";
+import { NavLink, useLocation } from "react-router-dom";
 import { LocaleSwitcher } from "@/components/sidebar/locale-switcher";
 import { NavProjects } from "@/components/sidebar/nav-projects";
 import { NavUser } from "@/components/sidebar/nav-user";
@@ -28,6 +44,7 @@ import { useAuthStore } from "@/features/auth/store/auth-store";
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 	const { t } = useTranslation("sidebar");
 	const { userInfo } = useAuthStore();
+	const { pathname } = useLocation();
 
 	const data = {
 		teams: [
@@ -57,6 +74,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 				icon: FileJson2Icon,
 			},
 			{
+				name: t("playground.documentToFhir.title"),
+				url: "/document-to-fhir",
+				icon: FileTextIcon,
+			},
+			{
 				name: t("playground.ehrSummary.title"),
 				url: "/ehr-summary",
 				icon: ClipboardPlusIcon,
@@ -76,6 +98,50 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 				url: "/ai-search",
 				icon: SearchIcon,
 			},
+			{
+				name: t("playground.voiceTranscribe.title"),
+				url: "/voice-transcribe",
+				icon: MicIcon,
+			},
+			{
+				name: t("playground.medicalImage.title"),
+				url: "/medical-image",
+				icon: ImageIcon,
+			},
+			{
+				name: t("playground.healthScore.title"),
+				url: "/health-score",
+				icon: HeartPulseIcon,
+			},
+		],
+		tools: [
+			{
+				name: t("tools.knowledgeBase.title"),
+				url: "/knowledge-base",
+				icon: DatabaseIcon,
+			},
+			{
+				name: t("tools.bhxhValidator.title"),
+				url: "/bhxh-validator",
+				icon: ShieldCheckIcon,
+			},
+			{
+				name: t("tools.dataMasking.title"),
+				url: "/data-masking",
+				icon: EyeOffIcon,
+			},
+		],
+		settings: [
+			{
+				name: t("settings.settings.title"),
+				url: "/settings",
+				icon: Settings2Icon,
+			},
+			{
+				name: t("settings.billing.title"),
+				url: "/billing",
+				icon: CreditCardIcon,
+			},
 		],
 	};
 
@@ -87,6 +153,27 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 			<SidebarContent>
 				<NavProjects projects={data.management} label={t("management.title")} />
 				<NavProjects projects={data.playground} label={t("playground.title")} />
+				<NavProjects projects={data.tools} label={t("tools.title")} />
+				<NavProjects projects={data.settings} label={t("settings.title")} />
+
+				{/* Upgrade to Pro */}
+				<SidebarGroup className="group-data-[collapsible=icon]:hidden">
+					<SidebarGroupContent>
+						<SidebarMenu>
+							<SidebarMenuItem>
+								<SidebarMenuButton asChild isActive={pathname === "/upgrade"}>
+									<NavLink
+										to="/upgrade"
+										className="font-medium bg-gradient-to-r from-violet-500 to-indigo-500 bg-clip-text text-transparent"
+									>
+										<SparklesIcon className="text-violet-500" />
+										<span>{t("settings.upgrade.title")}</span>
+									</NavLink>
+								</SidebarMenuButton>
+							</SidebarMenuItem>
+						</SidebarMenu>
+					</SidebarGroupContent>
+				</SidebarGroup>
 			</SidebarContent>
 
 			<SidebarFooter>

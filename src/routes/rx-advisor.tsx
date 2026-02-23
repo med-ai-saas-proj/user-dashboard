@@ -3,6 +3,8 @@ import { API_ROUTES } from "@/config/api-routes";
 import { ApiKeyRequiredDialog } from "@/features/api-keys/components/api-key-required-dialog";
 import { useServiceApiKeyStore } from "@/features/api-keys/store/service-api-key.store";
 import { Button } from "@/components/shadcn/button";
+import { MarkdownCustom } from "@/features/pg-chat/components/MarkdownCustom";
+import { ViewCodeDialog } from "@/components/view-code-dialog";
 import DashboardLayout from "@/layouts/dashboard-layout";
 import { getAuthHeaders } from "@/lib/auth-headers";
 import { toast } from "sonner";
@@ -204,14 +206,14 @@ const RxAdvisorPage = () => {
 	return (
 		<DashboardLayout pageTitle="RX Advisor">
 			<div className="flex flex-col h-[calc(100vh-4rem)] overflow-hidden">
-				<div className="flex-1 grid grid-cols-1 lg:grid-cols-2 overflow-hidden">
+				<div className="flex-1 flex flex-col lg:grid lg:grid-cols-2 overflow-hidden">
 					{/* Left: Input */}
-					<div className="border-r flex flex-col overflow-hidden">
-						<div className="flex items-center justify-between px-4 py-3 border-b bg-muted/30">
+					<div className="border-b lg:border-b-0 lg:border-r flex flex-col overflow-hidden min-h-0 lg:min-h-full">
+						<div className="flex items-center justify-between px-4 py-3 border-b bg-muted/30 gap-2 flex-wrap">
 							<h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
 								Patient & Prescription
 							</h2>
-							<div className="flex items-center gap-1.5">
+							<div className="flex items-center gap-1.5 flex-wrap">
 								<Button
 									variant="ghost"
 									size="sm"
@@ -280,7 +282,7 @@ const RxAdvisorPage = () => {
 										value={ehrData}
 										onChange={(e) => setEhrData(e.target.value)}
 										placeholder="Paste patient EHR data (JSON with diagnoses, lab results, allergies, etc.)"
-										className="w-full h-full min-h-[150px] p-3 font-mono text-[12px] leading-relaxed bg-muted/20 border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring resize-none"
+										className="w-full h-full min-h-[120px] p-3 font-mono text-[12px] leading-relaxed bg-muted/20 border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring resize-none"
 										spellCheck={false}
 									/>
 								</div>
@@ -299,20 +301,20 @@ const RxAdvisorPage = () => {
 										placeholder={
 											"One drug per line, e.g.:\nMetformin 500mg twice daily\nLisinopril 10mg once daily\nAspirin 81mg once daily"
 										}
-										className="w-full h-full min-h-[120px] p-3 font-mono text-[12px] leading-relaxed bg-muted/20 border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring resize-none"
+										className="w-full h-full min-h-[100px] p-3 font-mono text-[12px] leading-relaxed bg-muted/20 border rounded-lg focus:outline-none focus:ring-2 focus:ring-ring resize-none"
 										spellCheck={false}
 									/>
 								</div>
 							</div>
 						</div>
 
-						<div className="flex items-center justify-between px-4 py-2.5 border-t bg-muted/30">
-							<span className="text-[11px] text-muted-foreground/60">
+						<div className="flex items-center justify-between px-4 py-2.5 border-t bg-muted/30 gap-2 flex-wrap">
+							<span className="text-[11px] text-muted-foreground/60 hidden sm:inline">
 								Uses OpenFDA drug database + GPT-4o analysis
 							</span>
 							<Button
 								size="sm"
-								className="h-8 text-xs"
+								className="h-8 text-xs ml-auto"
 								onClick={handleAnalyze}
 								disabled={
 									!ehrData.trim() || !prescriptionData.trim() || isLoading
@@ -331,7 +333,7 @@ const RxAdvisorPage = () => {
 					</div>
 
 					{/* Right: Output */}
-					<div className="flex flex-col overflow-hidden">
+					<div className="flex flex-col overflow-hidden min-h-0 lg:min-h-full">
 						{analysis ? (
 							<>
 								<div className="flex items-center justify-between px-4 py-3 border-b bg-muted/30">
@@ -345,11 +347,29 @@ const RxAdvisorPage = () => {
 									)}
 								</div>
 								<div className="flex-1 overflow-auto p-4">
-									<div className="prose prose-sm dark:prose-invert max-w-none whitespace-pre-wrap text-[13px] leading-relaxed">
-										{analysis}
-									</div>
+									<MarkdownCustom content={analysis} />
 								</div>
 								<div className="flex justify-end gap-2 px-4 py-2.5 border-t bg-muted/30">
+									<ViewCodeDialog
+										endpoint={API_ROUTES.SERVICES.RX_ADVISOR}
+										method="POST"
+										body={{
+											ehr: { type: "custom_json", custom_json: {} },
+											prescription: {
+												type: "custom_json",
+												custom_json: [
+													{
+														name: "Metformin",
+														dose: "500mg",
+														frequency: "twice daily",
+													},
+												],
+											},
+											model: "gpt-4o-2",
+											stream: false,
+										}}
+										description="Analyze prescription risk using patient EHR + OpenFDA"
+									/>
 									<Button
 										variant="outline"
 										size="sm"

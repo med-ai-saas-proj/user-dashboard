@@ -1,0 +1,33 @@
+{
+  "pageTitle": "Nâng cấp",
+  "hero": {
+    "title": "Chọn gói phù hợp với bạn",
+    "subtitle": "Bắt đầu miễn phí và mở rộng khi bạn phát triển. Nâng cấp bất cứ lúc nào để mở khóa mô hình mạnh hơn, sử dụng không giới hạn và hỗ trợ ưu tiên."
+  },
+  "plans": {
+    "month": "tháng",
+    "free": {
+      "name": "Miễn phí",
+      "tagline": "Cho cá nhân mới bắt đầu",
+      "cta": "Gói hiện tại"
+    },
+    "pro": {
+      "name": "Pro",
+      "tagline": "Cho chuyên gia cần nhiều hơn",
+      "popular": "Phổ biến nhất",
+      "cta": "Nâng cấp ngay",
+      "toast": "Đã khởi tạo nâng cấp! Thanh toán Stripe sẽ sớm ra mắt."
+    },
+    "enterprise": {
+      "name": "Enterprise",
+      "tagline": "Cho đội nhóm và tổ chức",
+      "contactPrice": "Liên hệ",
+      "cta": "Liên hệ bán hàng",
+      "toast": "Đội ngũ bán hàng sẽ liên hệ bạn sớm."
+    }
+  },
+  "comparison": {
+    "title": "So sánh đầy đủ tính năng",
+    "feature": "Tính năng"
+  }
+}

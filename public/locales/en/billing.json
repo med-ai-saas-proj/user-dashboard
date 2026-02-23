@@ -1,0 +1,36 @@
+{
+  "pageTitle": "Billing",
+  "currentPlan": {
+    "title": "Current Plan",
+    "free": "Free",
+    "active": "Active",
+    "description": "You are on the Free plan. Upgrade to unlock more features.",
+    "upgrade": "Upgrade to Pro"
+  },
+  "comparison": {
+    "title": "Plan Comparison"
+  },
+  "plans": {
+    "month": "mo",
+    "free": {
+      "name": "Free",
+      "current": "Current Plan"
+    },
+    "pro": {
+      "name": "Pro",
+      "popular": "Most Popular",
+      "upgrade": "Upgrade Now"
+    }
+  },
+  "payment": {
+    "title": "Payment Method",
+    "description": "No payment method connected. Add a payment method to upgrade your plan.",
+    "connectStripe": "Connect Stripe",
+    "stripeToast": "Stripe integration coming soon"
+  },
+  "invoices": {
+    "title": "Invoice History",
+    "empty": "No invoices yet",
+    "emptyDescription": "Invoices will appear here once you subscribe to a paid plan."
+  }
+}

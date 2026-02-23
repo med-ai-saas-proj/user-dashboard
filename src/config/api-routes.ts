@@ -67,6 +67,42 @@ export const API_ROUTES = {
 			`service/api/${API_VERSION}/ehr_converter/health`,
 			BASE_API_URL
 		).toString(),
+		KNOWLEDGE_BASE: new URL(
+			`service/api/${API_VERSION}/knowledge_base`,
+			BASE_API_URL
+		).toString(),
+		BHXH_VALIDATE: new URL(
+			`service/api/${API_VERSION}/bhxh_validator/validate`,
+			BASE_API_URL
+		).toString(),
+		VOICE_TRANSCRIBE: new URL(
+			`service/api/${API_VERSION}/voice_transcribe`,
+			BASE_API_URL
+		).toString(),
+		MEDICAL_IMAGE: new URL(
+			`service/api/${API_VERSION}/medical_image/describe`,
+			BASE_API_URL
+		).toString(),
+		HEALTH_SCORE: new URL(
+			`service/api/${API_VERSION}/health_score/evaluate`,
+			BASE_API_URL
+		).toString(),
+		DATA_MASKING_MASK: new URL(
+			`service/api/${API_VERSION}/data_masking/mask`,
+			BASE_API_URL
+		).toString(),
+		DATA_MASKING_QUERY: new URL(
+			`service/api/${API_VERSION}/data_masking/query`,
+			BASE_API_URL
+		).toString(),
+		DATA_MASKING_FACILITY_REGISTER: new URL(
+			`service/api/${API_VERSION}/data_masking/facility/register`,
+			BASE_API_URL
+		).toString(),
+		DATA_MASKING_FACILITY_SEARCH: new URL(
+			`service/api/${API_VERSION}/data_masking/facility/search`,
+			BASE_API_URL
+		).toString(),
 	},
 } as const;
 

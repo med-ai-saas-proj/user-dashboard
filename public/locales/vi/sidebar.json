@@ -4,6 +4,9 @@
     "ehrConverter": {
       "title": "Chuyển đổi EHR"
     },
+    "documentToFhir": {
+      "title": "Tài liệu → FHIR"
+    },
     "ehrSummary": {
       "title": "Tóm tắt EHR"
     },
@@ -15,6 +18,15 @@
     },
     "aiSearch": {
       "title": "Tìm kiếm AI"
+    },
+    "voiceTranscribe": {
+      "title": "Chuyển giọng nói"
+    },
+    "medicalImage": {
+      "title": "Hình ảnh y tế"
+    },
+    "healthScore": {
+      "title": "Điểm sức khỏe"
     }
   },
   "management": {
@@ -24,6 +36,30 @@
     },
     "apiReference": {
       "title": "Tham chiếu API"
+    }
+  },
+  "tools": {
+    "title": "Công cụ",
+    "knowledgeBase": {
+      "title": "Cơ sở tri thức"
+    },
+    "bhxhValidator": {
+      "title": "Kiểm tra BHXH"
+    },
+    "dataMasking": {
+      "title": "Ẩn danh dữ liệu"
+    }
+  },
+  "settings": {
+    "title": "Cài đặt",
+    "settings": {
+      "title": "Cài đặt"
+    },
+    "billing": {
+      "title": "Thanh toán"
+    },
+    "upgrade": {
+      "title": "Nâng cấp Pro"
     }
   }
 }

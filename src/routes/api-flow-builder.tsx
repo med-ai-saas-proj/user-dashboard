@@ -143,22 +143,220 @@ const AVAILABLE_APIS: ApiDef[] = [
 
 // --- Demo flows ---
 
-const DEMO_FLOWS: { label: string; steps: string[] }[] = [
+const DEMO_FLOWS: {
+	label: string;
+	description: string;
+	steps: {
+		apiId: string;
+		input: Record<string, unknown>;
+		output: Record<string, unknown>;
+	}[];
+}[] = [
 	{
 		label: "EHR → FHIR → Summary",
-		steps: ["ehr_convert", "ehr_summarize"],
+		description:
+			"Convert HL7v2 admission data to FHIR, then generate a clinical summary",
+		steps: [
+			{
+				apiId: "ehr_convert",
+				input: {
+					data: "MSH|^~\\&|HIS|HOSP|EHR|FAC|20250201||ADT^A01|MSG001|P|2.5\rPID|1||MRN-001||Nguyen^Van Minh||19850315|M\rDG1|1|ICD10|E11.9^Type 2 Diabetes\rDG1|2|ICD10|I10^Hypertension",
+					validate_output: true,
+				},
+				output: {
+					success: true,
+					source_format: "hl7v2",
+					resource_count: 3,
+					bundle: {
+						resourceType: "Bundle",
+						type: "collection",
+						entry: [
+							{
+								resource: {
+									resourceType: "Patient",
+									id: "p-001",
+									name: [{ family: "Nguyen", given: ["Van Minh"] }],
+								},
+							},
+							{
+								resource: {
+									resourceType: "Condition",
+									code: { text: "Type 2 Diabetes" },
+								},
+							},
+						],
+					},
+				},
+			},
+			{
+				apiId: "ehr_summarize",
+				input: {
+					input_ehr: { type: "fhir", fhir_bundle: "{{prev.bundle}}" },
+					model: "gpt-4o-2",
+					stream: false,
+				},
+				output: {
+					output: [
+						{
+							type: "text",
+							content:
+								"## Clinical Summary\n**Patient**: Nguyen Van Minh, Male, 39y\n**Active Conditions**: Type 2 Diabetes (E11.9), Hypertension (I10)\n**Recommendation**: Monitor HbA1c quarterly, BP target <130/80",
+						},
+					],
+				},
+			},
+		],
 	},
 	{
 		label: "EHR → FHIR → Rx Check",
-		steps: ["ehr_convert", "rx_advisor"],
+		description:
+			"Convert patient data then check prescription for drug interactions",
+		steps: [
+			{
+				apiId: "ehr_convert",
+				input: {
+					data: "MSH|^~\\&|HIS|HOSP|EHR|FAC|20250215||ADT^A01|MSG002|P|2.5\rPID|1||MRN-002||Tran^Thi Lan||19470610|F\rAL1|1|DA|PCN^Penicillin|SV|Anaphylaxis\rDG1|1|ICD10|I48^Atrial Fibrillation",
+					validate_output: false,
+				},
+				output: {
+					success: true,
+					source_format: "hl7v2",
+					resource_count: 3,
+					bundle: {
+						resourceType: "Bundle",
+						type: "collection",
+						entry: [{ resource: { resourceType: "Patient", id: "p-002" } }],
+					},
+				},
+			},
+			{
+				apiId: "rx_advisor",
+				input: {
+					ehr: { type: "fhir", fhir_bundle: "{{prev.bundle}}" },
+					prescription: {
+						type: "custom_json",
+						custom_json: [
+							{ name: "Warfarin", dose: "5mg", frequency: "once daily" },
+							{ name: "Aspirin", dose: "81mg", frequency: "once daily" },
+						],
+					},
+					model: "gpt-4o-2",
+					stream: false,
+				},
+				output: {
+					output: [
+						{
+							type: "text",
+							content:
+								"## HIGH RISK: Warfarin + Aspirin\n**Interaction**: Increased bleeding risk (major)\n**Penicillin allergy**: No conflict with current Rx\n**Recommendation**: Monitor INR closely, consider PPI for GI protection",
+						},
+					],
+				},
+			},
+		],
 	},
 	{
 		label: "EHR → Mask → Store",
-		steps: ["ehr_convert", "data_mask", "patient_history"],
+		description: "Convert, de-identify PHI, then store in patient history",
+		steps: [
+			{
+				apiId: "ehr_convert",
+				input: {
+					data: "MSH|^~\\&|LAB|FAC|EHR|FAC|20250301||ORU^R01|MSG003|P|2.5\rPID|1||MRN-001||Nguyen^Van Minh||19850315|M\rOBX|1|NM|4548-4^HbA1c||7.2|%",
+					validate_output: false,
+				},
+				output: {
+					success: true,
+					source_format: "hl7v2",
+					resource_count: 2,
+					bundle: {
+						resourceType: "Bundle",
+						type: "collection",
+						entry: [
+							{ resource: { resourceType: "Patient", id: "p-001" } },
+							{
+								resource: {
+									resourceType: "Observation",
+									code: { text: "HbA1c" },
+									valueQuantity: { value: 7.2, unit: "%" },
+								},
+							},
+						],
+					},
+				},
+			},
+			{
+				apiId: "data_mask",
+				input: { bundle: "{{prev.bundle}}" },
+				output: {
+					masked_bundle: {
+						resourceType: "Bundle",
+						entry: [
+							{
+								resource: {
+									resourceType: "Patient",
+									id: "MASKED",
+									name: [{ family: "***", given: ["***"] }],
+								},
+							},
+						],
+					},
+					fields_masked: 4,
+				},
+			},
+			{
+				apiId: "patient_history",
+				input: {
+					patient_id: 1,
+					fhir_bundle: "{{prev.masked_bundle}}",
+					facility: "MedLab Diagnostics",
+				},
+				output: {
+					visit_count: 3,
+					timeline_updated: true,
+					latest_visit: "2025-03-01",
+				},
+			},
+		],
 	},
 	{
 		label: "BHXH Validate → Convert → Summary",
-		steps: ["bhxh_validate", "ehr_convert", "ehr_summarize"],
+		description:
+			"Validate Vietnam insurance XML, convert to FHIR, then summarize",
+		steps: [
+			{
+				apiId: "bhxh_validate",
+				input: { xml_data: "<GIAMDINHHS>...</GIAMDINHHS>", strict: true },
+				output: { valid: true, errors: [], warnings: 1, record_count: 1 },
+			},
+			{
+				apiId: "ehr_convert",
+				input: { data: "<GIAMDINHHS>...</GIAMDINHHS>", validate_output: true },
+				output: {
+					success: true,
+					source_format: "bhxh_4210",
+					resource_count: 6,
+					bundle: { resourceType: "Bundle", type: "collection", total: 6 },
+				},
+			},
+			{
+				apiId: "ehr_summarize",
+				input: {
+					input_ehr: { type: "fhir", fhir_bundle: "{{prev.bundle}}" },
+					model: "gpt-4o-2",
+					stream: false,
+				},
+				output: {
+					output: [
+						{
+							type: "text",
+							content:
+								"## BHXH Claim Summary\n**Facility**: 10065\n**Diagnosis**: J18.9 Pneumonia\n**Treatment period**: 2 days inpatient\n**Total cost**: 850,000 VND",
+						},
+					],
+				},
+			},
+		],
 	},
 ];
 
@@ -174,10 +372,7 @@ interface PipelineStep {
 
 // --- Code generation ---
 
-function generateFlowCode(steps: PipelineStep[]): {
-	curl: string;
-	python: string;
-} {
+function generateFlowCode(steps: PipelineStep[]): Record<string, string> {
 	const curlParts = steps.map((s, i) => {
 		let body: string;
 		try {
@@ -226,9 +421,64 @@ function generateFlowCode(steps: PipelineStep[]): {
 		return code;
 	});
 
+	const jsParts = steps.map((s, i) => {
+		let body: string;
+		try {
+			body = s.bodyOverride.trim() || JSON.stringify(s.api.sampleBody, null, 2);
+		} catch {
+			body = JSON.stringify(s.api.sampleBody, null, 2);
+		}
+		let code = `// Step ${i + 1}: ${s.api.label}\n`;
+		if (i > 0 && s.mapFromPrevious) {
+			code += `// Uses result_${i}.${s.mapFromPrevious}\n`;
+		}
+		code += `const resp${i + 1} = await fetch("${s.api.endpoint}", {\n`;
+		code += `  method: "${s.api.method}",\n`;
+		code += `  headers: { "Content-Type": "application/json", "X-Api-Key": API_KEY },\n`;
+		code += `  body: JSON.stringify(${body}),\n`;
+		code += `});\n`;
+		code += `const result${i + 1} = await resp${i + 1}.json();\n`;
+		code += `console.log("Step ${i + 1}:", resp${i + 1}.status);`;
+		return code;
+	});
+
+	const goParts = steps.map((s, i) => {
+		let body: string;
+		try {
+			body = s.bodyOverride.trim() || JSON.stringify(s.api.sampleBody);
+		} catch {
+			body = JSON.stringify(s.api.sampleBody);
+		}
+		let code = `// Step ${i + 1}: ${s.api.label}\n`;
+		code += `body${i + 1} := strings.NewReader(\`${body}\`)\n`;
+		code += `req${i + 1}, _ := http.NewRequest("${s.api.method}", "${s.api.endpoint}", body${i + 1})\n`;
+		code += `req${i + 1}.Header.Set("Content-Type", "application/json")\n`;
+		code += `req${i + 1}.Header.Set("X-Api-Key", apiKey)\n`;
+		code += `resp${i + 1}, _ := client.Do(req${i + 1})\n`;
+		code += `defer resp${i + 1}.Body.Close()\n`;
+		code += `fmt.Printf("Step ${i + 1} (%s): %d\\n", "${s.api.label}", resp${i + 1}.StatusCode)`;
+		return code;
+	});
+
 	return {
-		curl: curlParts.join("\n\n"),
 		python: `import requests\n\nheaders = {\n    "Content-Type": "application/json",\n    "X-Api-Key": "YOUR_API_KEY",\n}\n\n${pyParts.join("\n\n")}`,
+		curl: curlParts.join("\n\n"),
+		javascript: `const API_KEY = "YOUR_API_KEY";\n\nasync function runPipeline() {\n${jsParts
+			.map((p) =>
+				p
+					.split("\n")
+					.map((l) => `  ${l}`)
+					.join("\n")
+			)
+			.join("\n\n")}\n}\n\nrunPipeline();`,
+		go: `package main\n\nimport (\n\t"fmt"\n\t"net/http"\n\t"strings"\n)\n\nfunc main() {\n\tclient := &http.Client{}\n\tapiKey := "YOUR_API_KEY"\n\n${goParts
+			.map((p) =>
+				p
+					.split("\n")
+					.map((l) => `\t${l}`)
+					.join("\n")
+			)
+			.join("\n\n")}\n}`,
 	};
 }
 
@@ -236,15 +486,21 @@ function generateFlowCode(steps: PipelineStep[]): {
 
 export default function ApiFlowBuilderPage() {
 	const [pipeline, setPipeline] = useState<PipelineStep[]>([]);
-	const [generatedCode, setGeneratedCode] = useState<{
-		curl: string;
-		python: string;
-	} | null>(null);
-	const [activeTab, setActiveTab] = useState<"curl" | "python">("python");
+	const [generatedCode, setGeneratedCode] = useState<Record<
+		string,
+		string
+	> | null>(null);
+	const [activeTab, setActiveTab] = useState<string>("python");
 	const [dragIdx, setDragIdx] = useState<number | null>(null);
 	const [showDocs, setShowDocs] = useState(false);
 	const [showPackDialog, setShowPackDialog] = useState(false);
 	const [packedName, setPackedName] = useState("");
+	const [publishedFlows, setPublishedFlows] = useState<
+		{ name: string; steps: PipelineStep[] }[]
+	>([]);
+	const [activeStepIdx, setActiveStepIdx] = useState<number | null>(null);
+
+	const CODE_TABS = ["python", "javascript", "go", "curl"] as const;
 
 	const addStep = useCallback((api: ApiDef) => {
 		setPipeline((prev) => [
@@ -296,27 +552,25 @@ export default function ApiFlowBuilderPage() {
 		toast.success("Code generated");
 	}, [pipeline]);
 
-	const loadDemoFlow = useCallback(
-		(demo: { label: string; steps: string[] }) => {
-			const steps: PipelineStep[] = [];
-			for (const apiId of demo.steps) {
-				const api = AVAILABLE_APIS.find((a) => a.id === apiId);
-				if (api) {
-					steps.push({
-						id: `step_${Date.now()}_${apiId}`,
-						api,
-						bodyOverride: JSON.stringify(api.sampleBody, null, 2),
-						mapFromPrevious: api.outputKey || "",
-						sampleOutput: "",
-					});
-				}
+	const loadDemoFlow = useCallback((demo: (typeof DEMO_FLOWS)[number]) => {
+		const steps: PipelineStep[] = [];
+		for (const step of demo.steps) {
+			const api = AVAILABLE_APIS.find((a) => a.id === step.apiId);
+			if (api) {
+				steps.push({
+					id: `step_${Date.now()}_${step.apiId}`,
+					api,
+					bodyOverride: JSON.stringify(step.input, null, 2),
+					mapFromPrevious: api.outputKey || "",
+					sampleOutput: JSON.stringify(step.output, null, 2),
+				});
 			}
-			setPipeline(steps);
-			setGeneratedCode(null);
-			toast.success(`Loaded demo: ${demo.label}`);
-		},
-		[]
-	);
+		}
+		setPipeline(steps);
+		setGeneratedCode(null);
+		setActiveStepIdx(0);
+		toast.success(`Loaded demo: ${demo.label}`);
+	}, []);
 
 	const handleDragStart = (idx: number) => {
 		setDragIdx(idx);
@@ -343,9 +597,9 @@ export default function ApiFlowBuilderPage() {
 			toast.error("Enter an endpoint name");
 			return;
 		}
-		toast.success(
-			`Flow packed as /service/api/v1/flows/${packedName.trim().replace(/\s+/g, "_").toLowerCase()}`
-		);
+		const name = packedName.trim().replace(/\s+/g, "_").toLowerCase();
+		setPublishedFlows((prev) => [...prev, { name, steps: [...pipeline] }]);
+		toast.success(`Flow published as /service/api/v1/flows/${name}`);
 		setShowPackDialog(false);
 		setPackedName("");
 	};
@@ -383,15 +637,42 @@ export default function ApiFlowBuilderPage() {
 									key={demo.label}
 									type="button"
 									onClick={() => loadDemoFlow(demo)}
-									className="w-full flex items-center gap-2 px-2 py-1.5 rounded-md text-left text-[11px] text-muted-foreground hover:bg-muted/50 hover:text-foreground transition-colors"
+									className="w-full flex flex-col gap-0.5 px-2 py-1.5 rounded-md text-left text-[11px] text-muted-foreground hover:bg-muted/50 hover:text-foreground transition-colors mb-0.5"
+									title={demo.description}
 								>
-									<span className="truncate">{demo.label}</span>
-									<span className="ml-auto text-[10px] text-muted-foreground/50">
-										{demo.steps.length}x
+									<span className="truncate font-medium">{demo.label}</span>
+									<span className="text-[10px] text-muted-foreground/60 truncate">
+										{demo.steps.length} steps
 									</span>
 								</button>
 							))}
 						</div>
+
+						{publishedFlows.length > 0 && (
+							<div className="border-t pt-3">
+								<h3 className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground mb-2">
+									Custom Flows
+								</h3>
+								{publishedFlows.map((flow) => (
+									<button
+										key={flow.name}
+										type="button"
+										onClick={() => {
+											setPipeline([...flow.steps]);
+											setGeneratedCode(null);
+											setActiveStepIdx(0);
+											toast.success(`Loaded flow: ${flow.name}`);
+										}}
+										className="w-full flex items-center gap-2 px-2 py-1.5 rounded-md text-left text-[11px] text-muted-foreground hover:bg-muted/50 hover:text-foreground transition-colors"
+									>
+										<span className="truncate">/flows/{flow.name}</span>
+										<span className="ml-auto text-[10px] text-muted-foreground/50">
+											{flow.steps.length}x
+										</span>
+									</button>
+								))}
+							</div>
+						)}
 
 						<div className="border-t pt-3">
 							<button
@@ -560,8 +841,13 @@ export default function ApiFlowBuilderPage() {
 												</svg>
 											</div>
 										)}
+										{/* biome-ignore lint/a11y/useSemanticElements: clickable step card with drag support */}
 										<div
-											className={`rounded-lg border p-3 space-y-2 transition-colors ${dragIdx === idx ? "border-primary bg-primary/5" : ""}`}
+											className={`rounded-lg border p-3 space-y-2 transition-colors cursor-pointer ${dragIdx === idx ? "border-primary bg-primary/5" : activeStepIdx === idx ? "border-primary/50 bg-primary/5" : ""}`}
+											onClick={() => setActiveStepIdx(idx)}
+											onKeyDown={() => {}}
+											role="button"
+											tabIndex={0}
 										>
 											<div className="flex items-center gap-2">
 												<span className="text-xs font-bold text-muted-foreground w-5 cursor-grab">
@@ -657,70 +943,145 @@ export default function ApiFlowBuilderPage() {
 						</div>
 					</div>
 
-					{/* Right: Generated code */}
-					{generatedCode && (
+					{/* Right: Generated code / Step preview */}
+					{(generatedCode ||
+						(pipeline.length > 0 && activeStepIdx !== null)) && (
 						<div className="w-80 shrink-0 border-l flex flex-col overflow-hidden">
-							<div className="flex border-b">
-								{(["python", "curl"] as const).map((tab) => (
-									<button
-										key={tab}
-										type="button"
-										onClick={() => setActiveTab(tab)}
-										className={`flex-1 px-3 py-2 text-xs font-medium border-b-2 transition-colors ${
-											activeTab === tab
-												? "border-primary text-primary"
-												: "border-transparent text-muted-foreground"
-										}`}
-									>
-										{tab === "python" ? "Python" : "cURL"}
-									</button>
-								))}
-							</div>
-							<div className="flex-1 overflow-auto p-3">
-								<pre className="text-[11px] font-mono whitespace-pre-wrap leading-relaxed">
-									{activeTab === "python"
-										? generatedCode.python
-										: generatedCode.curl}
-								</pre>
-							</div>
-							<div className="p-2 border-t flex gap-2">
-								<Button
-									variant="outline"
-									size="sm"
-									className="text-[11px] h-6 flex-1"
-									onClick={() => {
-										const text =
-											activeTab === "python"
-												? generatedCode.python
-												: generatedCode.curl;
-										navigator.clipboard.writeText(text);
-										toast.success("Copied");
-									}}
-								>
-									Copy
-								</Button>
-								<Button
-									variant="outline"
-									size="sm"
-									className="text-[11px] h-6 flex-1"
-									onClick={() => {
-										const text =
-											activeTab === "python"
-												? generatedCode.python
-												: generatedCode.curl;
-										const ext = activeTab === "python" ? "py" : "sh";
-										const blob = new Blob([text], { type: "text/plain" });
-										const url = URL.createObjectURL(blob);
-										const a = document.createElement("a");
-										a.href = url;
-										a.download = `api-flow.${ext}`;
-										a.click();
-										URL.revokeObjectURL(url);
-									}}
-								>
-									Download
-								</Button>
-							</div>
+							{activeStepIdx !== null &&
+								pipeline[activeStepIdx] &&
+								!generatedCode && (
+									<>
+										<div className="px-3 py-2 border-b bg-muted/20">
+											<div className="text-xs font-semibold">
+												Step {activeStepIdx + 1}:{" "}
+												{pipeline[activeStepIdx].api.label}
+											</div>
+											<div className="text-[10px] text-muted-foreground font-mono truncate mt-0.5">
+												{pipeline[activeStepIdx].api.method}{" "}
+												{pipeline[activeStepIdx].api.endpoint.replace(
+													BASE_API_URL,
+													"/"
+												)}
+											</div>
+										</div>
+										<div className="flex-1 overflow-auto p-3 space-y-3">
+											<div>
+												<div className="text-[10px] font-bold text-green-600 dark:text-green-400 mb-1">
+													INPUT
+												</div>
+												<pre className="text-[10px] font-mono bg-muted/30 rounded p-2 whitespace-pre-wrap break-all leading-relaxed max-h-48 overflow-auto">
+													{pipeline[activeStepIdx].bodyOverride}
+												</pre>
+											</div>
+											{pipeline[activeStepIdx].sampleOutput && (
+												<div>
+													<div className="text-[10px] font-bold text-blue-600 dark:text-blue-400 mb-1">
+														OUTPUT
+													</div>
+													<pre className="text-[10px] font-mono bg-muted/30 rounded p-2 whitespace-pre-wrap break-all leading-relaxed max-h-48 overflow-auto">
+														{pipeline[activeStepIdx].sampleOutput}
+													</pre>
+												</div>
+											)}
+										</div>
+										<div className="p-2 border-t">
+											<div className="flex gap-1">
+												<Button
+													variant="outline"
+													size="sm"
+													className="text-[10px] h-6 flex-1"
+													disabled={activeStepIdx === 0}
+													onClick={() =>
+														setActiveStepIdx((p) => Math.max(0, (p ?? 0) - 1))
+													}
+												>
+													← Prev
+												</Button>
+												<Button
+													variant="outline"
+													size="sm"
+													className="text-[10px] h-6 flex-1"
+													disabled={activeStepIdx >= pipeline.length - 1}
+													onClick={() =>
+														setActiveStepIdx((p) =>
+															Math.min(pipeline.length - 1, (p ?? 0) + 1)
+														)
+													}
+												>
+													Next →
+												</Button>
+											</div>
+										</div>
+									</>
+								)}
+							{generatedCode && (
+								<>
+									<div className="flex border-b flex-wrap">
+										{CODE_TABS.map((tab) => (
+											<button
+												key={tab}
+												type="button"
+												onClick={() => setActiveTab(tab)}
+												className={`flex-1 px-2 py-2 text-[11px] font-medium border-b-2 transition-colors ${
+													activeTab === tab
+														? "border-primary text-primary"
+														: "border-transparent text-muted-foreground"
+												}`}
+											>
+												{tab === "python"
+													? "Python"
+													: tab === "javascript"
+														? "JS/TS"
+														: tab === "go"
+															? "Go"
+															: "cURL"}
+											</button>
+										))}
+									</div>
+									<div className="flex-1 overflow-auto p-3">
+										<pre className="text-[11px] font-mono whitespace-pre-wrap leading-relaxed">
+											{generatedCode[activeTab]}
+										</pre>
+									</div>
+									<div className="p-2 border-t flex gap-2">
+										<Button
+											variant="outline"
+											size="sm"
+											className="text-[11px] h-6 flex-1"
+											onClick={() => {
+												navigator.clipboard.writeText(generatedCode[activeTab]);
+												toast.success("Copied");
+											}}
+										>
+											Copy
+										</Button>
+										<Button
+											variant="outline"
+											size="sm"
+											className="text-[11px] h-6 flex-1"
+											onClick={() => {
+												const ext: Record<string, string> = {
+													python: "py",
+													curl: "sh",
+													javascript: "js",
+													go: "go",
+												};
+												const blob = new Blob([generatedCode[activeTab]], {
+													type: "text/plain",
+												});
+												const url = URL.createObjectURL(blob);
+												const a = document.createElement("a");
+												a.href = url;
+												a.download = `api-flow.${ext[activeTab] || "txt"}`;
+												a.click();
+												URL.revokeObjectURL(url);
+											}}
+										>
+											Download
+										</Button>
+									</div>
+								</>
+							)}
 						</div>
 					)}
 				</div>

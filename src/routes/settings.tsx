@@ -7,6 +7,8 @@ import {
 	CpuIcon,
 	Trash2Icon,
 	UserIcon,
+	UsersIcon,
+	MailIcon,
 	BarChart3Icon,
 	ServerIcon,
 	GlobeIcon,
@@ -148,6 +150,18 @@ export default function SettingsPage() {
 	const { userInfo } = useAuthStore();
 	const [groupConfigs, setGroupConfigs] =
 		useState<Record<ApiGroup, GroupFormState>>(DEFAULT_GROUP_STATE);
+	const [inviteEmail, setInviteEmail] = useState("");
+	const [inviteRole, setInviteRole] = useState<
+		"admin" | "developer" | "viewer"
+	>("developer");
+	const [teamMembers] = useState([
+		{
+			name: userInfo?.name ?? "You",
+			email: userInfo?.email ?? "",
+			role: "admin" as const,
+			status: "active" as const,
+		},
+	]);
 
 	const updateGroup = (group: ApiGroup, updates: Partial<GroupFormState>) => {
 		setGroupConfigs((prev) => ({
@@ -185,6 +199,107 @@ export default function SettingsPage() {
 							<span className="text-sm text-muted-foreground">
 								{userInfo?.email ?? "—"}
 							</span>
+						</div>
+					</div>
+				</section>
+
+				{/* Team */}
+				<section className="space-y-4">
+					<div className="flex items-center gap-2 text-lg font-semibold">
+						<UsersIcon className="size-5" aria-hidden="true" />
+						Team Members
+					</div>
+					<p className="text-sm text-muted-foreground">
+						Invite teammates to collaborate. Team members share API keys and
+						project access based on their role.
+					</p>
+					<div className="rounded-lg border p-4 space-y-4">
+						<div className="space-y-2">
+							{teamMembers.map((m) => (
+								<div key={m.email} className="flex items-center gap-3 py-2">
+									<div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-xs font-bold text-primary">
+										{m.name.charAt(0).toUpperCase()}
+									</div>
+									<div className="flex-1 min-w-0">
+										<div className="text-sm font-medium truncate">{m.name}</div>
+										<div className="text-xs text-muted-foreground truncate">
+											{m.email}
+										</div>
+									</div>
+									<span
+										className={`px-2 py-0.5 rounded-full text-[10px] font-medium ${
+											m.role === "admin"
+												? "bg-primary/10 text-primary"
+												: m.role === "developer"
+													? "bg-blue-500/10 text-blue-600 dark:text-blue-400"
+													: "bg-muted text-muted-foreground"
+										}`}
+									>
+										{m.role}
+									</span>
+								</div>
+							))}
+						</div>
+						<Separator />
+						<div>
+							<div className="text-sm font-medium mb-2">Invite new member</div>
+							<div className="flex gap-2 flex-wrap">
+								<div className="flex-1 min-w-[200px]">
+									<div className="relative">
+										<MailIcon className="absolute left-2.5 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground" />
+										<input
+											value={inviteEmail}
+											onChange={(e) => setInviteEmail(e.target.value)}
+											placeholder="colleague@hospital.org"
+											type="email"
+											className="w-full rounded-md border bg-transparent pl-8 pr-3 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-ring"
+										/>
+									</div>
+								</div>
+								<select
+									value={inviteRole}
+									onChange={(e) =>
+										setInviteRole(
+											e.target.value as "admin" | "developer" | "viewer"
+										)
+									}
+									className="rounded-md border bg-transparent px-2 py-1.5 text-xs"
+								>
+									<option value="admin">Admin</option>
+									<option value="developer">Developer</option>
+									<option value="viewer">Viewer</option>
+								</select>
+								<Button
+									size="sm"
+									className="text-xs"
+									onClick={() => {
+										if (!inviteEmail.trim() || !inviteEmail.includes("@")) {
+											toast.error("Enter a valid email address");
+											return;
+										}
+										toast.success(
+											`Invitation sent to ${inviteEmail} as ${inviteRole}`
+										);
+										setInviteEmail("");
+									}}
+								>
+									Send Invite
+								</Button>
+							</div>
+							<div className="mt-3 text-[11px] text-muted-foreground space-y-1">
+								<p>
+									<strong>Admin</strong> — Full access: manage API keys, models,
+									team, billing
+								</p>
+								<p>
+									<strong>Developer</strong> — Use all playground APIs, view
+									keys, cannot manage team/billing
+								</p>
+								<p>
+									<strong>Viewer</strong> — Read-only access to dashboards and
+									API reference
+								</p>
+							</div>
 						</div>
 					</div>
 				</section>

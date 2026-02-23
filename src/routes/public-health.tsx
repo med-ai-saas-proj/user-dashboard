@@ -343,7 +343,7 @@ const PublicHealthPage = () => {
 														key={t.period}
 														className="flex-1 flex flex-col items-center gap-0.5"
 													>
-														<span className="text-[9px] text-muted-foreground">
+														<span className="text-[11px] text-muted-foreground">
 															{t.count}
 														</span>
 														<div
@@ -445,7 +445,7 @@ const PublicHealthPage = () => {
 function StatCard({ label, value }: { label: string; value: string }) {
 	return (
 		<div className="px-3 py-2 rounded-lg border bg-muted/20">
-			<div className="text-[10px] text-muted-foreground">{label}</div>
+			<div className="text-[11px] text-muted-foreground">{label}</div>
 			<div className="text-lg font-bold mt-0.5">{value}</div>
 		</div>
 	);

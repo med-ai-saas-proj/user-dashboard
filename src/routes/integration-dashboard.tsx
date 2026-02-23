@@ -2,6 +2,36 @@ import { useState, useCallback, useRef } from "react";
 import DashboardLayout from "@/layouts/dashboard-layout";
 import { Button } from "@/components/shadcn/button";
 import { toast } from "sonner";
+import {
+	BuildingIcon,
+	Building2Icon,
+	FlaskConicalIcon,
+	PillIcon,
+	SmileIcon,
+	EyeIcon,
+	HeartIcon,
+	BrainIcon,
+	MonitorIcon,
+	ClipboardListIcon,
+	DatabaseIcon,
+	RadioIcon,
+	RefreshCwIcon,
+	FileJson2Icon,
+	ClipboardPlusIcon,
+	BotIcon,
+	SearchIcon,
+	MicIcon,
+	ImageIcon,
+	HeartPulseIcon,
+	EyeOffIcon,
+	ShieldCheckIcon,
+	BookOpenIcon,
+	UserRoundIcon,
+	WatchIcon,
+	BarChart3Icon,
+	StethoscopeIcon,
+	type LucideIcon,
+} from "lucide-react";
 
 // --- Types ---
 
@@ -9,7 +39,7 @@ interface FlowNode {
 	id: string;
 	type: "hospital" | "his" | "venera_api" | "output";
 	label: string;
-	icon: string;
+	icon: LucideIcon;
 	x: number;
 	y: number;
 	config?: Record<string, string>;
@@ -23,104 +53,115 @@ interface FlowEdge {
 
 // --- Palette items ---
 
-const HOSPITAL_ICONS = [
-	{ icon: "🏥", label: "General Hospital" },
-	{ icon: "🏨", label: "Private Clinic" },
-	{ icon: "🧪", label: "Lab / Diagnostics" },
-	{ icon: "💊", label: "Pharmacy" },
-	{ icon: "🦷", label: "Dental Clinic" },
-	{ icon: "👁️", label: "Eye Clinic" },
-	{ icon: "🫀", label: "Cardiology Center" },
-	{ icon: "🧠", label: "Neurology Center" },
+const HOSPITAL_ICONS: { icon: LucideIcon; label: string }[] = [
+	{ icon: BuildingIcon, label: "General Hospital" },
+	{ icon: Building2Icon, label: "Private Clinic" },
+	{ icon: FlaskConicalIcon, label: "Lab / Diagnostics" },
+	{ icon: PillIcon, label: "Pharmacy" },
+	{ icon: SmileIcon, label: "Dental Clinic" },
+	{ icon: EyeIcon, label: "Eye Clinic" },
+	{ icon: HeartIcon, label: "Cardiology Center" },
+	{ icon: BrainIcon, label: "Neurology Center" },
 ];
 
-const HIS_ICONS = [
-	{ icon: "💻", label: "Generic HIS" },
-	{ icon: "📋", label: "EMR System" },
-	{ icon: "🗄️", label: "LIS (Lab)" },
-	{ icon: "📡", label: "RIS (Radiology)" },
-	{ icon: "🔄", label: "HIE Gateway" },
+const HIS_ICONS: { icon: LucideIcon; label: string }[] = [
+	{ icon: MonitorIcon, label: "Generic HIS" },
+	{ icon: ClipboardListIcon, label: "EMR System" },
+	{ icon: DatabaseIcon, label: "LIS (Lab)" },
+	{ icon: RadioIcon, label: "RIS (Radiology)" },
+	{ icon: RefreshCwIcon, label: "HIE Gateway" },
 ];
 
-const VENERA_APIS = [
+const VENERA_APIS: {
+	icon: LucideIcon;
+	label: string;
+	endpoint: string;
+	requiredFields: string[];
+}[] = [
 	{
-		icon: "🔄",
+		icon: FileJson2Icon,
 		label: "EHR Converter",
 		endpoint: "ehr_converter/convert",
 		requiredFields: ["ehr_data"],
 	},
 	{
-		icon: "📝",
+		icon: ClipboardPlusIcon,
 		label: "EHR Summary",
 		endpoint: "ehr_summarize",
 		requiredFields: ["ehr_data", "patient_info"],
 	},
 	{
-		icon: "💊",
+		icon: PillIcon,
 		label: "Rx Advisor",
 		endpoint: "rx_advisor",
 		requiredFields: ["ehr_data", "prescription"],
 	},
-	{ icon: "💬", label: "Chat", endpoint: "chat", requiredFields: ["input"] },
+	{ icon: BotIcon, label: "Chat", endpoint: "chat", requiredFields: ["input"] },
 	{
-		icon: "🔍",
+		icon: SearchIcon,
 		label: "AI Search",
 		endpoint: "ai_search",
 		requiredFields: ["query"],
 	},
 	{
-		icon: "🎤",
+		icon: MicIcon,
 		label: "Voice Transcribe",
 		endpoint: "voice_transcribe",
 		requiredFields: ["audio_file"],
 	},
 	{
-		icon: "🖼️",
+		icon: ImageIcon,
 		label: "Medical Image",
 		endpoint: "medical_image/describe",
 		requiredFields: ["image_file"],
 	},
 	{
-		icon: "❤️",
+		icon: HeartPulseIcon,
 		label: "Health Score",
 		endpoint: "health_score/evaluate",
 		requiredFields: ["ehr_data"],
 	},
 	{
-		icon: "🔒",
+		icon: EyeOffIcon,
 		label: "Data Masking",
 		endpoint: "data_masking/mask",
 		requiredFields: ["fhir_bundle"],
 	},
 	{
-		icon: "✅",
+		icon: ShieldCheckIcon,
 		label: "BHXH Validator",
 		endpoint: "bhxh_validator/validate",
 		requiredFields: ["xml_data"],
 	},
 	{
-		icon: "📚",
+		icon: BookOpenIcon,
 		label: "Knowledge Base",
 		endpoint: "knowledge_base",
 		requiredFields: ["query"],
 	},
 	{
-		icon: "👤",
+		icon: UserRoundIcon,
 		label: "Patient History",
 		endpoint: "patient/{id}/history",
 		requiredFields: ["fhir_bundle"],
 	},
 	{
-		icon: "⌚",
+		icon: WatchIcon,
 		label: "Wearable Data",
 		endpoint: "patient/{id}/wearable",
 		requiredFields: ["source", "data"],
 	},
 	{
-		icon: "📊",
+		icon: BarChart3Icon,
 		label: "Public Health Stats",
 		endpoint: "public_health/statistics",
 		requiredFields: ["region", "metric"],
+	},
+	{
+		icon: StethoscopeIcon,
+		label: "Symptom Checker",
+		endpoint: "symptom_checker/check",
+		requiredFields: ["symptoms"],
 	},
 ];
 
@@ -151,6 +192,8 @@ function NodeBox({
 		output: "bg-orange-50 dark:bg-orange-950/30",
 	}[node.type];
 
+	const IconComponent = node.icon;
+
 	return (
 		<button
 			type="button"
@@ -162,8 +205,8 @@ function NodeBox({
 				onDragStart(e);
 			}}
 		>
-			<span className="text-2xl">{node.icon}</span>
-			<span className="text-[10px] font-medium text-center leading-tight max-w-[90px]">
+			<IconComponent className="size-6 text-muted-foreground" />
+			<span className="text-[11px] font-medium text-center leading-tight max-w-[90px]">
 				{node.label}
 			</span>
 		</button>
@@ -295,7 +338,7 @@ export default function IntegrationDashboardPage() {
 	const addNode = useCallback(
 		(
 			type: FlowNode["type"],
-			icon: string,
+			icon: LucideIcon,
 			label: string,
 			config?: Record<string, string>
 		) => {
@@ -396,63 +439,78 @@ export default function IntegrationDashboardPage() {
 					{/* Left: Palette */}
 					<div className="w-56 shrink-0 border-r overflow-y-auto bg-muted/20 p-3 space-y-4">
 						<div>
-							<h3 className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-2">
+							<h3 className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground mb-2">
 								Hospitals / Clinics
 							</h3>
 							<div className="grid grid-cols-2 gap-1.5">
-								{HOSPITAL_ICONS.map((h) => (
-									<button
-										key={h.label}
-										type="button"
-										onClick={() => addNode("hospital", h.icon, h.label)}
-										className="flex flex-col items-center gap-0.5 p-2 rounded-md border hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-colors text-center"
-									>
-										<span className="text-lg">{h.icon}</span>
-										<span className="text-[9px] leading-tight">{h.label}</span>
-									</button>
-								))}
+								{HOSPITAL_ICONS.map((h) => {
+									const IconComp = h.icon;
+									return (
+										<button
+											key={h.label}
+											type="button"
+											onClick={() => addNode("hospital", h.icon, h.label)}
+											className="flex flex-col items-center gap-1 p-2 rounded-md border hover:bg-blue-50 dark:hover:bg-blue-950/30 transition-colors text-center"
+										>
+											<IconComp className="size-5 text-blue-500" />
+											<span className="text-[11px] leading-tight">
+												{h.label}
+											</span>
+										</button>
+									);
+								})}
 							</div>
 						</div>
 
 						<div>
-							<h3 className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-2">
+							<h3 className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground mb-2">
 								HIS Systems
 							</h3>
 							<div className="grid grid-cols-2 gap-1.5">
-								{HIS_ICONS.map((h) => (
-									<button
-										key={h.label}
-										type="button"
-										onClick={() => addNode("his", h.icon, h.label)}
-										className="flex flex-col items-center gap-0.5 p-2 rounded-md border hover:bg-purple-50 dark:hover:bg-purple-950/30 transition-colors text-center"
-									>
-										<span className="text-lg">{h.icon}</span>
-										<span className="text-[9px] leading-tight">{h.label}</span>
-									</button>
-								))}
+								{HIS_ICONS.map((h) => {
+									const IconComp = h.icon;
+									return (
+										<button
+											key={h.label}
+											type="button"
+											onClick={() => addNode("his", h.icon, h.label)}
+											className="flex flex-col items-center gap-1 p-2 rounded-md border hover:bg-purple-50 dark:hover:bg-purple-950/30 transition-colors text-center"
+										>
+											<IconComp className="size-5 text-purple-500" />
+											<span className="text-[11px] leading-tight">
+												{h.label}
+											</span>
+										</button>
+									);
+								})}
 							</div>
 						</div>
 
 						<div>
-							<h3 className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-2">
+							<h3 className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground mb-2">
 								Venera APIs
 							</h3>
 							<div className="grid grid-cols-2 gap-1.5">
-								{VENERA_APIS.map((a) => (
-									<button
-										key={a.label}
-										type="button"
-										onClick={() =>
-											addNode("venera_api", a.icon, a.label, {
-												endpoint: a.endpoint,
-											})
-										}
-										className="flex flex-col items-center gap-0.5 p-2 rounded-md border hover:bg-green-50 dark:hover:bg-green-950/30 transition-colors text-center"
-									>
-										<span className="text-lg">{a.icon}</span>
-										<span className="text-[9px] leading-tight">{a.label}</span>
-									</button>
-								))}
+								{VENERA_APIS.map((a) => {
+									const IconComp = a.icon;
+									return (
+										<button
+											key={a.label}
+											type="button"
+											onClick={() =>
+												addNode("venera_api", a.icon, a.label, {
+													endpoint: a.endpoint,
+												})
+											}
+											className="flex flex-col items-center gap-1 p-2 rounded-md border hover:bg-green-50 dark:hover:bg-green-950/30 transition-colors text-center"
+										>
+											<IconComp className="size-5 text-green-500" />
+											<span className="text-[11px] leading-tight">
+												{a.label}
+											</span>
+										</button>
+									);
+								})}
 							</div>
 						</div>
 					</div>
@@ -461,14 +519,14 @@ export default function IntegrationDashboardPage() {
 					<div className="flex-1 flex flex-col overflow-hidden">
 						{/* Toolbar */}
 						<div className="flex items-center gap-2 px-3 py-2 border-b bg-muted/20 flex-wrap">
-							<span className="text-[10px] text-muted-foreground mr-2">
+							<span className="text-[11px] text-muted-foreground mr-2">
 								Click palette to add → Drag to position → Select two nodes &
 								Connect
 							</span>
 							<Button
 								variant="outline"
 								size="sm"
-								className="h-6 text-[10px]"
+								className="h-6 text-[11px]"
 								disabled={!selectedNode}
 								onClick={() => {
 									if (connectingFrom) {
@@ -484,7 +542,7 @@ export default function IntegrationDashboardPage() {
 							<Button
 								variant="outline"
 								size="sm"
-								className="h-6 text-[10px]"
+								className="h-6 text-[11px]"
 								disabled={!selectedNode}
 								onClick={handleDeleteSelected}
 							>
@@ -493,7 +551,7 @@ export default function IntegrationDashboardPage() {
 							<Button
 								variant="outline"
 								size="sm"
-								className="h-6 text-[10px]"
+								className="h-6 text-[11px]"
 								onClick={() => {
 									setNodes([]);
 									setEdges([]);
@@ -626,7 +684,7 @@ export default function IntegrationDashboardPage() {
 										<Button
 											variant="outline"
 											size="sm"
-											className="text-[10px] h-6 flex-1"
+											className="text-[11px] h-6 flex-1"
 											onClick={() => {
 												const text =
 													activeOutput === "instructions"
@@ -641,7 +699,7 @@ export default function IntegrationDashboardPage() {
 										<Button
 											variant="outline"
 											size="sm"
-											className="text-[10px] h-6 flex-1"
+											className="text-[11px] h-6 flex-1"
 											onClick={() => {
 												const text =
 													activeOutput === "instructions"

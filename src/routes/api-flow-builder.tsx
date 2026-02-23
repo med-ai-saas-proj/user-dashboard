@@ -2,14 +2,31 @@ import { useState, useCallback } from "react";
 import { BASE_API_URL } from "@/config/api-routes";
 import DashboardLayout from "@/layouts/dashboard-layout";
 import { Button } from "@/components/shadcn/button";
+import { ViewCodeDialog } from "@/components/view-code-dialog";
 import { toast } from "sonner";
+import {
+	FileJson2Icon,
+	ClipboardPlusIcon,
+	PillIcon,
+	HeartPulseIcon,
+	EyeOffIcon,
+	ShieldCheckIcon,
+	UserRoundIcon,
+	BarChart3Icon,
+	BookOpenIcon,
+	FlaskConicalIcon,
+	RefreshCwIcon,
+	SearchIcon,
+	StethoscopeIcon,
+	type LucideIcon,
+} from "lucide-react";
 
 // --- Available APIs ---
 
 interface ApiDef {
 	id: string;
 	label: string;
-	icon: string;
+	icon: LucideIcon;
 	endpoint: string;
 	method: string;
 	sampleBody: Record<string, unknown>;
@@ -20,7 +37,7 @@ const AVAILABLE_APIS: ApiDef[] = [
 	{
 		id: "ehr_convert",
 		label: "EHR Converter",
-		icon: "🔄",
+		icon: FileJson2Icon,
 		endpoint: `${BASE_API_URL}service/api/v1/ehr_converter/convert`,
 		method: "POST",
 		sampleBody: { data: "<HL7v2 or CDA data>", validate_output: false },
@@ -29,7 +46,7 @@ const AVAILABLE_APIS: ApiDef[] = [
 	{
 		id: "ehr_summarize",
 		label: "EHR Summary",
-		icon: "📝",
+		icon: ClipboardPlusIcon,
 		endpoint: `${BASE_API_URL}service/api/v1/ehr_summarize`,
 		method: "POST",
 		sampleBody: { ehr_data: {}, patient_info: {} },
@@ -37,7 +54,7 @@ const AVAILABLE_APIS: ApiDef[] = [
 	{
 		id: "rx_advisor",
 		label: "Rx Advisor",
-		icon: "💊",
+		icon: PillIcon,
 		endpoint: `${BASE_API_URL}service/api/v1/rx_advisor`,
 		method: "POST",
 		sampleBody: { ehr_data: {}, prescription: "" },
@@ -45,7 +62,7 @@ const AVAILABLE_APIS: ApiDef[] = [
 	{
 		id: "health_score",
 		label: "Health Score",
-		icon: "❤️",
+		icon: HeartPulseIcon,
 		endpoint: `${BASE_API_URL}service/api/v1/health_score/evaluate`,
 		method: "POST",
 		sampleBody: { ehr_data: {} },
@@ -53,7 +70,7 @@ const AVAILABLE_APIS: ApiDef[] = [
 	{
 		id: "data_mask",
 		label: "Data Masking",
-		icon: "🔒",
+		icon: EyeOffIcon,
 		endpoint: `${BASE_API_URL}service/api/v1/data_masking/mask`,
 		method: "POST",
 		sampleBody: { bundle: {} },
@@ -61,7 +78,7 @@ const AVAILABLE_APIS: ApiDef[] = [
 	{
 		id: "bhxh_validate",
 		label: "BHXH Validator",
-		icon: "✅",
+		icon: ShieldCheckIcon,
 		endpoint: `${BASE_API_URL}service/api/v1/bhxh_validator/validate`,
 		method: "POST",
 		sampleBody: { xml_data: "", strict: false },
@@ -69,7 +86,7 @@ const AVAILABLE_APIS: ApiDef[] = [
 	{
 		id: "patient_history",
 		label: "Save Patient History",
-		icon: "👤",
+		icon: UserRoundIcon,
 		endpoint: `${BASE_API_URL}service/api/v1/patient/1/history`,
 		method: "POST",
 		sampleBody: { patient_id: 1, fhir_bundle: {} },
@@ -77,7 +94,7 @@ const AVAILABLE_APIS: ApiDef[] = [
 	{
 		id: "pub_health",
 		label: "Public Health Stats",
-		icon: "📊",
+		icon: BarChart3Icon,
 		endpoint: `${BASE_API_URL}service/api/v1/public_health/statistics`,
 		method: "POST",
 		sampleBody: { metric: "overview" },
@@ -85,7 +102,7 @@ const AVAILABLE_APIS: ApiDef[] = [
 	{
 		id: "kb_search",
 		label: "Knowledge Base Search",
-		icon: "📚",
+		icon: BookOpenIcon,
 		endpoint: `${BASE_API_URL}service/api/v1/knowledge_base/search`,
 		method: "POST",
 		sampleBody: { query: "", kb_ids: [] },
@@ -93,7 +110,7 @@ const AVAILABLE_APIS: ApiDef[] = [
 	{
 		id: "fhir_validate",
 		label: "FHIR Validate",
-		icon: "🧪",
+		icon: FlaskConicalIcon,
 		endpoint: `${BASE_API_URL}service/api/v1/ehr_converter/validate`,
 		method: "POST",
 		sampleBody: { bundle: {} },
@@ -101,7 +118,7 @@ const AVAILABLE_APIS: ApiDef[] = [
 	{
 		id: "fhir_to_hl7v2",
 		label: "FHIR → HL7v2",
-		icon: "⬅️",
+		icon: RefreshCwIcon,
 		endpoint: `${BASE_API_URL}service/api/v1/ehr_converter/convert/fhir-to-hl7v2`,
 		method: "POST",
 		sampleBody: { bundle: {} },
@@ -109,10 +126,39 @@ const AVAILABLE_APIS: ApiDef[] = [
 	{
 		id: "facility_search",
 		label: "Cross-Facility Search",
-		icon: "🏥",
+		icon: SearchIcon,
 		endpoint: `${BASE_API_URL}service/api/v1/data_masking/facility/search`,
 		method: "POST",
 		sampleBody: { first_name: "", last_name: "", dob: "" },
+	},
+	{
+		id: "symptom_check",
+		label: "Symptom Checker",
+		icon: StethoscopeIcon,
+		endpoint: `${BASE_API_URL}service/api/v1/symptom_checker/check`,
+		method: "POST",
+		sampleBody: { symptoms: ["headache", "fever"], age: 35, gender: "female" },
+	},
+];
+
+// --- Demo flows ---
+
+const DEMO_FLOWS: { label: string; steps: string[] }[] = [
+	{
+		label: "EHR → FHIR → Summary",
+		steps: ["ehr_convert", "ehr_summarize"],
+	},
+	{
+		label: "EHR → FHIR → Rx Check",
+		steps: ["ehr_convert", "rx_advisor"],
+	},
+	{
+		label: "EHR → Mask → Store",
+		steps: ["ehr_convert", "data_mask", "patient_history"],
+	},
+	{
+		label: "BHXH Validate → Convert → Summary",
+		steps: ["bhxh_validate", "ehr_convert", "ehr_summarize"],
 	},
 ];
 
@@ -123,6 +169,7 @@ interface PipelineStep {
 	api: ApiDef;
 	bodyOverride: string;
 	mapFromPrevious: string;
+	sampleOutput: string;
 }
 
 // --- Code generation ---
@@ -194,6 +241,10 @@ export default function ApiFlowBuilderPage() {
 		python: string;
 	} | null>(null);
 	const [activeTab, setActiveTab] = useState<"curl" | "python">("python");
+	const [dragIdx, setDragIdx] = useState<number | null>(null);
+	const [showDocs, setShowDocs] = useState(false);
+	const [showPackDialog, setShowPackDialog] = useState(false);
+	const [packedName, setPackedName] = useState("");
 
 	const addStep = useCallback((api: ApiDef) => {
 		setPipeline((prev) => [
@@ -203,6 +254,7 @@ export default function ApiFlowBuilderPage() {
 				api,
 				bodyOverride: JSON.stringify(api.sampleBody, null, 2),
 				mapFromPrevious: api.outputKey || "",
+				sampleOutput: "",
 			},
 		]);
 	}, []);
@@ -244,45 +296,184 @@ export default function ApiFlowBuilderPage() {
 		toast.success("Code generated");
 	}, [pipeline]);
 
+	const loadDemoFlow = useCallback(
+		(demo: { label: string; steps: string[] }) => {
+			const steps: PipelineStep[] = [];
+			for (const apiId of demo.steps) {
+				const api = AVAILABLE_APIS.find((a) => a.id === apiId);
+				if (api) {
+					steps.push({
+						id: `step_${Date.now()}_${apiId}`,
+						api,
+						bodyOverride: JSON.stringify(api.sampleBody, null, 2),
+						mapFromPrevious: api.outputKey || "",
+						sampleOutput: "",
+					});
+				}
+			}
+			setPipeline(steps);
+			setGeneratedCode(null);
+			toast.success(`Loaded demo: ${demo.label}`);
+		},
+		[]
+	);
+
+	const handleDragStart = (idx: number) => {
+		setDragIdx(idx);
+	};
+
+	const handleDragOver = (e: React.DragEvent, idx: number) => {
+		e.preventDefault();
+		if (dragIdx === null || dragIdx === idx) return;
+		setPipeline((prev) => {
+			const copy = [...prev];
+			const [moved] = copy.splice(dragIdx, 1);
+			copy.splice(idx, 0, moved);
+			return copy;
+		});
+		setDragIdx(idx);
+	};
+
+	const handleDragEnd = () => {
+		setDragIdx(null);
+	};
+
+	const handlePackAsApi = () => {
+		if (!packedName.trim()) {
+			toast.error("Enter an endpoint name");
+			return;
+		}
+		toast.success(
+			`Flow packed as /service/api/v1/flows/${packedName.trim().replace(/\s+/g, "_").toLowerCase()}`
+		);
+		setShowPackDialog(false);
+		setPackedName("");
+	};
+
 	return (
 		<DashboardLayout pageTitle="API Flow Builder">
 			<div className="flex flex-col h-[calc(100vh-4rem)] overflow-hidden">
 				<div className="flex-1 flex overflow-hidden">
 					{/* Left: API palette */}
-					<div className="w-52 shrink-0 border-r overflow-y-auto bg-muted/20 p-3 space-y-1">
-						<h3 className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-2">
+					<div className="w-52 shrink-0 border-r overflow-y-auto bg-muted/20 p-3 space-y-3">
+						<h3 className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground mb-2">
 							Available APIs
 						</h3>
-						{AVAILABLE_APIS.map((api) => (
+						{AVAILABLE_APIS.map((api) => {
+							const IconComp = api.icon;
+							return (
+								<button
+									key={api.id}
+									type="button"
+									onClick={() => addStep(api)}
+									className="w-full flex items-center gap-2 px-2 py-1.5 rounded-md border text-left text-xs hover:bg-muted/50 transition-colors"
+								>
+									<IconComp className="size-4 shrink-0 text-muted-foreground" />
+									<span className="truncate">{api.label}</span>
+								</button>
+							);
+						})}
+
+						<div className="border-t pt-3">
+							<h3 className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground mb-2">
+								Demo Flows
+							</h3>
+							{DEMO_FLOWS.map((demo) => (
+								<button
+									key={demo.label}
+									type="button"
+									onClick={() => loadDemoFlow(demo)}
+									className="w-full flex items-center gap-2 px-2 py-1.5 rounded-md text-left text-[11px] text-muted-foreground hover:bg-muted/50 hover:text-foreground transition-colors"
+								>
+									<span className="truncate">{demo.label}</span>
+									<span className="ml-auto text-[10px] text-muted-foreground/50">
+										{demo.steps.length}x
+									</span>
+								</button>
+							))}
+						</div>
+
+						<div className="border-t pt-3">
 							<button
-								key={api.id}
 								type="button"
-								onClick={() => addStep(api)}
-								className="w-full flex items-center gap-2 px-2 py-1.5 rounded-md border text-left text-xs hover:bg-muted/50 transition-colors"
+								onClick={() => setShowDocs(!showDocs)}
+								className="w-full text-left text-[11px] font-medium text-primary hover:underline"
 							>
-								<span className="text-base">{api.icon}</span>
-								<span className="truncate">{api.label}</span>
+								{showDocs ? "Hide" : "Show"} API Docs
 							</button>
-						))}
+							{showDocs && (
+								<div className="mt-2 space-y-1.5 text-[11px] text-muted-foreground">
+									{AVAILABLE_APIS.map((api) => (
+										<div
+											key={api.id}
+											className="p-1.5 rounded border bg-muted/10"
+										>
+											<div className="font-medium text-foreground">
+												{api.label}
+											</div>
+											<div className="font-mono text-[10px] truncate">
+												{api.method} {api.endpoint.replace(BASE_API_URL, "/")}
+											</div>
+											<div className="text-[10px] mt-0.5">
+												Body: {Object.keys(api.sampleBody).join(", ")}
+											</div>
+											{api.outputKey && (
+												<div className="text-[10px]">
+													Output key: {api.outputKey}
+												</div>
+											)}
+										</div>
+									))}
+								</div>
+							)}
+						</div>
 					</div>
 
 					{/* Center: Pipeline builder */}
 					<div className="flex-1 flex flex-col overflow-hidden">
-						<div className="flex items-center justify-between px-4 py-2 border-b bg-muted/20">
+						<div className="flex items-center justify-between px-4 py-2 border-b bg-muted/20 gap-2 flex-wrap">
 							<span className="text-xs text-muted-foreground">
-								{pipeline.length} step(s) — Click API on the left to add
+								{pipeline.length} step(s) — drag to reorder
 							</span>
-							<div className="flex gap-2">
+							<div className="flex gap-2 flex-wrap">
 								<Button
 									variant="outline"
 									size="sm"
-									className="h-6 text-[10px]"
+									className="h-6 text-[11px]"
 									onClick={() => {
 										setPipeline([]);
 										setGeneratedCode(null);
 									}}
 								>
 									Clear
+								</Button>
+								{pipeline.length > 0 && (
+									<ViewCodeDialog
+										endpoint={pipeline[0]?.api.endpoint || ""}
+										method="POST"
+										description={`Flow: ${pipeline.map((s) => s.api.label).join(" → ")}`}
+										steps={pipeline.map((s) => ({
+											label: s.api.label,
+											endpoint: s.api.endpoint,
+											method: s.api.method,
+											body: (() => {
+												try {
+													return JSON.parse(s.bodyOverride);
+												} catch {
+													return s.api.sampleBody;
+												}
+											})(),
+										}))}
+									/>
+								)}
+								<Button
+									variant="outline"
+									size="sm"
+									className="h-7 text-xs"
+									disabled={pipeline.length === 0}
+									onClick={() => setShowPackDialog(true)}
+								>
+									Pack as API
 								</Button>
 								<Button
 									size="sm"
@@ -295,6 +486,39 @@ export default function ApiFlowBuilderPage() {
 							</div>
 						</div>
 
+						{/* Pack as API dialog */}
+						{showPackDialog && (
+							<div className="px-4 py-3 border-b bg-primary/5 flex items-center gap-3 flex-wrap">
+								<span className="text-xs font-medium">
+									Pack as API endpoint:
+								</span>
+								<code className="text-xs text-muted-foreground">
+									/service/api/v1/flows/
+								</code>
+								<input
+									value={packedName}
+									onChange={(e) => setPackedName(e.target.value)}
+									placeholder="my_pipeline"
+									className="rounded border bg-transparent px-2 py-1 text-xs font-mono w-40"
+								/>
+								<Button
+									size="sm"
+									className="h-6 text-[11px]"
+									onClick={handlePackAsApi}
+								>
+									Publish
+								</Button>
+								<Button
+									variant="ghost"
+									size="sm"
+									className="h-6 text-[11px]"
+									onClick={() => setShowPackDialog(false)}
+								>
+									Cancel
+								</Button>
+							</div>
+						)}
+
 						<div className="flex-1 overflow-auto p-4 space-y-3">
 							{pipeline.length === 0 ? (
 								<div className="flex items-center justify-center h-full">
@@ -303,14 +527,22 @@ export default function ApiFlowBuilderPage() {
 											Build a custom API pipeline
 										</p>
 										<p className="text-[11px] text-muted-foreground/60">
-											Click APIs from the palette to chain them together. Each
-											step's output can feed into the next.
+											Click APIs from the palette or load a demo flow. Drag
+											steps to reorder.
 										</p>
 									</div>
 								</div>
 							) : (
 								pipeline.map((step, idx) => (
-									<div key={step.id}>
+									// biome-ignore lint/a11y/useSemanticElements: draggable div for reordering
+									<div
+										key={step.id}
+										role="group"
+										draggable
+										onDragStart={() => handleDragStart(idx)}
+										onDragOver={(e) => handleDragOver(e, idx)}
+										onDragEnd={handleDragEnd}
+									>
 										{idx > 0 && (
 											<div className="flex justify-center py-1">
 												<svg
@@ -328,16 +560,26 @@ export default function ApiFlowBuilderPage() {
 												</svg>
 											</div>
 										)}
-										<div className="rounded-lg border p-3 space-y-2">
+										<div
+											className={`rounded-lg border p-3 space-y-2 transition-colors ${dragIdx === idx ? "border-primary bg-primary/5" : ""}`}
+										>
 											<div className="flex items-center gap-2">
+												<span className="text-xs font-bold text-muted-foreground w-5 cursor-grab">
+													⠿
+												</span>
 												<span className="text-xs font-bold text-muted-foreground w-5">
 													{idx + 1}
 												</span>
-												<span className="text-base">{step.api.icon}</span>
+												{(() => {
+													const StepIcon = step.api.icon;
+													return (
+														<StepIcon className="size-4 text-muted-foreground" />
+													);
+												})()}
 												<span className="text-xs font-medium flex-1">
 													{step.api.label}
 												</span>
-												<span className="text-[10px] text-muted-foreground font-mono">
+												<span className="text-[11px] text-muted-foreground font-mono">
 													{step.api.method}
 												</span>
 												<div className="flex gap-0.5">
@@ -366,12 +608,12 @@ export default function ApiFlowBuilderPage() {
 													</button>
 												</div>
 											</div>
-											<div className="text-[10px] text-muted-foreground font-mono truncate">
+											<div className="text-[11px] text-muted-foreground font-mono truncate">
 												{step.api.endpoint}
 											</div>
 											{idx > 0 && (
 												<div className="flex items-center gap-2">
-													<span className="text-[10px] text-muted-foreground shrink-0">
+													<span className="text-[11px] text-muted-foreground shrink-0">
 														Map from prev:
 													</span>
 													<input
@@ -380,18 +622,34 @@ export default function ApiFlowBuilderPage() {
 															updateStepMapping(step.id, e.target.value)
 														}
 														placeholder="e.g. fhir_bundle"
-														className="flex-1 rounded border bg-transparent px-2 py-0.5 text-[10px] font-mono"
+														className="flex-1 rounded border bg-transparent px-2 py-0.5 text-[11px] font-mono"
 													/>
 												</div>
 											)}
-											<textarea
-												value={step.bodyOverride}
-												onChange={(e) =>
-													updateStepBody(step.id, e.target.value)
-												}
-												rows={4}
-												className="w-full rounded border bg-transparent px-2 py-1 text-[10px] font-mono resize-y"
-											/>
+											<div className="grid grid-cols-2 gap-2">
+												<div>
+													<div className="text-[10px] font-semibold text-muted-foreground mb-1">
+														INPUT
+													</div>
+													<textarea
+														value={step.bodyOverride}
+														onChange={(e) =>
+															updateStepBody(step.id, e.target.value)
+														}
+														rows={4}
+														className="w-full rounded border bg-transparent px-2 py-1 text-[11px] font-mono resize-y"
+													/>
+												</div>
+												<div>
+													<div className="text-[10px] font-semibold text-muted-foreground mb-1">
+														OUTPUT (preview)
+													</div>
+													<pre className="w-full rounded border bg-muted/30 px-2 py-1 text-[11px] font-mono h-[6.5rem] overflow-auto text-muted-foreground">
+														{step.sampleOutput ||
+															`{  "status": "ok",\n  "data": "..."  }`}
+													</pre>
+												</div>
+											</div>
 										</div>
 									</div>
 								))
@@ -429,7 +687,7 @@ export default function ApiFlowBuilderPage() {
 								<Button
 									variant="outline"
 									size="sm"
-									className="text-[10px] h-6 flex-1"
+									className="text-[11px] h-6 flex-1"
 									onClick={() => {
 										const text =
 											activeTab === "python"
@@ -444,7 +702,7 @@ export default function ApiFlowBuilderPage() {
 								<Button
 									variant="outline"
 									size="sm"
-									className="text-[10px] h-6 flex-1"
+									className="text-[11px] h-6 flex-1"
 									onClick={() => {
 										const text =
 											activeTab === "python"

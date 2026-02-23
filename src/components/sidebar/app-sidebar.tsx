@@ -10,7 +10,7 @@ import {
 	EyeOffIcon,
 	FileTextIcon,
 	GalleryVerticalEnd,
-	GitBranchIcon,
+	GitBranchPlusIcon,
 	HeartPulseIcon,
 	ImageIcon,
 	KeyRound,
@@ -25,6 +25,8 @@ import {
 	FileJson2Icon,
 	UserRoundIcon,
 	WatchIcon,
+	LayoutGridIcon,
+	StethoscopeIcon,
 } from "lucide-react";
 import type * as React from "react";
 import { useTranslation } from "react-i18next";
@@ -147,7 +149,17 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 			{
 				name: t("playground.apiFlowBuilder.title"),
 				url: "/api-flow-builder",
-				icon: GitBranchIcon,
+				icon: GitBranchPlusIcon,
+			},
+			{
+				name: "Dashboard Builder",
+				url: "/dashboard-builder",
+				icon: LayoutGridIcon,
+			},
+			{
+				name: "Symptom Checker",
+				url: "/symptom-checker",
+				icon: StethoscopeIcon,
 			},
 		],
 		tools: [
@@ -200,6 +212,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 								<SidebarMenuButton asChild isActive={pathname === "/upgrade"}>
 									<NavLink
 										to="/upgrade"
+										preventScrollReset
 										className="font-medium bg-gradient-to-r from-violet-500 to-indigo-500 bg-clip-text text-transparent"
 									>
 										<SparklesIcon className="text-violet-500" />

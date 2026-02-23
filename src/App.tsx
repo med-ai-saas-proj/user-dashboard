@@ -10,8 +10,15 @@ import { ProtectedRoute } from "@/routes/protected-route";
 import { PublicRoute } from "@/routes/public-route";
 import RxAdvisorPage from "@/routes/rx-advisor";
 import { QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import {
+	BrowserRouter,
+	Navigate,
+	Route,
+	Routes,
+	useLocation,
+} from "react-router-dom";
 import { Toaster } from "sonner";
+import { useEffect, useRef } from "react";
 import PlaygroundChatPage from "./routes/playground-chat";
 import PlaygroundAISearchPage from "@/routes/playground-ai-search";
 import EhrConverterPage from "@/routes/ehr-converter";
@@ -31,6 +38,267 @@ import ApiFlowBuilderPage from "@/routes/api-flow-builder";
 import SettingsPage from "@/routes/settings";
 import BillingPage from "@/routes/billing";
 import UpgradePage from "@/routes/upgrade";
+import DashboardBuilderPage from "@/routes/dashboard-builder";
+import SymptomCheckerPage from "@/routes/symptom-checker";
+
+function PreventScrollReset() {
+	const location = useLocation();
+	const isFirstRender = useRef(true);
+	const prevPathname = useRef(location.pathname);
+
+	useEffect(() => {
+		if (isFirstRender.current) {
+			isFirstRender.current = false;
+			prevPathname.current = location.pathname;
+			return;
+		}
+		prevPathname.current = location.pathname;
+	});
+
+	return null;
+}
+
+function AppRoutes() {
+	return (
+		<>
+			<PreventScrollReset />
+			<Routes>
+				<Route
+					path="/login"
+					element={
+						<PublicRoute>
+							<LoginPage />
+						</PublicRoute>
+					}
+				/>
+				{/* TODO: Replace with main home page later, temporarily redirecting to /chat for now */}
+				<Route path="/" element={<Navigate to="/chat" replace />} />
+				<Route
+					path="/api-keys"
+					element={
+						<ProtectedRoute>
+							<APIKeysPage />
+						</ProtectedRoute>
+					}
+				/>
+				<Route
+					path="/api-reference"
+					element={
+						<ProtectedRoute>
+							<APIReferencePage />
+						</ProtectedRoute>
+					}
+				/>
+				<Route
+					path="/chat"
+					element={
+						<ProtectedRoute>
+							<PlaygroundChatPage />
+						</ProtectedRoute>
+					}
+				/>
+				<Route
+					path="/ai-search"
+					element={
+						<ProtectedRoute>
+							<PlaygroundAISearchPage />
+						</ProtectedRoute>
+					}
+				/>
+				<Route
+					path="/ehr-summary"
+					element={
+						<ProtectedRoute>
+							<EHRSummaryPage />
+						</ProtectedRoute>
+					}
+				/>
+
+				<Route
+					path="/rx-advisor"
+					element={
+						<ProtectedRoute>
+							<RxAdvisorPage />
+						</ProtectedRoute>
+					}
+				/>
+
+				<Route
+					path="/ehr-converter"
+					element={
+						<ProtectedRoute>
+							<EhrConverterPage />
+						</ProtectedRoute>
+					}
+				/>
+
+				<Route
+					path="/document-to-fhir"
+					element={
+						<ProtectedRoute>
+							<DocumentToFhirPage />
+						</ProtectedRoute>
+					}
+				/>
+
+				<Route
+					path="/knowledge-base"
+					element={
+						<ProtectedRoute>
+							<KnowledgeBasePage />
+						</ProtectedRoute>
+					}
+				/>
+
+				<Route
+					path="/bhxh-validator"
+					element={
+						<ProtectedRoute>
+							<BhxhValidatorPage />
+						</ProtectedRoute>
+					}
+				/>
+
+				<Route
+					path="/voice-transcribe"
+					element={
+						<ProtectedRoute>
+							<VoiceTranscribePage />
+						</ProtectedRoute>
+					}
+				/>
+
+				<Route
+					path="/medical-image"
+					element={
+						<ProtectedRoute>
+							<MedicalImagePage />
+						</ProtectedRoute>
+					}
+				/>
+
+				<Route
+					path="/health-score"
+					element={
+						<ProtectedRoute>
+							<HealthScorePage />
+						</ProtectedRoute>
+					}
+				/>
+
+				<Route
+					path="/data-masking"
+					element={
+						<ProtectedRoute>
+							<DataMaskingPage />
+						</ProtectedRoute>
+					}
+				/>
+
+				<Route
+					path="/patient-history"
+					element={
+						<ProtectedRoute>
+							<PatientHistoryPage />
+						</ProtectedRoute>
+					}
+				/>
+
+				<Route
+					path="/wearable-data"
+					element={
+						<ProtectedRoute>
+							<WearableDataPage />
+						</ProtectedRoute>
+					}
+				/>
+
+				<Route
+					path="/architecture"
+					element={
+						<ProtectedRoute>
+							<ArchitecturePage />
+						</ProtectedRoute>
+					}
+				/>
+
+				<Route
+					path="/integration"
+					element={
+						<ProtectedRoute>
+							<IntegrationDashboardPage />
+						</ProtectedRoute>
+					}
+				/>
+
+				<Route
+					path="/public-health"
+					element={
+						<ProtectedRoute>
+							<PublicHealthPage />
+						</ProtectedRoute>
+					}
+				/>
+
+				<Route
+					path="/api-flow-builder"
+					element={
+						<ProtectedRoute>
+							<ApiFlowBuilderPage />
+						</ProtectedRoute>
+					}
+				/>
+
+				<Route
+					path="/dashboard-builder"
+					element={
+						<ProtectedRoute>
+							<DashboardBuilderPage />
+						</ProtectedRoute>
+					}
+				/>
+
+				<Route
+					path="/symptom-checker"
+					element={
+						<ProtectedRoute>
+							<SymptomCheckerPage />
+						</ProtectedRoute>
+					}
+				/>
+
+				<Route
+					path="/settings"
+					element={
+						<ProtectedRoute>
+							<SettingsPage />
+						</ProtectedRoute>
+					}
+				/>
+
+				<Route
+					path="/billing"
+					element={
+						<ProtectedRoute>
+							<BillingPage />
+						</ProtectedRoute>
+					}
+				/>
+
+				<Route
+					path="/upgrade"
+					element={
+						<ProtectedRoute>
+							<UpgradePage />
+						</ProtectedRoute>
+					}
+				/>
+
+				<Route path="*" element={<Navigate to="/" replace />} />
+			</Routes>
+		</>
+	);
+}
 
 function App() {
 	return (
@@ -38,222 +306,7 @@ function App() {
 			<KeycloakProvider>
 				<BrowserRouter>
 					<Toaster />
-					<Routes>
-						<Route
-							path="/login"
-							element={
-								<PublicRoute>
-									<LoginPage />
-								</PublicRoute>
-							}
-						/>
-						{/* TODO: Replace with main home page later, temporarily redirecting to /chat for now */}
-						<Route path="/" element={<Navigate to="/chat" replace />} />
-						<Route
-							path="/api-keys"
-							element={
-								<ProtectedRoute>
-									<APIKeysPage />
-								</ProtectedRoute>
-							}
-						/>
-						<Route
-							path="/api-reference"
-							element={
-								<ProtectedRoute>
-									<APIReferencePage />
-								</ProtectedRoute>
-							}
-						/>
-						<Route
-							path="/chat"
-							element={
-								<ProtectedRoute>
-									<PlaygroundChatPage />
-								</ProtectedRoute>
-							}
-						/>
-						<Route
-							path="/ai-search"
-							element={
-								<ProtectedRoute>
-									<PlaygroundAISearchPage />
-								</ProtectedRoute>
-							}
-						/>
-						<Route
-							path="/ehr-summary"
-							element={
-								<ProtectedRoute>
-									<EHRSummaryPage />
-								</ProtectedRoute>
-							}
-						/>
-
-						<Route
-							path="/rx-advisor"
-							element={
-								<ProtectedRoute>
-									<RxAdvisorPage />
-								</ProtectedRoute>
-							}
-						/>
-
-						<Route
-							path="/ehr-converter"
-							element={
-								<ProtectedRoute>
-									<EhrConverterPage />
-								</ProtectedRoute>
-							}
-						/>
-
-						<Route
-							path="/document-to-fhir"
-							element={
-								<ProtectedRoute>
-									<DocumentToFhirPage />
-								</ProtectedRoute>
-							}
-						/>
-
-						<Route
-							path="/knowledge-base"
-							element={
-								<ProtectedRoute>
-									<KnowledgeBasePage />
-								</ProtectedRoute>
-							}
-						/>
-
-						<Route
-							path="/bhxh-validator"
-							element={
-								<ProtectedRoute>
-									<BhxhValidatorPage />
-								</ProtectedRoute>
-							}
-						/>
-
-						<Route
-							path="/voice-transcribe"
-							element={
-								<ProtectedRoute>
-									<VoiceTranscribePage />
-								</ProtectedRoute>
-							}
-						/>
-
-						<Route
-							path="/medical-image"
-							element={
-								<ProtectedRoute>
-									<MedicalImagePage />
-								</ProtectedRoute>
-							}
-						/>
-
-						<Route
-							path="/health-score"
-							element={
-								<ProtectedRoute>
-									<HealthScorePage />
-								</ProtectedRoute>
-							}
-						/>
-
-						<Route
-							path="/data-masking"
-							element={
-								<ProtectedRoute>
-									<DataMaskingPage />
-								</ProtectedRoute>
-							}
-						/>
-
-						<Route
-							path="/patient-history"
-							element={
-								<ProtectedRoute>
-									<PatientHistoryPage />
-								</ProtectedRoute>
-							}
-						/>
-
-						<Route
-							path="/wearable-data"
-							element={
-								<ProtectedRoute>
-									<WearableDataPage />
-								</ProtectedRoute>
-							}
-						/>
-
-						<Route
-							path="/architecture"
-							element={
-								<ProtectedRoute>
-									<ArchitecturePage />
-								</ProtectedRoute>
-							}
-						/>
-
-						<Route
-							path="/integration"
-							element={
-								<ProtectedRoute>
-									<IntegrationDashboardPage />
-								</ProtectedRoute>
-							}
-						/>
-
-						<Route
-							path="/public-health"
-							element={
-								<ProtectedRoute>
-									<PublicHealthPage />
-								</ProtectedRoute>
-							}
-						/>
-
-						<Route
-							path="/api-flow-builder"
-							element={
-								<ProtectedRoute>
-									<ApiFlowBuilderPage />
-								</ProtectedRoute>
-							}
-						/>
-
-						<Route
-							path="/settings"
-							element={
-								<ProtectedRoute>
-									<SettingsPage />
-								</ProtectedRoute>
-							}
-						/>
-
-						<Route
-							path="/billing"
-							element={
-								<ProtectedRoute>
-									<BillingPage />
-								</ProtectedRoute>
-							}
-						/>
-
-						<Route
-							path="/upgrade"
-							element={
-								<ProtectedRoute>
-									<UpgradePage />
-								</ProtectedRoute>
-							}
-						/>
-
-						<Route path="*" element={<Navigate to="/" replace />} />
-					</Routes>
+					<AppRoutes />
 				</BrowserRouter>
 			</KeycloakProvider>
 		</QueryClientProvider>

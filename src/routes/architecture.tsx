@@ -1,32 +1,66 @@
+import { useState, useEffect, useRef, useCallback } from "react";
+import mermaid from "mermaid";
 import DashboardLayout from "@/layouts/dashboard-layout";
+import {
+	LayoutGridIcon,
+	CodeIcon,
+	CopyIcon,
+	CheckIcon,
+	MonitorIcon,
+	SmartphoneIcon,
+	Building2Icon,
+	PlugIcon,
+	KeyRoundIcon,
+	TimerIcon,
+	GlobeIcon,
+	BarChart3Icon,
+	CogIcon,
+	WrenchIcon,
+	FileCodeIcon,
+	type LucideIcon,
+} from "lucide-react";
 
-const LAYERS = {
+interface LayerItem {
+	id: string;
+	label: string;
+	icon?: LucideIcon;
+	desc?: string;
+}
+
+const LAYERS: Record<
+	string,
+	{ label: string; color: string; items: LayerItem[] }
+> = {
 	clients: {
 		label: "Clients",
 		color: "#6366f1",
 		items: [
-			{ id: "web", label: "Web Dashboard", icon: "🖥️" },
-			{ id: "mobile", label: "Mobile App", icon: "📱" },
-			{ id: "his", label: "HIS / EMR", icon: "🏥" },
-			{ id: "third", label: "3rd-Party API", icon: "🔌" },
+			{ id: "web", label: "Web Dashboard", icon: MonitorIcon },
+			{ id: "mobile", label: "Mobile App", icon: SmartphoneIcon },
+			{ id: "his", label: "HIS / EMR", icon: Building2Icon },
+			{ id: "third", label: "3rd-Party API", icon: PlugIcon },
 		],
 	},
 	gateway: {
 		label: "API Gateway (FastAPI)",
 		color: "#0ea5e9",
 		items: [
-			{ id: "auth", label: "Auth / API Key", icon: "🔑" },
-			{ id: "rate", label: "Rate Limiter", icon: "⏱️" },
-			{ id: "cors", label: "CORS", icon: "🌐" },
-			{ id: "otel", label: "OpenTelemetry", icon: "📊" },
+			{ id: "auth", label: "Auth / API Key", icon: KeyRoundIcon },
+			{ id: "rate", label: "Rate Limiter", icon: TimerIcon },
+			{ id: "cors", label: "CORS", icon: GlobeIcon },
+			{ id: "otel", label: "OpenTelemetry", icon: BarChart3Icon },
 		],
 	},
 	apps: {
 		label: "Mounted Sub-Apps",
 		color: "#8b5cf6",
 		items: [
-			{ id: "service_app", label: "/service → Service API", icon: "⚙️" },
-			{ id: "mgmt_app", label: "/management → Management API", icon: "🛠️" },
+			{ id: "service_app", label: "/service → Service API", icon: CogIcon },
+			{
+				id: "mgmt_app",
+				label: "/management → Management API",
+				icon: WrenchIcon,
+			},
 		],
 	},
 	services: {
@@ -119,7 +153,7 @@ function LayerRow({
 }: {
 	label: string;
 	color: string;
-	items: { id: string; label: string; icon?: string; desc?: string }[];
+	items: LayerItem[];
 	showDesc?: boolean;
 }) {
 	return (
@@ -131,21 +165,24 @@ function LayerRow({
 				{label}
 			</div>
 			<div className="flex flex-wrap gap-2">
-				{items.map((item) => (
-					<div
-						key={item.id}
-						className="group relative flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border text-xs font-medium transition-all hover:shadow-md cursor-default"
-						style={{ borderColor: `${color}40`, background: `${color}08` }}
-					>
-						{item.icon && <span className="text-sm">{item.icon}</span>}
-						<span>{item.label}</span>
-						{showDesc && item.desc && (
-							<div className="absolute left-0 top-full mt-1 z-20 hidden group-hover:block w-48 p-2 rounded-md border bg-popover text-[10px] text-muted-foreground shadow-lg">
-								{item.desc}
-							</div>
-						)}
-					</div>
-				))}
+				{items.map((item) => {
+					const IconComp = item.icon;
+					return (
+						<div
+							key={item.id}
+							className="group relative flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border text-xs font-medium transition-all hover:shadow-md cursor-default"
+							style={{ borderColor: `${color}40`, background: `${color}08` }}
+						>
+							{IconComp && <IconComp className="size-4" style={{ color }} />}
+							<span>{item.label}</span>
+							{showDesc && item.desc && (
+								<div className="absolute left-0 top-full mt-1 z-20 hidden group-hover:block w-48 p-2 rounded-md border bg-popover text-[11px] text-muted-foreground shadow-lg">
+									{item.desc}
+								</div>
+							)}
+						</div>
+					);
+				})}
 			</div>
 		</div>
 	);
@@ -171,7 +208,251 @@ function Arrow() {
 	);
 }
 
+const MERMAID_DIAGRAM = `graph TD
+    subgraph Clients
+        WEB[Web Dashboard]
+        MOB[Mobile App]
+        HIS[HIS / EMR]
+        EXT[3rd-Party API]
+    end
+
+    subgraph Gateway["API Gateway — FastAPI :8100"]
+        AUTH[Auth / API Key]
+        RATE[Rate Limiter]
+        CORS_MW[CORS]
+        OTEL[OpenTelemetry]
+    end
+
+    subgraph Apps["Mounted Sub-Apps"]
+        SVC_APP["/service → Service API"]
+        MGMT_APP["/management → Management API"]
+    end
+
+    subgraph Services["Service Modules — /service/api/v1"]
+        EHR_CONV[EHR Converter<br/>HL7v2/CDA/v3/BHXH → FHIR R4]
+        EHR_SUM[EHR Summary<br/>AI clinical summarization]
+        RX[Rx Advisor<br/>Prescription risk analysis]
+        CHAT_SVC[Chat<br/>Medical chatbot SSE]
+        AI_SEARCH[AI Search<br/>Knowledge retrieval + citations]
+        VOICE[Voice Transcribe<br/>Audio → text Whisper]
+        MED_IMG[Medical Image<br/>GPT-4o vision analysis]
+        HEALTH[Health Score<br/>Patient scoring 20-100]
+        MASK[Data Masking<br/>PHI de-identification]
+        KB[Knowledge Base<br/>RAG: create, ingest, search]
+        BHXH[BHXH Validator<br/>Vietnam 4210 XML]
+        PAT[Patient<br/>Registry, history, wearable]
+        OCR_SVC[OCR<br/>Document text extraction]
+        PUB[Public Health<br/>Population statistics]
+    end
+
+    subgraph Management["Management Modules — /management/api/v1"]
+        API_KEYS[API Keys — CRUD + permissions]
+        AUTH_MGMT[Auth — Keycloak SSO]
+    end
+
+    subgraph Infra["Infrastructure"]
+        AZURE[Azure OpenAI<br/>GPT-4o / GPT-4o-mini]
+        PG[PostgreSQL<br/>Patient, Facility, API Keys]
+        MINIO[MinIO / S3<br/>FHIR document storage]
+        EHR_HUB[EHR Interop Hub :8080<br/>Standalone converter]
+        OTLP[OTLP Collector<br/>Traces + metrics]
+        KC[Keycloak<br/>Identity provider]
+    end
+
+    WEB & MOB & HIS & EXT --> Gateway
+    Gateway --> Apps
+    SVC_APP --> Services
+    MGMT_APP --> Management
+
+    EHR_CONV --> EHR_HUB
+    EHR_SUM & RX & CHAT_SVC & AI_SEARCH & MED_IMG & OCR_SVC --> AZURE
+    MASK & PAT & KB --> PG
+    EHR_CONV --> MINIO
+    AUTH --> KC
+    OTEL --> OTLP
+
+    style Clients fill:#eef2ff,stroke:#6366f1,color:#312e81
+    style Gateway fill:#f0f9ff,stroke:#0ea5e9,color:#0c4a6e
+    style Apps fill:#f5f3ff,stroke:#8b5cf6,color:#4c1d95
+    style Services fill:#ecfdf5,stroke:#10b981,color:#064e3b
+    style Management fill:#fffbeb,stroke:#f59e0b,color:#78350f
+    style Infra fill:#fef2f2,stroke:#ef4444,color:#7f1d1d
+`;
+
+const MERMAID_SEQUENCE = `sequenceDiagram
+    participant C as Client
+    participant GW as API Gateway :8100
+    participant MW as Middleware
+    participant SVC as /service app
+    participant MOD as Service Module
+    participant LLM as Azure OpenAI
+    participant DB as PostgreSQL
+    participant HUB as EHR Hub :8080
+
+    C->>GW: HTTP Request
+    GW->>MW: requestId, logging, OTLP
+    MW->>MW: API Key auth / JWT auth
+    MW->>SVC: Route to /service/*
+
+    alt EHR Conversion
+        SVC->>MOD: ehr_converter/convert
+        MOD->>HUB: Proxy via httpx
+        HUB-->>MOD: FHIR R4 Bundle
+        MOD-->>C: JSON response
+    else AI Feature (summary, chat, rx, search)
+        SVC->>MOD: ehr_summarize / rx_advisor / chat
+        MOD->>LLM: GPT-4o prompt
+        LLM-->>MOD: AI response
+        MOD-->>C: JSON / SSE stream
+    else Data Persistence
+        SVC->>MOD: patient / knowledge_base
+        MOD->>DB: SQL query
+        DB-->>MOD: Result set
+        MOD-->>C: JSON response
+    end
+`;
+
+mermaid.initialize({
+	startOnLoad: false,
+	theme: "dark",
+	themeVariables: {
+		darkMode: true,
+		background: "#1a1a2e",
+		primaryColor: "#6366f1",
+		primaryTextColor: "#e2e8f0",
+		primaryBorderColor: "#4f46e5",
+		secondaryColor: "#0ea5e9",
+		tertiaryColor: "#1e293b",
+		lineColor: "#94a3b8",
+		textColor: "#e2e8f0",
+		mainBkg: "#1e293b",
+		nodeBorder: "#475569",
+		clusterBkg: "#0f172a",
+		clusterBorder: "#334155",
+		titleColor: "#e2e8f0",
+		edgeLabelBackground: "#1e293b",
+		nodeTextColor: "#e2e8f0",
+	},
+	flowchart: { curve: "basis", padding: 12 },
+	sequence: { mirrorActors: false },
+});
+
+function MermaidRenderer({ diagram, id }: { diagram: string; id: string }) {
+	const containerRef = useRef<HTMLDivElement>(null);
+	const [error, setError] = useState<string | null>(null);
+
+	useEffect(() => {
+		let cancelled = false;
+		const render = async () => {
+			if (!containerRef.current) return;
+			try {
+				const { svg } = await mermaid.render(
+					`mermaid-${id}-${Date.now()}`,
+					diagram
+				);
+				if (!cancelled && containerRef.current) {
+					containerRef.current.innerHTML = svg;
+					setError(null);
+				}
+			} catch (e) {
+				if (!cancelled) setError(e instanceof Error ? e.message : String(e));
+			}
+		};
+		render();
+		return () => {
+			cancelled = true;
+		};
+	}, [diagram, id]);
+
+	if (error) {
+		return (
+			<div className="p-4 text-sm text-red-400 border border-red-500/30 rounded-lg bg-red-500/5">
+				Failed to render diagram: {error}
+			</div>
+		);
+	}
+
+	return (
+		<div
+			ref={containerRef}
+			className="flex justify-center overflow-auto p-4 [&_svg]:max-w-full"
+		/>
+	);
+}
+
+function MermaidView() {
+	const [activeTab, setActiveTab] = useState<"architecture" | "sequence">(
+		"architecture"
+	);
+	const [showSource, setShowSource] = useState(false);
+	const [copied, setCopied] = useState(false);
+
+	const currentDiagram =
+		activeTab === "architecture" ? MERMAID_DIAGRAM : MERMAID_SEQUENCE;
+
+	const handleCopy = useCallback(() => {
+		navigator.clipboard.writeText(currentDiagram);
+		setCopied(true);
+		setTimeout(() => setCopied(false), 2000);
+	}, [currentDiagram]);
+
+	return (
+		<div className="space-y-4">
+			<div className="flex items-center gap-2">
+				<button
+					type="button"
+					onClick={() => setActiveTab("architecture")}
+					className={`px-3 py-1.5 text-xs font-medium rounded-md border transition-colors ${activeTab === "architecture" ? "bg-primary text-primary-foreground border-primary" : "bg-muted/50 hover:bg-muted"}`}
+				>
+					Architecture
+				</button>
+				<button
+					type="button"
+					onClick={() => setActiveTab("sequence")}
+					className={`px-3 py-1.5 text-xs font-medium rounded-md border transition-colors ${activeTab === "sequence" ? "bg-primary text-primary-foreground border-primary" : "bg-muted/50 hover:bg-muted"}`}
+				>
+					Request Flow
+				</button>
+				<div className="ml-auto flex items-center gap-2">
+					<button
+						type="button"
+						onClick={() => setShowSource((p) => !p)}
+						className={`flex items-center gap-1.5 px-2.5 py-1.5 text-xs rounded-md border transition-colors ${showSource ? "bg-primary text-primary-foreground border-primary" : "hover:bg-muted/50"}`}
+					>
+						<FileCodeIcon className="size-3.5" />
+						Source
+					</button>
+					<button
+						type="button"
+						onClick={handleCopy}
+						className="flex items-center gap-1.5 px-2.5 py-1.5 text-xs rounded-md border hover:bg-muted/50 transition-colors"
+					>
+						{copied ? (
+							<CheckIcon className="size-3.5" />
+						) : (
+							<CopyIcon className="size-3.5" />
+						)}
+						{copied ? "Copied" : "Copy"}
+					</button>
+				</div>
+			</div>
+
+			<div className="border rounded-lg bg-muted/10 overflow-auto min-h-[300px]">
+				{showSource ? (
+					<pre className="p-4 text-xs font-mono leading-relaxed whitespace-pre overflow-x-auto text-foreground/90">
+						{currentDiagram}
+					</pre>
+				) : (
+					<MermaidRenderer diagram={currentDiagram} id={activeTab} />
+				)}
+			</div>
+		</div>
+	);
+}
+
 export default function ArchitecturePage() {
+	const [view, setView] = useState<"visual" | "mermaid">("visual");
+
 	return (
 		<DashboardLayout pageTitle="System Architecture">
 			<div className="flex flex-col h-[calc(100vh-4rem)] overflow-auto">
@@ -182,171 +463,199 @@ export default function ArchitecturePage() {
 							Unified medical API gateway — AI assistants, EHR interoperability,
 							patient management, clinical data processing
 						</p>
-					</div>
-
-					<LayerRow {...LAYERS.clients} />
-					<Arrow />
-					<LayerRow {...LAYERS.gateway} />
-					<Arrow />
-					<LayerRow {...LAYERS.apps} />
-					<Arrow />
-					<div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-						<div className="lg:col-span-2">
-							<LayerRow {...LAYERS.services} showDesc />
-						</div>
-						<div>
-							<LayerRow {...LAYERS.management} showDesc />
-						</div>
-					</div>
-					<Arrow />
-					<LayerRow {...LAYERS.infra} showDesc />
-
-					{/* Data flow summary */}
-					<div className="mt-8 border rounded-lg p-4 bg-muted/20">
-						<h3 className="text-sm font-semibold mb-3">Request Flow</h3>
-						<div className="text-xs text-muted-foreground space-y-1.5 font-mono">
-							<p>
-								Client → main_app (port 8100) → global_middleware (requestId,
-								logging, OTLP)
-							</p>
-							<p>
-								{" "}
-								├─ /service/* → service_app → /api/v1/&lt;module&gt; → API Key
-								auth → Service logic
-							</p>
-							<p>
-								{" "}
-								└─ /management/* → management_app → /api/v1/api-keys → JWT auth
-								→ CRUD
-							</p>
-							<p>{""}</p>
-							<p>Service modules call:</p>
-							<p>
-								{" "}
-								├─ Azure OpenAI (GPT-4o) for AI features (summary, rx, chat,
-								search, image, ocr)
-							</p>
-							<p>
-								{" "}
-								├─ EHR Interop Hub (port 8080) for format conversion (proxy via
-								httpx)
-							</p>
-							<p> ├─ PostgreSQL for patient/facility/API key persistence</p>
-							<p> └─ MinIO for FHIR document storage</p>
+						<div className="flex items-center justify-center gap-1 mt-4">
+							<button
+								type="button"
+								onClick={() => setView("visual")}
+								className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-l-md border transition-colors ${view === "visual" ? "bg-primary text-primary-foreground border-primary" : "bg-background hover:bg-muted/50"}`}
+							>
+								<LayoutGridIcon className="size-3.5" />
+								Visual
+							</button>
+							<button
+								type="button"
+								onClick={() => setView("mermaid")}
+								className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-r-md border transition-colors ${view === "mermaid" ? "bg-primary text-primary-foreground border-primary" : "bg-background hover:bg-muted/50"}`}
+							>
+								<CodeIcon className="size-3.5" />
+								Mermaid
+							</button>
 						</div>
 					</div>
 
-					{/* API endpoint summary */}
-					<div className="mt-4 border rounded-lg p-4 bg-muted/20">
-						<h3 className="text-sm font-semibold mb-3">
-							API Endpoints Summary
-						</h3>
-						<div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-1 text-[11px] font-mono">
-							{[
-								[
-									"POST",
-									"/service/api/v1/ehr_converter/convert",
-									"Auto-detect → FHIR R4",
-								],
-								[
-									"POST",
-									"/service/api/v1/ehr_converter/convert/fhir-to-hl7v2",
-									"FHIR → HL7v2",
-								],
-								[
-									"POST",
-									"/service/api/v1/ehr_converter/validate",
-									"Validate FHIR Bundle",
-								],
-								[
-									"POST",
-									"/service/api/v1/ehr_converter/convert/document",
-									"Document → FHIR (OCR)",
-								],
-								[
-									"POST",
-									"/service/api/v1/ehr_converter/convert/batch",
-									"Batch conversion",
-								],
-								[
-									"POST",
-									"/service/api/v1/ehr_summarize",
-									"EHR clinical summary",
-								],
-								[
-									"POST",
-									"/service/api/v1/rx_advisor",
-									"Prescription risk analysis",
-								],
-								["POST", "/service/api/v1/chat", "AI chat (SSE stream)"],
-								["POST", "/service/api/v1/ai_search", "AI search (SSE stream)"],
-								[
-									"POST",
-									"/service/api/v1/voice_transcribe",
-									"Audio transcription",
-								],
-								[
-									"POST",
-									"/service/api/v1/medical_image/describe",
-									"Medical image analysis",
-								],
-								[
-									"POST",
-									"/service/api/v1/health_score/evaluate",
-									"Health score",
-								],
-								[
-									"POST",
-									"/service/api/v1/data_masking/mask",
-									"De-identify FHIR",
-								],
-								[
-									"POST",
-									"/service/api/v1/data_masking/facility/register",
-									"Register facility DB",
-								],
-								[
-									"POST",
-									"/service/api/v1/data_masking/facility/search",
-									"Cross-facility search",
-								],
-								[
-									"POST",
-									"/service/api/v1/bhxh_validator/validate",
-									"BHXH 4210 validate",
-								],
-								[
-									"*",
-									"/service/api/v1/knowledge_base/**",
-									"Knowledge base CRUD + search",
-								],
-								[
-									"*",
-									"/service/api/v1/patient/**",
-									"Patient CRUD, history, wearable",
-								],
-								[
-									"POST",
-									"/service/api/v1/public_health/statistics",
-									"Population statistics",
-								],
-								["GET", "/management/api/v1/api-keys", "List API keys"],
-								["POST", "/management/api/v1/api-keys", "Create API key"],
-							].map(([method, path, desc]) => (
-								<div key={path} className="flex gap-2 py-0.5">
-									<span
-										className={`w-9 shrink-0 font-bold ${method === "POST" ? "text-green-600 dark:text-green-400" : method === "GET" ? "text-blue-600 dark:text-blue-400" : "text-muted-foreground"}`}
-									>
-										{method}
-									</span>
-									<span className="text-foreground truncate">{path}</span>
-									<span className="text-muted-foreground ml-auto shrink-0 hidden lg:inline">
-										{desc}
-									</span>
+					{view === "mermaid" ? (
+						<MermaidView />
+					) : (
+						<>
+							<LayerRow {...LAYERS.clients} />
+							<Arrow />
+							<LayerRow {...LAYERS.gateway} />
+							<Arrow />
+							<LayerRow {...LAYERS.apps} />
+							<Arrow />
+							<div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+								<div className="lg:col-span-2">
+									<LayerRow {...LAYERS.services} showDesc />
 								</div>
-							))}
-						</div>
-					</div>
+								<div>
+									<LayerRow {...LAYERS.management} showDesc />
+								</div>
+							</div>
+							<Arrow />
+							<LayerRow {...LAYERS.infra} showDesc />
+
+							{/* Data flow summary */}
+							<div className="mt-8 border rounded-lg p-4 bg-muted/20">
+								<h3 className="text-sm font-semibold mb-3">Request Flow</h3>
+								<div className="text-xs text-muted-foreground space-y-1.5 font-mono">
+									<p>
+										Client → main_app (port 8100) → global_middleware
+										(requestId, logging, OTLP)
+									</p>
+									<p>
+										{" "}
+										├─ /service/* → service_app → /api/v1/&lt;module&gt; → API
+										Key auth → Service logic
+									</p>
+									<p>
+										{" "}
+										└─ /management/* → management_app → /api/v1/api-keys → JWT
+										auth → CRUD
+									</p>
+									<p>{""}</p>
+									<p>Service modules call:</p>
+									<p>
+										{" "}
+										├─ Azure OpenAI (GPT-4o) for AI features (summary, rx, chat,
+										search, image, ocr)
+									</p>
+									<p>
+										{" "}
+										├─ EHR Interop Hub (port 8080) for format conversion (proxy
+										via httpx)
+									</p>
+									<p> ├─ PostgreSQL for patient/facility/API key persistence</p>
+									<p> └─ MinIO for FHIR document storage</p>
+								</div>
+							</div>
+
+							{/* API endpoint summary */}
+							<div className="mt-4 border rounded-lg p-4 bg-muted/20">
+								<h3 className="text-sm font-semibold mb-3">
+									API Endpoints Summary
+								</h3>
+								<div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-1 text-[11px] font-mono">
+									{[
+										[
+											"POST",
+											"/service/api/v1/ehr_converter/convert",
+											"Auto-detect → FHIR R4",
+										],
+										[
+											"POST",
+											"/service/api/v1/ehr_converter/convert/fhir-to-hl7v2",
+											"FHIR → HL7v2",
+										],
+										[
+											"POST",
+											"/service/api/v1/ehr_converter/validate",
+											"Validate FHIR Bundle",
+										],
+										[
+											"POST",
+											"/service/api/v1/ehr_converter/convert/document",
+											"Document → FHIR (OCR)",
+										],
+										[
+											"POST",
+											"/service/api/v1/ehr_converter/convert/batch",
+											"Batch conversion",
+										],
+										[
+											"POST",
+											"/service/api/v1/ehr_summarize",
+											"EHR clinical summary",
+										],
+										[
+											"POST",
+											"/service/api/v1/rx_advisor",
+											"Prescription risk analysis",
+										],
+										["POST", "/service/api/v1/chat", "AI chat (SSE stream)"],
+										[
+											"POST",
+											"/service/api/v1/ai_search",
+											"AI search (SSE stream)",
+										],
+										[
+											"POST",
+											"/service/api/v1/voice_transcribe",
+											"Audio transcription",
+										],
+										[
+											"POST",
+											"/service/api/v1/medical_image/describe",
+											"Medical image analysis",
+										],
+										[
+											"POST",
+											"/service/api/v1/health_score/evaluate",
+											"Health score",
+										],
+										[
+											"POST",
+											"/service/api/v1/data_masking/mask",
+											"De-identify FHIR",
+										],
+										[
+											"POST",
+											"/service/api/v1/data_masking/facility/register",
+											"Register facility DB",
+										],
+										[
+											"POST",
+											"/service/api/v1/data_masking/facility/search",
+											"Cross-facility search",
+										],
+										[
+											"POST",
+											"/service/api/v1/bhxh_validator/validate",
+											"BHXH 4210 validate",
+										],
+										[
+											"*",
+											"/service/api/v1/knowledge_base/**",
+											"Knowledge base CRUD + search",
+										],
+										[
+											"*",
+											"/service/api/v1/patient/**",
+											"Patient CRUD, history, wearable",
+										],
+										[
+											"POST",
+											"/service/api/v1/public_health/statistics",
+											"Population statistics",
+										],
+										["GET", "/management/api/v1/api-keys", "List API keys"],
+										["POST", "/management/api/v1/api-keys", "Create API key"],
+									].map(([method, path, desc]) => (
+										<div key={path} className="flex gap-2 py-0.5">
+											<span
+												className={`w-9 shrink-0 font-bold ${method === "POST" ? "text-green-600 dark:text-green-400" : method === "GET" ? "text-blue-600 dark:text-blue-400" : "text-muted-foreground"}`}
+											>
+												{method}
+											</span>
+											<span className="text-foreground truncate">{path}</span>
+											<span className="text-muted-foreground ml-auto shrink-0 hidden lg:inline">
+												{desc}
+											</span>
+										</div>
+									))}
+								</div>
+							</div>
+						</>
+					)}
 				</div>
 			</div>
 		</DashboardLayout>

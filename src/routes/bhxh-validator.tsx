@@ -134,14 +134,14 @@ const BhxhValidatorPage = () => {
 							<div className="flex items-center gap-3">
 								<button
 									type="button"
-									className="flex items-center gap-2 text-xs"
+									className="flex items-center gap-2 text-sm"
 									onClick={() => setStrictMode(!strictMode)}
 								>
 									<span
-										className={`w-8 h-4 rounded-full relative transition-colors ${strictMode ? "bg-primary" : "bg-muted-foreground/30"}`}
+										className={`inline-flex w-9 h-5 rounded-full relative transition-colors shrink-0 ${strictMode ? "bg-primary" : "bg-muted-foreground/30"}`}
 									>
 										<span
-											className={`absolute top-0.5 w-3 h-3 rounded-full bg-white transition-transform ${strictMode ? "translate-x-4" : "translate-x-0.5"}`}
+											className={`absolute top-0.5 left-0.5 w-4 h-4 rounded-full bg-white shadow-sm transition-transform ${strictMode ? "translate-x-4" : "translate-x-0"}`}
 										/>
 									</span>
 									<span>Strict mode</span>
@@ -208,7 +208,7 @@ const BhxhValidatorPage = () => {
 											>
 												<div className="flex items-center gap-2">
 													<span
-														className={`inline-flex px-1.5 py-0.5 rounded text-[10px] font-semibold uppercase ${severityColor(issue.severity)}`}
+														className={`inline-flex px-1.5 py-0.5 rounded text-[11px] font-semibold uppercase ${severityColor(issue.severity)}`}
 													>
 														{issue.severity}
 													</span>

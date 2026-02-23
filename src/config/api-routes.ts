@@ -115,6 +115,10 @@ export const API_ROUTES = {
 			`service/api/${API_VERSION}/public_health/statistics`,
 			BASE_API_URL
 		).toString(),
+		SYMPTOM_CHECKER: new URL(
+			`service/api/${API_VERSION}/symptom_checker/check`,
+			BASE_API_URL
+		).toString(),
 	},
 } as const;
 

@@ -156,23 +156,181 @@ const EhrSummaryPage = () => {
 		const files = e.target.files;
 		if (!files) return;
 		for (const file of Array.from(files)) {
+			const isText = /\.(json|txt|xml|hl7|cda|csv)$/i.test(file.name);
 			const reader = new FileReader();
 			reader.onload = () => {
 				const id = nextId++;
+				let data = "";
+				if (isText) {
+					data = reader.result as string;
+				} else {
+					const base64 = (reader.result as string).split(",")[1] || "";
+					data = JSON.stringify(
+						{
+							_preprocess: true,
+							filename: file.name,
+							mime: file.type,
+							base64_data: base64,
+							note: "This file requires preprocessing (OCR/vision API). Run Document→FHIR or Medical Image first.",
+						},
+						null,
+						2
+					);
+				}
 				setEntries((prev) => [
 					...prev,
 					{
 						id,
 						label: file.name.replace(/\.[^.]+$/, ""),
-						data: reader.result as string,
+						data,
 						facility: "",
 					},
 				]);
 				setSelectedEntry(id);
+				if (!isText) {
+					toast.info(
+						`${file.name}: Non-text file loaded. Needs preprocessing via OCR/Document→FHIR API.`
+					);
+				}
 			};
-			reader.readAsText(file);
+			if (isText) {
+				reader.readAsText(file);
+			} else {
+				reader.readAsDataURL(file);
+			}
 		}
 		e.target.value = "";
+	};
+
+	const generateTemplate = (format: string) => {
+		const templates: Record<string, { label: string; data: string }> = {
+			hl7v2: {
+				label: "HL7v2 Template",
+				data: `MSH|^~\\&|SENDING_APP|FACILITY|RECEIVING_APP|DEST|20250101120000||ADT^A01|MSG001|P|2.5\nEVN|A01|20250101120000\nPID|1||MRN001^^^FACILITY||DOE^JOHN||19800101|M|||123 MAIN ST^^CITY^STATE^12345||555-1234\nPV1|1|I|WARD^ROOM^BED||||ATTENDING^DR|||MED||||ADM|||V001|||||||||||||||||||||||||20250101120000`,
+			},
+			cda: {
+				label: "CDA/C-CDA Template",
+				data: `<?xml version="1.0" encoding="UTF-8"?>
+<ClinicalDocument xmlns="urn:hl7-org:v3">
+  <realmCode code="US"/>
+  <typeId root="2.16.840.1.113883.1.3" extension="POCD_HD000040"/>
+  <id root="2.16.840.1.113883.19.5.99999.1" extension="DOC001"/>
+  <code code="34133-9" displayName="Summarization of Episode Note" codeSystem="2.16.840.1.113883.6.1"/>
+  <title>Clinical Summary</title>
+  <effectiveTime value="20250101"/>
+  <recordTarget>
+    <patientRole>
+      <id extension="MRN001"/>
+      <patient>
+        <name><given>John</given><family>Doe</family></name>
+        <administrativeGenderCode code="M"/>
+        <birthTime value="19800101"/>
+      </patient>
+    </patientRole>
+  </recordTarget>
+  <component><structuredBody>
+    <!-- Add sections here -->
+  </structuredBody></component>
+</ClinicalDocument>`,
+			},
+			fhir: {
+				label: "FHIR Bundle Template",
+				data: JSON.stringify(
+					{
+						resourceType: "Bundle",
+						type: "collection",
+						entry: [
+							{
+								resource: {
+									resourceType: "Patient",
+									id: "patient-1",
+									name: [{ family: "Doe", given: ["John"] }],
+									gender: "male",
+									birthDate: "1980-01-01",
+								},
+							},
+							{
+								resource: {
+									resourceType: "Encounter",
+									id: "enc-1",
+									status: "finished",
+									class: { code: "IMP" },
+									subject: { reference: "Patient/patient-1" },
+								},
+							},
+						],
+					},
+					null,
+					2
+				),
+			},
+			bhxh: {
+				label: "BHXH 4210 Template",
+				data: `<?xml version="1.0" encoding="UTF-8"?>
+<GIAMDINHHS>
+  <THONGTINDONVI>
+    <MACSKCB>00000</MACSKCB>
+    <TENCSKCB>Sample Facility</TENCSKCB>
+  </THONGTINDONVI>
+  <THONGTINHOSO>
+    <DANHSACHHOSO>
+      <HOSO>
+        <FILEHOSO>
+          <LOAIHOSO>XML1</LOAIHOSO>
+          <NOIDUNGFILE><!-- Base64 encoded XML1 --></NOIDUNGFILE>
+        </FILEHOSO>
+      </HOSO>
+    </DANHSACHHOSO>
+  </THONGTINHOSO>
+</GIAMDINHHS>`,
+			},
+			custom_json: {
+				label: "Custom JSON Template",
+				data: JSON.stringify(
+					{
+						patient: {
+							name: "John Doe",
+							gender: "Male",
+							dob: "1980-01-01",
+							id: "MRN-001",
+						},
+						encounter: {
+							type: "inpatient",
+							date: "2025-01-01",
+							department: "Internal Medicine",
+							physician: "Dr. Smith",
+						},
+						diagnoses: [
+							{ code: "J18.9", display: "Pneumonia", status: "active" },
+						],
+						medications: [
+							{ name: "Amoxicillin", dose: "500mg", frequency: "3x daily" },
+						],
+						lab_results: [
+							{
+								test: "WBC",
+								value: "11.2",
+								unit: "10^3/uL",
+								reference: "4.5-11.0",
+								flag: "H",
+							},
+						],
+					},
+					null,
+					2
+				),
+			},
+		};
+		const tmpl = templates[format];
+		if (tmpl) {
+			const id = nextId++;
+			setEntries((prev) => [
+				...prev,
+				{ id, label: tmpl.label, data: tmpl.data, facility: "Template" },
+			]);
+			setSelectedEntry(id);
+			toast.success(`Generated ${tmpl.label}`);
+		}
 	};
 
 	const standardizeToFhir = async (
@@ -338,7 +496,7 @@ const EhrSummaryPage = () => {
 							<input
 								ref={fileInputRef}
 								type="file"
-								accept=".json,.txt,.hl7,.xml,.cda"
+								accept=".json,.txt,.hl7,.xml,.cda,.pdf,.png,.jpg,.jpeg,.tiff,.bmp"
 								multiple
 								className="hidden"
 								onChange={handleFileUpload}
@@ -367,8 +525,32 @@ const EhrSummaryPage = () => {
 											className="w-full text-xs"
 											onClick={() => fileInputRef.current?.click()}
 										>
-											Upload EHR File(s)
+											Upload EHR File(s) (txt, xml, json, pdf, image)
 										</Button>
+										<div className="text-[11px] font-semibold text-muted-foreground mt-2 mb-1">
+											Generate Template
+										</div>
+										<div className="flex flex-wrap gap-1.5 justify-center">
+											{[
+												{ label: "HL7v2", key: "hl7v2" },
+												{ label: "CDA/C-CDA", key: "cda" },
+												{ label: "FHIR", key: "fhir" },
+												{ label: "BHXH 4210", key: "bhxh" },
+												{ label: "Custom JSON", key: "custom_json" },
+											].map((t) => (
+												<button
+													key={t.key}
+													type="button"
+													onClick={() => generateTemplate(t.key)}
+													className="px-2.5 py-1 text-[11px] font-medium rounded-md border bg-background hover:bg-muted transition-colors"
+												>
+													{t.label}
+												</button>
+											))}
+										</div>
+										<div className="text-[11px] font-semibold text-muted-foreground mt-2 mb-1">
+											Quick Examples
+										</div>
 										<div className="flex flex-wrap gap-1.5 justify-center">
 											{[
 												{ label: "HL7v2 ADT", data: EXAMPLES[0].data },
@@ -452,7 +634,7 @@ const EhrSummaryPage = () => {
 											/>
 											{current.data.trim() && (
 												<span
-													className={`px-2 py-0.5 rounded-full text-[10px] font-semibold ${FORMAT_COLORS[detectFormat(current.data)]}`}
+													className={`px-2 py-0.5 rounded-full text-[11px] font-semibold ${FORMAT_COLORS[detectFormat(current.data)]}`}
 												>
 													{detectFormat(current.data)}
 												</span>

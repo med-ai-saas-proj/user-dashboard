@@ -171,13 +171,13 @@ const DataMaskingPage = () => {
 										>
 											{label}
 											{key === "mapping" && mappingEntries.length > 0 && (
-												<span className="ml-1.5 px-1.5 py-0.5 rounded-full bg-muted text-[10px]">
+												<span className="ml-1.5 px-1.5 py-0.5 rounded-full bg-muted text-[11px]">
 													{mappingEntries.length}
 												</span>
 											)}
 											{key === "removed" &&
 												result.removed_fields.length > 0 && (
-													<span className="ml-1.5 px-1.5 py-0.5 rounded-full bg-muted text-[10px]">
+													<span className="ml-1.5 px-1.5 py-0.5 rounded-full bg-muted text-[11px]">
 														{result.removed_fields.length}
 													</span>
 												)}

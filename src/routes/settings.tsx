@@ -8,45 +8,59 @@ import {
 	Trash2Icon,
 	UserIcon,
 	BarChart3Icon,
+	ServerIcon,
+	GlobeIcon,
 } from "lucide-react";
 import { Button } from "@/components/shadcn/button";
 import { Separator } from "@/components/shadcn/separator";
 import DashboardLayout from "@/layouts/dashboard-layout";
 import { useAuthStore } from "@/features/auth/store/auth-store";
 
-type ModelSlot = "BigModel" | "MediumModel" | "SmallModel" | "OcrModel";
+type ApiGroup =
+	| "text_reasoning"
+	| "text_fast"
+	| "vision_ocr"
+	| "embedding"
+	| "speech";
 
-interface ModelSlotConfig {
-	slot: ModelSlot;
+interface ApiGroupConfig {
+	group: ApiGroup;
 	label: string;
 	description: string;
-	usedBy: string;
+	apis: string[];
 }
 
-const MODEL_SLOTS: ModelSlotConfig[] = [
+const API_GROUPS: ApiGroupConfig[] = [
 	{
-		slot: "BigModel",
-		label: "Big Model",
-		description: "Highest capability — complex reasoning and tool use",
-		usedBy: "Chat, RX Advisor, AI Search, EHR Summarize",
+		group: "text_reasoning",
+		label: "Text Reasoning (Complex)",
+		description:
+			"Complex multi-step reasoning, tool use, and structured generation",
+		apis: ["Chat", "RX Advisor", "AI Search", "EHR Summarize", "Health Score"],
 	},
 	{
-		slot: "MediumModel",
-		label: "Medium Model",
-		description: "Balanced cost/performance for structured tasks",
-		usedBy: "Health Score, BHXH Validator, Knowledge Base",
+		group: "text_fast",
+		label: "Text Processing (Fast)",
+		description: "Lightweight extraction, classification, and formatting tasks",
+		apis: ["Data Masking", "BHXH Validator", "Knowledge Base", "Public Health"],
 	},
 	{
-		slot: "SmallModel",
-		label: "Small Model",
-		description: "Fast and cost-effective for lightweight tasks",
-		usedBy: "Data Masking, simple extraction",
+		group: "vision_ocr",
+		label: "Vision / OCR",
+		description: "Image understanding, document OCR, and visual analysis",
+		apis: ["Medical Image", "Document→FHIR", "OCR"],
 	},
 	{
-		slot: "OcrModel",
-		label: "OCR / Vision Model",
-		description: "Requires vision capability for image input",
-		usedBy: "Medical Image, Document→FHIR, OCR",
+		group: "embedding",
+		label: "Embedding / Retrieval",
+		description: "Vector embeddings for knowledge base and semantic search",
+		apis: ["Knowledge Base Indexing", "AI Search Retrieval"],
+	},
+	{
+		group: "speech",
+		label: "Speech / Audio",
+		description: "Audio transcription and voice input processing",
+		apis: ["Voice Transcribe"],
 	},
 ];
 
@@ -76,19 +90,29 @@ const PROVIDER_PRESETS = [
 		prefix: "openai:",
 		models: ["meta-llama/Llama-3.1-70B-Instruct", "llama3.1:70b"],
 	},
+	{
+		provider: "WebGPU (Browser)",
+		prefix: "webgpu:",
+		models: ["GPT-OSS-WebGPU"],
+	},
 ];
 
-interface SlotFormState {
+interface GroupFormState {
 	name: string;
 	provider: string;
 	baseUrl: string;
 }
 
-const DEFAULT_STATE: Record<ModelSlot, SlotFormState> = {
-	BigModel: { name: "openai:gpt-4o", provider: "OpenAI", baseUrl: "" },
-	MediumModel: { name: "openai:gpt-4o", provider: "OpenAI", baseUrl: "" },
-	SmallModel: { name: "openai:gpt-4o-mini", provider: "OpenAI", baseUrl: "" },
-	OcrModel: { name: "openai:gpt-4o", provider: "OpenAI", baseUrl: "" },
+const DEFAULT_GROUP_STATE: Record<ApiGroup, GroupFormState> = {
+	text_reasoning: { name: "openai:gpt-4o", provider: "OpenAI", baseUrl: "" },
+	text_fast: { name: "openai:gpt-4o-mini", provider: "OpenAI", baseUrl: "" },
+	vision_ocr: { name: "openai:gpt-4o", provider: "OpenAI", baseUrl: "" },
+	embedding: {
+		name: "openai:text-embedding-3-small",
+		provider: "OpenAI",
+		baseUrl: "",
+	},
+	speech: { name: "openai:whisper-1", provider: "OpenAI", baseUrl: "" },
 };
 
 const MOCK_USAGE = [
@@ -100,13 +124,13 @@ const MOCK_USAGE = [
 export default function SettingsPage() {
 	const { t } = useTranslation("settings");
 	const { userInfo } = useAuthStore();
-	const [slotConfigs, setSlotConfigs] =
-		useState<Record<ModelSlot, SlotFormState>>(DEFAULT_STATE);
+	const [groupConfigs, setGroupConfigs] =
+		useState<Record<ApiGroup, GroupFormState>>(DEFAULT_GROUP_STATE);
 
-	const updateSlot = (slot: ModelSlot, updates: Partial<SlotFormState>) => {
-		setSlotConfigs((prev) => ({
+	const updateGroup = (group: ApiGroup, updates: Partial<GroupFormState>) => {
+		setGroupConfigs((prev) => ({
 			...prev,
-			[slot]: { ...prev[slot], ...updates },
+			[group]: { ...prev[group], ...updates },
 		}));
 	};
 
@@ -143,36 +167,43 @@ export default function SettingsPage() {
 					</div>
 				</section>
 
-				{/* Model Configuration */}
+				{/* Model Configuration by API Group */}
 				<section className="space-y-4">
 					<div className="flex items-center gap-2 text-lg font-semibold">
 						<CpuIcon className="size-5" aria-hidden="true" />
 						{t("model.title")}
 					</div>
 					<p className="text-sm text-muted-foreground">
-						Configure which LLM powers each capability slot. Use cloud API keys
-						or point to a self-hosted inference server (vLLM, Ollama, etc.).
+						Configure which model powers each API group. Group APIs by their
+						capability requirements rather than model size.
 					</p>
 
 					<div className="space-y-4">
-						{MODEL_SLOTS.map((slot) => {
-							const config = slotConfigs[slot.slot];
+						{API_GROUPS.map((grp) => {
+							const config = groupConfigs[grp.group];
 							return (
 								<div
-									key={slot.slot}
+									key={grp.group}
 									className="rounded-lg border p-4 space-y-3"
 								>
 									<div className="flex items-start justify-between gap-2">
 										<div>
-											<h3 className="text-sm font-semibold">{slot.label}</h3>
-											<p className="text-[11px] text-muted-foreground">
-												{slot.description}
+											<h3 className="text-sm font-semibold">{grp.label}</h3>
+											<p className="text-xs text-muted-foreground">
+												{grp.description}
 											</p>
-											<p className="text-[10px] text-muted-foreground/60 mt-0.5">
-												Used by: {slot.usedBy}
-											</p>
+											<div className="flex flex-wrap gap-1 mt-1">
+												{grp.apis.map((api) => (
+													<span
+														key={api}
+														className="px-1.5 py-0.5 rounded text-[10px] bg-muted text-muted-foreground"
+													>
+														{api}
+													</span>
+												))}
+											</div>
 										</div>
-										<span className="rounded-full bg-primary/10 px-2.5 py-0.5 text-[10px] font-medium text-primary whitespace-nowrap">
+										<span className="rounded-full bg-primary/10 px-2.5 py-0.5 text-[11px] font-medium text-primary whitespace-nowrap">
 											{config.provider || "Custom"}
 										</span>
 									</div>
@@ -184,7 +215,7 @@ export default function SettingsPage() {
 												<input
 													value={config.name}
 													onChange={(e) =>
-														updateSlot(slot.slot, { name: e.target.value })
+														updateGroup(grp.group, { name: e.target.value })
 													}
 													placeholder="openai:gpt-4o"
 													className="mt-1 w-full rounded-md border bg-transparent px-3 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-ring"
@@ -197,7 +228,7 @@ export default function SettingsPage() {
 												<input
 													value={config.baseUrl}
 													onChange={(e) =>
-														updateSlot(slot.slot, { baseUrl: e.target.value })
+														updateGroup(grp.group, { baseUrl: e.target.value })
 													}
 													placeholder="http://localhost:8001/v1"
 													className="mt-1 w-full rounded-md border bg-transparent px-3 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-ring"
@@ -211,15 +242,17 @@ export default function SettingsPage() {
 												key={p.provider}
 												type="button"
 												onClick={() =>
-													updateSlot(slot.slot, {
+													updateGroup(grp.group, {
 														provider: p.provider,
 														name: `${p.prefix}${p.models[0]}`,
 														baseUrl: p.provider.includes("Self-Hosted")
 															? "http://localhost:11434/v1"
-															: "",
+															: p.provider.includes("WebGPU")
+																? "browser"
+																: "",
 													})
 												}
-												className={`px-2 py-0.5 text-[10px] font-medium rounded-md border transition-colors ${
+												className={`px-2 py-0.5 text-[11px] font-medium rounded-md border transition-colors ${
 													config.provider === p.provider
 														? "border-primary bg-primary/10 text-primary"
 														: "hover:bg-muted text-muted-foreground"
@@ -239,6 +272,110 @@ export default function SettingsPage() {
 							<CheckIcon className="size-3.5 mr-1" />
 							Save Model Configuration
 						</Button>
+					</div>
+				</section>
+
+				{/* Self-Host & WebGPU */}
+				<section className="space-y-4">
+					<div className="flex items-center gap-2 text-lg font-semibold">
+						<ServerIcon className="size-5" aria-hidden="true" />
+						Self-Host & Browser Models
+					</div>
+					<p className="text-sm text-muted-foreground">
+						Deploy models locally or run them directly in the browser.
+					</p>
+
+					<div className="rounded-lg border p-4 space-y-4">
+						<div>
+							<h3 className="text-sm font-semibold mb-2">
+								Self-Host with vLLM
+							</h3>
+							<p className="text-xs text-muted-foreground mb-3">
+								Deploy open-source models from HuggingFace with vLLM for an
+								OpenAI-compatible API.
+							</p>
+							<div className="bg-muted/50 rounded-lg p-3 text-xs font-mono space-y-1.5">
+								<p className="text-muted-foreground"># Install vLLM</p>
+								<p>pip install vllm</p>
+								<p className="text-muted-foreground mt-2"># Serve a model</p>
+								<p>vllm serve meta-llama/Llama-3.1-70B-Instruct \</p>
+								<p> --host 0.0.0.0 --port 8001 \</p>
+								<p> --tensor-parallel-size 2</p>
+								<p className="text-muted-foreground mt-2">
+									# Then set Base URL above to: http://localhost:8001/v1
+								</p>
+							</div>
+							<div className="flex flex-wrap gap-2 mt-3">
+								<a
+									href="https://docs.vllm.ai"
+									target="_blank"
+									rel="noopener noreferrer"
+									className="text-xs text-primary underline underline-offset-2"
+								>
+									vLLM Docs
+								</a>
+								<a
+									href="https://huggingface.co/models?pipeline_tag=text-generation&sort=trending"
+									target="_blank"
+									rel="noopener noreferrer"
+									className="text-xs text-primary underline underline-offset-2"
+								>
+									Browse Models on HuggingFace
+								</a>
+								<a
+									href="https://github.com/ggerganov/llama.cpp"
+									target="_blank"
+									rel="noopener noreferrer"
+									className="text-xs text-primary underline underline-offset-2"
+								>
+									llama.cpp (CPU)
+								</a>
+								<a
+									href="https://ollama.com"
+									target="_blank"
+									rel="noopener noreferrer"
+									className="text-xs text-primary underline underline-offset-2"
+								>
+									Ollama
+								</a>
+							</div>
+						</div>
+
+						<Separator />
+
+						<div>
+							<h3 className="text-sm font-semibold mb-2">
+								Run in Browser (WebGPU)
+							</h3>
+							<p className="text-xs text-muted-foreground mb-3">
+								Run small language models directly in the browser using WebGPU —
+								no server needed. Requires a WebGPU-capable browser (Chrome
+								113+, Edge 113+).
+							</p>
+							<div className="flex flex-wrap gap-2">
+								<a
+									href="https://huggingface.co/spaces/webml-community/GPT-OSS-WebGPU"
+									target="_blank"
+									rel="noopener noreferrer"
+									className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md border bg-background text-xs font-medium hover:bg-muted transition-colors"
+								>
+									<GlobeIcon className="size-3.5" />
+									GPT-OSS WebGPU Demo
+								</a>
+								<a
+									href="https://huggingface.co/spaces/webml-community"
+									target="_blank"
+									rel="noopener noreferrer"
+									className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md border bg-background text-xs font-medium hover:bg-muted transition-colors"
+								>
+									WebML Community Models
+								</a>
+							</div>
+							<p className="text-[11px] text-muted-foreground/60 mt-2">
+								Select "WebGPU (Browser)" as a provider in any API group above
+								to use browser-based inference.
+							</p>
+						</div>
 					</div>
 				</section>
 

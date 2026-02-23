@@ -202,15 +202,14 @@ const EhrSummaryPage = () => {
 		e.target.value = "";
 	};
 
-	const generateTemplate = (format: string) => {
-		const templates: Record<string, { label: string; data: string }> = {
-			hl7v2: {
-				label: "HL7v2 Template",
-				data: `MSH|^~\\&|SENDING_APP|FACILITY|RECEIVING_APP|DEST|20250101120000||ADT^A01|MSG001|P|2.5\nEVN|A01|20250101120000\nPID|1||MRN001^^^FACILITY||DOE^JOHN||19800101|M|||123 MAIN ST^^CITY^STATE^12345||555-1234\nPV1|1|I|WARD^ROOM^BED||||ATTENDING^DR|||MED||||ADM|||V001|||||||||||||||||||||||||20250101120000`,
-			},
-			cda: {
-				label: "CDA/C-CDA Template",
-				data: `<?xml version="1.0" encoding="UTF-8"?>
+	const TEMPLATES: Record<string, { label: string; data: string }> = {
+		hl7v2: {
+			label: "HL7v2 Template",
+			data: `MSH|^~\\&|SENDING_APP|FACILITY|RECEIVING_APP|DEST|20250101120000||ADT^A01|MSG001|P|2.5\nEVN|A01|20250101120000\nPID|1||MRN001^^^FACILITY||DOE^JOHN||19800101|M|||123 MAIN ST^^CITY^STATE^12345||555-1234\nPV1|1|I|WARD^ROOM^BED||||ATTENDING^DR|||MED||||ADM|||V001|||||||||||||||||||||||||20250101120000`,
+		},
+		cda: {
+			label: "CDA/C-CDA Template",
+			data: `<?xml version="1.0" encoding="UTF-8"?>
 <ClinicalDocument xmlns="urn:hl7-org:v3">
   <realmCode code="US"/>
   <typeId root="2.16.840.1.113883.1.3" extension="POCD_HD000040"/>
@@ -232,41 +231,41 @@ const EhrSummaryPage = () => {
     <!-- Add sections here -->
   </structuredBody></component>
 </ClinicalDocument>`,
-			},
-			fhir: {
-				label: "FHIR Bundle Template",
-				data: JSON.stringify(
-					{
-						resourceType: "Bundle",
-						type: "collection",
-						entry: [
-							{
-								resource: {
-									resourceType: "Patient",
-									id: "patient-1",
-									name: [{ family: "Doe", given: ["John"] }],
-									gender: "male",
-									birthDate: "1980-01-01",
-								},
+		},
+		fhir: {
+			label: "FHIR Bundle Template",
+			data: JSON.stringify(
+				{
+					resourceType: "Bundle",
+					type: "collection",
+					entry: [
+						{
+							resource: {
+								resourceType: "Patient",
+								id: "patient-1",
+								name: [{ family: "Doe", given: ["John"] }],
+								gender: "male",
+								birthDate: "1980-01-01",
 							},
-							{
-								resource: {
-									resourceType: "Encounter",
-									id: "enc-1",
-									status: "finished",
-									class: { code: "IMP" },
-									subject: { reference: "Patient/patient-1" },
-								},
+						},
+						{
+							resource: {
+								resourceType: "Encounter",
+								id: "enc-1",
+								status: "finished",
+								class: { code: "IMP" },
+								subject: { reference: "Patient/patient-1" },
 							},
-						],
-					},
-					null,
-					2
-				),
-			},
-			bhxh: {
-				label: "BHXH 4210 Template",
-				data: `<?xml version="1.0" encoding="UTF-8"?>
+						},
+					],
+				},
+				null,
+				2
+			),
+		},
+		bhxh: {
+			label: "BHXH 4210 Template",
+			data: `<?xml version="1.0" encoding="UTF-8"?>
 <GIAMDINHHS>
   <THONGTINDONVI>
     <MACSKCB>00000</MACSKCB>
@@ -283,45 +282,49 @@ const EhrSummaryPage = () => {
     </DANHSACHHOSO>
   </THONGTINHOSO>
 </GIAMDINHHS>`,
-			},
-			custom_json: {
-				label: "Custom JSON Template",
-				data: JSON.stringify(
-					{
-						patient: {
-							name: "John Doe",
-							gender: "Male",
-							dob: "1980-01-01",
-							id: "MRN-001",
-						},
-						encounter: {
-							type: "inpatient",
-							date: "2025-01-01",
-							department: "Internal Medicine",
-							physician: "Dr. Smith",
-						},
-						diagnoses: [
-							{ code: "J18.9", display: "Pneumonia", status: "active" },
-						],
-						medications: [
-							{ name: "Amoxicillin", dose: "500mg", frequency: "3x daily" },
-						],
-						lab_results: [
-							{
-								test: "WBC",
-								value: "11.2",
-								unit: "10^3/uL",
-								reference: "4.5-11.0",
-								flag: "H",
-							},
-						],
+		},
+		custom_json: {
+			label: "Custom JSON Template",
+			data: JSON.stringify(
+				{
+					patient: {
+						name: "John Doe",
+						gender: "Male",
+						dob: "1980-01-01",
+						id: "MRN-001",
 					},
-					null,
-					2
-				),
-			},
-		};
-		const tmpl = templates[format];
+					encounter: {
+						type: "inpatient",
+						date: "2025-01-01",
+						department: "Internal Medicine",
+						physician: "Dr. Smith",
+					},
+					diagnoses: [
+						{ code: "J18.9", display: "Pneumonia", status: "active" },
+					],
+					medications: [
+						{ name: "Amoxicillin", dose: "500mg", frequency: "3x daily" },
+					],
+					lab_results: [
+						{
+							test: "WBC",
+							value: "11.2",
+							unit: "10^3/uL",
+							reference: "4.5-11.0",
+							flag: "H",
+						},
+					],
+				},
+				null,
+				2
+			),
+		},
+	};
+
+	const generateTemplateData = (format: string) => TEMPLATES[format] ?? null;
+
+	const generateTemplate = (format: string) => {
+		const tmpl = generateTemplateData(format);
 		if (tmpl) {
 			const id = nextId++;
 			setEntries((prev) => [
@@ -612,6 +615,44 @@ const EhrSummaryPage = () => {
 									</button>
 								</div>
 
+								{/* Generate template for selected source */}
+								{current && !current.data.trim() && (
+									<div className="px-4 py-2 border-b bg-muted/10">
+										<span className="text-[10px] font-semibold text-muted-foreground">
+											Generate example for this source:
+										</span>
+										<div className="flex flex-wrap gap-1.5 mt-1">
+											{[
+												{ label: "HL7v2", key: "hl7v2" },
+												{ label: "CDA/C-CDA", key: "cda" },
+												{ label: "FHIR", key: "fhir" },
+												{ label: "BHXH 4210", key: "bhxh" },
+												{ label: "Custom JSON", key: "custom_json" },
+											].map((tmpl) => (
+												<button
+													key={tmpl.key}
+													type="button"
+													onClick={() => {
+														const generated = generateTemplateData(tmpl.key);
+														if (generated)
+															updateEntry(current.id, {
+																data: generated.data,
+																label:
+																	current.label ===
+																	`Source ${entries.indexOf(current) + 1}`
+																		? generated.label
+																		: current.label,
+															});
+													}}
+													className="px-2 py-0.5 text-[10px] font-medium rounded border bg-background hover:bg-muted transition-colors"
+												>
+													{tmpl.label}
+												</button>
+											))}
+										</div>
+									</div>
+								)}
+
 								{/* Current source editor */}
 								{current && (
 									<div className="flex-1 flex flex-col overflow-hidden">
@@ -682,18 +723,38 @@ const EhrSummaryPage = () => {
 
 					{/* Right: Output */}
 					<div className="flex flex-col overflow-hidden min-h-0 lg:min-h-full">
+						<div className="flex items-center justify-between px-4 py-3 border-b bg-muted/30">
+							<h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+								Output
+								{conversionTime != null && (
+									<span className="ml-2 text-[11px] font-normal normal-case tracking-normal">
+										({conversionTime}ms)
+									</span>
+								)}
+							</h2>
+							<ViewCodeDialog
+								endpoint={API_ROUTES.SERVICES.EHR_SUMMARIZE}
+								method="POST"
+								body={{
+									input_ehr: {
+										type: "custom_json",
+										custom_json: {
+											sources: ["Hospital A", "Lab B"],
+											merged_fhir_bundle: {
+												resourceType: "Bundle",
+												type: "collection",
+												entry: [],
+											},
+										},
+									},
+									model: "gpt-4o-2",
+									stream: false,
+								}}
+								description="Generate clinical summary from merged FHIR data"
+							/>
+						</div>
 						{hasResult ? (
 							<>
-								<div className="flex items-center justify-between px-4 py-3 border-b bg-muted/30">
-									<h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
-										Output
-									</h2>
-									{conversionTime && (
-										<span className="text-[11px] text-muted-foreground">
-											{conversionTime}ms
-										</span>
-									)}
-								</div>
 								<div className="flex gap-0 border-b px-4">
 									{(["summary", "fhir"] as const).map((tab) => (
 										<button
@@ -720,36 +781,14 @@ const EhrSummaryPage = () => {
 								</div>
 								<div className="flex justify-end gap-2 px-4 py-2.5 border-t bg-muted/30">
 									{activeTab === "summary" && summary && (
-										<>
-											<ViewCodeDialog
-												endpoint={API_ROUTES.SERVICES.EHR_SUMMARIZE}
-												method="POST"
-												body={{
-													input_ehr: {
-														type: "custom_json",
-														custom_json: {
-															sources: ["Hospital A", "Lab B"],
-															merged_fhir_bundle: {
-																resourceType: "Bundle",
-																type: "collection",
-																entry: [],
-															},
-														},
-													},
-													model: "gpt-4o-2",
-													stream: false,
-												}}
-												description="Generate clinical summary from merged FHIR data"
-											/>
-											<Button
-												variant="outline"
-												size="sm"
-												className="h-7 text-xs"
-												onClick={() => navigator.clipboard.writeText(summary)}
-											>
-												Copy Summary
-											</Button>
-										</>
+										<Button
+											variant="outline"
+											size="sm"
+											className="h-7 text-xs"
+											onClick={() => navigator.clipboard.writeText(summary)}
+										>
+											Copy Summary
+										</Button>
 									)}
 									{activeTab === "fhir" && mergedFhir && (
 										<>

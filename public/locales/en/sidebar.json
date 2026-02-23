@@ -1,12 +1,39 @@
 {
-  "playground": {
-    "title": "Playground",
+  "dataProcessing": {
+    "title": "Data Processing",
     "ehrConverter": {
       "title": "EHR Converter"
     },
     "documentToFhir": {
       "title": "Document → FHIR"
     },
+    "bhxhValidator": {
+      "title": "BHXH Validator"
+    },
+    "dataMasking": {
+      "title": "Data Masking"
+    },
+    "knowledgeBase": {
+      "title": "Knowledge Base"
+    }
+  },
+  "dataManagement": {
+    "title": "Data Management",
+    "patientHistory": {
+      "title": "Patient History"
+    },
+    "wearableData": {
+      "title": "Wearable Data"
+    },
+    "publicHealth": {
+      "title": "Public Health"
+    },
+    "healthScore": {
+      "title": "Health Score"
+    }
+  },
+  "operation": {
+    "title": "Operation",
     "ehrSummary": {
       "title": "EHR Summary"
     },
@@ -25,20 +52,23 @@
     "medicalImage": {
       "title": "Medical Image"
     },
-    "healthScore": {
-      "title": "Health Score"
-    },
-    "patientHistory": {
-      "title": "Patient History"
-    },
-    "wearableData": {
-      "title": "Wearable Data"
-    },
-    "publicHealth": {
-      "title": "Public Health"
-    },
+    "symptomChecker": {
+      "title": "Symptom Checker"
+    }
+  },
+  "development": {
+    "title": "Development",
     "apiFlowBuilder": {
       "title": "API Flow Builder"
+    },
+    "dashboardBuilder": {
+      "title": "Dashboard Builder"
+    },
+    "integration": {
+      "title": "Integration Hub"
+    },
+    "architecture": {
+      "title": "Architecture"
     }
   },
   "management": {
@@ -48,24 +78,6 @@
     },
     "apiReference": {
       "title": "API Reference"
-    },
-    "architecture": {
-      "title": "Architecture"
-    },
-    "integration": {
-      "title": "Integration Hub"
-    }
-  },
-  "tools": {
-    "title": "Tools",
-    "knowledgeBase": {
-      "title": "Knowledge Base"
-    },
-    "bhxhValidator": {
-      "title": "BHXH Validator"
-    },
-    "dataMasking": {
-      "title": "Data Masking"
     }
   },
   "settings": {

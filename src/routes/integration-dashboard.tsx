@@ -1,6 +1,7 @@
 import { useState, useCallback, useRef } from "react";
 import DashboardLayout from "@/layouts/dashboard-layout";
 import { Button } from "@/components/shadcn/button";
+import { MarkdownCustom } from "@/features/pg-chat/components/MarkdownCustom";
 import { toast } from "sonner";
 import {
 	BuildingIcon,
@@ -674,11 +675,13 @@ export default function IntegrationDashboardPage() {
 										))}
 									</div>
 									<div className="flex-1 overflow-auto p-3">
-										<pre className="text-[11px] font-mono whitespace-pre-wrap leading-relaxed">
-											{activeOutput === "instructions"
-												? generatedCode.instructions
-												: generatedCode.code}
-										</pre>
+										{activeOutput === "instructions" ? (
+											<MarkdownCustom content={generatedCode.instructions} />
+										) : (
+											<pre className="text-[11px] font-mono whitespace-pre-wrap leading-relaxed">
+												{generatedCode.code}
+											</pre>
+										)}
 									</div>
 									<div className="p-2 border-t flex gap-2">
 										<Button

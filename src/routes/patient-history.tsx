@@ -8,58 +8,185 @@ import DashboardLayout from "@/layouts/dashboard-layout";
 import { getAuthHeaders } from "@/lib/auth-headers";
 import { toast } from "sonner";
 
-const EXAMPLE_FHIR = JSON.stringify(
+const EXAMPLE_RECORDS = [
 	{
-		resourceType: "Bundle",
-		type: "collection",
-		entry: [
-			{
-				resource: {
-					resourceType: "Patient",
-					id: "p-001",
-					name: [{ family: "Nguyen", given: ["Van", "Minh"] }],
-					gender: "male",
-					birthDate: "1985-03-15",
-				},
-			},
-			{
-				resource: {
-					resourceType: "Condition",
-					subject: { reference: "Patient/p-001" },
-					code: {
-						coding: [
-							{
-								system: "http://hl7.org/fhir/sid/icd-10",
-								code: "E11.9",
-								display: "Type 2 diabetes mellitus",
-							},
-						],
+		label: "Visit 1 — Hospital Admission (Jan 2025)",
+		facility: "City General Hospital",
+		data: {
+			resourceType: "Bundle",
+			type: "collection",
+			entry: [
+				{
+					resource: {
+						resourceType: "Patient",
+						id: "p-001",
+						name: [{ family: "Nguyen", given: ["Van", "Minh"] }],
+						gender: "male",
+						birthDate: "1985-03-15",
 					},
-					clinicalStatus: { coding: [{ code: "active" }] },
 				},
-			},
-			{
-				resource: {
-					resourceType: "Observation",
-					subject: { reference: "Patient/p-001" },
-					code: {
-						coding: [
-							{
-								system: "http://loinc.org",
-								code: "4548-4",
-								display: "HbA1c",
-							},
-						],
+				{
+					resource: {
+						resourceType: "Encounter",
+						id: "enc-001",
+						status: "finished",
+						class: { code: "IMP", display: "inpatient" },
+						subject: { reference: "Patient/p-001" },
+						period: { start: "2025-01-10", end: "2025-01-15" },
 					},
-					valueQuantity: { value: 7.2, unit: "%" },
-					effectiveDateTime: "2025-01-15",
 				},
-			},
-		],
+				{
+					resource: {
+						resourceType: "Condition",
+						subject: { reference: "Patient/p-001" },
+						code: {
+							coding: [
+								{
+									system: "http://hl7.org/fhir/sid/icd-10",
+									code: "J18.9",
+									display: "Pneumonia, unspecified",
+								},
+							],
+						},
+						clinicalStatus: { coding: [{ code: "active" }] },
+						onsetDateTime: "2025-01-10",
+					},
+				},
+				{
+					resource: {
+						resourceType: "Condition",
+						subject: { reference: "Patient/p-001" },
+						code: {
+							coding: [
+								{
+									system: "http://hl7.org/fhir/sid/icd-10",
+									code: "E11.9",
+									display: "Type 2 diabetes mellitus",
+								},
+							],
+						},
+						clinicalStatus: { coding: [{ code: "active" }] },
+					},
+				},
+			],
+		},
 	},
-	null,
-	2
-);
+	{
+		label: "Visit 2 — Lab Results (Feb 2025)",
+		facility: "MedLab Diagnostics",
+		data: {
+			resourceType: "Bundle",
+			type: "collection",
+			entry: [
+				{
+					resource: {
+						resourceType: "Observation",
+						status: "final",
+						subject: { reference: "Patient/p-001" },
+						code: {
+							coding: [
+								{ system: "http://loinc.org", code: "6690-2", display: "WBC" },
+							],
+						},
+						valueQuantity: { value: 7.5, unit: "10^3/uL" },
+						effectiveDateTime: "2025-02-01",
+					},
+				},
+				{
+					resource: {
+						resourceType: "Observation",
+						status: "final",
+						subject: { reference: "Patient/p-001" },
+						code: {
+							coding: [
+								{
+									system: "http://loinc.org",
+									code: "4548-4",
+									display: "HbA1c",
+								},
+							],
+						},
+						valueQuantity: { value: 7.2, unit: "%" },
+						effectiveDateTime: "2025-02-01",
+					},
+				},
+				{
+					resource: {
+						resourceType: "Observation",
+						status: "final",
+						subject: { reference: "Patient/p-001" },
+						code: {
+							coding: [
+								{
+									system: "http://loinc.org",
+									code: "718-7",
+									display: "Hemoglobin",
+								},
+							],
+						},
+						valueQuantity: { value: 14.1, unit: "g/dL" },
+						effectiveDateTime: "2025-02-01",
+					},
+				},
+			],
+		},
+	},
+	{
+		label: "Visit 3 — Follow-up (Feb 2025)",
+		facility: "District Health Center",
+		data: {
+			resourceType: "Bundle",
+			type: "collection",
+			entry: [
+				{
+					resource: {
+						resourceType: "Encounter",
+						id: "enc-003",
+						status: "finished",
+						class: { code: "AMB", display: "outpatient" },
+						subject: { reference: "Patient/p-001" },
+						period: { start: "2025-02-15", end: "2025-02-15" },
+					},
+				},
+				{
+					resource: {
+						resourceType: "MedicationStatement",
+						subject: { reference: "Patient/p-001" },
+						status: "active",
+						medicationCodeableConcept: {
+							coding: [
+								{
+									system: "http://www.nlm.nih.gov/research/umls/rxnorm",
+									code: "860975",
+									display: "Metformin 500 MG",
+								},
+							],
+						},
+						dosage: [{ text: "500mg twice daily" }],
+					},
+				},
+				{
+					resource: {
+						resourceType: "Condition",
+						subject: { reference: "Patient/p-001" },
+						code: {
+							coding: [
+								{
+									system: "http://hl7.org/fhir/sid/icd-10",
+									code: "J18.9",
+									display: "Pneumonia — resolving",
+								},
+							],
+						},
+						clinicalStatus: { coding: [{ code: "resolved" }] },
+					},
+				},
+			],
+		},
+	},
+];
+
+const EXAMPLE_FHIR = JSON.stringify(EXAMPLE_RECORDS[0].data, null, 2);
 
 const PatientHistoryPage = () => {
 	const [patientId, setPatientId] = useState("1");
@@ -74,6 +201,58 @@ const PatientHistoryPage = () => {
 
 	const baseHistoryUrl = (pid: string) =>
 		`${BASE_API_URL}service/api/v1/patient/${pid}/history`;
+
+	const handleLoadMultiVisitDemo = async () => {
+		if (!selectedApiKey) {
+			setShowApiKeyDialog(true);
+			return;
+		}
+		setIsLoading(true);
+		setResult(null);
+		setHistory(null);
+		setFacility("");
+		const pid = patientId || "1";
+
+		try {
+			for (const record of EXAMPLE_RECORDS) {
+				toast.info(`Submitting: ${record.label}...`);
+				const url = baseHistoryUrl(pid);
+				const headers = await getAuthHeaders(url);
+				const resp = await fetch(url, {
+					method: "POST",
+					headers,
+					body: JSON.stringify({
+						patient_id: Number(pid),
+						fhir_bundle: record.data,
+						facility: record.facility,
+						search_facilities: false,
+					}),
+				});
+				if (!resp.ok)
+					throw new Error(`HTTP ${resp.status}: ${await resp.text()}`);
+				const json = await resp.json();
+				setResult(json);
+			}
+
+			const histResp = await fetch(baseHistoryUrl(pid), {
+				method: "GET",
+				headers: await getAuthHeaders(baseHistoryUrl(pid)),
+			});
+			if (histResp.ok) {
+				const histJson = await histResp.json();
+				setHistory(histJson.history);
+			}
+			setActiveTab("history");
+			setFhirInput(JSON.stringify(EXAMPLE_RECORDS[0].data, null, 2));
+			toast.success(
+				`Loaded ${EXAMPLE_RECORDS.length} visits into nested temporal history`
+			);
+		} catch (err) {
+			toast.error(err instanceof Error ? err.message : "Request failed");
+		} finally {
+			setIsLoading(false);
+		}
+	};
 
 	const handleSubmit = async () => {
 		if (!selectedApiKey) {
@@ -170,7 +349,15 @@ const PatientHistoryPage = () => {
 									className="h-7 text-xs"
 									onClick={() => setFhirInput(EXAMPLE_FHIR)}
 								>
-									Load Example
+									Load Single Visit
+								</Button>
+								<Button
+									variant="ghost"
+									size="sm"
+									className="h-7 text-xs"
+									onClick={handleLoadMultiVisitDemo}
+								>
+									Load Multi-Visit Demo
 								</Button>
 								<Button
 									variant="ghost"

@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import mermaid from "mermaid";
+import { useTheme } from "next-themes";
 import DashboardLayout from "@/layouts/dashboard-layout";
 import {
 	LayoutGridIcon,
@@ -17,6 +18,9 @@ import {
 	CogIcon,
 	WrenchIcon,
 	FileCodeIcon,
+	ZoomInIcon,
+	ZoomOutIcon,
+	MaximizeIcon,
 	type LucideIcon,
 } from "lucide-react";
 
@@ -312,40 +316,54 @@ const MERMAID_SEQUENCE = `sequenceDiagram
     end
 `;
 
-mermaid.initialize({
-	startOnLoad: false,
-	theme: "dark",
-	themeVariables: {
-		darkMode: true,
-		background: "#1a1a2e",
-		primaryColor: "#6366f1",
-		primaryTextColor: "#e2e8f0",
-		primaryBorderColor: "#4f46e5",
-		secondaryColor: "#0ea5e9",
-		tertiaryColor: "#1e293b",
-		lineColor: "#94a3b8",
-		textColor: "#e2e8f0",
-		mainBkg: "#1e293b",
-		nodeBorder: "#475569",
-		clusterBkg: "#0f172a",
-		clusterBorder: "#334155",
-		titleColor: "#e2e8f0",
-		edgeLabelBackground: "#1e293b",
-		nodeTextColor: "#e2e8f0",
-	},
-	flowchart: { curve: "basis", padding: 12 },
-	sequence: { mirrorActors: false },
-});
+function initMermaid(isDark: boolean) {
+	mermaid.initialize({
+		startOnLoad: false,
+		theme: isDark ? "dark" : "default",
+		themeVariables: isDark
+			? {
+					darkMode: true,
+					background: "#1a1a2e",
+					primaryColor: "#6366f1",
+					primaryTextColor: "#e2e8f0",
+					primaryBorderColor: "#4f46e5",
+					secondaryColor: "#0ea5e9",
+					tertiaryColor: "#1e293b",
+					lineColor: "#94a3b8",
+					textColor: "#e2e8f0",
+					mainBkg: "#1e293b",
+					nodeBorder: "#475569",
+					clusterBkg: "#0f172a",
+					clusterBorder: "#334155",
+					titleColor: "#e2e8f0",
+					edgeLabelBackground: "#1e293b",
+					nodeTextColor: "#e2e8f0",
+				}
+			: {
+					primaryColor: "#6366f1",
+					primaryTextColor: "#1e293b",
+					primaryBorderColor: "#4f46e5",
+					secondaryColor: "#0ea5e9",
+					lineColor: "#64748b",
+					textColor: "#1e293b",
+				},
+		flowchart: { curve: "basis", padding: 12 },
+		sequence: { mirrorActors: false },
+	});
+}
 
 function MermaidRenderer({ diagram, id }: { diagram: string; id: string }) {
 	const containerRef = useRef<HTMLDivElement>(null);
 	const [error, setError] = useState<string | null>(null);
+	const [scale, setScale] = useState(1);
+	const { resolvedTheme } = useTheme();
 
 	useEffect(() => {
 		let cancelled = false;
 		const render = async () => {
 			if (!containerRef.current) return;
 			try {
+				initMermaid(resolvedTheme === "dark");
 				const { svg } = await mermaid.render(
 					`mermaid-${id}-${Date.now()}`,
 					diagram
@@ -362,7 +380,13 @@ function MermaidRenderer({ diagram, id }: { diagram: string; id: string }) {
 		return () => {
 			cancelled = true;
 		};
-	}, [diagram, id]);
+	}, [diagram, id, resolvedTheme]);
+
+	const zoom = useCallback((delta: number) => {
+		setScale((s) => Math.min(3, Math.max(0.3, s + delta)));
+	}, []);
+
+	const resetZoom = useCallback(() => setScale(1), []);
 
 	if (error) {
 		return (
@@ -373,10 +397,44 @@ function MermaidRenderer({ diagram, id }: { diagram: string; id: string }) {
 	}
 
 	return (
-		<div
-			ref={containerRef}
-			className="flex justify-center overflow-auto p-4 [&_svg]:max-w-full"
-		/>
+		<div className="relative group">
+			<div className="absolute top-2 right-2 z-10 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+				<button
+					type="button"
+					onClick={() => zoom(0.2)}
+					className="p-1.5 rounded-md bg-background/80 border shadow-sm hover:bg-muted transition-colors"
+					title="Zoom in"
+				>
+					<ZoomInIcon className="size-3.5" />
+				</button>
+				<button
+					type="button"
+					onClick={() => zoom(-0.2)}
+					className="p-1.5 rounded-md bg-background/80 border shadow-sm hover:bg-muted transition-colors"
+					title="Zoom out"
+				>
+					<ZoomOutIcon className="size-3.5" />
+				</button>
+				<button
+					type="button"
+					onClick={resetZoom}
+					className="p-1.5 rounded-md bg-background/80 border shadow-sm hover:bg-muted transition-colors"
+					title="Reset zoom"
+				>
+					<MaximizeIcon className="size-3.5" />
+				</button>
+				<span className="flex items-center px-1.5 text-[10px] text-muted-foreground font-mono bg-background/80 border rounded-md">
+					{Math.round(scale * 100)}%
+				</span>
+			</div>
+			<div className="overflow-auto p-4 cursor-grab active:cursor-grabbing">
+				<div
+					ref={containerRef}
+					className="flex justify-center [&_svg]:max-w-none transition-transform origin-top-left"
+					style={{ transform: `scale(${scale})` }}
+				/>
+			</div>
+		</div>
 	);
 }
 

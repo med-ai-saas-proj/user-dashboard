@@ -101,18 +101,40 @@ interface GroupFormState {
 	name: string;
 	provider: string;
 	baseUrl: string;
+	apiKey: string;
 }
 
 const DEFAULT_GROUP_STATE: Record<ApiGroup, GroupFormState> = {
-	text_reasoning: { name: "openai:gpt-4o", provider: "OpenAI", baseUrl: "" },
-	text_fast: { name: "openai:gpt-4o-mini", provider: "OpenAI", baseUrl: "" },
-	vision_ocr: { name: "openai:gpt-4o", provider: "OpenAI", baseUrl: "" },
+	text_reasoning: {
+		name: "openai:gpt-4o",
+		provider: "OpenAI",
+		baseUrl: "",
+		apiKey: "",
+	},
+	text_fast: {
+		name: "openai:gpt-4o-mini",
+		provider: "OpenAI",
+		baseUrl: "",
+		apiKey: "",
+	},
+	vision_ocr: {
+		name: "openai:gpt-4o",
+		provider: "OpenAI",
+		baseUrl: "",
+		apiKey: "",
+	},
 	embedding: {
 		name: "openai:text-embedding-3-small",
 		provider: "OpenAI",
 		baseUrl: "",
+		apiKey: "",
 	},
-	speech: { name: "openai:whisper-1", provider: "OpenAI", baseUrl: "" },
+	speech: {
+		name: "openai:whisper-1",
+		provider: "OpenAI",
+		baseUrl: "",
+		apiKey: "",
+	},
 };
 
 const MOCK_USAGE = [
@@ -208,7 +230,7 @@ export default function SettingsPage() {
 										</span>
 									</div>
 									<Separator />
-									<div className="grid gap-3 sm:grid-cols-2">
+									<div className="grid gap-3 sm:grid-cols-3">
 										<div className="space-y-1">
 											<label className="text-[11px] font-medium text-muted-foreground">
 												Model Name
@@ -218,6 +240,20 @@ export default function SettingsPage() {
 														updateGroup(grp.group, { name: e.target.value })
 													}
 													placeholder="openai:gpt-4o"
+													className="mt-1 w-full rounded-md border bg-transparent px-3 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-ring"
+												/>
+											</label>
+										</div>
+										<div className="space-y-1">
+											<label className="text-[11px] font-medium text-muted-foreground">
+												API Key
+												<input
+													type="password"
+													value={config.apiKey}
+													onChange={(e) =>
+														updateGroup(grp.group, { apiKey: e.target.value })
+													}
+													placeholder="sk-... or key-..."
 													className="mt-1 w-full rounded-md border bg-transparent px-3 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-ring"
 												/>
 											</label>

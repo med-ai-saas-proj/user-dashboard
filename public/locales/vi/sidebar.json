@@ -1,12 +1,39 @@
 {
-  "playground": {
-    "title": "Sân chơi",
+  "dataProcessing": {
+    "title": "Xử lý dữ liệu",
     "ehrConverter": {
       "title": "Chuyển đổi EHR"
     },
     "documentToFhir": {
       "title": "Tài liệu → FHIR"
     },
+    "bhxhValidator": {
+      "title": "Kiểm tra BHXH"
+    },
+    "dataMasking": {
+      "title": "Ẩn danh dữ liệu"
+    },
+    "knowledgeBase": {
+      "title": "Cơ sở tri thức"
+    }
+  },
+  "dataManagement": {
+    "title": "Quản lý dữ liệu",
+    "patientHistory": {
+      "title": "Lịch sử bệnh nhân"
+    },
+    "wearableData": {
+      "title": "Dữ liệu thiết bị đeo"
+    },
+    "publicHealth": {
+      "title": "Y tế công cộng"
+    },
+    "healthScore": {
+      "title": "Điểm sức khỏe"
+    }
+  },
+  "operation": {
+    "title": "Vận hành",
     "ehrSummary": {
       "title": "Tóm tắt EHR"
     },
@@ -25,20 +52,23 @@
     "medicalImage": {
       "title": "Hình ảnh y tế"
     },
-    "healthScore": {
-      "title": "Điểm sức khỏe"
-    },
-    "patientHistory": {
-      "title": "Lịch sử bệnh nhân"
-    },
-    "wearableData": {
-      "title": "Dữ liệu thiết bị đeo"
-    },
-    "publicHealth": {
-      "title": "Y tế công cộng"
-    },
+    "symptomChecker": {
+      "title": "Kiểm tra triệu chứng"
+    }
+  },
+  "development": {
+    "title": "Phát triển",
     "apiFlowBuilder": {
       "title": "Tạo luồng API"
+    },
+    "dashboardBuilder": {
+      "title": "Tạo Dashboard"
+    },
+    "integration": {
+      "title": "Tích hợp"
+    },
+    "architecture": {
+      "title": "Kiến trúc"
     }
   },
   "management": {
@@ -48,24 +78,6 @@
     },
     "apiReference": {
       "title": "Tham chiếu API"
-    },
-    "architecture": {
-      "title": "Kiến trúc"
-    },
-    "integration": {
-      "title": "Tích hợp"
-    }
-  },
-  "tools": {
-    "title": "Công cụ",
-    "knowledgeBase": {
-      "title": "Cơ sở tri thức"
-    },
-    "bhxhValidator": {
-      "title": "Kiểm tra BHXH"
-    },
-    "dataMasking": {
-      "title": "Ẩn danh dữ liệu"
     }
   },
   "settings": {

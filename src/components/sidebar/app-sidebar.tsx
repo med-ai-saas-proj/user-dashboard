@@ -74,109 +74,113 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 				url: "/api-reference",
 				icon: Book,
 			},
-			{
-				name: t("management.architecture.title"),
-				url: "/architecture",
-				icon: NetworkIcon,
-			},
-			{
-				name: t("management.integration.title"),
-				url: "/integration",
-				icon: LayoutDashboardIcon,
-			},
 		],
-		playground: [
+		dataProcessing: [
 			{
-				name: t("playground.ehrConverter.title"),
+				name: t("dataProcessing.ehrConverter.title"),
 				url: "/ehr-converter",
 				icon: FileJson2Icon,
 			},
 			{
-				name: t("playground.documentToFhir.title"),
+				name: t("dataProcessing.documentToFhir.title"),
 				url: "/document-to-fhir",
 				icon: FileTextIcon,
 			},
 			{
-				name: t("playground.ehrSummary.title"),
-				url: "/ehr-summary",
-				icon: ClipboardPlusIcon,
-			},
-			{
-				name: t("playground.rxAdvisor.title"),
-				url: "/rx-advisor",
-				icon: PillIcon,
-			},
-			{
-				name: t("playground.chatBot.title"),
-				url: "/chat",
-				icon: BotIcon,
-			},
-			{
-				name: t("playground.aiSearch.title"),
-				url: "/ai-search",
-				icon: SearchIcon,
-			},
-			{
-				name: t("playground.voiceTranscribe.title"),
-				url: "/voice-transcribe",
-				icon: MicIcon,
-			},
-			{
-				name: t("playground.medicalImage.title"),
-				url: "/medical-image",
-				icon: ImageIcon,
-			},
-			{
-				name: t("playground.healthScore.title"),
-				url: "/health-score",
-				icon: HeartPulseIcon,
-			},
-			{
-				name: t("playground.patientHistory.title"),
-				url: "/patient-history",
-				icon: UserRoundIcon,
-			},
-			{
-				name: t("playground.wearableData.title"),
-				url: "/wearable-data",
-				icon: WatchIcon,
-			},
-			{
-				name: t("playground.publicHealth.title"),
-				url: "/public-health",
-				icon: BarChart3Icon,
-			},
-			{
-				name: t("playground.apiFlowBuilder.title"),
-				url: "/api-flow-builder",
-				icon: GitBranchPlusIcon,
-			},
-			{
-				name: "Dashboard Builder",
-				url: "/dashboard-builder",
-				icon: LayoutGridIcon,
-			},
-			{
-				name: "Symptom Checker",
-				url: "/symptom-checker",
-				icon: StethoscopeIcon,
-			},
-		],
-		tools: [
-			{
-				name: t("tools.knowledgeBase.title"),
-				url: "/knowledge-base",
-				icon: DatabaseIcon,
-			},
-			{
-				name: t("tools.bhxhValidator.title"),
+				name: t("dataProcessing.bhxhValidator.title"),
 				url: "/bhxh-validator",
 				icon: ShieldCheckIcon,
 			},
 			{
-				name: t("tools.dataMasking.title"),
+				name: t("dataProcessing.dataMasking.title"),
 				url: "/data-masking",
 				icon: EyeOffIcon,
+			},
+			{
+				name: t("dataProcessing.knowledgeBase.title"),
+				url: "/knowledge-base",
+				icon: DatabaseIcon,
+			},
+		],
+		dataManagement: [
+			{
+				name: t("dataManagement.patientHistory.title"),
+				url: "/patient-history",
+				icon: UserRoundIcon,
+			},
+			{
+				name: t("dataManagement.wearableData.title"),
+				url: "/wearable-data",
+				icon: WatchIcon,
+			},
+			{
+				name: t("dataManagement.publicHealth.title"),
+				url: "/public-health",
+				icon: BarChart3Icon,
+			},
+			{
+				name: t("dataManagement.healthScore.title"),
+				url: "/health-score",
+				icon: HeartPulseIcon,
+			},
+		],
+		operation: [
+			{
+				name: t("operation.ehrSummary.title"),
+				url: "/ehr-summary",
+				icon: ClipboardPlusIcon,
+			},
+			{
+				name: t("operation.rxAdvisor.title"),
+				url: "/rx-advisor",
+				icon: PillIcon,
+			},
+			{
+				name: t("operation.chatBot.title"),
+				url: "/chat",
+				icon: BotIcon,
+			},
+			{
+				name: t("operation.aiSearch.title"),
+				url: "/ai-search",
+				icon: SearchIcon,
+			},
+			{
+				name: t("operation.voiceTranscribe.title"),
+				url: "/voice-transcribe",
+				icon: MicIcon,
+			},
+			{
+				name: t("operation.medicalImage.title"),
+				url: "/medical-image",
+				icon: ImageIcon,
+			},
+			{
+				name: t("operation.symptomChecker.title"),
+				url: "/symptom-checker",
+				icon: StethoscopeIcon,
+			},
+		],
+		development: [
+			{
+				name: t("development.apiFlowBuilder.title"),
+				url: "/api-flow-builder",
+				icon: GitBranchPlusIcon,
+			},
+			{
+				name: t("development.dashboardBuilder.title"),
+				url: "/dashboard-builder",
+				icon: LayoutGridIcon,
+			},
+			{
+				name: t("development.integration.title"),
+				url: "/integration",
+				icon: LayoutDashboardIcon,
+			},
+			{
+				name: t("development.architecture.title"),
+				url: "/architecture",
+				icon: NetworkIcon,
 			},
 		],
 		settings: [
@@ -200,8 +204,19 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 			</SidebarHeader>
 			<SidebarContent>
 				<NavProjects projects={data.management} label={t("management.title")} />
-				<NavProjects projects={data.playground} label={t("playground.title")} />
-				<NavProjects projects={data.tools} label={t("tools.title")} />
+				<NavProjects
+					projects={data.dataProcessing}
+					label={t("dataProcessing.title")}
+				/>
+				<NavProjects
+					projects={data.dataManagement}
+					label={t("dataManagement.title")}
+				/>
+				<NavProjects projects={data.operation} label={t("operation.title")} />
+				<NavProjects
+					projects={data.development}
+					label={t("development.title")}
+				/>
 				<NavProjects projects={data.settings} label={t("settings.title")} />
 
 				{/* Upgrade to Pro */}

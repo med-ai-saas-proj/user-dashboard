@@ -334,42 +334,44 @@ const RxAdvisorPage = () => {
 
 					{/* Right: Output */}
 					<div className="flex flex-col overflow-hidden min-h-0 lg:min-h-full">
+						<div className="flex items-center justify-between px-4 py-3 border-b bg-muted/30">
+							<h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+								Risk Analysis
+							</h2>
+							<ViewCodeDialog
+								endpoint={API_ROUTES.SERVICES.RX_ADVISOR}
+								method="POST"
+								body={{
+									ehr: { type: "custom_json", custom_json: {} },
+									prescription: {
+										type: "custom_json",
+										custom_json: [
+											{
+												name: "Metformin",
+												dose: "500mg",
+												frequency: "twice daily",
+											},
+										],
+									},
+									model: "gpt-4o-2",
+									stream: false,
+								}}
+								description="Analyze prescription risk using patient EHR + OpenFDA"
+							/>
+						</div>
 						{analysis ? (
 							<>
-								<div className="flex items-center justify-between px-4 py-3 border-b bg-muted/30">
-									<h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
-										Risk Analysis
-									</h2>
-									{conversionTime && (
+								{conversionTime && (
+									<div className="px-4 py-1 text-right">
 										<span className="text-[11px] text-muted-foreground">
 											{conversionTime}ms
 										</span>
-									)}
-								</div>
+									</div>
+								)}
 								<div className="flex-1 overflow-auto p-4">
 									<MarkdownCustom content={analysis} />
 								</div>
 								<div className="flex justify-end gap-2 px-4 py-2.5 border-t bg-muted/30">
-									<ViewCodeDialog
-										endpoint={API_ROUTES.SERVICES.RX_ADVISOR}
-										method="POST"
-										body={{
-											ehr: { type: "custom_json", custom_json: {} },
-											prescription: {
-												type: "custom_json",
-												custom_json: [
-													{
-														name: "Metformin",
-														dose: "500mg",
-														frequency: "twice daily",
-													},
-												],
-											},
-											model: "gpt-4o-2",
-											stream: false,
-										}}
-										description="Analyze prescription risk using patient EHR + OpenFDA"
-									/>
 									<Button
 										variant="outline"
 										size="sm"

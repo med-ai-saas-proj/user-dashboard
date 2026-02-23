@@ -2,6 +2,7 @@ import { useState, useRef } from "react";
 import { API_ROUTES } from "@/config/api-routes";
 import { ApiKeyRequiredDialog } from "@/features/api-keys/components/api-key-required-dialog";
 import { useServiceApiKeyStore } from "@/features/api-keys/store/service-api-key.store";
+import { ViewCodeDialog } from "@/components/view-code-dialog";
 import DashboardLayout from "@/layouts/dashboard-layout";
 import { getAuthHeaders } from "@/lib/auth-headers";
 import { toast } from "sonner";
@@ -82,6 +83,14 @@ const MedicalImagePage = () => {
 	return (
 		<DashboardLayout pageTitle="Medical Image">
 			<div className="flex flex-col h-[calc(100vh-4rem)] overflow-hidden">
+				<div className="flex items-center justify-end px-4 py-1.5 border-b">
+					<ViewCodeDialog
+						endpoint={API_ROUTES.SERVICES.MEDICAL_IMAGE}
+						method="POST"
+						contentType="multipart/form-data"
+						description="Analyze medical image and extract findings"
+					/>
+				</div>
 				<div className="flex-1 grid grid-cols-1 lg:grid-cols-2 overflow-hidden border-b">
 					{/* Left: Upload + Preview */}
 					<div className="border-r flex flex-col overflow-hidden p-4 space-y-4">

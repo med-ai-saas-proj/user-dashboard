@@ -103,6 +103,18 @@ export const API_ROUTES = {
 			`service/api/${API_VERSION}/data_masking/facility/search`,
 			BASE_API_URL
 		).toString(),
+		PATIENT_HISTORY_CREATE: new URL(
+			`service/api/${API_VERSION}/patient`,
+			BASE_API_URL
+		).toString(),
+		PATIENT_WEARABLE_INGEST: new URL(
+			`service/api/${API_VERSION}/patient`,
+			BASE_API_URL
+		).toString(),
+		PUBLIC_HEALTH_STATS: new URL(
+			`service/api/${API_VERSION}/public_health/statistics`,
+			BASE_API_URL
+		).toString(),
 	},
 } as const;
 

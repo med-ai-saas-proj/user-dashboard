@@ -4,6 +4,7 @@ import { useAISearchStore } from "@/features/pg-ai-search/store/ai-search.store"
 import ChatContent from "@/features/pg-chat/components/ChatContent";
 import ChatInput from "@/features/pg-chat/components/ChatInput";
 import { useStream } from "@/lib/streaming/use-stream";
+import { ViewCodeDialog } from "@/components/view-code-dialog";
 import DashboardLayout from "@/layouts/dashboard-layout";
 
 export default function PlaygroundAISearchPage() {
@@ -53,6 +54,18 @@ export default function PlaygroundAISearchPage() {
 	return (
 		<DashboardLayout pageTitle="AI Search" className="pb-0">
 			<div className="w-full h-full flex flex-col items-stretch justify-between px-4 sm:px-6 md:px-12 lg:px-24 xl:px-64 relative">
+				<div className="absolute top-2 right-4 z-10 sm:right-6 md:right-12 lg:right-24 xl:right-64">
+					<ViewCodeDialog
+						endpoint={API_ROUTES.SERVICES.AI_SEARCH}
+						method="POST"
+						body={{
+							conversation_id: null,
+							model: "default",
+							query: "search query",
+						}}
+						description="AI-powered medical knowledge search (streaming SSE)"
+					/>
+				</div>
 				<ChatContent messages={messages} isLoading={isStreaming} />
 				<ChatInput onSendMessage={handleSendMessage} isLoading={isStreaming} />
 			</div>

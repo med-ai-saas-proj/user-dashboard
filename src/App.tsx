@@ -22,6 +22,12 @@ import VoiceTranscribePage from "@/routes/voice-transcribe";
 import MedicalImagePage from "@/routes/medical-image";
 import HealthScorePage from "@/routes/health-score";
 import DataMaskingPage from "@/routes/data-masking";
+import PatientHistoryPage from "@/routes/patient-history";
+import WearableDataPage from "@/routes/wearable-data";
+import ArchitecturePage from "@/routes/architecture";
+import IntegrationDashboardPage from "@/routes/integration-dashboard";
+import PublicHealthPage from "@/routes/public-health";
+import ApiFlowBuilderPage from "@/routes/api-flow-builder";
 import SettingsPage from "@/routes/settings";
 import BillingPage from "@/routes/billing";
 import UpgradePage from "@/routes/upgrade";
@@ -161,6 +167,60 @@ function App() {
 							element={
 								<ProtectedRoute>
 									<DataMaskingPage />
+								</ProtectedRoute>
+							}
+						/>
+
+						<Route
+							path="/patient-history"
+							element={
+								<ProtectedRoute>
+									<PatientHistoryPage />
+								</ProtectedRoute>
+							}
+						/>
+
+						<Route
+							path="/wearable-data"
+							element={
+								<ProtectedRoute>
+									<WearableDataPage />
+								</ProtectedRoute>
+							}
+						/>
+
+						<Route
+							path="/architecture"
+							element={
+								<ProtectedRoute>
+									<ArchitecturePage />
+								</ProtectedRoute>
+							}
+						/>
+
+						<Route
+							path="/integration"
+							element={
+								<ProtectedRoute>
+									<IntegrationDashboardPage />
+								</ProtectedRoute>
+							}
+						/>
+
+						<Route
+							path="/public-health"
+							element={
+								<ProtectedRoute>
+									<PublicHealthPage />
+								</ProtectedRoute>
+							}
+						/>
+
+						<Route
+							path="/api-flow-builder"
+							element={
+								<ProtectedRoute>
+									<ApiFlowBuilderPage />
 								</ProtectedRoute>
 							}
 						/>

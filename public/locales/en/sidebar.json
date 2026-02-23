@@ -27,6 +27,18 @@
     },
     "healthScore": {
       "title": "Health Score"
+    },
+    "patientHistory": {
+      "title": "Patient History"
+    },
+    "wearableData": {
+      "title": "Wearable Data"
+    },
+    "publicHealth": {
+      "title": "Public Health"
+    },
+    "apiFlowBuilder": {
+      "title": "API Flow Builder"
     }
   },
   "management": {
@@ -36,6 +48,12 @@
     },
     "apiReference": {
       "title": "API Reference"
+    },
+    "architecture": {
+      "title": "Architecture"
+    },
+    "integration": {
+      "title": "Integration Hub"
     }
   },
   "tools": {

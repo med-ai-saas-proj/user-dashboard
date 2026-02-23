@@ -2,6 +2,7 @@ import { useState } from "react";
 import { API_ROUTES } from "@/config/api-routes";
 import { ApiKeyRequiredDialog } from "@/features/api-keys/components/api-key-required-dialog";
 import { useServiceApiKeyStore } from "@/features/api-keys/store/service-api-key.store";
+import { ViewCodeDialog } from "@/components/view-code-dialog";
 import DashboardLayout from "@/layouts/dashboard-layout";
 import { getAuthHeaders } from "@/lib/auth-headers";
 import { toast } from "sonner";
@@ -177,6 +178,32 @@ const KnowledgeBasePage = () => {
 	return (
 		<DashboardLayout pageTitle="Knowledge Base">
 			<div className="flex flex-col h-[calc(100vh-4rem)] overflow-hidden">
+				<div className="flex items-center justify-end px-4 py-1.5 border-b">
+					<ViewCodeDialog
+						endpoint={API_ROUTES.SERVICES.KNOWLEDGE_BASE}
+						description="Knowledge Base: create, ingest records, and semantic search"
+						steps={[
+							{
+								label: "Create KB",
+								endpoint: API_ROUTES.SERVICES.KNOWLEDGE_BASE,
+								method: "POST",
+								body: { name: "My KB", type: "custom", description: "..." },
+							},
+							{
+								label: "Ingest records",
+								endpoint: `${API_ROUTES.SERVICES.KNOWLEDGE_BASE}/{kb_id}/ingest`,
+								method: "POST",
+								body: { records: [{ text: "..." }] },
+							},
+							{
+								label: "Search",
+								endpoint: `${API_ROUTES.SERVICES.KNOWLEDGE_BASE}/search`,
+								method: "POST",
+								body: { query: "search query", kb_ids: ["kb_id"] },
+							},
+						]}
+					/>
+				</div>
 				<div className="flex-1 grid grid-cols-1 lg:grid-cols-2 overflow-hidden border-b">
 					{/* Left: List & Create */}
 					<div className="border-r flex flex-col overflow-hidden">

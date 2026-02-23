@@ -2,6 +2,7 @@ import { useState } from "react";
 import { API_ROUTES } from "@/config/api-routes";
 import { ApiKeyRequiredDialog } from "@/features/api-keys/components/api-key-required-dialog";
 import { useServiceApiKeyStore } from "@/features/api-keys/store/service-api-key.store";
+import { ViewCodeDialog } from "@/components/view-code-dialog";
 import DashboardLayout from "@/layouts/dashboard-layout";
 import { getAuthHeaders } from "@/lib/auth-headers";
 import { toast } from "sonner";
@@ -114,6 +115,17 @@ const BhxhValidatorPage = () => {
 	return (
 		<DashboardLayout pageTitle="BHXH 4210 Validator">
 			<div className="flex flex-col h-[calc(100vh-4rem)] overflow-hidden">
+				<div className="flex items-center justify-end px-4 py-1.5 border-b">
+					<ViewCodeDialog
+						endpoint={API_ROUTES.SERVICES.BHXH_VALIDATE}
+						method="POST"
+						body={{
+							xml_data: "<MedicalRecord>...</MedicalRecord>",
+							strict: false,
+						}}
+						description="Validate BHXH 4210 XML document"
+					/>
+				</div>
 				<div className="flex-1 grid grid-cols-1 lg:grid-cols-2 overflow-hidden border-b">
 					{/* Left: Input */}
 					<div className="border-r flex flex-col overflow-hidden">

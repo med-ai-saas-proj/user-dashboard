@@ -27,6 +27,18 @@
     },
     "healthScore": {
       "title": "Điểm sức khỏe"
+    },
+    "patientHistory": {
+      "title": "Lịch sử bệnh nhân"
+    },
+    "wearableData": {
+      "title": "Dữ liệu thiết bị đeo"
+    },
+    "publicHealth": {
+      "title": "Y tế công cộng"
+    },
+    "apiFlowBuilder": {
+      "title": "Tạo luồng API"
     }
   },
   "management": {
@@ -36,6 +48,12 @@
     },
     "apiReference": {
       "title": "Tham chiếu API"
+    },
+    "architecture": {
+      "title": "Kiến trúc"
+    },
+    "integration": {
+      "title": "Tích hợp"
     }
   },
   "tools": {

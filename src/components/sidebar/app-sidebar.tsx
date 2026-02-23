@@ -1,6 +1,7 @@
 "use client";
 
 import {
+	BarChart3Icon,
 	Book,
 	BotIcon,
 	ClipboardPlusIcon,
@@ -9,16 +10,21 @@ import {
 	EyeOffIcon,
 	FileTextIcon,
 	GalleryVerticalEnd,
+	GitBranchIcon,
 	HeartPulseIcon,
 	ImageIcon,
 	KeyRound,
+	LayoutDashboardIcon,
 	MicIcon,
+	NetworkIcon,
 	PillIcon,
 	SearchIcon,
 	Settings2Icon,
 	ShieldCheckIcon,
 	SparklesIcon,
 	FileJson2Icon,
+	UserRoundIcon,
+	WatchIcon,
 } from "lucide-react";
 import type * as React from "react";
 import { useTranslation } from "react-i18next";
@@ -66,6 +72,16 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 				url: "/api-reference",
 				icon: Book,
 			},
+			{
+				name: t("management.architecture.title"),
+				url: "/architecture",
+				icon: NetworkIcon,
+			},
+			{
+				name: t("management.integration.title"),
+				url: "/integration",
+				icon: LayoutDashboardIcon,
+			},
 		],
 		playground: [
 			{
@@ -112,6 +128,26 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 				name: t("playground.healthScore.title"),
 				url: "/health-score",
 				icon: HeartPulseIcon,
+			},
+			{
+				name: t("playground.patientHistory.title"),
+				url: "/patient-history",
+				icon: UserRoundIcon,
+			},
+			{
+				name: t("playground.wearableData.title"),
+				url: "/wearable-data",
+				icon: WatchIcon,
+			},
+			{
+				name: t("playground.publicHealth.title"),
+				url: "/public-health",
+				icon: BarChart3Icon,
+			},
+			{
+				name: t("playground.apiFlowBuilder.title"),
+				url: "/api-flow-builder",
+				icon: GitBranchIcon,
 			},
 		],
 		tools: [

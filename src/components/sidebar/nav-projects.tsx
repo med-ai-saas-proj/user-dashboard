@@ -23,10 +23,32 @@ interface NavProjectsProps {
 		url: string;
 		icon: LucideIcon;
 	}[];
+	hideLabel?: boolean;
 }
 
-export function NavProjects({ label, projects }: NavProjectsProps) {
+export function NavProjects({ label, projects, hideLabel }: NavProjectsProps) {
 	const { pathname } = useLocation();
+
+	if (hideLabel) {
+		return (
+			<SidebarGroup className="group-data-[collapsible=icon]:hidden pt-0">
+				<SidebarGroupContent>
+					<SidebarMenu>
+						{projects.map((item) => (
+							<SidebarMenuItem key={item.name}>
+								<SidebarMenuButton asChild isActive={pathname === item.url}>
+									<NavLink to={item.url} preventScrollReset>
+										<item.icon />
+										<span>{item.name}</span>
+									</NavLink>
+								</SidebarMenuButton>
+							</SidebarMenuItem>
+						))}
+					</SidebarMenu>
+				</SidebarGroupContent>
+			</SidebarGroup>
+		);
+	}
 
 	return (
 		<Collapsible defaultOpen className="group/collapsible">

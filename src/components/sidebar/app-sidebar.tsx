@@ -204,9 +204,21 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 				<TeamSwitcher teams={data.teams} />
 			</SidebarHeader>
 			<SidebarContent>
-				<NavProjects projects={data.management} label={t("management.title")} />
-				<SidebarGroup className="group-data-[collapsible=icon]:hidden">
-					<SidebarGroupLabel className="text-xs font-bold uppercase tracking-wider">
+				{/* MANAGEMENT */}
+				<SidebarGroup className="group-data-[collapsible=icon]:hidden pb-0">
+					<SidebarGroupLabel className="text-[11px] font-bold uppercase tracking-widest text-sidebar-foreground/70">
+						{t("management.title")}
+					</SidebarGroupLabel>
+				</SidebarGroup>
+				<NavProjects
+					projects={data.management}
+					label={t("management.title")}
+					hideLabel
+				/>
+
+				{/* PLAYGROUND */}
+				<SidebarGroup className="group-data-[collapsible=icon]:hidden pb-0">
+					<SidebarGroupLabel className="text-[11px] font-bold uppercase tracking-widest text-sidebar-foreground/70">
 						Playground
 					</SidebarGroupLabel>
 				</SidebarGroup>
@@ -223,7 +235,18 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 					projects={data.development}
 					label={t("development.title")}
 				/>
-				<NavProjects projects={data.settings} label={t("settings.title")} />
+
+				{/* SETTINGS */}
+				<SidebarGroup className="group-data-[collapsible=icon]:hidden pb-0">
+					<SidebarGroupLabel className="text-[11px] font-bold uppercase tracking-widest text-sidebar-foreground/70">
+						{t("settings.title")}
+					</SidebarGroupLabel>
+				</SidebarGroup>
+				<NavProjects
+					projects={data.settings}
+					label={t("settings.title")}
+					hideLabel
+				/>
 
 				{/* Upgrade to Pro */}
 				<SidebarGroup className="group-data-[collapsible=icon]:hidden">

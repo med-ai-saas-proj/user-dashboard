@@ -36,6 +36,7 @@ import {
 	SidebarFooter,
 	SidebarGroup,
 	SidebarGroupContent,
+	SidebarGroupLabel,
 	SidebarHeader,
 	SidebarMenu,
 	SidebarMenuButton,
@@ -73,6 +74,16 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 				name: t("management.apiReference.title"),
 				url: "/api-reference",
 				icon: Book,
+			},
+			{
+				name: t("management.architecture.title"),
+				url: "/architecture",
+				icon: NetworkIcon,
+			},
+			{
+				name: t("management.integration.title"),
+				url: "/integration",
+				icon: LayoutDashboardIcon,
 			},
 		],
 		dataProcessing: [
@@ -172,16 +183,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 				url: "/dashboard-builder",
 				icon: LayoutGridIcon,
 			},
-			{
-				name: t("development.integration.title"),
-				url: "/integration",
-				icon: LayoutDashboardIcon,
-			},
-			{
-				name: t("development.architecture.title"),
-				url: "/architecture",
-				icon: NetworkIcon,
-			},
 		],
 		settings: [
 			{
@@ -204,6 +205,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 			</SidebarHeader>
 			<SidebarContent>
 				<NavProjects projects={data.management} label={t("management.title")} />
+				<SidebarGroup className="group-data-[collapsible=icon]:hidden">
+					<SidebarGroupLabel className="text-xs font-bold uppercase tracking-wider">
+						Playground
+					</SidebarGroupLabel>
+				</SidebarGroup>
 				<NavProjects
 					projects={data.dataProcessing}
 					label={t("dataProcessing.title")}

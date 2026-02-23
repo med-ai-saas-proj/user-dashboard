@@ -78,6 +78,12 @@
     },
     "apiReference": {
       "title": "Tham chiếu API"
+    },
+    "architecture": {
+      "title": "Kiến trúc"
+    },
+    "integration": {
+      "title": "Tích hợp"
     }
   },
   "settings": {

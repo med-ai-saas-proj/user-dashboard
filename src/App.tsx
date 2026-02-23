@@ -1,5 +1,6 @@
 import "./config/i18n";
 
+import { ThemeProvider } from "next-themes";
 import { KeycloakProvider } from "@/features/auth/providers/keycloak-provider";
 import { query_client } from "@/query/query-client";
 import APIKeysPage from "@/routes/api-keys";
@@ -302,14 +303,16 @@ function AppRoutes() {
 
 function App() {
 	return (
-		<QueryClientProvider client={query_client}>
-			<KeycloakProvider>
-				<BrowserRouter>
-					<Toaster />
-					<AppRoutes />
-				</BrowserRouter>
-			</KeycloakProvider>
-		</QueryClientProvider>
+		<ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
+			<QueryClientProvider client={query_client}>
+				<KeycloakProvider>
+					<BrowserRouter>
+						<Toaster />
+						<AppRoutes />
+					</BrowserRouter>
+				</KeycloakProvider>
+			</QueryClientProvider>
+		</ThemeProvider>
 	);
 }
 

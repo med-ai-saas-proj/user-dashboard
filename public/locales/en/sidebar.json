@@ -78,6 +78,12 @@
     },
     "apiReference": {
       "title": "API Reference"
+    },
+    "architecture": {
+      "title": "Architecture"
+    },
+    "integration": {
+      "title": "Integration Hub"
     }
   },
   "settings": {

@@ -56,6 +56,26 @@ function PreventScrollReset() {
 		prevPathname.current = location.pathname;
 	});
 
+	useEffect(() => {
+		const original = window.scrollTo;
+		window.scrollTo = (...args: Parameters<typeof window.scrollTo>) => {
+			if (
+				args.length === 1 &&
+				typeof args[0] === "object" &&
+				args[0]?.top === 0
+			) {
+				return;
+			}
+			if (args.length === 2 && args[0] === 0 && args[1] === 0) {
+				return;
+			}
+			original.apply(window, args);
+		};
+		return () => {
+			window.scrollTo = original;
+		};
+	}, []);
+
 	return null;
 }
 

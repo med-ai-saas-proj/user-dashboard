@@ -205,31 +205,31 @@ const WearableDataPage = () => {
 
 					{/* Right: Output */}
 					<div className="flex flex-col overflow-hidden min-h-0 lg:min-h-full">
+						<div className="flex items-center justify-between px-4 py-3 border-b bg-muted/30">
+							<h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+								Output
+							</h2>
+							<ViewCodeDialog
+								endpoint={wearableUrl("{patient_id}")}
+								method="POST"
+								body={{
+									patient_id: 1,
+									source: "apple_health",
+									device_name: "Apple Watch Series 9",
+									data: [
+										{
+											date: "2025-02-20",
+											steps: 8423,
+											heart_rate_avg: 72,
+											sleep_hours: 7.2,
+										},
+									],
+								}}
+								description="Ingest wearable device data into patient timeline"
+							/>
+						</div>
 						{result ? (
 							<>
-								<div className="flex items-center justify-between px-4 py-3 border-b bg-muted/30">
-									<h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
-										Ingestion Result
-									</h2>
-									<ViewCodeDialog
-										endpoint={wearableUrl("{patient_id}")}
-										method="POST"
-										body={{
-											patient_id: 1,
-											source: "apple_health",
-											device_name: "Apple Watch Series 9",
-											data: [
-												{
-													date: "2025-02-20",
-													steps: 8423,
-													heart_rate_avg: 72,
-													sleep_hours: 7.2,
-												},
-											],
-										}}
-										description="Ingest wearable device data into patient timeline"
-									/>
-								</div>
 								<div className="flex-1 overflow-auto p-4">
 									<div className="space-y-4">
 										{result.success && (

@@ -31,6 +31,8 @@ const ENDPOINT = `${BASE_API_URL}service/api/v1/public_health/statistics`;
 const PublicHealthPage = () => {
 	const [metric, setMetric] = useState("overview");
 	const [region, setRegion] = useState("");
+	const [facility, setFacility] = useState("");
+	const [patientIds, setPatientIds] = useState("");
 	const [dateFrom, setDateFrom] = useState("");
 	const [dateTo, setDateTo] = useState("");
 	const [groupBy, setGroupBy] = useState("");
@@ -54,6 +56,13 @@ const PublicHealthPage = () => {
 				top_n: topN,
 			};
 			if (region) body.region = region;
+			if (facility) body.facility = facility;
+			if (patientIds.trim()) {
+				body.patient_ids = patientIds
+					.split(",")
+					.map((id) => id.trim())
+					.filter(Boolean);
+			}
 			if (dateFrom) body.date_from = dateFrom;
 			if (dateTo) body.date_to = dateTo;
 			if (groupBy) body.group_by = groupBy;
@@ -113,7 +122,7 @@ const PublicHealthPage = () => {
 
 						<div className="space-y-3">
 							<div>
-								<span className="text-[11px] text-muted-foreground block mb-1">
+								<span className="text-xs text-muted-foreground block mb-1">
 									Metric
 								</span>
 								<div className="flex flex-wrap gap-1.5">
@@ -134,9 +143,21 @@ const PublicHealthPage = () => {
 								</div>
 							</div>
 
+							<div>
+								<span className="text-xs text-muted-foreground block mb-1">
+									Patient IDs (comma-separated, or leave empty for all)
+								</span>
+								<input
+									value={patientIds}
+									onChange={(e) => setPatientIds(e.target.value)}
+									placeholder="e.g. 1, 2, 5 — or empty for population-level"
+									className="w-full rounded-md border bg-transparent px-2 py-1.5 text-xs"
+								/>
+							</div>
+
 							<div className="grid grid-cols-2 gap-2">
 								<div>
-									<span className="text-[11px] text-muted-foreground block mb-1">
+									<span className="text-xs text-muted-foreground block mb-1">
 										Region
 									</span>
 									<input
@@ -147,7 +168,21 @@ const PublicHealthPage = () => {
 									/>
 								</div>
 								<div>
-									<span className="text-[11px] text-muted-foreground block mb-1">
+									<span className="text-xs text-muted-foreground block mb-1">
+										Facility
+									</span>
+									<input
+										value={facility}
+										onChange={(e) => setFacility(e.target.value)}
+										placeholder="e.g. City General"
+										className="w-full rounded-md border bg-transparent px-2 py-1.5 text-xs"
+									/>
+								</div>
+							</div>
+
+							<div className="grid grid-cols-2 gap-2">
+								<div>
+									<span className="text-xs text-muted-foreground block mb-1">
 										Group By
 									</span>
 									<select
@@ -166,7 +201,7 @@ const PublicHealthPage = () => {
 
 							<div className="grid grid-cols-2 gap-2">
 								<div>
-									<span className="text-[11px] text-muted-foreground block mb-1">
+									<span className="text-xs text-muted-foreground block mb-1">
 										From
 									</span>
 									<input
@@ -177,7 +212,7 @@ const PublicHealthPage = () => {
 									/>
 								</div>
 								<div>
-									<span className="text-[11px] text-muted-foreground block mb-1">
+									<span className="text-xs text-muted-foreground block mb-1">
 										To
 									</span>
 									<input
@@ -190,7 +225,7 @@ const PublicHealthPage = () => {
 							</div>
 
 							<div>
-								<span className="text-[11px] text-muted-foreground block mb-1">
+								<span className="text-xs text-muted-foreground block mb-1">
 									Top N: {topN}
 								</span>
 								<input
@@ -221,7 +256,7 @@ const PublicHealthPage = () => {
 								{/* Demographics */}
 								{demographics && (
 									<div className="space-y-2">
-										<h3 className="text-sm font-semibold">Demographics</h3>
+										<h3 className="text-base font-semibold">Demographics</h3>
 										<div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
 											<StatCard
 												label="Total Patients"
@@ -267,7 +302,7 @@ const PublicHealthPage = () => {
 								{/* Conditions */}
 								{conditions && (
 									<div className="space-y-2">
-										<h3 className="text-sm font-semibold">Conditions</h3>
+										<h3 className="text-base font-semibold">Conditions</h3>
 										<div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
 											<StatCard
 												label="Total"
@@ -313,7 +348,7 @@ const PublicHealthPage = () => {
 								{/* Medications */}
 								{medications && (
 									<div className="space-y-2">
-										<h3 className="text-sm font-semibold">Medications</h3>
+										<h3 className="text-base font-semibold">Medications</h3>
 										<div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
 											<StatCard
 												label="Total Rxs"
@@ -343,14 +378,14 @@ const PublicHealthPage = () => {
 														key={t.period}
 														className="flex-1 flex flex-col items-center gap-0.5"
 													>
-														<span className="text-[11px] text-muted-foreground">
+														<span className="text-xs text-muted-foreground">
 															{t.count}
 														</span>
 														<div
 															className="w-full rounded-t bg-primary/60"
 															style={{ height: `${height}%` }}
 														/>
-														<span className="text-[8px] text-muted-foreground truncate max-w-full">
+														<span className="text-[10px] text-muted-foreground truncate max-w-full">
 															{t.period}
 														</span>
 													</div>
@@ -444,9 +479,9 @@ const PublicHealthPage = () => {
 
 function StatCard({ label, value }: { label: string; value: string }) {
 	return (
-		<div className="px-3 py-2 rounded-lg border bg-muted/20">
-			<div className="text-[11px] text-muted-foreground">{label}</div>
-			<div className="text-lg font-bold mt-0.5">{value}</div>
+		<div className="px-3 py-2.5 rounded-lg border bg-muted/20">
+			<div className="text-xs text-muted-foreground">{label}</div>
+			<div className="text-xl font-bold mt-0.5">{value}</div>
 		</div>
 	);
 }

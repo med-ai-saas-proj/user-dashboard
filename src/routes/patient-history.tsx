@@ -418,58 +418,60 @@ const PatientHistoryPage = () => {
 
 					{/* Right: Output */}
 					<div className="flex flex-col overflow-hidden min-h-0 lg:min-h-full">
+						<div className="flex items-center justify-between px-4 py-3 border-b bg-muted/30">
+							<h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+								Output
+							</h2>
+							<ViewCodeDialog
+								description="Pipeline: standardize EHR → search facilities → save nested temporal history"
+								endpoint={baseHistoryUrl("{patient_id}")}
+								steps={[
+									{
+										label: "Standardize to FHIR",
+										endpoint: API_ROUTES.SERVICES.EHR_CONVERTER_CONVERT,
+										body: {
+											data: "<raw EHR data>",
+											validate_output: false,
+										},
+									},
+									{
+										label: "Search facilities",
+										endpoint: API_ROUTES.SERVICES.DATA_MASKING_FACILITY_SEARCH,
+										body: {
+											first_name: "Nguyen",
+											last_name: "Van Minh",
+											dob: "1985-03-15",
+										},
+									},
+									{
+										label: "Save patient history",
+										endpoint: baseHistoryUrl("1"),
+										body: {
+											patient_id: 1,
+											fhir_bundle: {
+												resourceType: "Bundle",
+												type: "collection",
+												entry: [],
+											},
+											facility: "City General Hospital",
+										},
+									},
+								]}
+							/>
+						</div>
 						{result || history ? (
 							<>
-								<div className="flex items-center justify-between px-4 py-3 border-b bg-muted/30">
-									<div className="flex gap-0">
-										{(["result", "history"] as const).map((tab) => (
-											<button
-												key={tab}
-												type="button"
-												onClick={() => setActiveTab(tab)}
-												className={`px-3 py-1 text-xs font-medium border-b-2 transition-colors ${activeTab === tab ? "border-primary text-primary" : "border-transparent text-muted-foreground hover:text-foreground"}`}
-											>
-												{tab === "result" ? "Last Result" : "Full History"}
-											</button>
-										))}
-									</div>
-									<ViewCodeDialog
-										description="Pipeline: standardize EHR → search facilities → save nested temporal history"
-										endpoint={baseHistoryUrl("{patient_id}")}
-										steps={[
-											{
-												label: "Standardize to FHIR",
-												endpoint: API_ROUTES.SERVICES.EHR_CONVERTER_CONVERT,
-												body: {
-													data: "<raw EHR data>",
-													validate_output: false,
-												},
-											},
-											{
-												label: "Search facilities",
-												endpoint:
-													API_ROUTES.SERVICES.DATA_MASKING_FACILITY_SEARCH,
-												body: {
-													first_name: "Nguyen",
-													last_name: "Van Minh",
-													dob: "1985-03-15",
-												},
-											},
-											{
-												label: "Save patient history",
-												endpoint: baseHistoryUrl("1"),
-												body: {
-													patient_id: 1,
-													fhir_bundle: {
-														resourceType: "Bundle",
-														type: "collection",
-														entry: [],
-													},
-													facility: "City General Hospital",
-												},
-											},
-										]}
-									/>
+								<div className="flex gap-0 px-4 border-b">
+									{(["result", "history"] as const).map((tab) => (
+										<button
+											key={tab}
+											type="button"
+											onClick={() => setActiveTab(tab)}
+											className={`px-3 py-2 text-xs font-medium border-b-2 transition-colors ${activeTab === tab ? "border-primary text-primary" : "border-transparent text-muted-foreground hover:text-foreground"}`}
+										>
+											{tab === "result" ? "Last Result" : "Full History"}
+										</button>
+									))}
 								</div>
 								<div className="flex-1 overflow-auto p-4">
 									{activeTab === "result" && result && (

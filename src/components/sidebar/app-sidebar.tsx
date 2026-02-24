@@ -7,6 +7,7 @@ import {
 	ClipboardPlusIcon,
 	CreditCardIcon,
 	DatabaseIcon,
+	DnaIcon,
 	EyeOffIcon,
 	FileTextIcon,
 	GalleryVerticalEnd,
@@ -111,6 +112,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 				name: t("dataProcessing.knowledgeBase.title"),
 				url: "/knowledge-base",
 				icon: DatabaseIcon,
+			},
+			{
+				name: "Gene Decoder",
+				url: "/gene-decoder",
+				icon: DnaIcon,
 			},
 		],
 		dataManagement: [

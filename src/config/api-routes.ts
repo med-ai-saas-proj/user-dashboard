@@ -119,6 +119,14 @@ export const API_ROUTES = {
 			`service/api/${API_VERSION}/symptom_checker/check`,
 			BASE_API_URL
 		).toString(),
+		GENE_DECODER_DECODE: new URL(
+			`service/api/${API_VERSION}/gene_decoder/decode`,
+			BASE_API_URL
+		).toString(),
+		GENE_DECODER_ANALYZE: new URL(
+			`service/api/${API_VERSION}/gene_decoder/analyze`,
+			BASE_API_URL
+		).toString(),
 	},
 } as const;
 

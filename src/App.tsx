@@ -41,6 +41,7 @@ import BillingPage from "@/routes/billing";
 import UpgradePage from "@/routes/upgrade";
 import DashboardBuilderPage from "@/routes/dashboard-builder";
 import SymptomCheckerPage from "@/routes/symptom-checker";
+import GeneDecoderPage from "@/routes/gene-decoder";
 
 function PreventScrollReset() {
 	const location = useLocation();
@@ -284,6 +285,15 @@ function AppRoutes() {
 					element={
 						<ProtectedRoute>
 							<SymptomCheckerPage />
+						</ProtectedRoute>
+					}
+				/>
+
+				<Route
+					path="/gene-decoder"
+					element={
+						<ProtectedRoute>
+							<GeneDecoderPage />
 						</ProtectedRoute>
 					}
 				/>

@@ -7,8 +7,6 @@ if (!import.meta.env.VITE_BASE_API_URL) {
 	throw new Error("VITE_BASE_API_URL is not defined in environment variables");
 }
 export let BASE_API_URL = import.meta.env.VITE_BASE_API_URL;
-// Ensure BASE_API_URL ends with a slash, since URL constructor requires it for relative paths
-// See: https://developer.mozilla.org/en-US/docs/Web/API/URL_API/Resolving_relative_references
 if (!BASE_API_URL.endsWith("/")) {
 	BASE_API_URL += "/";
 }
@@ -125,6 +123,34 @@ export const API_ROUTES = {
 		).toString(),
 		GENE_DECODER_ANALYZE: new URL(
 			`service/api/${API_VERSION}/gene_decoder/analyze`,
+			BASE_API_URL
+		).toString(),
+		CROSS_SEARCH_SEARCH: new URL(
+			`service/api/${API_VERSION}/cross_search/search`,
+			BASE_API_URL
+		).toString(),
+		CROSS_SEARCH_PULL: new URL(
+			`service/api/${API_VERSION}/cross_search/pull`,
+			BASE_API_URL
+		).toString(),
+		CROSS_SEARCH_PULL_CONVERT: new URL(
+			`service/api/${API_VERSION}/cross_search/pull_and_convert`,
+			BASE_API_URL
+		).toString(),
+		CROSS_SEARCH_NETWORK_STATS: new URL(
+			`service/api/${API_VERSION}/cross_search/network_stats`,
+			BASE_API_URL
+		).toString(),
+		PLAYGROUND_SEED: new URL(
+			`service/api/${API_VERSION}/playground/seed`,
+			BASE_API_URL
+		).toString(),
+		PLAYGROUND_STATUS: new URL(
+			`service/api/${API_VERSION}/playground/status`,
+			BASE_API_URL
+		).toString(),
+		BLOOD_PANEL_ANALYZE: new URL(
+			`service/api/${API_VERSION}/blood_panel/analyze`,
 			BASE_API_URL
 		).toString(),
 	},

@@ -5,6 +5,7 @@ import { useServiceApiKeyStore } from "@/features/api-keys/store/service-api-key
 import { ViewCodeDialog } from "@/components/view-code-dialog";
 import DashboardLayout from "@/layouts/dashboard-layout";
 import { getAuthHeaders } from "@/lib/auth-headers";
+import { ApiTopology, TOPOLOGIES } from "@/components/api-topology";
 import { toast } from "sonner";
 import { Button } from "@/components/shadcn/button";
 
@@ -207,6 +208,10 @@ const VoiceTranscribePage = () => {
 						)}
 					</div>
 				</div>
+			</div>
+
+			<div className="px-4 py-2 border-t">
+				<ApiTopology {...TOPOLOGIES.voice_transcribe} />
 			</div>
 
 			<ApiKeyRequiredDialog

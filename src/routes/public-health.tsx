@@ -4,6 +4,7 @@ import { ApiKeyRequiredDialog } from "@/features/api-keys/components/api-key-req
 import { useServiceApiKeyStore } from "@/features/api-keys/store/service-api-key.store";
 import { Button } from "@/components/shadcn/button";
 import { ViewCodeDialog } from "@/components/view-code-dialog";
+import { ApiTopology, TOPOLOGIES } from "@/components/api-topology";
 import DashboardLayout from "@/layouts/dashboard-layout";
 import { getAuthHeaders } from "@/lib/auth-headers";
 import { toast } from "sonner";
@@ -468,6 +469,9 @@ const PublicHealthPage = () => {
 						)}
 					</div>
 				</div>
+			</div>
+			<div className="px-4 py-2 border-t">
+				<ApiTopology {...TOPOLOGIES.public_health} />
 			</div>
 			<ApiKeyRequiredDialog
 				open={showApiKeyDialog}

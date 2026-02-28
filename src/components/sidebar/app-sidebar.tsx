@@ -27,6 +27,9 @@ import {
 	WatchIcon,
 	LayoutGridIcon,
 	StethoscopeIcon,
+	MapPinIcon,
+	ActivityIcon,
+	BrainIcon,
 } from "lucide-react";
 import type * as React from "react";
 import { useTranslation } from "react-i18next";
@@ -80,11 +83,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 				url: "/architecture",
 				icon: NetworkIcon,
 			},
-			{
-				name: t("management.integration.title"),
-				url: "/integration",
-				icon: LayoutDashboardIcon,
-			},
 		],
 		dataProcessing: [
 			{
@@ -134,8 +132,18 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 				url: "/health-score",
 				icon: HeartPulseIcon,
 			},
+			{
+				name: t("dataManagement.digitalTwin.title"),
+				url: "/digital-twin",
+				icon: BrainIcon,
+			},
 		],
 		operation: [
+			{
+				name: t("operation.healthcareDashboard.title"),
+				url: "/healthcare-dashboard",
+				icon: ActivityIcon,
+			},
 			{
 				name: t("operation.ehrSummary.title"),
 				url: "/ehr-summary",
@@ -171,6 +179,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 				url: "/symptom-checker",
 				icon: StethoscopeIcon,
 			},
+			{
+				name: t("operation.clinicSearch.title"),
+				url: "/clinic-search",
+				icon: MapPinIcon,
+			},
 		],
 		development: [
 			{
@@ -182,6 +195,16 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 				name: t("development.dashboardBuilder.title"),
 				url: "/dashboard-builder",
 				icon: LayoutGridIcon,
+			},
+			{
+				name: t("development.federatedLearning.title"),
+				url: "/federated-learning",
+				icon: NetworkIcon,
+			},
+			{
+				name: t("development.integration.title"),
+				url: "/integration",
+				icon: LayoutDashboardIcon,
 			},
 		],
 		settings: [

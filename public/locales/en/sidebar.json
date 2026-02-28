@@ -30,10 +30,16 @@
     },
     "healthScore": {
       "title": "Health Score"
+    },
+    "digitalTwin": {
+      "title": "Digital Twin"
     }
   },
   "operation": {
     "title": "Operation",
+    "healthcareDashboard": {
+      "title": "Healthcare Dashboard"
+    },
     "ehrSummary": {
       "title": "EHR Summary"
     },
@@ -54,6 +60,9 @@
     },
     "symptomChecker": {
       "title": "Symptom Checker"
+    },
+    "clinicSearch": {
+      "title": "Clinic Search"
     }
   },
   "development": {
@@ -63,6 +72,9 @@
     },
     "dashboardBuilder": {
       "title": "Dashboard Builder"
+    },
+    "federatedLearning": {
+      "title": "Federated Learning"
     },
     "integration": {
       "title": "Integration Hub"
@@ -81,9 +93,6 @@
     },
     "architecture": {
       "title": "Architecture"
-    },
-    "integration": {
-      "title": "Integration Hub"
     }
   },
   "settings": {

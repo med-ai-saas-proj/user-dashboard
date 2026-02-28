@@ -11,9 +11,14 @@ import {
 type ChatInputProps = {
 	onSendMessage: (message: string) => void;
 	isLoading?: boolean;
+	placeholder?: string;
 };
 
-const ChatInput = ({ onSendMessage, isLoading = false }: ChatInputProps) => {
+const ChatInput = ({
+	onSendMessage,
+	isLoading = false,
+	placeholder,
+}: ChatInputProps) => {
 	const { t } = useTranslation("chatbot");
 
 	const [message, setMessage] = useState("");
@@ -36,7 +41,7 @@ const ChatInput = ({ onSendMessage, isLoading = false }: ChatInputProps) => {
 		<div className="sticky bottom-0 w-full z-50 bg-background pb-4">
 			<InputGroup className="w-full mx-auto">
 				<InputGroupTextarea
-					placeholder={t("input.placeholder")}
+					placeholder={placeholder || t("input.placeholder")}
 					value={message}
 					onChange={(e) => setMessage(e.target.value)}
 					onKeyDown={handleKeyDown}

@@ -1,9 +1,11 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { BASE_API_URL } from "@/config/api-routes";
+import { useSearchParams } from "react-router-dom";
 import DashboardLayout from "@/layouts/dashboard-layout";
 import { Button } from "@/components/shadcn/button";
 import { ViewCodeDialog } from "@/components/view-code-dialog";
 import { toast } from "sonner";
+import { TOPOLOGIES } from "@/components/api-topology";
 import {
 	FileJson2Icon,
 	ClipboardPlusIcon,
@@ -18,6 +20,13 @@ import {
 	RefreshCwIcon,
 	SearchIcon,
 	StethoscopeIcon,
+	BrainIcon,
+	MapPinIcon,
+	NetworkIcon,
+	ActivityIcon,
+	DropletIcon,
+	GitBranchIcon,
+	ArrowRightIcon,
 	type LucideIcon,
 } from "lucide-react";
 
@@ -138,6 +147,68 @@ const AVAILABLE_APIS: ApiDef[] = [
 		endpoint: `${BASE_API_URL}service/api/v1/symptom_checker/check`,
 		method: "POST",
 		sampleBody: { symptoms: ["headache", "fever"], age: 35, gender: "female" },
+	},
+	{
+		id: "clinic_search",
+		label: "Clinic Search",
+		icon: MapPinIcon,
+		endpoint: `${BASE_API_URL}service/api/v1/clinic_search/search`,
+		method: "GET",
+		sampleBody: { q: "đau lưng", province: "Hà Nội", limit: 10 },
+	},
+	{
+		id: "clinic_recommend",
+		label: "Clinic Recommend",
+		icon: MapPinIcon,
+		endpoint: `${BASE_API_URL}service/api/v1/clinic_search/recommend`,
+		method: "POST",
+		sampleBody: { symptoms: "đau lưng, mất ngủ", province: "Hà Nội", limit: 5 },
+	},
+	{
+		id: "digital_twin",
+		label: "Digital Twin",
+		icon: BrainIcon,
+		endpoint: `${BASE_API_URL}service/api/v1/digital_twin/1`,
+		method: "GET",
+		sampleBody: {},
+		outputKey: "profile",
+	},
+	{
+		id: "digital_twin_predict",
+		label: "AI Risk Prediction",
+		icon: ActivityIcon,
+		endpoint: `${BASE_API_URL}service/api/v1/digital_twin/1/predict`,
+		method: "POST",
+		sampleBody: {
+			patient_id: 1,
+			prediction_type: "risk",
+			time_horizon_days: 30,
+		},
+	},
+	{
+		id: "blood_panel",
+		label: "Blood Panel Analyzer",
+		icon: DropletIcon,
+		endpoint: `${BASE_API_URL}service/api/v1/blood_panel/analyze`,
+		method: "POST",
+		sampleBody: {
+			panel_type: "cbc",
+			results: { wbc: 7.5, rbc: 4.8, hemoglobin: 14.2, hematocrit: 42 },
+		},
+	},
+	{
+		id: "federated_create",
+		label: "Create FL Project",
+		icon: NetworkIcon,
+		endpoint: `${BASE_API_URL}service/api/v1/federated/projects`,
+		method: "POST",
+		sampleBody: {
+			name: "Diabetes Risk",
+			model_type: "logistic_regression",
+			target_variable: "risk_score",
+			min_facilities: 2,
+			max_rounds: 5,
+		},
 	},
 ];
 
@@ -358,6 +429,122 @@ const DEMO_FLOWS: {
 			},
 		],
 	},
+	{
+		label: "Digital Twin → Risk → Clinic",
+		description:
+			"Load patient digital twin, predict risk, find a traditional medicine clinic",
+		steps: [
+			{
+				apiId: "digital_twin",
+				input: {},
+				output: {
+					profile: {
+						patient_id: 1,
+						first_name: "Nguyen",
+						last_name: "Van A",
+						age: 55,
+					},
+					conditions: [
+						{ name: "Type 2 Diabetes", icd10: "E11.9" },
+						{ name: "Hypertension", icd10: "I10" },
+					],
+					risk_score: 68.5,
+				},
+			},
+			{
+				apiId: "digital_twin_predict",
+				input: {
+					patient_id: 1,
+					prediction_type: "risk",
+					time_horizon_days: 30,
+				},
+				output: {
+					score: 65,
+					confidence: 0.78,
+					factors: [
+						{ factor: "Type 2 Diabetes", impact: "high" },
+						{ factor: "Low adherence: Atorvastatin", impact: "high" },
+					],
+					recommendations: [
+						"Tighten glycemic control",
+						"Monitor blood pressure",
+					],
+				},
+			},
+			{
+				apiId: "clinic_recommend",
+				input: {
+					symptoms: "tiểu đường, huyết áp cao",
+					province: "Hà Nội",
+					limit: 3,
+				},
+				output: {
+					recommendations: [
+						{
+							type: "clinic",
+							name: "Phòng khám YHCT Hà Nội",
+							province: "Hà Nội",
+							score: 15,
+						},
+						{
+							type: "doctor",
+							name: "TS.BS. Nguyễn Văn B",
+							province: "Hà Nội",
+							score: 12,
+						},
+					],
+					total: 2,
+				},
+			},
+		],
+	},
+	{
+		label: "Symptom → Blood Panel → Health Score",
+		description:
+			"Check symptoms, analyze blood work, evaluate overall health score",
+		steps: [
+			{
+				apiId: "symptom_check",
+				input: {
+					symptoms: ["fatigue", "frequent urination", "blurred vision"],
+					age: 55,
+					gender: "male",
+				},
+				output: {
+					conditions: [
+						{ name: "Type 2 Diabetes", probability: "high", icd10: "E11.9" },
+					],
+					triage_level: "routine",
+					recommended_actions: ["Fasting blood glucose test", "HbA1c test"],
+				},
+			},
+			{
+				apiId: "blood_panel",
+				input: {
+					panel_type: "cmp",
+					results: { glucose: 180, bun: 18, creatinine: 1.1, sodium: 141 },
+				},
+				output: {
+					interpretation: "Elevated glucose (180 mg/dL) suggests hyperglycemia",
+					abnormal_markers: [{ name: "Glucose", value: 180, status: "high" }],
+				},
+			},
+			{
+				apiId: "health_score",
+				input: {
+					ehr_data: {
+						conditions: ["E11.9"],
+						labs: { glucose: 180, hba1c: 8.1 },
+					},
+				},
+				output: {
+					score: 52,
+					grade: "Fair",
+					top_factors: ["Uncontrolled diabetes", "Elevated glucose"],
+				},
+			},
+		],
+	},
 ];
 
 // --- Pipeline step ---
@@ -485,6 +672,7 @@ function generateFlowCode(steps: PipelineStep[]): Record<string, string> {
 // --- Main component ---
 
 export default function ApiFlowBuilderPage() {
+	const [searchParams, setSearchParams] = useSearchParams();
 	const [pipeline, setPipeline] = useState<PipelineStep[]>([]);
 	const [generatedCode, setGeneratedCode] = useState<Record<
 		string,
@@ -499,6 +687,7 @@ export default function ApiFlowBuilderPage() {
 		{ name: string; steps: PipelineStep[] }[]
 	>([]);
 	const [activeStepIdx, setActiveStepIdx] = useState<number | null>(null);
+	const [showTopology, setShowTopology] = useState(true);
 
 	const CODE_TABS = ["python", "javascript", "go", "curl"] as const;
 
@@ -603,6 +792,43 @@ export default function ApiFlowBuilderPage() {
 		setShowPackDialog(false);
 		setPackedName("");
 	};
+
+	useEffect(() => {
+		const flowId = searchParams.get("flow");
+		if (!flowId || pipeline.length > 0) return;
+
+		const topology = TOPOLOGIES[flowId];
+		if (!topology) return;
+
+		const steps: PipelineStep[] = topology.nodes.map((node) => {
+			const api = AVAILABLE_APIS.find(
+				(a) =>
+					node.endpoint.includes(
+						a.endpoint.replace(`${BASE_API_URL}service/api/v1`, "")
+					) || a.label.toLowerCase().includes(node.label.toLowerCase())
+			) || {
+				id: node.id,
+				label: node.label,
+				icon: FileJson2Icon,
+				endpoint: `${BASE_API_URL}service/api/v1${node.endpoint}`,
+				method: node.method,
+				sampleBody: {},
+			};
+			return {
+				id: `step_${Date.now()}_${node.id}`,
+				api: { ...api, method: node.method },
+				bodyOverride: JSON.stringify(api.sampleBody, null, 2),
+				mapFromPrevious: "",
+				sampleOutput: "",
+			};
+		});
+
+		setPipeline(steps);
+		setActiveStepIdx(0);
+		setShowTopology(true);
+		setSearchParams({}, { replace: true });
+		toast.success(`Loaded flow: ${topology.title}`);
+	}, [searchParams, pipeline.length, setSearchParams]);
 
 	return (
 		<DashboardLayout pageTitle="API Flow Builder">
@@ -713,9 +939,30 @@ export default function ApiFlowBuilderPage() {
 					{/* Center: Pipeline builder */}
 					<div className="flex-1 flex flex-col overflow-hidden">
 						<div className="flex items-center justify-between px-4 py-2 border-b bg-muted/20 gap-2 flex-wrap">
-							<span className="text-xs text-muted-foreground">
-								{pipeline.length} step(s) — drag to reorder
-							</span>
+							<div className="flex items-center gap-3">
+								<span className="text-xs text-muted-foreground">
+									{pipeline.length} step(s)
+								</span>
+								{pipeline.length > 0 && (
+									<div className="flex items-center rounded-md border bg-muted/30 p-0.5">
+										<button
+											type="button"
+											onClick={() => setShowTopology(true)}
+											className={`px-2 py-0.5 rounded text-[10px] font-medium transition-colors ${showTopology ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"}`}
+										>
+											<GitBranchIcon className="size-3 inline mr-1 -mt-0.5" />
+											Topology
+										</button>
+										<button
+											type="button"
+											onClick={() => setShowTopology(false)}
+											className={`px-2 py-0.5 rounded text-[10px] font-medium transition-colors ${!showTopology ? "bg-background text-foreground shadow-sm" : "text-muted-foreground hover:text-foreground"}`}
+										>
+											Steps
+										</button>
+									</div>
+								)}
+							</div>
 							<div className="flex gap-2 flex-wrap">
 								<Button
 									variant="outline"
@@ -812,6 +1059,135 @@ export default function ApiFlowBuilderPage() {
 											steps to reorder.
 										</p>
 									</div>
+								</div>
+							) : showTopology ? (
+								/* Topology graph view */
+								<div className="space-y-4">
+									{/* Visual graph */}
+									<div className="rounded-xl border bg-muted/10 p-6 overflow-x-auto">
+										<div className="flex items-start gap-0 min-w-fit">
+											{pipeline.map((step, idx) => {
+												const StepIcon = step.api.icon;
+												return (
+													<div
+														key={step.id}
+														className="flex items-start shrink-0"
+													>
+														{/* biome-ignore lint/a11y/useSemanticElements: complex card with nested interactive elements */}
+														<div
+															className={`rounded-xl border-2 p-3 min-w-[140px] max-w-[180px] transition-all cursor-pointer hover:shadow-md ${activeStepIdx === idx ? "border-primary bg-primary/5 shadow-md" : "border-muted-foreground/20 bg-background"}`}
+															onClick={() => {
+																setActiveStepIdx(idx);
+																setShowTopology(false);
+															}}
+															onKeyDown={() => {}}
+															role="button"
+															tabIndex={0}
+														>
+															<div className="flex items-center gap-2 mb-2">
+																<div
+																	className={`size-8 rounded-lg flex items-center justify-center ${step.api.method === "POST" ? "bg-green-500/10 text-green-600" : "bg-blue-500/10 text-blue-600"}`}
+																>
+																	<StepIcon className="size-4" />
+																</div>
+																<div className="text-[10px] font-bold text-muted-foreground">
+																	STEP {idx + 1}
+																</div>
+															</div>
+															<div className="text-xs font-semibold mb-1">
+																{step.api.label}
+															</div>
+															<div className="flex items-center gap-1.5">
+																<span
+																	className={`text-[9px] font-bold px-1.5 py-0.5 rounded ${step.api.method === "POST" ? "bg-green-500/10 text-green-700 dark:text-green-400" : "bg-blue-500/10 text-blue-700 dark:text-blue-400"}`}
+																>
+																	{step.api.method}
+																</span>
+																<span className="text-[9px] font-mono text-muted-foreground truncate">
+																	{step.api.endpoint
+																		.replace(BASE_API_URL, "")
+																		.replace("service/api/v1", "")}
+																</span>
+															</div>
+															{idx > 0 && step.mapFromPrevious && (
+																<div className="mt-1.5 text-[9px] text-primary font-mono bg-primary/5 rounded px-1.5 py-0.5">
+																	← {step.mapFromPrevious}
+																</div>
+															)}
+														</div>
+														{idx < pipeline.length - 1 && (
+															<div className="flex items-center self-center px-2 pt-6">
+																<div className="w-6 h-px bg-muted-foreground/30" />
+																<ArrowRightIcon className="size-4 text-muted-foreground/50 -ml-1" />
+															</div>
+														)}
+													</div>
+												);
+											})}
+										</div>
+									</div>
+
+									{/* Summary table */}
+									<div className="rounded-lg border overflow-hidden">
+										<table className="w-full text-xs">
+											<thead>
+												<tr className="bg-muted/30 text-left">
+													<th className="px-3 py-2 font-bold text-[10px] uppercase w-8">
+														#
+													</th>
+													<th className="px-3 py-2 font-bold text-[10px] uppercase">
+														API
+													</th>
+													<th className="px-3 py-2 font-bold text-[10px] uppercase">
+														Method
+													</th>
+													<th className="px-3 py-2 font-bold text-[10px] uppercase">
+														Endpoint
+													</th>
+													<th className="px-3 py-2 font-bold text-[10px] uppercase">
+														Input From
+													</th>
+												</tr>
+											</thead>
+											<tbody>
+												{pipeline.map((step, idx) => (
+													<tr
+														key={step.id}
+														className="border-t hover:bg-muted/20 cursor-pointer"
+														onClick={() => {
+															setActiveStepIdx(idx);
+															setShowTopology(false);
+														}}
+													>
+														<td className="px-3 py-2 font-mono text-muted-foreground">
+															{idx + 1}
+														</td>
+														<td className="px-3 py-2 font-medium">
+															{step.api.label}
+														</td>
+														<td className="px-3 py-2">
+															<span
+																className={`text-[10px] font-bold px-1.5 py-0.5 rounded ${step.api.method === "POST" ? "bg-green-500/10 text-green-600" : "bg-blue-500/10 text-blue-600"}`}
+															>
+																{step.api.method}
+															</span>
+														</td>
+														<td className="px-3 py-2 font-mono text-[10px] text-muted-foreground truncate max-w-[200px]">
+															{step.api.endpoint.replace(BASE_API_URL, "")}
+														</td>
+														<td className="px-3 py-2 font-mono text-[10px] text-primary">
+															{idx === 0
+																? "User input"
+																: step.mapFromPrevious || "—"}
+														</td>
+													</tr>
+												))}
+											</tbody>
+										</table>
+									</div>
+									<p className="text-[10px] text-muted-foreground text-center">
+										Click any step to edit its input/output in the Steps view
+									</p>
 								</div>
 							) : (
 								pipeline.map((step, idx) => (

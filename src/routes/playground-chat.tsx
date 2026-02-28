@@ -5,6 +5,7 @@ import type { ChatRequest } from "@/features/pg-chat/services/chat.dto";
 import { useChatStore } from "@/features/pg-chat/store/chat.store";
 import { useStream } from "@/lib/streaming/use-stream";
 import { ViewCodeDialog } from "@/components/view-code-dialog";
+import { ApiTopology, TOPOLOGIES } from "@/components/api-topology";
 import DashboardLayout from "@/layouts/dashboard-layout";
 
 export default function PlaygroundChatPage() {
@@ -68,6 +69,9 @@ export default function PlaygroundChatPage() {
 				</div>
 				<ChatContent messages={messages} isLoading={isStreaming} />
 				<ChatInput onSendMessage={handleSendMessage} isLoading={isStreaming} />
+			</div>
+			<div className="px-4 py-2 border-t">
+				<ApiTopology {...TOPOLOGIES.chat} />
 			</div>
 		</DashboardLayout>
 	);

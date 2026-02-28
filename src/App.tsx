@@ -41,6 +41,10 @@ import BillingPage from "@/routes/billing";
 import UpgradePage from "@/routes/upgrade";
 import DashboardBuilderPage from "@/routes/dashboard-builder";
 import SymptomCheckerPage from "@/routes/symptom-checker";
+import ClinicSearchPage from "@/routes/clinic-search";
+import DigitalTwinPage from "@/routes/digital-twin";
+import FederatedLearningPage from "@/routes/federated-learning";
+import HealthcareDashboardPage from "@/routes/healthcare-dashboard";
 
 function PreventScrollReset() {
 	const location = useLocation();
@@ -284,6 +288,42 @@ function AppRoutes() {
 					element={
 						<ProtectedRoute>
 							<SymptomCheckerPage />
+						</ProtectedRoute>
+					}
+				/>
+
+				<Route
+					path="/clinic-search"
+					element={
+						<ProtectedRoute>
+							<ClinicSearchPage />
+						</ProtectedRoute>
+					}
+				/>
+
+				<Route
+					path="/digital-twin"
+					element={
+						<ProtectedRoute>
+							<DigitalTwinPage />
+						</ProtectedRoute>
+					}
+				/>
+
+				<Route
+					path="/federated-learning"
+					element={
+						<ProtectedRoute>
+							<FederatedLearningPage />
+						</ProtectedRoute>
+					}
+				/>
+
+				<Route
+					path="/healthcare-dashboard"
+					element={
+						<ProtectedRoute>
+							<HealthcareDashboardPage />
 						</ProtectedRoute>
 					}
 				/>

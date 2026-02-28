@@ -30,10 +30,16 @@
     },
     "healthScore": {
       "title": "Điểm sức khỏe"
+    },
+    "digitalTwin": {
+      "title": "Digital Twin"
     }
   },
   "operation": {
     "title": "Vận hành",
+    "healthcareDashboard": {
+      "title": "Dashboard Y tế"
+    },
     "ehrSummary": {
       "title": "Tóm tắt EHR"
     },
@@ -54,6 +60,9 @@
     },
     "symptomChecker": {
       "title": "Kiểm tra triệu chứng"
+    },
+    "clinicSearch": {
+      "title": "Tìm phòng khám"
     }
   },
   "development": {
@@ -63,6 +72,9 @@
     },
     "dashboardBuilder": {
       "title": "Tạo Dashboard"
+    },
+    "federatedLearning": {
+      "title": "Học liên hiệp"
     },
     "integration": {
       "title": "Tích hợp"
@@ -81,9 +93,6 @@
     },
     "architecture": {
       "title": "Kiến trúc"
-    },
-    "integration": {
-      "title": "Tích hợp"
     }
   },
   "settings": {

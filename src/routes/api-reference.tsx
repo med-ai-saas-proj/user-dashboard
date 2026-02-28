@@ -73,6 +73,52 @@ const API_CATEGORIES = [
 				path: "/data_masking/facility/search",
 				desc: "Cross-facility search",
 			},
+			{
+				method: "GET",
+				path: "/digital_twin/{id}",
+				desc: "Full patient digital twin",
+			},
+			{
+				method: "GET",
+				path: "/digital_twin/{id}/vitals",
+				desc: "Patient vitals",
+			},
+			{ method: "GET", path: "/digital_twin/{id}/labs", desc: "Lab results" },
+			{
+				method: "GET",
+				path: "/digital_twin/{id}/conditions",
+				desc: "Active conditions",
+			},
+			{
+				method: "GET",
+				path: "/digital_twin/{id}/medications",
+				desc: "Medications + adherence",
+			},
+			{
+				method: "GET",
+				path: "/digital_twin/{id}/imaging",
+				desc: "Imaging studies",
+			},
+			{
+				method: "GET",
+				path: "/digital_twin/{id}/tasks",
+				desc: "Clinical tasks",
+			},
+			{
+				method: "GET",
+				path: "/digital_twin/{id}/timeline",
+				desc: "Medical timeline",
+			},
+			{
+				method: "POST",
+				path: "/digital_twin/sync",
+				desc: "Sync from data sources",
+			},
+			{
+				method: "POST",
+				path: "/digital_twin/{id}/predict",
+				desc: "AI risk prediction",
+			},
 		],
 	},
 	{
@@ -86,7 +132,11 @@ const API_CATEGORIES = [
 				desc: "Prescription risk analysis",
 			},
 			{ method: "POST", path: "/chat", desc: "AI chat (SSE stream)" },
-			{ method: "POST", path: "/ai_search", desc: "AI search (SSE stream)" },
+			{
+				method: "POST",
+				path: "/ai_search",
+				desc: "AI search + deep research (SSE)",
+			},
 			{
 				method: "POST",
 				path: "/voice_transcribe",
@@ -97,6 +147,111 @@ const API_CATEGORIES = [
 				path: "/medical_image/describe",
 				desc: "Medical image analysis",
 			},
+			{
+				method: "POST",
+				path: "/symptom_checker/check",
+				desc: "Symptom assessment + triage",
+			},
+			{
+				method: "GET",
+				path: "/clinic_search/search",
+				desc: "Search clinics & doctors",
+			},
+			{
+				method: "POST",
+				path: "/clinic_search/recommend",
+				desc: "Recommend by symptoms",
+			},
+			{
+				method: "GET",
+				path: "/clinic_search/provinces",
+				desc: "List provinces",
+			},
+			{
+				method: "GET",
+				path: "/clinic_search/clinics",
+				desc: "List all clinics",
+			},
+			{
+				method: "GET",
+				path: "/clinic_search/doctors",
+				desc: "List all doctors",
+			},
+			{
+				method: "POST",
+				path: "/blood_panel/analyze",
+				desc: "Blood test analysis",
+			},
+		],
+	},
+	{
+		label: "Advanced / Research",
+		color: "#ec4899",
+		apis: [
+			{
+				method: "POST",
+				path: "/gene_decoder/decode",
+				desc: "Parse FASTA/FASTQ sequences",
+			},
+			{
+				method: "POST",
+				path: "/gene_decoder/analyze",
+				desc: "AI variant annotation",
+			},
+			{
+				method: "POST",
+				path: "/gene_decoder/decode/batch",
+				desc: "Batch sequence decoding",
+			},
+			{
+				method: "POST",
+				path: "/federated/projects",
+				desc: "Create FL project",
+			},
+			{ method: "GET", path: "/federated/projects", desc: "List FL projects" },
+			{
+				method: "POST",
+				path: "/federated/projects/{id}/join",
+				desc: "Facility joins project",
+			},
+			{
+				method: "POST",
+				path: "/federated/projects/{id}/rounds",
+				desc: "Start training round",
+			},
+			{
+				method: "POST",
+				path: "/federated/projects/{id}/updates",
+				desc: "Submit gradient updates",
+			},
+			{
+				method: "GET",
+				path: "/federated/projects/{id}/model",
+				desc: "Get aggregated model",
+			},
+			{
+				method: "GET",
+				path: "/federated/projects/{id}/metrics",
+				desc: "Training metrics",
+			},
+		],
+	},
+	{
+		label: "Interop & Workflow",
+		color: "#f97316",
+		apis: [
+			{
+				method: "*",
+				path: "/cross_search/**",
+				desc: "Cross-provider patient search",
+			},
+			{
+				method: "*",
+				path: "/workflows/**",
+				desc: "Workflow builder CRUD + codegen",
+			},
+			{ method: "*", path: "/memory/**", desc: "Agent memory layer" },
+			{ method: "*", path: "/playground/**", desc: "Seed demo environment" },
 		],
 	},
 	{
@@ -105,6 +260,12 @@ const API_CATEGORIES = [
 		apis: [
 			{ method: "GET", path: "/api-keys", desc: "List API keys", mgmt: true },
 			{ method: "POST", path: "/api-keys", desc: "Create API key", mgmt: true },
+			{
+				method: "*",
+				path: "/local-models/**",
+				desc: "Local model management",
+				mgmt: true,
+			},
 		],
 	},
 ];

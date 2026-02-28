@@ -5,10 +5,12 @@ type AISearchStore = {
 	conversationId: string | null;
 	messages: ChatMessage[];
 	model: string;
+	mode: "search" | "deep_research";
 	setConversationId: (id: string) => void;
 	addMessage: (message: ChatMessage) => void;
 	updateLastAssistantMessage: (content: string) => void;
 	setModel: (model: string) => void;
+	setMode: (mode: "search" | "deep_research") => void;
 	clearMessages: () => void;
 };
 
@@ -16,6 +18,7 @@ export const useAISearchStore = create<AISearchStore>((set) => ({
 	conversationId: null,
 	messages: [],
 	model: "gpt-4o-2",
+	mode: "search",
 
 	setConversationId: (id) => set({ conversationId: id }),
 
@@ -37,6 +40,8 @@ export const useAISearchStore = create<AISearchStore>((set) => ({
 		}),
 
 	setModel: (model) => set({ model }),
+
+	setMode: (mode) => set({ mode }),
 
 	clearMessages: () => set({ messages: [], conversationId: null }),
 }));

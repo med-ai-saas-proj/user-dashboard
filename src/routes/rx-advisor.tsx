@@ -7,6 +7,7 @@ import { MarkdownCustom } from "@/features/pg-chat/components/MarkdownCustom";
 import { ViewCodeDialog } from "@/components/view-code-dialog";
 import DashboardLayout from "@/layouts/dashboard-layout";
 import { getAuthHeaders } from "@/lib/auth-headers";
+import { ApiTopology, TOPOLOGIES } from "@/components/api-topology";
 import { toast } from "sonner";
 
 const RX_EXAMPLES = [
@@ -399,6 +400,10 @@ const RxAdvisorPage = () => {
 						)}
 					</div>
 				</div>
+			</div>
+
+			<div className="px-4 py-2 border-t">
+				<ApiTopology {...TOPOLOGIES.rx_advisor} />
 			</div>
 
 			<ApiKeyRequiredDialog

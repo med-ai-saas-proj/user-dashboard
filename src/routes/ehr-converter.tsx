@@ -13,6 +13,7 @@ import type {
 } from "@/features/pg-ehr-converter/services/ehr-converter.dto";
 import DashboardLayout from "@/layouts/dashboard-layout";
 import { ViewCodeDialog } from "@/components/view-code-dialog";
+import { ApiTopology, TOPOLOGIES } from "@/components/api-topology";
 import { getAuthHeaders } from "@/lib/auth-headers";
 import { toast } from "sonner";
 
@@ -310,6 +311,9 @@ const EhrConverterPage = () => {
 				</div>
 			</div>
 
+			<div className="px-4 py-2 border-t">
+				<ApiTopology {...TOPOLOGIES.ehr_converter} />
+			</div>
 			<ApiKeyRequiredDialog
 				open={showApiKeyDialog}
 				onOpenChange={setShowApiKeyDialog}

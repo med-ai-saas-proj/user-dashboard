@@ -119,6 +119,22 @@ export const API_ROUTES = {
 			`service/api/${API_VERSION}/symptom_checker/check`,
 			BASE_API_URL
 		).toString(),
+		CLINIC_SEARCH: new URL(
+			`service/api/${API_VERSION}/clinic_search/search`,
+			BASE_API_URL
+		).toString(),
+		CLINIC_SEARCH_RECOMMEND: new URL(
+			`service/api/${API_VERSION}/clinic_search/recommend`,
+			BASE_API_URL
+		).toString(),
+		DIGITAL_TWIN: new URL(
+			`service/api/${API_VERSION}/digital_twin`,
+			BASE_API_URL
+		).toString(),
+		FEDERATED_PROJECTS: new URL(
+			`service/api/${API_VERSION}/federated/projects`,
+			BASE_API_URL
+		).toString(),
 	},
 } as const;
 

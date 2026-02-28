@@ -3,6 +3,7 @@ import { API_ROUTES } from "@/config/api-routes";
 import { ApiKeyRequiredDialog } from "@/features/api-keys/components/api-key-required-dialog";
 import { useServiceApiKeyStore } from "@/features/api-keys/store/service-api-key.store";
 import { ViewCodeDialog } from "@/components/view-code-dialog";
+import { ApiTopology, TOPOLOGIES } from "@/components/api-topology";
 import DashboardLayout from "@/layouts/dashboard-layout";
 import { getAuthHeaders } from "@/lib/auth-headers";
 import { toast } from "sonner";
@@ -291,6 +292,9 @@ const DataMaskingPage = () => {
 				</div>
 			</div>
 
+			<div className="px-4 py-2 border-t">
+				<ApiTopology {...TOPOLOGIES.data_masking} />
+			</div>
 			<ApiKeyRequiredDialog
 				open={showApiKeyDialog}
 				onOpenChange={setShowApiKeyDialog}

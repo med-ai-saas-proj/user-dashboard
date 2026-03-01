@@ -1,8 +1,5 @@
 import "./config/i18n";
 
-import { QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
-import { Toaster } from "sonner";
 import { KeycloakProvider } from "@/features/auth/providers/keycloak-provider";
 import { query_client } from "@/query/query-client";
 import APIKeysPage from "@/routes/api-keys";
@@ -12,9 +9,11 @@ import LoginPage from "@/routes/login";
 import { ProtectedRoute } from "@/routes/protected-route";
 import { PublicRoute } from "@/routes/public-route";
 import RxAdvisorPage from "@/routes/rx-advisor";
-import DashboardPage from "./routes/dashboard";
-import PlaygroundAISearchPage from "./routes/playground-AI-search";
+import { QueryClientProvider } from "@tanstack/react-query";
+import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { Toaster } from "sonner";
 import PlaygroundChatPage from "./routes/playground-chat";
+import PlaygroundAISearchPage from "@/routes/playground-ai-search";
 
 function App() {
 	return (

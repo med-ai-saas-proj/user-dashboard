@@ -9,7 +9,6 @@ import {
 	DialogTitle,
 } from "@/components/shadcn/dialog";
 import { Separator } from "@/components/shadcn/separator";
-import { Spinner } from "@/components/shadcn/spinner";
 import { useCopyToClipboard } from "@/hooks/use-copy-to-clipboard";
 
 type AnalysisResponseDialogProps = {
@@ -38,7 +37,7 @@ export function AnalysisResponseDialog({
 ${analysis || ""}
 
 ${reasoning ? `\n## Lý do\n\n${reasoning}` : ""}
-    `.trim();
+        `.trim();
 		copy(fullContent);
 	};
 
@@ -51,13 +50,14 @@ ${reasoning ? `\n## Lý do\n\n${reasoning}` : ""}
 							<DialogTitle>Kết quả phân tích đơn thuốc</DialogTitle>
 							<DialogDescription>Phân tích và tư vấn từ AI</DialogDescription>
 						</div>
-						{analysis && !isLoading && !error && (
+						{analysis && !error && (
 							<Button
 								type="button"
 								variant="outline"
 								size="sm"
 								onClick={copyAll}
 								className="gap-2 shrink-0"
+								disabled={isLoading}
 							>
 								{isCopied ? (
 									<>
@@ -76,17 +76,6 @@ ${reasoning ? `\n## Lý do\n\n${reasoning}` : ""}
 				</DialogHeader>
 
 				<div className="flex-1 overflow-y-auto pr-2">
-					{isLoading && (
-						<div className="flex items-center justify-center p-12">
-							<div className="flex flex-col items-center gap-3">
-								<Spinner className="size-8" />
-								<p className="text-muted-foreground text-sm">
-									Đang phân tích dữ liệu...
-								</p>
-							</div>
-						</div>
-					)}
-
 					{error && (
 						<div className="p-4 border border-destructive rounded-lg bg-destructive/10">
 							<p className="text-destructive text-sm font-medium">
@@ -95,12 +84,18 @@ ${reasoning ? `\n## Lý do\n\n${reasoning}` : ""}
 						</div>
 					)}
 
-					{analysis && !isLoading && !error && (
+					{analysis ? (
 						<div className="space-y-6">
 							<div>
 								<h3 className="text-lg font-semibold mb-3">Phân tích</h3>
 								<div className="prose prose-sm max-w-none dark:prose-invert">
-									<Markdown>{analysis}</Markdown>
+									<div className="flex items-end gap-1">
+										<Markdown>{analysis}</Markdown>
+										{isLoading && analysis === "" && (
+											// Blinking cursor when waiting for stream to start
+											<div className="animate-pulse bg-gray-400 w-3 h-4"> </div>
+										)}
+									</div>
 								</div>
 							</div>
 
@@ -116,6 +111,16 @@ ${reasoning ? `\n## Lý do\n\n${reasoning}` : ""}
 								</>
 							)}
 						</div>
+					) : (
+						isLoading && (
+							// Show blinking cursor when no content yet
+							<div className="flex items-center gap-2 p-4">
+								<span className="text-muted-foreground text-sm">
+									Đang phân tích dữ liệu...
+								</span>
+								<div className="animate-pulse bg-gray-400 w-3 h-4"> </div>
+							</div>
+						)
 					)}
 				</div>
 			</DialogContent>

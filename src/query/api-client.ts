@@ -1,8 +1,6 @@
 import axios from "axios";
-import { BASE_API_URL, isServiceEndpoint } from "@/config/api-routes";
-import keycloak from "@/config/keycloak";
-import { useServiceApiKeyStore } from "@/features/api-keys/store/service-api-key.store";
-import { useAuthStore } from "@/features/auth/store/auth-store";
+import { BASE_API_URL } from "@/config/api-routes";
+import { getAuthHeaders, handleUnauthorized } from "@/lib/auth-headers";
 
 const apiClient = axios.create({
 	baseURL: BASE_API_URL,
@@ -14,29 +12,10 @@ const apiClient = axios.create({
 // Request interceptor for adding auth token
 apiClient.interceptors.request.use(
 	async (config) => {
-		// Handle authentication token
-		if (keycloak.authenticated && keycloak.token) {
-			try {
-				await keycloak.updateToken(30);
-			} catch (error) {
-				console.error("Failed to refresh token", error);
-			}
-			config.headers.Authorization = `Bearer ${keycloak.token}`;
-		} else {
-			const token = useAuthStore.getState().token;
-			if (token) {
-				config.headers.Authorization = `Bearer ${token}`;
-			}
-		}
-
-		// Add API key for service endpoints
-		if (isServiceEndpoint(config.url)) {
-			const selectedApiKey = useServiceApiKeyStore.getState().selectedApiKey;
-			if (selectedApiKey) {
-				config.headers["X-Api-Key"] = selectedApiKey;
-			}
-		}
-
+		const headers = await getAuthHeaders(config.url || "");
+		Object.entries(headers).forEach(([key, value]) => {
+			config.headers.set(key, value);
+		});
 		return config;
 	},
 	(error) => Promise.reject(error)
@@ -47,10 +26,7 @@ apiClient.interceptors.response.use(
 	(response) => response,
 	(error) => {
 		if (error.response?.status === 401) {
-			useAuthStore.getState().logout();
-			if (keycloak.authenticated) {
-				keycloak.logout();
-			}
+			handleUnauthorized();
 		}
 		return Promise.reject(error);
 	}

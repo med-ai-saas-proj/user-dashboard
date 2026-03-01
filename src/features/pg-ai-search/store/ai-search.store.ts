@@ -7,6 +7,7 @@ type AISearchStore = {
 	model: string;
 	setConversationId: (id: string) => void;
 	addMessage: (message: ChatMessage) => void;
+	updateLastAssistantMessage: (content: string) => void;
 	setModel: (model: string) => void;
 	clearMessages: () => void;
 };
@@ -22,6 +23,18 @@ export const useAISearchStore = create<AISearchStore>((set) => ({
 		set((state) => ({
 			messages: [...state.messages, message],
 		})),
+
+	updateLastAssistantMessage: (content) =>
+		set((state) => {
+			const messages = [...state.messages];
+			for (let index = messages.length - 1; index >= 0; index -= 1) {
+				if (messages[index]?.role === "assistant") {
+					messages[index] = { ...messages[index], content };
+					break;
+				}
+			}
+			return { messages };
+		}),
 
 	setModel: (model) => set({ model }),
 

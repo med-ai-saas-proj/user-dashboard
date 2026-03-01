@@ -1,36 +1,59 @@
 import { useState } from "react";
+import { API_ROUTES } from "@/config/api-routes";
 import { ApiKeyRequiredDialog } from "@/features/api-keys/components/api-key-required-dialog";
 import { useServiceApiKeyStore } from "@/features/api-keys/store/service-api-key.store";
 import EHRForm from "@/features/pg-ehr-summary/components/ehr-form";
 import { SummaryResponseDialog } from "@/features/pg-ehr-summary/components/summary-response-dialog";
 import type { EHRFormData } from "@/features/pg-ehr-summary/ehr-form.type";
-import { useSummarizeEHR } from "@/features/pg-ehr-summary/hooks/use-summarize-ehr";
-import { ehrFormToSummaryRequest } from "@/features/pg-ehr-summary/utils/ehr-summary.utils";
+import type { EHRSummaryStreamRequest } from "@/features/pg-ehr-summary/services/ehr-summary.dto";
+import { ehrFormToStreamRequest } from "@/features/pg-ehr-summary/utils/ehr-summary.utils";
 import DashboardLayout from "@/layouts/dashboard-layout";
+import { useStream } from "@/lib/streaming/use-stream";
+import { toast } from "sonner";
+import { useTranslation } from "react-i18next";
 
 const EHRSummaryPage = () => {
-	const [summary, setSummary] = useState<string>();
+	const { t: tCommon } = useTranslation("common");
+	const [summary, setSummary] = useState<string>("");
+	const [conversationId, setConversationId] = useState<string | null>(null);
 	const [showApiKeyDialog, setShowApiKeyDialog] = useState(false);
 	const [showResultDialog, setShowResultDialog] = useState(false);
-	const summarizeMutation = useSummarizeEHR();
+	const { startStream, isStreaming } = useStream<EHRSummaryStreamRequest>();
 	const { selectedApiKey } = useServiceApiKeyStore();
 
-	const handleSubmit = async (data: EHRFormData) => {
+	const handleSubmit = (data: EHRFormData) => {
 		// Check if API key is selected
 		if (!selectedApiKey) {
 			setShowApiKeyDialog(true);
 			return;
 		}
 
-		try {
-			const request = ehrFormToSummaryRequest(data);
-			const response = await summarizeMutation.mutateAsync(request);
-			setSummary(response.summary);
-			setShowResultDialog(true);
-		} catch (error) {
-			console.error("Failed to summarize EHR:", error);
-			setShowResultDialog(true);
-		}
+		// Reset summary and show dialog
+		setSummary("");
+		setShowResultDialog(true);
+
+		const request = ehrFormToStreamRequest(data, "gpt-4o-mini", conversationId);
+
+		startStream(
+			{
+				url: API_ROUTES.SERVICES.EHR_SUMMARIZE,
+				request,
+			},
+			{
+				onConversationIdUpdate: (convId) => {
+					setConversationId(convId);
+				},
+				onContentUpdate: (content) => {
+					setSummary(content);
+				},
+				onError: (error) => {
+					console.error("EHR summary streaming error:", error);
+				},
+				onComplete: () => {
+					toast.success(tCommon("requestDone"));
+				},
+			}
+		);
 	};
 
 	return (
@@ -38,7 +61,7 @@ const EHRSummaryPage = () => {
 			<div className="px-6 space-y-8">
 				<EHRForm
 					onSubmit={handleSubmit}
-					isSubmitting={summarizeMutation.isPending}
+					isSubmitting={isStreaming}
 					submitButtonText="Tóm tắt hồ sơ"
 				/>
 			</div>
@@ -52,8 +75,7 @@ const EHRSummaryPage = () => {
 				open={showResultDialog}
 				onOpenChange={setShowResultDialog}
 				summary={summary}
-				isLoading={summarizeMutation.isPending}
-				error={summarizeMutation.error}
+				isLoading={isStreaming}
 			/>
 		</DashboardLayout>
 	);

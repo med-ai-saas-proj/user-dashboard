@@ -1,0 +1,18 @@
+name: Trigger Deploy
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  trigger:
+    name: Trigger deployment
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger api-hub-deployment workflow
+        uses: peter-evans/repository-dispatch@v3
+        with:
+          token: ${{ secrets.DEPLOY_PAT }}
+          repository: Venera-AI/api-hub-deployment
+          event-type: deploy
+          client-payload: '{"repo": "user-dashboard", "sha": "${{ github.sha }}"}'

@@ -46,6 +46,9 @@ import DigitalTwinPage from "@/routes/digital-twin";
 import FederatedLearningPage from "@/routes/federated-learning";
 import HealthcareDashboardPage from "@/routes/healthcare-dashboard";
 import A2UIPlaygroundPage from "@/routes/a2ui-playground";
+import GeneDecoderPage from "@/routes/gene-decoder";
+import CrossSearchPage from "@/routes/cross-search";
+import BloodPanelPage from "@/routes/blood-panel";
 
 function PreventScrollReset() {
 	const location = useLocation();
@@ -97,274 +100,40 @@ function AppRoutes() {
 						</PublicRoute>
 					}
 				/>
-				{/* TODO: Replace with main home page later, temporarily redirecting to /chat for now */}
 				<Route path="/" element={<Navigate to="/chat" replace />} />
-				<Route
-					path="/api-keys"
-					element={
-						<ProtectedRoute>
-							<APIKeysPage />
-						</ProtectedRoute>
-					}
-				/>
-				<Route
-					path="/api-reference"
-					element={
-						<ProtectedRoute>
-							<APIReferencePage />
-						</ProtectedRoute>
-					}
-				/>
-				<Route
-					path="/chat"
-					element={
-						<ProtectedRoute>
-							<PlaygroundChatPage />
-						</ProtectedRoute>
-					}
-				/>
-				<Route
-					path="/ai-search"
-					element={
-						<ProtectedRoute>
-							<PlaygroundAISearchPage />
-						</ProtectedRoute>
-					}
-				/>
-				<Route
-					path="/ehr-summary"
-					element={
-						<ProtectedRoute>
-							<EHRSummaryPage />
-						</ProtectedRoute>
-					}
-				/>
-
-				<Route
-					path="/rx-advisor"
-					element={
-						<ProtectedRoute>
-							<RxAdvisorPage />
-						</ProtectedRoute>
-					}
-				/>
-
-				<Route
-					path="/ehr-converter"
-					element={
-						<ProtectedRoute>
-							<EhrConverterPage />
-						</ProtectedRoute>
-					}
-				/>
-
-				<Route
-					path="/document-to-fhir"
-					element={
-						<ProtectedRoute>
-							<DocumentToFhirPage />
-						</ProtectedRoute>
-					}
-				/>
-
-				<Route
-					path="/knowledge-base"
-					element={
-						<ProtectedRoute>
-							<KnowledgeBasePage />
-						</ProtectedRoute>
-					}
-				/>
-
-				<Route
-					path="/bhxh-validator"
-					element={
-						<ProtectedRoute>
-							<BhxhValidatorPage />
-						</ProtectedRoute>
-					}
-				/>
-
-				<Route
-					path="/voice-transcribe"
-					element={
-						<ProtectedRoute>
-							<VoiceTranscribePage />
-						</ProtectedRoute>
-					}
-				/>
-
-				<Route
-					path="/medical-image"
-					element={
-						<ProtectedRoute>
-							<MedicalImagePage />
-						</ProtectedRoute>
-					}
-				/>
-
-				<Route
-					path="/health-score"
-					element={
-						<ProtectedRoute>
-							<HealthScorePage />
-						</ProtectedRoute>
-					}
-				/>
-
-				<Route
-					path="/data-masking"
-					element={
-						<ProtectedRoute>
-							<DataMaskingPage />
-						</ProtectedRoute>
-					}
-				/>
-
-				<Route
-					path="/patient-history"
-					element={
-						<ProtectedRoute>
-							<PatientHistoryPage />
-						</ProtectedRoute>
-					}
-				/>
-
-				<Route
-					path="/wearable-data"
-					element={
-						<ProtectedRoute>
-							<WearableDataPage />
-						</ProtectedRoute>
-					}
-				/>
-
-				<Route
-					path="/architecture"
-					element={
-						<ProtectedRoute>
-							<ArchitecturePage />
-						</ProtectedRoute>
-					}
-				/>
-
-				<Route
-					path="/integration"
-					element={
-						<ProtectedRoute>
-							<IntegrationDashboardPage />
-						</ProtectedRoute>
-					}
-				/>
-
-				<Route
-					path="/public-health"
-					element={
-						<ProtectedRoute>
-							<PublicHealthPage />
-						</ProtectedRoute>
-					}
-				/>
-
-				<Route
-					path="/api-flow-builder"
-					element={
-						<ProtectedRoute>
-							<ApiFlowBuilderPage />
-						</ProtectedRoute>
-					}
-				/>
-
-				<Route
-					path="/dashboard-builder"
-					element={
-						<ProtectedRoute>
-							<DashboardBuilderPage />
-						</ProtectedRoute>
-					}
-				/>
-
-				<Route
-					path="/symptom-checker"
-					element={
-						<ProtectedRoute>
-							<SymptomCheckerPage />
-						</ProtectedRoute>
-					}
-				/>
-
-				<Route
-					path="/clinic-search"
-					element={
-						<ProtectedRoute>
-							<ClinicSearchPage />
-						</ProtectedRoute>
-					}
-				/>
-
-				<Route
-					path="/digital-twin"
-					element={
-						<ProtectedRoute>
-							<DigitalTwinPage />
-						</ProtectedRoute>
-					}
-				/>
-
-				<Route
-					path="/federated-learning"
-					element={
-						<ProtectedRoute>
-							<FederatedLearningPage />
-						</ProtectedRoute>
-					}
-				/>
-
-				<Route
-					path="/healthcare-dashboard"
-					element={
-						<ProtectedRoute>
-							<HealthcareDashboardPage />
-						</ProtectedRoute>
-					}
-				/>
-
-				<Route
-					path="/a2ui"
-					element={
-						<ProtectedRoute>
-							<A2UIPlaygroundPage />
-						</ProtectedRoute>
-					}
-				/>
-
-				<Route
-					path="/settings"
-					element={
-						<ProtectedRoute>
-							<SettingsPage />
-						</ProtectedRoute>
-					}
-				/>
-
-				<Route
-					path="/billing"
-					element={
-						<ProtectedRoute>
-							<BillingPage />
-						</ProtectedRoute>
-					}
-				/>
-
-				<Route
-					path="/upgrade"
-					element={
-						<ProtectedRoute>
-							<UpgradePage />
-						</ProtectedRoute>
-					}
-				/>
-
+				<Route path="/api-keys" element={<ProtectedRoute><APIKeysPage /></ProtectedRoute>} />
+				<Route path="/api-reference" element={<ProtectedRoute><APIReferencePage /></ProtectedRoute>} />
+				<Route path="/chat" element={<ProtectedRoute><PlaygroundChatPage /></ProtectedRoute>} />
+				<Route path="/ai-search" element={<ProtectedRoute><PlaygroundAISearchPage /></ProtectedRoute>} />
+				<Route path="/ehr-summary" element={<ProtectedRoute><EHRSummaryPage /></ProtectedRoute>} />
+				<Route path="/rx-advisor" element={<ProtectedRoute><RxAdvisorPage /></ProtectedRoute>} />
+				<Route path="/ehr-converter" element={<ProtectedRoute><EhrConverterPage /></ProtectedRoute>} />
+				<Route path="/document-to-fhir" element={<ProtectedRoute><DocumentToFhirPage /></ProtectedRoute>} />
+				<Route path="/knowledge-base" element={<ProtectedRoute><KnowledgeBasePage /></ProtectedRoute>} />
+				<Route path="/bhxh-validator" element={<ProtectedRoute><BhxhValidatorPage /></ProtectedRoute>} />
+				<Route path="/voice-transcribe" element={<ProtectedRoute><VoiceTranscribePage /></ProtectedRoute>} />
+				<Route path="/medical-image" element={<ProtectedRoute><MedicalImagePage /></ProtectedRoute>} />
+				<Route path="/health-score" element={<ProtectedRoute><HealthScorePage /></ProtectedRoute>} />
+				<Route path="/data-masking" element={<ProtectedRoute><DataMaskingPage /></ProtectedRoute>} />
+				<Route path="/patient-history" element={<ProtectedRoute><PatientHistoryPage /></ProtectedRoute>} />
+				<Route path="/wearable-data" element={<ProtectedRoute><WearableDataPage /></ProtectedRoute>} />
+				<Route path="/architecture" element={<ProtectedRoute><ArchitecturePage /></ProtectedRoute>} />
+				<Route path="/integration" element={<ProtectedRoute><IntegrationDashboardPage /></ProtectedRoute>} />
+				<Route path="/public-health" element={<ProtectedRoute><PublicHealthPage /></ProtectedRoute>} />
+				<Route path="/api-flow-builder" element={<ProtectedRoute><ApiFlowBuilderPage /></ProtectedRoute>} />
+				<Route path="/dashboard-builder" element={<ProtectedRoute><DashboardBuilderPage /></ProtectedRoute>} />
+				<Route path="/symptom-checker" element={<ProtectedRoute><SymptomCheckerPage /></ProtectedRoute>} />
+				<Route path="/gene-decoder" element={<ProtectedRoute><GeneDecoderPage /></ProtectedRoute>} />
+				<Route path="/cross-search" element={<ProtectedRoute><CrossSearchPage /></ProtectedRoute>} />
+				<Route path="/blood-panel" element={<ProtectedRoute><BloodPanelPage /></ProtectedRoute>} />
+				<Route path="/clinic-search" element={<ProtectedRoute><ClinicSearchPage /></ProtectedRoute>} />
+				<Route path="/digital-twin" element={<ProtectedRoute><DigitalTwinPage /></ProtectedRoute>} />
+				<Route path="/federated-learning" element={<ProtectedRoute><FederatedLearningPage /></ProtectedRoute>} />
+				<Route path="/healthcare-dashboard" element={<ProtectedRoute><HealthcareDashboardPage /></ProtectedRoute>} />
+				<Route path="/a2ui" element={<ProtectedRoute><A2UIPlaygroundPage /></ProtectedRoute>} />
+				<Route path="/settings" element={<ProtectedRoute><SettingsPage /></ProtectedRoute>} />
+				<Route path="/billing" element={<ProtectedRoute><BillingPage /></ProtectedRoute>} />
+				<Route path="/upgrade" element={<ProtectedRoute><UpgradePage /></ProtectedRoute>} />
 				<Route path="*" element={<Navigate to="/" replace />} />
 			</Routes>
 		</>

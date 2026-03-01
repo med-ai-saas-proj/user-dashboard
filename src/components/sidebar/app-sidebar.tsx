@@ -7,10 +7,13 @@ import {
 	ClipboardPlusIcon,
 	CreditCardIcon,
 	DatabaseIcon,
+	DnaIcon,
+	DropletIcon,
 	EyeOffIcon,
 	FileTextIcon,
 	GalleryVerticalEnd,
 	GitBranchPlusIcon,
+	GlobeIcon,
 	HeartPulseIcon,
 	ImageIcon,
 	KeyRound,
@@ -110,6 +113,16 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 				url: "/knowledge-base",
 				icon: DatabaseIcon,
 			},
+			{
+				name: "Gene Decoder",
+				url: "/gene-decoder",
+				icon: DnaIcon,
+			},
+			{
+				name: "Cross-Provider Search",
+				url: "/cross-search",
+				icon: GlobeIcon,
+			},
 		],
 		dataManagement: [
 			{
@@ -183,6 +196,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 				name: t("operation.clinicSearch.title"),
 				url: "/clinic-search",
 				icon: MapPinIcon,
+				name: "Blood Panel",
+				url: "/blood-panel",
+				icon: DropletIcon,
 			},
 		],
 		development: [

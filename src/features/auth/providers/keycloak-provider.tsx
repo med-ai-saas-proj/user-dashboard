@@ -4,9 +4,9 @@ import {
 	useContext,
 	useEffect,
 	useState,
-} from 'react';
-import keycloak, { initKeycloak } from '@/config/keycloak';
-import { useAuthStore, type UserInfo } from '@/features/auth/store/auth-store';
+} from "react";
+import keycloak, { initKeycloak, isDesktop } from "@/config/keycloak";
+import { useAuthStore, type UserInfo } from "@/features/auth/store/auth-store";
 
 interface KeycloakContextType {
 	keycloak: typeof keycloak;
@@ -25,12 +25,25 @@ export const KeycloakProvider = ({ children }: { children: ReactNode }) => {
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: This is intended to run only once on mount
 	useEffect(() => {
+		if (isDesktop) {
+			setAuthenticated(true);
+			setInitialized(true);
+			setUserInfo({
+				preferred_username: "desktop-user",
+				email: "desktop@venera.local",
+				given_name: "Desktop",
+				family_name: "User",
+				name: "Desktop User",
+				sub: "desktop-user",
+			} as UserInfo);
+			return;
+		}
+
 		initKeycloak()
 			.then((auth) => {
 				setAuthenticated(auth);
 				setInitialized(true);
 
-				// Init auth statke on first load
 				if (auth && keycloak.token && keycloak.refreshToken) {
 					const expiresIn = keycloak.tokenParsed?.exp
 						? keycloak.tokenParsed.exp - Math.floor(Date.now() / 1000)
@@ -43,7 +56,6 @@ export const KeycloakProvider = ({ children }: { children: ReactNode }) => {
 					}
 				}
 
-				// Auto-refresh token
 				keycloak.onTokenExpired = () => {
 					keycloak
 						.updateToken(30)
@@ -54,7 +66,6 @@ export const KeycloakProvider = ({ children }: { children: ReactNode }) => {
 									: 3600;
 								setAuth(keycloak.token, keycloak.refreshToken, expiresIn);
 
-								// Update user info on token refresh
 								if (keycloak.tokenParsed) {
 									const tokenParsed = keycloak.tokenParsed as UserInfo;
 									setUserInfo(tokenParsed);
@@ -68,7 +79,7 @@ export const KeycloakProvider = ({ children }: { children: ReactNode }) => {
 				};
 			})
 			.catch((error) => {
-				console.error('Keycloak initialization failed', error);
+				console.error("Keycloak initialization failed", error);
 				setInitialized(true);
 			});
 	}, []);
@@ -83,7 +94,7 @@ export const KeycloakProvider = ({ children }: { children: ReactNode }) => {
 export const useKeycloak = () => {
 	const context = useContext(KeycloakContext);
 	if (!context) {
-		throw new Error('useKeycloak must be used within KeycloakProvider');
+		throw new Error("useKeycloak must be used within KeycloakProvider");
 	}
 	return context;
 };

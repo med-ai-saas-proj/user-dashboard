@@ -45,7 +45,8 @@ const LineChartDashboard = ({
 	return (
 		<ChartContainer
 			config={configuration}
-			className={`aspect-auto h-[${height}px] w-full`}
+			className={`aspect-auto w-full`}
+			style={{ height: `${height}px` }}
 		>
 			<LineChart
 				accessibilityLayer={true}

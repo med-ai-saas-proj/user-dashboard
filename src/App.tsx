@@ -14,6 +14,7 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { Toaster } from "sonner";
 import PlaygroundChatPage from "./routes/playground-chat";
 import PlaygroundAISearchPage from "@/routes/playground-ai-search";
+import DashboardPage from "@/routes/dashboard";
 
 function App() {
 	return (

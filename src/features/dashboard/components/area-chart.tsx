@@ -45,7 +45,8 @@ const AreaChartDashboard = ({
 	return (
 		<ChartContainer
 			config={configuration}
-			className={`aspect-auto h-[${height}px] w-full`}
+			className={`aspect-auto w-full`}
+			style={{ height: `${height}px` }}
 		>
 			<AreaChart
 				accessibilityLayer={true}

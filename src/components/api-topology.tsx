@@ -493,4 +493,30 @@ export const TOPOLOGIES: Record<string, TopologyDef> = {
 			},
 		],
 	},
+	a2ui: {
+		title: "A2UI: API → UI Generation",
+		description:
+			"Takes an API workflow, generates A2UI JSON surface, renders natively on any client, embeddable in HIS systems.",
+		flowId: "a2ui",
+		nodes: [
+			{
+				id: "workflow",
+				label: "Workflow Builder",
+				endpoint: "/workflows",
+				method: "GET",
+			},
+			{
+				id: "generate",
+				label: "A2UI Generate",
+				endpoint: "/a2ui/generate",
+				method: "POST",
+			},
+			{
+				id: "render",
+				label: "A2UI Render",
+				endpoint: "/a2ui/render/{id}",
+				method: "GET",
+			},
+		],
+	},
 };

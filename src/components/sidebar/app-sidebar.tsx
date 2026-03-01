@@ -206,6 +206,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 				url: "/integration",
 				icon: LayoutDashboardIcon,
 			},
+			{
+				name: t("development.a2ui.title"),
+				url: "/a2ui",
+				icon: LayoutDashboardIcon,
+			},
 		],
 		settings: [
 			{

@@ -135,6 +135,10 @@ export const API_ROUTES = {
 			`service/api/${API_VERSION}/federated/projects`,
 			BASE_API_URL
 		).toString(),
+		A2UI_GENERATE: new URL(
+			`service/api/${API_VERSION}/a2ui/generate`,
+			BASE_API_URL
+		).toString(),
 	},
 } as const;
 

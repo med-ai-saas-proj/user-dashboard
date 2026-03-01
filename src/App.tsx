@@ -45,6 +45,7 @@ import ClinicSearchPage from "@/routes/clinic-search";
 import DigitalTwinPage from "@/routes/digital-twin";
 import FederatedLearningPage from "@/routes/federated-learning";
 import HealthcareDashboardPage from "@/routes/healthcare-dashboard";
+import A2UIPlaygroundPage from "@/routes/a2ui-playground";
 
 function PreventScrollReset() {
 	const location = useLocation();
@@ -324,6 +325,15 @@ function AppRoutes() {
 					element={
 						<ProtectedRoute>
 							<HealthcareDashboardPage />
+						</ProtectedRoute>
+					}
+				/>
+
+				<Route
+					path="/a2ui"
+					element={
+						<ProtectedRoute>
+							<A2UIPlaygroundPage />
 						</ProtectedRoute>
 					}
 				/>

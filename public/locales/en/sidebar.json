@@ -79,6 +79,9 @@
     "integration": {
       "title": "Integration Hub"
     },
+    "a2ui": {
+      "title": "A2UI Builder"
+    },
     "architecture": {
       "title": "Architecture"
     }

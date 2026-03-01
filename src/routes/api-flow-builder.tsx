@@ -25,6 +25,7 @@ import {
 	NetworkIcon,
 	ActivityIcon,
 	DropletIcon,
+	LayoutDashboardIcon,
 	GitBranchIcon,
 	ArrowRightIcon,
 	type LucideIcon,
@@ -208,6 +209,19 @@ const AVAILABLE_APIS: ApiDef[] = [
 			target_variable: "risk_score",
 			min_facilities: 2,
 			max_rounds: 5,
+		},
+	},
+	{
+		id: "a2ui_generate",
+		label: "A2UI Generate UI",
+		icon: LayoutDashboardIcon,
+		endpoint: `${BASE_API_URL}service/api/v1/a2ui/generate`,
+		method: "POST",
+		sampleBody: {
+			workflow_name: "My Workflow",
+			steps: [],
+			target_system: "his",
+			style: "dashboard",
 		},
 	},
 ];

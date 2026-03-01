@@ -79,6 +79,9 @@
     "integration": {
       "title": "Tích hợp"
     },
+    "a2ui": {
+      "title": "A2UI Builder"
+    },
     "architecture": {
       "title": "Kiến trúc"
     }

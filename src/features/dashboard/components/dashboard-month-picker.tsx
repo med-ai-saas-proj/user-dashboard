@@ -10,13 +10,22 @@ import {
 	PopoverTrigger,
 } from "@/components/shadcn/popover";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "react-i18next";
+import { vi } from "react-day-picker/locale/vi";
+import { enUS } from "react-day-picker/locale/en-US";
 
 const DashboardMonthPicker = () => {
+	const { t } = useTranslation("dashboard");
+	const { i18n } = useTranslation();
+	const currentLocale = i18n.language || "en-US";
+
 	const [month, setMonth] = useState<Date>();
 
 	return (
 		<Field className="mx-auto w-44">
-			<FieldLabel htmlFor="date-picker-simple">Pick A Month</FieldLabel>
+			<FieldLabel htmlFor="date-picker-simple">
+				{t("monthPicker.label")}
+			</FieldLabel>
 			<Popover>
 				<PopoverTrigger asChild>
 					<Button
@@ -27,7 +36,13 @@ const DashboardMonthPicker = () => {
 						)}
 					>
 						<CalendarIcon className="mr-2 h-4 w-4" />
-						{month ? format(month, "MMM yyyy") : <span>Pick a month</span>}
+						{month ? (
+							format(month, "MMM yyyy", {
+								locale: currentLocale === "vi" ? vi : enUS,
+							})
+						) : (
+							<span>{t("monthPicker.placeholder")}</span>
+						)}
 					</Button>
 				</PopoverTrigger>
 				<PopoverContent className="w-auto p-0">

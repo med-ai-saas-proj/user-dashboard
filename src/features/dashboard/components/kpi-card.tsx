@@ -8,19 +8,23 @@ import {
 } from "@/components/shadcn/card";
 import type { StatCardData } from "../dashboard.type";
 import { FormatValue } from "../utils/format-stat.utils";
+import { useTranslation } from "react-i18next";
 
 type KPICardProps = {
 	stats: StatCardData;
 };
 
 const KPICard = ({ stats }: KPICardProps) => {
+	const { t } = useTranslation("dashboard");
 	const formattedValue = FormatValue(stats.value, stats.format || "compact");
 
 	return (
 		<Card>
 			<CardHeader>
 				<CardTitle>
-					<p className="font-medium text-muted-foreground">{stats.title}</p>
+					<p className="font-medium text-muted-foreground">
+						{t(`kpiCard.${stats.title}`)}
+					</p>
 				</CardTitle>
 			</CardHeader>
 			<CardContent>
@@ -34,7 +38,8 @@ const KPICard = ({ stats }: KPICardProps) => {
 						<ArrowDown className="mr-1 text-muted-foreground" size={16} />
 					)}
 					<p className="text-muted-foreground">
-						{stats.change?.value}% {stats.change?.compareLabel}
+						{stats.change?.value}%{" "}
+						{t(`kpiCard.change.${stats.change?.compareLabel}`)}
 					</p>
 				</div>
 			</CardFooter>

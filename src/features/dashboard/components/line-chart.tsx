@@ -9,6 +9,7 @@ import {
 	ChartTooltipContent,
 } from "@/components/shadcn/chart";
 import type { ChartDataset, Series } from "../dashboard.type";
+import { useTranslation } from "react-i18next";
 
 type LineChartProps = {
 	configuration: ChartConfig;
@@ -27,6 +28,10 @@ const LineChartDashboard = ({
 	height = 250,
 	isTotalOnly = false,
 }: LineChartProps) => {
+	const { t } = useTranslation("dashboard");
+	const { i18n } = useTranslation();
+	const currentLocale = i18n.language || "en-US";
+
 	const formattedDatasets = useMemo(
 		() =>
 			datasets.map((data) => ({
@@ -62,7 +67,7 @@ const LineChartDashboard = ({
 					minTickGap={32}
 					tickFormatter={(value) => {
 						const date = new Date(value);
-						return date.toLocaleDateString("en-US", {
+						return date.toLocaleDateString(currentLocale, {
 							month: "short",
 							day: "numeric",
 						});
@@ -71,6 +76,7 @@ const LineChartDashboard = ({
 				{isTotalOnly && (
 					<YAxis
 						dataKey={"total"}
+						name={t("chart.series.total")}
 						yAxisId={"left"}
 						tickLine={false}
 						axisLine={false}
@@ -84,6 +90,7 @@ const LineChartDashboard = ({
 						<YAxis
 							key={id}
 							dataKey={series[index].dataKey}
+							name={t(`chart.series.${series[index].name}`)}
 							yAxisId={id}
 							tickLine={false}
 							axisLine={false}
@@ -99,7 +106,7 @@ const LineChartDashboard = ({
 							className="w-[150px]"
 							labelFormatter={(value) => {
 								const date = new Date(value);
-								return date.toLocaleDateString("en-US", {
+								return date.toLocaleDateString(currentLocale, {
 									month: "short",
 									day: "numeric",
 								});
@@ -116,7 +123,7 @@ const LineChartDashboard = ({
 						strokeWidth={s.strokeWidth ?? 2}
 						dot={s.dot ?? false}
 						yAxisId={isTotalOnly ? "left" : (s.yAxisId ?? "left")}
-						name={s.name ?? s.dataKey}
+						name={t(`chart.series.${s.name}`)}
 					/>
 				))}
 

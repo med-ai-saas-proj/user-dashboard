@@ -10,12 +10,21 @@ import {
 	PopoverContent,
 	PopoverTrigger,
 } from "@/components/shadcn/popover";
+import { useTranslation } from "react-i18next";
+import { vi } from "react-day-picker/locale/vi";
+import { enUS } from "react-day-picker/locale/en-US";
 
 const DashboardTimeRangePicker = () => {
+	const { t } = useTranslation("dashboard");
+	const { i18n } = useTranslation();
+	const currentLocale = i18n.language || "en-US";
+
 	const [date, setDate] = useState<DateRange | undefined>();
 	return (
 		<Field className="mx-auto w-60">
-			<FieldLabel htmlFor="date-picker-range">Pick A Range Of Dates</FieldLabel>
+			<FieldLabel htmlFor="date-picker-range">
+				{t("rangePicker.label")}
+			</FieldLabel>
 			<Popover>
 				<PopoverTrigger asChild>
 					<Button
@@ -27,14 +36,21 @@ const DashboardTimeRangePicker = () => {
 						{date?.from ? (
 							date.to ? (
 								<>
-									{format(date.from, "LLL dd, y")} -{" "}
-									{format(date.to, "LLL dd, y")}
+									{format(date.from, "LLL dd, y", {
+										locale: currentLocale === "vi" ? vi : enUS,
+									})}{" "}
+									-{" "}
+									{format(date.to, "LLL dd, y", {
+										locale: currentLocale === "vi" ? vi : enUS,
+									})}
 								</>
 							) : (
-								format(date.from, "LLL dd, y")
+								format(date.from, "LLL dd, y", {
+									locale: currentLocale === "vi" ? vi : enUS,
+								})
 							)
 						) : (
-							<span>Pick a date</span>
+							<span>{t("rangePicker.placeholder")}</span>
 						)}
 					</Button>
 				</PopoverTrigger>

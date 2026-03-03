@@ -9,6 +9,7 @@ import {
 	ChartTooltipContent,
 } from "@/components/shadcn/chart";
 import type { ChartDataset, Series } from "../dashboard.type";
+import { useTranslation } from "react-i18next";
 
 type AreaChartProps = {
 	configuration: ChartConfig;
@@ -27,6 +28,10 @@ const AreaChartDashboard = ({
 	height = 250,
 	isTotalOnly = false,
 }: AreaChartProps) => {
+	const { t } = useTranslation("dashboard");
+	const { i18n } = useTranslation();
+	const currentLocale = i18n.language || "en-US";
+
 	const formattedDatasets = useMemo(
 		() =>
 			datasets.map((data) => ({
@@ -65,7 +70,7 @@ const AreaChartDashboard = ({
 					minTickGap={32}
 					tickFormatter={(value) => {
 						const date = new Date(value);
-						return date.toLocaleDateString("en-US", {
+						return date.toLocaleDateString(currentLocale, {
 							month: "short",
 							day: "numeric",
 						});
@@ -74,6 +79,7 @@ const AreaChartDashboard = ({
 				{isTotalOnly && (
 					<YAxis
 						dataKey={"total"}
+						name={t("chart.series.total")}
 						yAxisId={"left"}
 						tickLine={false}
 						axisLine={false}
@@ -87,6 +93,7 @@ const AreaChartDashboard = ({
 						<YAxis
 							key={id}
 							dataKey={series[index].dataKey}
+							name={t(`chart.series.${series[index].name}`)}
 							yAxisId={id}
 							tickLine={false}
 							axisLine={false}
@@ -101,7 +108,7 @@ const AreaChartDashboard = ({
 						<ChartTooltipContent
 							className="w-[150px]"
 							labelFormatter={(value) => {
-								return new Date(value).toLocaleDateString("en-US", {
+								return new Date(value).toLocaleDateString(currentLocale, {
 									month: "short",
 									day: "numeric",
 									year: "numeric",
@@ -122,7 +129,7 @@ const AreaChartDashboard = ({
 						fill={s.stroke ?? `var(--chart-${(idx % 6) + 1})`}
 						stackId={"a"}
 						yAxisId={isTotalOnly ? "left" : (s.yAxisId ?? "left")}
-						name={s.name ?? s.dataKey}
+						name={t(`chart.series.${s.name}`)}
 					/>
 				))}
 				<ChartLegend content={<ChartLegendContent />} />

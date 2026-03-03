@@ -8,13 +8,22 @@ import {
 	PopoverContent,
 	PopoverTrigger,
 } from "@/components/shadcn/popover";
+import { useTranslation } from "react-i18next";
+import { vi } from "react-day-picker/locale/vi";
+import { enUS } from "react-day-picker/locale/en-US";
 
 const DashboardDatePicker = () => {
+	const { t } = useTranslation("dashboard");
+	const { i18n } = useTranslation();
+	const currentLocale = i18n.language || "en-US";
+
 	const [date, setDate] = useState<Date>(new Date());
 
 	return (
 		<Field className="mx-auto w-44">
-			<FieldLabel htmlFor="date-picker-simple">Pick A Date</FieldLabel>
+			<FieldLabel htmlFor="date-picker-simple">
+				{t("datePicker.label")}
+			</FieldLabel>
 			<Popover>
 				<PopoverTrigger asChild>
 					<Button
@@ -22,7 +31,13 @@ const DashboardDatePicker = () => {
 						id="date-picker-simple"
 						className="justify-start font-normal"
 					>
-						{date ? format(date, "PPP") : <span>Pick a date</span>}
+						{date ? (
+							format(date, "PPP", {
+								locale: currentLocale === "vi" ? vi : enUS,
+							})
+						) : (
+							<span>{t("datePicker.placeholder")}</span>
+						)}
 					</Button>
 				</PopoverTrigger>
 				<PopoverContent className="w-auto p-0" align="start">

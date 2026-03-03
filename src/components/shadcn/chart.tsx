@@ -2,6 +2,7 @@ import * as React from "react";
 import * as RechartsPrimitive from "recharts";
 
 import { cn } from "@/lib/utils";
+import { useTranslation } from "react-i18next";
 
 // Format: { THEME_NAME: CSS_SELECTOR }
 const THEMES = { light: "", dark: ".dark" } as const;
@@ -262,6 +263,7 @@ function ChartLegendContent({
 		hideIcon?: boolean;
 		nameKey?: string;
 	}) {
+	const { t } = useTranslation("dashboard");
 	const { config } = useChart();
 
 	if (!payload?.length) {
@@ -299,7 +301,8 @@ function ChartLegendContent({
 									}}
 								/>
 							)}
-							{itemConfig?.label}
+							{/* {itemConfig?.label} */}
+							{item.value}
 						</div>
 					);
 				})}

@@ -8,6 +8,7 @@ import type {
 	StatCardData,
 } from "@/features/dashboard/dashboard.type";
 import DashboardLayout from "@/layouts/dashboard-layout";
+import { useTranslation } from "react-i18next";
 
 const chartData = [
 	{ date: "2024-04-01", requests: 222, cost: 1500 },
@@ -109,14 +110,14 @@ const requestVolumeAndCostChartConfig = {
 } satisfies ChartConfig;
 
 const chartConfigurationVolumeAndCost = {
-	title: "Request Volume & Cost Chart",
+	title: "requestVolumeAndCost",
 	config: requestVolumeAndCostChartConfig,
 	datasets: chartData,
 	xKey: "date",
 	series: [
 		{
 			dataKey: "requests",
-			name: "Requests",
+			name: "requests",
 			yAxisId: "left",
 			stroke: "var(--chart-1)",
 			dot: false,
@@ -124,7 +125,7 @@ const chartConfigurationVolumeAndCost = {
 		},
 		{
 			dataKey: "cost",
-			name: "Cost",
+			name: "cost",
 			yAxisId: "right",
 			stroke: "var(--chart-2)",
 			dot: false,
@@ -134,14 +135,14 @@ const chartConfigurationVolumeAndCost = {
 } satisfies ChartConfiguration;
 
 const chartConfigurationTokenUsage = {
-	title: "Token Usage Over Time",
+	title: "tokenUsageOverTime",
 	config: requestVolumeAndCostChartConfig,
 	datasets: chartData,
 	xKey: "date",
 	series: [
 		{
 			dataKey: "requests",
-			name: "Requests",
+			name: "requests",
 			yAxisId: "left",
 			stroke: "var(--chart-1)",
 			dot: false,
@@ -149,7 +150,7 @@ const chartConfigurationTokenUsage = {
 		},
 		{
 			dataKey: "cost",
-			name: "Cost",
+			name: "cost",
 			yAxisId: "right",
 			stroke: "var(--chart-2)",
 			dot: false,
@@ -160,29 +161,31 @@ const chartConfigurationTokenUsage = {
 
 const totalRequestsKPI: StatCardData = {
 	id: "1",
-	title: "Total Requests",
+	title: "totalRequest",
 	value: 403500,
 	format: "compact",
 	change: {
 		value: 12.5,
 		type: "increase",
-		compareLabel: "vs last week",
+		compareLabel: "vsLastWeek",
 	},
 };
 
 const totalCostKPI: StatCardData = {
 	id: "2",
-	title: "Total Cost",
+	title: "totalCost",
 	value: 1112,
 	format: "currency",
 	change: {
 		value: 8.3,
 		type: "decrease",
-		compareLabel: "vs last week",
+		compareLabel: "vsLastWeek",
 	},
 };
 
 const DashboardPage = () => {
+	const { t } = useTranslation("dashboard");
+
 	return (
 		<DashboardLayout pageTitle="Dashboard">
 			<div className="px-6">
@@ -193,10 +196,10 @@ const DashboardPage = () => {
 				</div>
 				<div className="flex flex-col gap-4">
 					<DashboardChart
-						title="Request Volume & Cost Chart"
+						title={t("chart.requestVolumeAndCost")}
 						chartConfiguration={chartConfigurationVolumeAndCost}
 					/>
-					<DashboardChart title="Token Usage Over Time">
+					<DashboardChart title={t("chart.tokenUsageOverTime")}>
 						<AreaChartDashboard
 							configuration={chartConfigurationTokenUsage.config}
 							datasets={chartConfigurationTokenUsage.datasets}

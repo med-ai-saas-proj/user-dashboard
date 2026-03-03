@@ -1,15 +1,19 @@
 import type { ChartConfig } from "@/components/shadcn/chart";
 
+export type KPIKey = "totalRequest" | "totalCost";
+
+export type CompareLabelKey = "vsLastWeek" | "vsLastMonth" | "vsLastYear";
+
 export type StatCardData = {
 	id: string; // unique key
-	title: string; // "Total Requests"
+	title: KPIKey; // "Total Requests"
 	value: number; // 403
 	format?: "compact" | "currency"; // optional formatting for value
 
-	change?: {
+	change: {
 		value: number; // 12.5
 		type: "increase" | "decrease";
-		compareLabel?: string; // "vs last week"
+		compareLabel: CompareLabelKey; // "vs last week"
 	};
 };
 
@@ -17,17 +21,23 @@ export type ChartDataset = {
 	[key: string]: number | string;
 };
 
+export type SeriesNameKey = "requests" | "cost" | "total";
+
 export type Series = {
 	dataKey: string;
-	name?: string;
-	yAxisId?: "left" | "right";
+	name: SeriesNameKey;
+	yAxisId: "left" | "right";
 	stroke?: string;
 	dot?: boolean;
 	strokeWidth?: number;
 };
 
+export type ChartConfigurationTitleKey =
+	| "tokenUsageOverTime"
+	| "requestVolumeAndCost";
+
 export type ChartConfiguration = {
-	title: string;
+	title: ChartConfigurationTitleKey;
 	config: ChartConfig;
 	datasets: ChartDataset[];
 	// Which key to use for X axis and the series to render

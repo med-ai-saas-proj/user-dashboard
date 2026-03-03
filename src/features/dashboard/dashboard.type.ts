@@ -36,6 +36,8 @@ export type ChartConfigurationTitleKey =
 	| "tokenUsageOverTime"
 	| "requestVolumeAndCost";
 
+export type ChartType = "line" | "area";
+
 export type ChartConfiguration = {
 	title: ChartConfigurationTitleKey;
 	config: ChartConfig;
@@ -43,4 +45,5 @@ export type ChartConfiguration = {
 	// Which key to use for X axis and the series to render
 	xKey: string;
 	series: Series[];
+	chartType: ChartType;
 };

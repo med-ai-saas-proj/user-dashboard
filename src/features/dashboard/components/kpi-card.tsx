@@ -9,41 +9,49 @@ import {
 import type { StatCardData } from "../dashboard.type";
 import { FormatValue } from "../utils/format-stat.utils";
 import { useTranslation } from "react-i18next";
+import { useGetKPICard } from "../hooks/use-get-kpi-card";
 
-type KPICardProps = {
-	stats: StatCardData;
-};
-
-const KPICard = ({ stats }: KPICardProps) => {
+const KPICard = () => {
 	const { t } = useTranslation("dashboard");
-	const formattedValue = FormatValue(stats.value, stats.format || "compact");
+
+	const { data, isLoading, isError } = useGetKPICard();
 
 	return (
-		<Card>
-			<CardHeader>
-				<CardTitle>
-					<p className="font-medium text-muted-foreground">
-						{t(`kpiCard.${stats.title}`)}
-					</p>
-				</CardTitle>
-			</CardHeader>
-			<CardContent>
-				<p className="font-bold text-4xl">{formattedValue}</p>
-			</CardContent>
-			<CardFooter>
-				<div className="flex items-center">
-					{stats.change?.type === "increase" ? (
-						<ArrowUp className="mr-1 text-muted-foreground" size={16} />
-					) : (
-						<ArrowDown className="mr-1 text-muted-foreground" size={16} />
-					)}
-					<p className="text-muted-foreground">
-						{stats.change?.value}%{" "}
-						{t(`kpiCard.change.${stats.change?.compareLabel}`)}
-					</p>
-				</div>
-			</CardFooter>
-		</Card>
+		<div className="flex gap-4">
+			{data?.map((stat: StatCardData) => {
+				const formattedValue = FormatValue(
+					stat.value,
+					stat.format || "compact"
+				);
+				return (
+					<Card key={stat.title} className="w-full">
+						<CardHeader>
+							<CardTitle>
+								<p className="font-medium text-muted-foreground">
+									{t(`kpiCard.${stat.title}`)}
+								</p>
+							</CardTitle>
+						</CardHeader>
+						<CardContent>
+							<p className="font-bold text-4xl">{formattedValue}</p>
+						</CardContent>
+						<CardFooter>
+							<div className="flex items-center">
+								{stat.change?.type === "increase" ? (
+									<ArrowUp className="mr-1 text-muted-foreground" size={16} />
+								) : (
+									<ArrowDown className="mr-1 text-muted-foreground" size={16} />
+								)}
+								<p className="text-muted-foreground">
+									{stat.change?.value}%{" "}
+									{t(`kpiCard.change.${stat.change?.compareLabel}`)}
+								</p>
+							</div>
+						</CardFooter>
+					</Card>
+				);
+			})}
+		</div>
 	);
 };
 

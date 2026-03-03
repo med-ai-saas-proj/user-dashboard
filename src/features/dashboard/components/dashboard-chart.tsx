@@ -1,34 +1,55 @@
+import { Suspense, lazy } from "react";
 import { Card, CardContent, CardHeader } from "@/components/shadcn/card";
 import type { ChartConfiguration } from "../dashboard.type";
-import LineChartDashboard from "./line-chart";
+import { useGetChartMetric } from "../hooks/use-get-chart-metric";
+
+const LazyLineChart = lazy(() => import("./line-chart"));
+const LazyAreaChart = lazy(() => import("./area-chart"));
 
 type DashboardChartProps = {
 	title: string;
-	chartConfiguration?: ChartConfiguration;
-	children?: React.ReactNode;
+	chartConfig: Omit<ChartConfiguration, "datasets">;
+	isTotalOnly?: boolean; // if true, only show total line and hide requests and cost lines
 };
 
 const DashboardChart = ({
 	title,
-	chartConfiguration,
-	children,
+	chartConfig,
+	isTotalOnly,
 }: DashboardChartProps) => {
+	const { data: datasets } = useGetChartMetric();
+
+	const chartConfiguration: ChartConfiguration = {
+		...chartConfig,
+		datasets: datasets ?? [],
+	};
+
 	return (
 		<Card>
 			<CardHeader>
 				<h3 className="text-xl font-bold">{title}</h3>
 			</CardHeader>
 			<CardContent>
-				{children ? (
-					children
-				) : chartConfiguration ? (
-					<LineChartDashboard
-						configuration={chartConfiguration.config}
-						datasets={chartConfiguration.datasets}
-						xKey={chartConfiguration.xKey}
-						series={chartConfiguration.series}
-					/>
-				) : null}
+				<Suspense fallback={<div>Loading chart...</div>}>
+					{chartConfiguration.chartType === "line" && (
+						<LazyLineChart
+							configuration={chartConfiguration.config}
+							datasets={chartConfiguration.datasets}
+							xKey={chartConfiguration.xKey}
+							series={chartConfiguration.series}
+							isTotalOnly={isTotalOnly}
+						/>
+					)}
+					{chartConfiguration.chartType === "area" && (
+						<LazyAreaChart
+							configuration={chartConfiguration.config}
+							datasets={chartConfiguration.datasets}
+							xKey={chartConfiguration.xKey}
+							series={chartConfiguration.series}
+							isTotalOnly={isTotalOnly}
+						/>
+					)}
+				</Suspense>
 			</CardContent>
 		</Card>
 	);

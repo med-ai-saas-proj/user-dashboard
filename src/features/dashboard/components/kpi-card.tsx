@@ -14,7 +14,7 @@ import { useGetKPICard } from "../hooks/use-get-kpi-card";
 const KPICard = () => {
 	const { t } = useTranslation("dashboard");
 
-	const { data, isLoading, isError } = useGetKPICard();
+	const { data } = useGetKPICard();
 
 	return (
 		<div className="flex gap-4">

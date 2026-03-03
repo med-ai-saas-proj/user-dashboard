@@ -11,6 +11,7 @@ import {
 import { useTranslation } from "react-i18next";
 import { vi } from "react-day-picker/locale/vi";
 import { enUS } from "react-day-picker/locale/en-US";
+import { useChartTimePickerStore } from "../store/chart-time-picker";
 
 const DashboardDatePicker = () => {
 	const { t } = useTranslation("dashboard");
@@ -18,6 +19,14 @@ const DashboardDatePicker = () => {
 	const currentLocale = i18n.language || "en-US";
 
 	const [date, setDate] = useState<Date>(new Date());
+	const updateDateRange = useChartTimePickerStore(
+		(state) => state.updateDateRange
+	);
+
+	const handleDateSelect = (selectedDate: Date) => {
+		setDate(selectedDate);
+		updateDateRange(selectedDate, selectedDate);
+	};
 
 	return (
 		<Field className="mx-auto w-44">
@@ -45,7 +54,7 @@ const DashboardDatePicker = () => {
 						mode="single"
 						required
 						selected={date}
-						onSelect={setDate}
+						onSelect={handleDateSelect}
 						defaultMonth={date}
 					/>
 				</PopoverContent>

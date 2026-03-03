@@ -13,6 +13,7 @@ import { cn } from "@/lib/utils";
 import { useTranslation } from "react-i18next";
 import { vi } from "react-day-picker/locale/vi";
 import { enUS } from "react-day-picker/locale/en-US";
+import { useChartTimePickerStore } from "../store/chart-time-picker";
 
 const DashboardYearPicker = () => {
 	const { t } = useTranslation("dashboard");
@@ -20,6 +21,16 @@ const DashboardYearPicker = () => {
 	const currentLocale = i18n.language || "en-US";
 
 	const [year, setYear] = useState<Date>();
+	const updateDateRange = useChartTimePickerStore(
+		(state) => state.updateDateRange
+	);
+
+	const handleYearSelect = (selectedYear: Date) => {
+		setYear(selectedYear);
+		const startDate = new Date(selectedYear.getFullYear(), 0, 1);
+		const endDate = new Date(selectedYear.getFullYear(), 11, 31);
+		updateDateRange(startDate, endDate);
+	};
 
 	return (
 		<Field className="mx-auto w-44">
@@ -46,7 +57,7 @@ const DashboardYearPicker = () => {
 					</Button>
 				</PopoverTrigger>
 				<PopoverContent className="w-auto p-0">
-					<YearPicker onYearSelect={setYear} selectedYear={year} />
+					<YearPicker onYearSelect={handleYearSelect} selectedYear={year} />
 				</PopoverContent>
 			</Popover>
 		</Field>

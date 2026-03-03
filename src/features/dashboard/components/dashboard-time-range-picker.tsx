@@ -13,6 +13,7 @@ import {
 import { useTranslation } from "react-i18next";
 import { vi } from "react-day-picker/locale/vi";
 import { enUS } from "react-day-picker/locale/en-US";
+import { useChartTimePickerStore } from "../store/chart-time-picker";
 
 const DashboardTimeRangePicker = () => {
 	const { t } = useTranslation("dashboard");
@@ -20,6 +21,21 @@ const DashboardTimeRangePicker = () => {
 	const currentLocale = i18n.language || "en-US";
 
 	const [date, setDate] = useState<DateRange | undefined>();
+	const updateDateRange = useChartTimePickerStore(
+		(state) => state.updateDateRange
+	);
+
+	const handleDateSelect = (selectedDate: DateRange | undefined) => {
+		setDate(selectedDate);
+		if (selectedDate?.from && selectedDate?.to) {
+			updateDateRange(selectedDate.from, selectedDate.to);
+		} else if (selectedDate?.from) {
+			updateDateRange(selectedDate.from, selectedDate.from);
+		} else {
+			updateDateRange(new Date(), new Date());
+		}
+	};
+
 	return (
 		<Field className="mx-auto w-60">
 			<FieldLabel htmlFor="date-picker-range">
@@ -59,7 +75,7 @@ const DashboardTimeRangePicker = () => {
 						mode="range"
 						defaultMonth={date?.from}
 						selected={date}
-						onSelect={setDate}
+						onSelect={handleDateSelect}
 						numberOfMonths={2}
 					/>
 				</PopoverContent>

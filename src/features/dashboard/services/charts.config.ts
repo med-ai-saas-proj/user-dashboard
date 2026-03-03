@@ -161,7 +161,7 @@ export const totalRequestsKPI: StatCardData = {
 	change: {
 		value: 12.5,
 		type: "increase",
-		compareLabel: "vsLastWeek",
+		compareLabel: "vsLastMonth",
 	},
 };
 
@@ -173,6 +173,6 @@ export const totalCostKPI: StatCardData = {
 	change: {
 		value: 8.3,
 		type: "decrease",
-		compareLabel: "vsLastWeek",
+		compareLabel: "vsLastMonth",
 	},
 };

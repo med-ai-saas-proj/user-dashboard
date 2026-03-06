@@ -5,7 +5,7 @@ import DashboardYearPicker from "./dashboard-year-picker";
 
 const DashboardTimePicker = () => {
 	return (
-		<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+		<div className="grid grid-cols-1 gap-x-4 mt-4 md:grid-cols-2 xl:mt-0 xl:gap-x-0">
 			<div className="flex flex-col items-start gap-4">
 				<div className="w-auto">
 					<DashboardDatePicker />

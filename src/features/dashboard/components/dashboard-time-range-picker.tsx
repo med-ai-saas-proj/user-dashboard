@@ -1,6 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { useChartTimePickerStore } from "../store/chart-time-picker";
 import TimeRangePickerCustom from "@/components/shadcn/timerangepicker-custom";
+import type { DateRange } from "react-day-picker";
 
 const DashboardTimeRangePicker = () => {
 	const { t, i18n } = useTranslation("dashboard");
@@ -10,7 +11,7 @@ const DashboardTimeRangePicker = () => {
 		(state) => state.updateDateRange
 	);
 
-	const handleDateSelect = (selectedDate: any) => {
+	const handleDateSelect = (selectedDate: DateRange | undefined) => {
 		if (selectedDate?.from && selectedDate?.to) {
 			updateDateRange(selectedDate.from, selectedDate.to);
 		} else if (selectedDate?.from) {

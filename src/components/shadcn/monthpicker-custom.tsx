@@ -59,7 +59,7 @@ const MonthPickerCustom: React.FC<MonthPickerCustomProps> = ({
 	const dfLocale = locale === "vi" ? dfVi : dfEnUS;
 
 	return (
-		<Field className={cn("mx-auto w-44", className)}>
+		<Field className={cn("mx-auto w-fit", className)}>
 			{label && <FieldLabel htmlFor={id}>{label}</FieldLabel>}
 			<Popover>
 				<PopoverTrigger asChild>

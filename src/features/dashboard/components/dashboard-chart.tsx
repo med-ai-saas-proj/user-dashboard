@@ -36,7 +36,7 @@ const DashboardChart = ({
 	};
 
 	return (
-		<Card>
+		<Card className="w-100%">
 			<CardHeader>
 				<h3 className="text-xl font-bold">{title}</h3>
 			</CardHeader>

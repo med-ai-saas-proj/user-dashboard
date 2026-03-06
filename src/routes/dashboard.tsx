@@ -15,7 +15,7 @@ const DashboardPage = () => {
 	return (
 		<DashboardLayout pageTitle="Dashboard">
 			<div className="px-6">
-				<div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 mb-6">
+				<div className="grid grid-cols-1 gap-x-4 mb-6 xl:grid-cols-2 2xl:grid-cols-3">
 					<KPICard />
 					<DashboardTimePicker />
 				</div>

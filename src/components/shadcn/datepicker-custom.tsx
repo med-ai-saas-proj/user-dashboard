@@ -60,7 +60,7 @@ const DatePickerCustom: React.FC<DatePickerCustomProps> = ({
 	const rdLocale = locale === "vi" ? rdVi : rdEnUS;
 
 	return (
-		<Field className={cn("mx-auto w-44", className)}>
+		<Field className={cn("mx-auto w-fit", className)}>
 			{label && <FieldLabel htmlFor={id}>{label}</FieldLabel>}
 			<Popover>
 				<PopoverTrigger asChild>

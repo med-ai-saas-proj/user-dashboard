@@ -61,7 +61,7 @@ const TimeRangePickerCustom: React.FC<TimeRangePickerCustomProps> = ({
 	const rdLocale = locale === "vi" ? rdVi : rdEnUS;
 
 	return (
-		<Field className={cn("mx-auto w-60", className)}>
+		<Field className={cn("mx-auto w-fit", className)}>
 			{label && <FieldLabel htmlFor={id}>{label}</FieldLabel>}
 			<Popover>
 				<PopoverTrigger asChild>

@@ -17,7 +17,7 @@ const KPICard = () => {
 	const { data } = useGetKPICard();
 
 	return (
-		<div className="flex gap-4">
+		<div className="flex gap-4 flex-col md:flex-row">
 			{data?.map((stat: StatCardData) => {
 				const formattedValue = FormatValue(
 					stat.value,

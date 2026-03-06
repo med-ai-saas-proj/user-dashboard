@@ -1,6 +1,9 @@
 import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { getChartMetric, type GetChartParams } from "../services/chart-metric";
+import {
+	getChartMetric,
+	type GetChartParams,
+} from "../services/get-chart-metric";
 
 import { useChartTimePickerStore } from "../store/chart-time-picker";
 

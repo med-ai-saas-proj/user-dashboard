@@ -4,6 +4,8 @@ import {
 	ChevronRightIcon,
 } from "lucide-react";
 import * as React from "react";
+import { format } from "date-fns";
+import type { Locale } from "date-fns";
 import {
 	type DayButton,
 	DayPicker,
@@ -20,9 +22,13 @@ function Calendar({
 	buttonVariant = "ghost",
 	formatters,
 	components,
+	dateFnsLocale,
 	...props
 }: React.ComponentProps<typeof DayPicker> & {
+	/** Button variant for navigation buttons. */
 	buttonVariant?: React.ComponentProps<typeof Button>["variant"];
+	/** Optional `date-fns` locale used for formatting month names and other labels. */
+	dateFnsLocale?: Locale;
 }) {
 	const defaultClassNames = getDefaultClassNames();
 
@@ -37,8 +43,12 @@ function Calendar({
 			)}
 			captionLayout={captionLayout}
 			formatters={{
+				// Use `date-fns` for consistent formatting when a locale is provided,
+				// otherwise fall back to the browser's `toLocaleString`.
 				formatMonthDropdown: (date) =>
-					date.toLocaleString("default", { month: "short" }),
+					dateFnsLocale
+						? format(date, "MMM", { locale: dateFnsLocale })
+						: date.toLocaleString("default", { month: "short" }),
 				...formatters,
 			}}
 			classNames={{

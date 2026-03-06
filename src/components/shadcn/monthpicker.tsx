@@ -1,6 +1,8 @@
 "use client";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import * as React from "react";
+import { format } from "date-fns";
+import type { Locale } from "date-fns";
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "./button";
 
@@ -33,6 +35,8 @@ const MONTHS: Month[][] = [
 type MonthCalProps = {
 	selectedMonth?: Date;
 	onMonthSelect?: (date: Date) => void;
+	/** Optional locale from `date-fns` used to format month labels (e.g. Vietnamese). */
+	dateFnsLocale?: Locale;
 	onYearForward?: () => void;
 	onYearBackward?: () => void;
 	callbacks?: {
@@ -72,6 +76,7 @@ function MonthPicker({
 	onYearForward,
 	variant,
 	className,
+	dateFnsLocale,
 	...props
 }: React.HTMLAttributes<HTMLDivElement> & MonthCalProps) {
 	return (
@@ -88,6 +93,7 @@ function MonthPicker({
 						minDate={minDate}
 						maxDate={maxDate}
 						disabledDates={disabledDates}
+						dateFnsLocale={dateFnsLocale}
 					></MonthCal>
 				</div>
 			</div>
@@ -105,6 +111,7 @@ function MonthCal({
 	disabledDates,
 	onYearBackward,
 	onYearForward,
+	dateFnsLocale,
 }: MonthCalProps) {
 	const [year, setYear] = React.useState<number>(
 		selectedMonth?.getFullYear() ?? new Date().getFullYear()
@@ -208,7 +215,9 @@ function MonthCal({
 											>
 												{callbacks?.monthLabel
 													? callbacks.monthLabel(m)
-													: m.name}
+													: format(new Date(menuYear, m.number), "MMM", {
+															locale: dateFnsLocale,
+														})}
 											</button>
 										</td>
 									);

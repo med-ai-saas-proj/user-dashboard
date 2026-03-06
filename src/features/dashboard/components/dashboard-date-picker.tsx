@@ -1,65 +1,26 @@
-import { format } from "date-fns";
-import { useState } from "react";
-import { Button } from "@/components/shadcn/button";
-import { Calendar } from "@/components/shadcn/calendar";
-import { Field, FieldLabel } from "@/components/shadcn/field";
-import {
-	Popover,
-	PopoverContent,
-	PopoverTrigger,
-} from "@/components/shadcn/popover";
 import { useTranslation } from "react-i18next";
-import { vi } from "react-day-picker/locale/vi";
-import { enUS } from "react-day-picker/locale/en-US";
 import { useChartTimePickerStore } from "../store/chart-time-picker";
+import DatePickerCustom from "@/components/shadcn/datepicker-custom";
 
 const DashboardDatePicker = () => {
-	const { t } = useTranslation("dashboard");
-	const { i18n } = useTranslation();
+	const { t, i18n } = useTranslation("dashboard");
 	const currentLocale = i18n.language || "en-US";
 
-	const [date, setDate] = useState<Date>(new Date());
 	const updateDateRange = useChartTimePickerStore(
 		(state) => state.updateDateRange
 	);
 
 	const handleDateSelect = (selectedDate: Date) => {
-		setDate(selectedDate);
 		updateDateRange(selectedDate, selectedDate);
 	};
 
 	return (
-		<Field className="mx-auto w-44">
-			<FieldLabel htmlFor="date-picker-simple">
-				{t("datePicker.label")}
-			</FieldLabel>
-			<Popover>
-				<PopoverTrigger asChild>
-					<Button
-						variant="outline"
-						id="date-picker-simple"
-						className="justify-start font-normal"
-					>
-						{date ? (
-							format(date, "PPP", {
-								locale: currentLocale === "vi" ? vi : enUS,
-							})
-						) : (
-							<span>{t("datePicker.placeholder")}</span>
-						)}
-					</Button>
-				</PopoverTrigger>
-				<PopoverContent className="w-auto p-0" align="start">
-					<Calendar
-						mode="single"
-						required
-						selected={date}
-						onSelect={handleDateSelect}
-						defaultMonth={date}
-					/>
-				</PopoverContent>
-			</Popover>
-		</Field>
+		<DatePickerCustom
+			label={t("datePicker.label")}
+			placeholder={t("datePicker.placeholder")}
+			onDateChange={handleDateSelect}
+			locale={currentLocale === "vi" ? "vi" : "en-US"}
+		/>
 	);
 };
 

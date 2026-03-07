@@ -1,13 +1,13 @@
-import { create } from 'zustand';
-import type { APIKey } from '@/features/api-keys/api-key.type';
+import { create } from "zustand";
+import type { APIKey } from "@/features/api-keys/api-key.type";
 
 interface APIKeyState {
 	apiKeys: APIKey[];
 }
 
 interface APIKeyActions {
-	addAPIKey: (key: Omit<APIKey, 'id' | 'createdAt'>) => void;
-	updateAPIKey: (id: string, key: Pick<APIKey, 'name' | 'permissions'>) => void;
+	addAPIKey: (key: Omit<APIKey, "id" | "createdAt">) => void;
+	updateAPIKey: (id: string, key: Pick<APIKey, "name" | "permissions">) => void;
 	deleteAPIKey: (id: string) => void;
 }
 

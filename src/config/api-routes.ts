@@ -43,6 +43,10 @@ export const API_ROUTES = {
 			BASE_API_URL
 		).toString(),
 		CHAT: new URL(`service/${API_VERSION}/chat`, BASE_API_URL).toString(),
+		DASHBOARD: new URL(
+			`service/${API_VERSION}/dashboard`,
+			BASE_API_URL
+		).toString(),
 	},
 } as const;
 

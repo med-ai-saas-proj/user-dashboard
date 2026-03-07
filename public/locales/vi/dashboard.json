@@ -1,0 +1,37 @@
+{
+    "kpiCard": {
+        "totalRequest": "Tổng số yêu cầu",
+        "totalCost": "Tổng chi phí",
+        "change": {
+            "compare": "{{value}}% {{compareLabel}}",
+            "vsLastMonth": "so với tháng trước",
+            "vsLastWeek": "so với tuần trước",
+            "vsLastYear": "so với năm trước"
+        }
+    },
+    "datePicker": {
+        "label": "Chọn ngày",
+        "placeholder": "Chọn ngày"
+    },
+    "monthPicker": {
+        "label": "Chọn tháng",
+        "placeholder": "Chọn tháng"
+    },
+    "yearPicker": {
+        "label": "Chọn năm",
+        "placeholder": "Chọn năm"
+    },
+    "rangePicker": {
+        "label": "Chọn khoảng thời gian",
+        "placeholder": "Chọn khoảng thời gian"
+    },
+    "chart": {
+        "requestVolumeAndCost": "Biểu đồ khối lượng yêu cầu & chi phí",
+        "tokenUsageOverTime": "Biểu đồ sử dụng token theo thời gian",
+        "series": {
+            "requests": "Yêu cầu",
+            "cost": "Chi phí",
+            "total": "Tổng"
+        }
+    }
+}

@@ -1,26 +1,29 @@
 {
-  "playground": {
-    "title": "Playground",
-    "ehrSummary": {
-      "title": "EHR Summary"
+    "playground": {
+        "title": "Playground",
+        "ehrSummary": {
+            "title": "EHR Summary"
+        },
+        "rxAdvisor": {
+            "title": "Rx Advisor"
+        },
+        "chatBot": {
+            "title": "Chatbot"
+        },
+        "aiSearch": {
+            "title": "AI Search"
+        }
     },
-    "rxAdvisor": {
-      "title": "Rx Advisor"
-    },
-    "chatBot": {
-      "title": "Chatbot"
-    },
-    "aiSearch": {
-      "title": "AI Search"
+    "management": {
+        "title": "Management",
+        "dashboard": {
+            "title": "Dashboard"
+        },
+        "apiKeys": {
+            "title": "API Keys"
+        },
+        "apiReference": {
+            "title": "API Reference"
+        }
     }
-  },
-  "management": {
-    "title": "Management",
-    "apiKeys": {
-      "title": "API Keys"
-    },
-    "apiReference": {
-      "title": "API Reference"
-    }
-  }
 }

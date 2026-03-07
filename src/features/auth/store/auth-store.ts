@@ -1,5 +1,5 @@
-import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
 export type UserInfo = {
 	name: string;
@@ -55,7 +55,7 @@ export const useAuthStore = create<AuthState>()(
 			},
 		}),
 		{
-			name: 'med--ai-saas-auth',
+			name: "med--ai-saas-auth",
 		}
 	)
 );

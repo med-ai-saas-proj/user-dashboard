@@ -4,9 +4,9 @@ import {
 	useContext,
 	useEffect,
 	useState,
-} from 'react';
-import keycloak, { initKeycloak } from '@/config/keycloak';
-import { useAuthStore, type UserInfo } from '@/features/auth/store/auth-store';
+} from "react";
+import keycloak, { initKeycloak } from "@/config/keycloak";
+import { type UserInfo, useAuthStore } from "@/features/auth/store/auth-store";
 
 interface KeycloakContextType {
 	keycloak: typeof keycloak;
@@ -68,7 +68,7 @@ export const KeycloakProvider = ({ children }: { children: ReactNode }) => {
 				};
 			})
 			.catch((error) => {
-				console.error('Keycloak initialization failed', error);
+				console.error("Keycloak initialization failed", error);
 				setInitialized(true);
 			});
 	}, []);
@@ -83,7 +83,7 @@ export const KeycloakProvider = ({ children }: { children: ReactNode }) => {
 export const useKeycloak = () => {
 	const context = useContext(KeycloakContext);
 	if (!context) {
-		throw new Error('useKeycloak must be used within KeycloakProvider');
+		throw new Error("useKeycloak must be used within KeycloakProvider");
 	}
 	return context;
 };

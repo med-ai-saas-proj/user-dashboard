@@ -1,6 +1,6 @@
-import { createApiKey } from '@/features/api-keys/services/create-api-key';
-import type { CreateApiKeyRequest } from '../services/api-key.dto';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { createApiKey } from "@/features/api-keys/services/create-api-key";
+import type { CreateApiKeyRequest } from "../services/api-key.dto";
 
 export const useCreateApiKey = () => {
 	const queryClient = useQueryClient();
@@ -11,7 +11,7 @@ export const useCreateApiKey = () => {
 			return data;
 		},
 		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ['api-keys'] });
+			queryClient.invalidateQueries({ queryKey: ["api-keys"] });
 		},
 	});
 };

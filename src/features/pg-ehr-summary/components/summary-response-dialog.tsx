@@ -67,7 +67,9 @@ export function SummaryResponseDialog({
 					{error && (
 						<div className="p-4 border border-destructive rounded-lg bg-destructive/10">
 							<p className="text-destructive text-sm font-medium">
-								{t("errors.summaryFailed", { message: error.message })}
+								{t("errors.summaryFailed", {
+									message: error.message,
+								})}
 							</p>
 						</div>
 					)}

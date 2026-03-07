@@ -14,6 +14,7 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { Toaster } from "sonner";
 import PlaygroundChatPage from "./routes/playground-chat";
 import PlaygroundAISearchPage from "@/routes/playground-ai-search";
+import DashboardPage from "@/routes/dashboard";
 
 function App() {
 	return (
@@ -32,6 +33,7 @@ function App() {
 						/>
 						{/* TODO: Replace with main home page later, temporarily redirecting to /chat for now */}
 						<Route path="/" element={<Navigate to="/chat" replace />} />
+						<Route path="/dashboard" element={<DashboardPage />} />
 						<Route
 							path="/api-keys"
 							element={

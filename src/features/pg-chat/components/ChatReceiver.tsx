@@ -1,4 +1,4 @@
-import { MarkdownCustom } from './MarkdownCustom';
+import { MarkdownCustom } from "./MarkdownCustom";
 
 function ChatReceiver({
 	message,

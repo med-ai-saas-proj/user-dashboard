@@ -1,0 +1,37 @@
+{
+    "kpiCard": {
+        "totalRequest": "Total Requests",
+        "totalCost": "Total Cost",
+        "change": {
+            "compare": "{{value}}% {{compareLabel}}",
+            "vsLastMonth": "vs last month",
+            "vsLastWeek": "vs last week",
+            "vsLastYear": "vs last year"
+        }
+    },
+    "datePicker": {
+        "label": "Select Date",
+        "placeholder": "Select date"
+    },
+    "monthPicker": {
+        "label": "Select Month",
+        "placeholder": "Select month"
+    },
+    "yearPicker": {
+        "label": "Select Year",
+        "placeholder": "Select year"
+    },
+    "rangePicker": {
+        "label": "Select Date Range",
+        "placeholder": "Select date range"
+    },
+    "chart": {
+        "requestVolumeAndCost": "Request Volume & Cost Chart",
+        "tokenUsageOverTime": "Token Usage Overtime Chart",
+        "series": {
+            "requests": "Requests",
+            "cost": "Cost",
+            "total": "Total"
+        }
+    }
+}

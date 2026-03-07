@@ -1,16 +1,16 @@
-import { LockIcon, Plus } from 'lucide-react';
-import { useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Button } from '@/components/shadcn/button';
-import { Skeleton } from '@/components/shadcn/skeleton';
-import APIKeyDialog from '@/features/api-keys/components/api-key-dialog';
-import APIKeyTable from '@/features/api-keys/components/api-key-table';
-import { useGetApiKeys } from '@/features/api-keys/hooks/use-get-api-keys';
-import DashboardLayout from '@/layouts/dashboard-layout';
+import { LockIcon, Plus } from "lucide-react";
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { Button } from "@/components/shadcn/button";
+import { Skeleton } from "@/components/shadcn/skeleton";
+import APIKeyDialog from "@/features/api-keys/components/api-key-dialog";
+import APIKeyTable from "@/features/api-keys/components/api-key-table";
+import { useGetApiKeys } from "@/features/api-keys/hooks/use-get-api-keys";
+import DashboardLayout from "@/layouts/dashboard-layout";
 
 export default function APIKeysPage() {
-	const { t } = useTranslation('api-keys');
-	const { t: tCommon } = useTranslation('common');
+	const { t } = useTranslation("api-keys");
+	const { t: tCommon } = useTranslation("common");
 	const [openApiKeyDialog, setOpenApiKeyDialog] = useState(false);
 
 	const { data: apiKeys, isLoading, isError } = useGetApiKeys();
@@ -18,17 +18,17 @@ export default function APIKeysPage() {
 
 	return (
 		<DashboardLayout
-			pageTitle={t('pageTitle')}
+			pageTitle={t("pageTitle")}
 			headerRight={
 				<Button onClick={() => setOpenApiKeyDialog(true)}>
-					<Plus /> {t('actions.create')}
+					<Plus /> {t("actions.create")}
 				</Button>
 			}
 		>
 			<div>
-				<p className="mb-4">{t('description.permissions')}</p>
-				<p className="mb-4">{t('description.security')}</p>
-				<p className="mb-4">{t('description.usage')}</p>
+				<p className="mb-4">{t("description.permissions")}</p>
+				<p className="mb-4">{t("description.security")}</p>
+				<p className="mb-4">{t("description.usage")}</p>
 
 				{isLoading && (
 					<div className="mt-6 space-y-3">
@@ -40,7 +40,7 @@ export default function APIKeysPage() {
 
 				{isError && (
 					<div className="mt-6 p-4 bg-destructive/10 text-destructive rounded-md">
-						{tCommon('error')}
+						{tCommon("error")}
 					</div>
 				)}
 
@@ -49,10 +49,10 @@ export default function APIKeysPage() {
 						<div className="bg-muted text-muted-foreground p-4 rounded-md mb-3">
 							<LockIcon />
 						</div>
-						<p className="font-bold">{t('emptyState.title')}</p>
+						<p className="font-bold">{t("emptyState.title")}</p>
 						<Button className="mt-3" onClick={() => setOpenApiKeyDialog(true)}>
 							<Plus />
-							{t('actions.createSecret')}
+							{t("actions.createSecret")}
 						</Button>
 					</div>
 				)}

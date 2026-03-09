@@ -24,6 +24,9 @@
         },
         "apiReference": {
             "title": "API Reference"
+        },
+        "settings": {
+            "title": "Settings"
         }
     }
 }

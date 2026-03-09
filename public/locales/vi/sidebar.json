@@ -24,6 +24,9 @@
         },
         "apiReference": {
             "title": "Tham chiếu API"
+        },
+        "settings": {
+            "title": "Cài đặt"
         }
     }
 }

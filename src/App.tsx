@@ -15,6 +15,8 @@ import { Toaster } from "sonner";
 import PlaygroundChatPage from "./routes/playground-chat";
 import PlaygroundAISearchPage from "@/routes/playground-ai-search";
 import DashboardPage from "@/routes/dashboard";
+import SettingPage from "@/routes/setting";
+import SettingOrganizationPeoplePage from "@/routes/setting-organization-people";
 
 function App() {
 	return (
@@ -83,7 +85,22 @@ function App() {
 								</ProtectedRoute>
 							}
 						/>
-
+						<Route
+							path="/settings/organization/general"
+							element={
+								<ProtectedRoute>
+									<SettingPage />
+								</ProtectedRoute>
+							}
+						/>
+						<Route
+							path="/settings/organization/people"
+							element={
+								<ProtectedRoute>
+									<SettingOrganizationPeoplePage />
+								</ProtectedRoute>
+							}
+						/>
 						<Route path="*" element={<Navigate to="/" replace />} />
 					</Routes>
 				</BrowserRouter>

@@ -9,6 +9,7 @@ import {
 	KeyRound,
 	PillIcon,
 	SearchIcon,
+	Settings,
 } from "lucide-react";
 import type * as React from "react";
 import { useTranslation } from "react-i18next";
@@ -53,6 +54,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 				name: t("management.apiReference.title"),
 				url: "/api-reference",
 				icon: Book,
+			},
+			{
+				name: t("management.settings.title"),
+				url: "/settings/organization/general",
+				icon: Settings,
 			},
 		],
 		playground: [

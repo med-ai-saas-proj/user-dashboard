@@ -21,7 +21,7 @@ interface NavProjectsProps {
 	projects: {
 		name: string;
 		url: string;
-		icon: LucideIcon;
+		icon?: LucideIcon;
 	}[];
 }
 
@@ -44,7 +44,7 @@ export function NavProjects({ label, projects }: NavProjectsProps) {
 								<SidebarMenuItem key={item.name}>
 									<SidebarMenuButton asChild isActive={pathname === item.url}>
 										<NavLink to={item.url}>
-											<item.icon />
+											{item.icon && <item.icon />}
 											<span>{item.name}</span>
 										</NavLink>
 									</SidebarMenuButton>

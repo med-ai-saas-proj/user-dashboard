@@ -3,10 +3,13 @@ import { useGetUsers } from "../../hooks/organization-people/use-get-users";
 import OrganizationPeopleMemberItem from "./organization-people-member-item";
 import type { OrganizationUser } from "../../organization.type";
 import OrganizationPeopleMemberDetails from "./organization-people-member-details";
+import { Spinner } from "@/components/shadcn/spinner";
 
 const OrganizationPeopleMember = () => {
 	const fakeOrgId = "123";
-	const { data: users } = useGetUsers({ organizationId: fakeOrgId });
+	const { data: users, isPending } = useGetUsers({
+		organizationId: fakeOrgId,
+	});
 
 	const [selectedUser, setSelectedUser] = useState<OrganizationUser | null>(
 		null
@@ -20,17 +23,35 @@ const OrganizationPeopleMember = () => {
 	return (
 		<div className="flex gap-8">
 			<div className="flex-7 flex-col border rounded-md">
-				{users?.results.map((user) => (
-					<OrganizationPeopleMemberItem
-						key={user.id}
-						id={user.id}
-						username={user.username}
-						email={user.email}
-						onClick={() => handleSelectUser(user)}
-					/>
-				))}
+				{isPending && (
+					<div className="flex items-center justify-center h-full">
+						<div className="flex items-center justify-center gap-2">
+							<Spinner />
+							<p className="text-center text-sm text-muted-foreground">
+								Loading members...
+							</p>
+						</div>
+					</div>
+				)}
+				{!isPending &&
+					users?.results.map((user) => (
+						<OrganizationPeopleMemberItem
+							key={user.id}
+							id={user.id}
+							username={user.username}
+							email={user.email}
+							onClick={() => handleSelectUser(user)}
+						/>
+					))}
 			</div>
 			<div className="flex-3 border-l p-8">
+				{!selectedUser && (
+					<div className="flex items-center justify-center h-full">
+						<p className="text-center text-muted-foreground">
+							Select a member to view details
+						</p>
+					</div>
+				)}
 				{selectedUser && (
 					<OrganizationPeopleMemberDetails user={selectedUser} />
 				)}

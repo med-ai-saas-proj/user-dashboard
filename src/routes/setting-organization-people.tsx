@@ -8,6 +8,7 @@ import {
 	TabsList,
 	TabsTrigger,
 } from "@/components/shadcn/tabs";
+import OrganizationPeopleMember from "@/features/organization/components/organization-people/organization-people-member";
 
 const SettingOrganizationPeoplePage = () => {
 	const [organizationPeopleTab, setOrganizationPeopleTab] =
@@ -32,9 +33,7 @@ const SettingOrganizationPeoplePage = () => {
 				{organizationPeopleTab === "members" && (
 					<TabsContent value="members">
 						<OrganizationPeopleLayout>
-							<p className="text-gray-500">
-								Manage your organization members and their permissions here.
-							</p>
+							<OrganizationPeopleMember />
 						</OrganizationPeopleLayout>
 					</TabsContent>
 				)}

@@ -4,10 +4,10 @@ import {
 	type DeleteUserParams,
 } from "../../services/organization-people/delete-user";
 
-export const useDeleteUser = (params: DeleteUserParams) => {
+export const useDeleteUser = () => {
 	return useMutation({
-		mutationKey: ["organization-delete-user", params],
-		mutationFn: () => deleteUser(params),
+		mutationKey: ["organization-delete-user"],
+		mutationFn: (params: DeleteUserParams) => deleteUser(params),
 		onSuccess: () => {
 			console.log("User deleted successfully");
 		},

@@ -37,10 +37,7 @@ const OrganizationPeopleMemberItem: React.FC<
 
 	const [currentPermissions, setCurrentPermissions] = useState<string[]>([]);
 
-	const { mutate: deleteUser } = useDeleteUser({
-		organizationId: fakeOrgId,
-		userId: id,
-	});
+	const { mutate: deleteUser } = useDeleteUser();
 	const { data: permissions } = useGetPermissions({
 		organizationId: fakeOrgId,
 		userId: id,
@@ -48,7 +45,10 @@ const OrganizationPeopleMemberItem: React.FC<
 	const { mutate: updatePermissions } = useUpdatePermissions();
 
 	const handleRemoveUser = () => {
-		deleteUser();
+		deleteUser({
+			organizationId: fakeOrgId,
+			userId: id,
+		});
 	};
 	const handleUpdatePermissions = () => {
 		updatePermissions({

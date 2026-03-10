@@ -14,7 +14,7 @@ export const updatePermissions = async (params: UpdatePermissionsRequest) => {
 		`${API_ROUTES.MANAGEMENT.ORGANIZATION.PEOPLE.replace(
 			"{organizationId}",
 			organizationId
-		)}/${userId}/permissions`,
+		)}/users/${userId}/permissions`,
 		{ permissions }
 	);
 };

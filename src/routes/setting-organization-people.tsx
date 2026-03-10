@@ -9,6 +9,7 @@ import {
 	TabsTrigger,
 } from "@/components/shadcn/tabs";
 import OrganizationPeopleMember from "@/features/organization/components/organization-people/organization-people-member";
+import OrganizationPeopleInvitation from "@/features/organization/components/organization-people/organization-people-invitation";
 
 const SettingOrganizationPeoplePage = () => {
 	const [organizationPeopleTab, setOrganizationPeopleTab] =
@@ -40,9 +41,7 @@ const SettingOrganizationPeoplePage = () => {
 				{organizationPeopleTab === "invitations" && (
 					<TabsContent value="invitations">
 						<OrganizationPeopleLayout addedButtonText="Invite member">
-							<p className="text-gray-500">
-								Manage your organization invitations here.
-							</p>
+							<OrganizationPeopleInvitation />
 						</OrganizationPeopleLayout>
 					</TabsContent>
 				)}

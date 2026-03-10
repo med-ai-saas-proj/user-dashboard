@@ -30,7 +30,7 @@ export const API_ROUTES = {
 		DOCS_OPENAPI: new URL(`service/docs/openapi.json`, BASE_API_URL).toString(),
 		ORGANIZATION: {
 			PEOPLE: new URL(
-				`management/${API_VERSION}/organizations/:organizationId/users`,
+				`management/${API_VERSION}/organizations/:organizationId`,
 				BASE_API_URL
 			).toString(),
 		},

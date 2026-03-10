@@ -19,7 +19,7 @@ export const getPermissions = async (
 			`${API_ROUTES.MANAGEMENT.ORGANIZATION.PEOPLE.replace(
 				":organizationId",
 				organizationId
-			)}/${userId}/permissions`
+			)}/users/${userId}/permissions`
 		);
 
 		return response.data;

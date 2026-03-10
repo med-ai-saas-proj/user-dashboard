@@ -18,10 +18,10 @@ export const getUsers = async (
 
 	try {
 		const response = await apiClient.get(
-			API_ROUTES.MANAGEMENT.ORGANIZATION.PEOPLE.replace(
+			`${API_ROUTES.MANAGEMENT.ORGANIZATION.PEOPLE.replace(
 				":organizationId",
 				organizationId
-			),
+			)}/users`,
 			{
 				params: {
 					limit,

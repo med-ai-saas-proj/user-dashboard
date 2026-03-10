@@ -6,7 +6,11 @@ import {
 
 export const useGetPermissions = (params: GetPermissionsParams) => {
 	return useQuery({
-		queryKey: ["organizationPermissions", params.organizationId, params.userId],
+		queryKey: [
+			"organization-permissions",
+			params.organizationId,
+			params.userId,
+		],
 		queryFn: () => getPermissions(params),
 		enabled: !!params.organizationId && !!params.userId,
 	});

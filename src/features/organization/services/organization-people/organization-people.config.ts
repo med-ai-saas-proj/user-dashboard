@@ -1,4 +1,5 @@
 import type {
+	OrganizationInvitationResponse,
 	OrganizationPermissions,
 	OrganizationUserResponse,
 } from "../../organization.type";
@@ -27,3 +28,23 @@ export const userList = {
 export const userPermissions = {
 	permissions: ["read:organization", "write:organization"],
 } satisfies OrganizationPermissions;
+
+export const invitationList = {
+	results: [
+		{
+			id: "1",
+			email: "john.doe@example.com",
+			status: "pending",
+		},
+		{
+			id: "2",
+			email: "jane.smith@example.com",
+			status: "accepted",
+		},
+		{
+			id: "3",
+			email: "alice.johnson@example.com",
+			status: "declined",
+		},
+	],
+} satisfies OrganizationInvitationResponse;

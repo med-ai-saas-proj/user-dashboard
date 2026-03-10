@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import {
 	Avatar,
 	AvatarImage,
@@ -19,6 +20,7 @@ import { useGetPermissions } from "../../hooks/organization-people/use-get-permi
 import { Field } from "@/components/shadcn/field";
 import { Checkbox } from "@/components/shadcn/checkbox";
 import { Label } from "@/components/shadcn/label";
+import { useUpdatePermissions } from "../../hooks/organization-people/use-update-permissions";
 
 type OrganizationPeopleMemberItemProps =
 	React.HTMLAttributes<HTMLDivElement> & {
@@ -32,6 +34,9 @@ const OrganizationPeopleMemberItem: React.FC<
 	OrganizationPeopleMemberItemProps
 > = ({ id, username, email, imageSrc = "", ...props }) => {
 	const fakeOrgId = "123";
+
+	const [currentPermissions, setCurrentPermissions] = useState<string[]>([]);
+
 	const { mutate: deleteUser } = useDeleteUser({
 		organizationId: fakeOrgId,
 		userId: id,
@@ -40,10 +45,32 @@ const OrganizationPeopleMemberItem: React.FC<
 		organizationId: fakeOrgId,
 		userId: id,
 	});
+	const { mutate: updatePermissions } = useUpdatePermissions();
 
 	const handleRemoveUser = () => {
 		deleteUser();
 	};
+	const handleUpdatePermissions = () => {
+		updatePermissions({
+			organizationId: fakeOrgId,
+			userId: id,
+			permissions: {
+				permissions: currentPermissions,
+			},
+		});
+	};
+	const handleChangePermissions = (perm: string) => {
+		setCurrentPermissions(
+			(prev) =>
+				prev.includes(perm)
+					? prev.filter((p) => p !== perm) // remove
+					: [...prev, perm] // add
+		);
+	};
+
+	useEffect(() => {
+		setCurrentPermissions(permissions?.permissions || []);
+	}, [permissions]);
 
 	return (
 		<div
@@ -100,7 +127,12 @@ const OrganizationPeopleMemberItem: React.FC<
 								<div className="flex flex-col gap-4 mt-4">
 									{permissions?.permissions?.map((perm) => (
 										<Field orientation={"horizontal"} key={perm}>
-											<Checkbox id={perm} name={perm} />
+											<Checkbox
+												id={perm}
+												name={perm}
+												checked={currentPermissions.includes(perm)}
+												onCheckedChange={() => handleChangePermissions(perm)}
+											/>
 											<Label htmlFor={perm}>{perm}</Label>
 										</Field>
 									))}
@@ -113,7 +145,9 @@ const OrganizationPeopleMemberItem: React.FC<
 									Close
 								</Button>
 							</DialogClose>
-							<Button variant="default">Save</Button>
+							<Button variant="default" onClick={handleUpdatePermissions}>
+								Save
+							</Button>
 						</DialogFooter>
 					</DialogContent>
 				</Dialog>

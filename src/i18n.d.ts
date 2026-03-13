@@ -13,6 +13,7 @@ import type summaryResponseEN from "../public/locales/en/summary-response.json";
 import type chatbotEN from "../public/locales/en/chatbot.json";
 import type dashboardEN from "../public/locales/en/dashboard.json";
 import type settingEN from "../public.locales/en/settings.json";
+import type organizationEN from "../public/locales/en/organization.json";
 
 declare module "i18next" {
 	interface CustomTypeOptions {
@@ -32,6 +33,7 @@ declare module "i18next" {
 			chatbot: typeof chatbotEN;
 			dashboard: typeof dashboardEN;
 			setting: typeof settingEN;
+			organization: typeof organizationEN;
 		};
 	}
 }

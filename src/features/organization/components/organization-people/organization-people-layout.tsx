@@ -1,4 +1,5 @@
 import { Search } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/shadcn/button";
 import {
 	InputGroup,
@@ -14,21 +15,24 @@ type OrganizationPeopleLayoutProps = {
 };
 
 const OrganizationPeopleLayout: React.FC<OrganizationPeopleLayoutProps> = ({
-	addedButtonText = "Add member",
+	addedButtonText,
 	onAdd,
 	// onSearch,
 }) => {
+	const { t } = useTranslation("organization");
+	const addButtonText = addedButtonText ?? t("people.layout.addMember");
+
 	return (
 		<div className="flex items-center justify-between mb-4 mt-2">
 			<InputGroup className="max-w-xs">
-				<InputGroupInput placeholder="Search..." />
+				<InputGroupInput placeholder={t("people.layout.searchPlaceholder")} />
 				<InputGroupAddon>
 					<Search />
 				</InputGroupAddon>
 			</InputGroup>
 			<Button variant="default" onClick={onAdd}>
 				<Plus />
-				{addedButtonText}
+				{addButtonText}
 			</Button>
 		</div>
 	);

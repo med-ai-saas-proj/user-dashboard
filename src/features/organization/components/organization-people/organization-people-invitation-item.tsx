@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import type { OrganizationInvitation } from "../../organization.type";
 import {
 	Avatar,
@@ -24,6 +25,7 @@ const OrganizationPeopleInvitationItem = ({
 }: {
 	invitation: OrganizationInvitation;
 }) => {
+	const { t } = useTranslation("organization");
 	const fakeOrgId = "123";
 	const [isResendInvitation, setIsResendInvitation] = useState<boolean>(false);
 
@@ -63,26 +65,29 @@ const OrganizationPeopleInvitationItem = ({
 					onClick={() => handleResendInvitation(invitation.id)}
 					disabled={isResendInvitation}
 				>
-					Resend
+					{t("people.invitations.item.actions.resend")}
 				</Button>
 				<Dialog>
 					<DialogTrigger asChild>
 						<Button variant="secondary" size="sm">
-							Remove
+							{t("people.invitations.item.actions.remove")}
 						</Button>
 					</DialogTrigger>
 					<DialogContent>
 						<DialogHeader>
-							<DialogTitle>Removal Confirm</DialogTitle>
+							<DialogTitle>
+								{t("people.invitations.item.removeDialog.title")}
+							</DialogTitle>
 							<DialogDescription>
-								Are you sure you want to remove the invitation for{" "}
-								<strong>{invitation.email}</strong>?
+								{t("people.invitations.item.removeDialog.description", {
+									email: invitation.email,
+								})}
 							</DialogDescription>
 						</DialogHeader>
 						<DialogFooter>
 							<DialogClose asChild>
 								<Button variant="secondary" size="sm">
-									Cancel
+									{t("people.invitations.item.actions.cancel")}
 								</Button>
 							</DialogClose>
 							<Button
@@ -90,7 +95,7 @@ const OrganizationPeopleInvitationItem = ({
 								size="sm"
 								onClick={() => handleDeleteInvitation(invitation.id)}
 							>
-								Remove
+								{t("people.invitations.item.actions.remove")}
 							</Button>
 						</DialogFooter>
 					</DialogContent>

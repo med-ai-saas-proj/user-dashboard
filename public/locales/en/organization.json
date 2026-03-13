@@ -1,0 +1,60 @@
+{
+    "people": {
+        "pageTitle": "People",
+        "heading": "People & Permission",
+        "tabs": {
+            "members": "Members",
+            "invitations": "Invitations",
+            "roles": "Roles"
+        },
+        "roles": {
+            "description": "Manage your organization roles and permissions here."
+        },
+        "layout": {
+            "searchPlaceholder": "Search...",
+            "addMember": "Add member",
+            "inviteMember": "Invite member"
+        },
+        "dialog": {
+            "title": "Add new member",
+            "description": "Invite new member to join your organization by email.",
+            "emailLabel": "Email",
+            "emailPlaceholder": "Enter email address",
+            "emailInvalid": "Please enter a valid email address",
+            "submit": "Send Invitation"
+        },
+        "members": {
+            "loading": "Loading members...",
+            "emptySelection": "Select a member to view details",
+            "item": {
+                "actions": {
+                    "remove": "Remove",
+                    "roles": "Roles",
+                    "close": "Close",
+                    "save": "Save"
+                },
+                "removeDialog": {
+                    "title": "Confirm removal",
+                    "description": "Are you sure you want to remove {{username}} from this organization?"
+                },
+                "permissionsDialog": {
+                    "title": "Permissions"
+                }
+            }
+        },
+        "invitations": {
+            "loading": "Loading invitations...",
+            "item": {
+                "actions": {
+                    "resend": "Resend",
+                    "remove": "Remove",
+                    "cancel": "Cancel"
+                },
+                "removeDialog": {
+                    "title": "Removal Confirm",
+                    "description": "Are you sure you want to remove the invitation for {{email}}?"
+                }
+            }
+        }
+    }
+}

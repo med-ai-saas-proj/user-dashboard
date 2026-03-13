@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import DashboardLayout from "@/layouts/dashboard-layout";
 import type { OrganizationPeopleTabs } from "@/features/organization/organization.type";
 import {
@@ -11,12 +12,13 @@ import OrganizationPeopleMember from "@/features/organization/components/organiz
 import OrganizationPeopleInvitation from "@/features/organization/components/organization-people/organization-people-invitation";
 
 const SettingOrganizationPeoplePage = () => {
+	const { t } = useTranslation("organization");
 	const [organizationPeopleTab, setOrganizationPeopleTab] =
 		useState<OrganizationPeopleTabs>("members");
 
 	return (
-		<DashboardLayout pageTitle="People">
-			<h2 className="text-2xl font-bold mb-4">People & Permission</h2>
+		<DashboardLayout pageTitle={t("people.pageTitle")}>
+			<h2 className="text-2xl font-bold mb-4">{t("people.heading")}</h2>
 			<Tabs
 				value={organizationPeopleTab}
 				onValueChange={(value: string) =>
@@ -25,9 +27,13 @@ const SettingOrganizationPeoplePage = () => {
 			>
 				<div className="border-b w-full">
 					<TabsList variant="line">
-						<TabsTrigger value="members">Members</TabsTrigger>
-						<TabsTrigger value="invitations">Invitations</TabsTrigger>
-						<TabsTrigger value="roles">Roles</TabsTrigger>
+						<TabsTrigger value="members">
+							{t("people.tabs.members")}
+						</TabsTrigger>
+						<TabsTrigger value="invitations">
+							{t("people.tabs.invitations")}
+						</TabsTrigger>
+						<TabsTrigger value="roles">{t("people.tabs.roles")}</TabsTrigger>
 					</TabsList>
 				</div>
 				{organizationPeopleTab === "members" && (
@@ -42,9 +48,7 @@ const SettingOrganizationPeoplePage = () => {
 				)}
 				{organizationPeopleTab === "roles" && (
 					<TabsContent value="roles">
-						<p className="text-gray-500">
-							Manage your organization roles and permissions here.
-						</p>
+						<p className="text-gray-500">{t("people.roles.description")}</p>
 					</TabsContent>
 				)}
 			</Tabs>

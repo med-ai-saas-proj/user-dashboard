@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import {
 	Avatar,
 	AvatarImage,
@@ -33,6 +34,7 @@ type OrganizationPeopleMemberItemProps =
 const OrganizationPeopleMemberItem: React.FC<
 	OrganizationPeopleMemberItemProps
 > = ({ id, username, email, imageSrc = "", ...props }) => {
+	const { t } = useTranslation("organization");
 	const fakeOrgId = "123";
 
 	const [currentPermissions, setCurrentPermissions] = useState<string[]>([]);
@@ -91,25 +93,28 @@ const OrganizationPeopleMemberItem: React.FC<
 				<Dialog>
 					<DialogTrigger asChild>
 						<Button variant="outline" size="sm" className="ml-auto mt-2">
-							Remove
+							{t("people.members.item.actions.remove")}
 						</Button>
 					</DialogTrigger>
 					<DialogContent>
 						<DialogHeader>
-							<DialogTitle>Confirm removal</DialogTitle>
+							<DialogTitle>
+								{t("people.members.item.removeDialog.title")}
+							</DialogTitle>
 							<DialogDescription>
-								Are you sure you want to remove <strong>{username}</strong> from
-								this organization?
+								{t("people.members.item.removeDialog.description", {
+									username,
+								})}
 							</DialogDescription>
 						</DialogHeader>
 						<DialogFooter>
 							<DialogClose asChild>
 								<Button type="button" variant="outline">
-									Close
+									{t("people.members.item.actions.close")}
 								</Button>
 							</DialogClose>
 							<Button variant="destructive" onClick={handleRemoveUser}>
-								Remove
+								{t("people.members.item.actions.remove")}
 							</Button>
 						</DialogFooter>
 					</DialogContent>
@@ -117,12 +122,14 @@ const OrganizationPeopleMemberItem: React.FC<
 				<Dialog>
 					<DialogTrigger asChild>
 						<Button variant="default" size="sm" className="ml-auto mt-2">
-							Roles
+							{t("people.members.item.actions.roles")}
 						</Button>
 					</DialogTrigger>
 					<DialogContent>
 						<DialogHeader>
-							<DialogTitle>Permissions</DialogTitle>
+							<DialogTitle>
+								{t("people.members.item.permissionsDialog.title")}
+							</DialogTitle>
 							<DialogDescription>
 								<div className="flex flex-col gap-4 mt-4">
 									{permissions?.permissions?.map((perm) => (
@@ -142,11 +149,11 @@ const OrganizationPeopleMemberItem: React.FC<
 						<DialogFooter>
 							<DialogClose asChild>
 								<Button type="button" variant="outline">
-									Close
+									{t("people.members.item.actions.close")}
 								</Button>
 							</DialogClose>
 							<Button variant="default" onClick={handleUpdatePermissions}>
-								Save
+								{t("people.members.item.actions.save")}
 							</Button>
 						</DialogFooter>
 					</DialogContent>

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { useGetUsers } from "../../hooks/organization-people/use-get-users";
 import OrganizationPeopleMemberItem from "./organization-people-member-item";
 import type { OrganizationUser } from "../../organization.type";
@@ -8,6 +9,7 @@ import { Spinner } from "@/components/shadcn/spinner";
 import InvitationDialog from "./dialogs/invitation-dialog";
 
 const OrganizationPeopleMember = () => {
+	const { t } = useTranslation("organization");
 	const fakeOrgId = "123";
 	const { data: users, isPending } = useGetUsers({
 		organizationId: fakeOrgId,
@@ -38,7 +40,7 @@ const OrganizationPeopleMember = () => {
 							<div className="flex items-center justify-center gap-2">
 								<Spinner />
 								<p className="text-center text-sm text-muted-foreground">
-									Loading members...
+									{t("people.members.loading")}
 								</p>
 							</div>
 						</div>
@@ -58,7 +60,7 @@ const OrganizationPeopleMember = () => {
 					{!selectedUser && (
 						<div className="flex items-center justify-center h-full">
 							<p className="text-center text-muted-foreground">
-								Select a member to view details
+								{t("people.members.emptySelection")}
 							</p>
 						</div>
 					)}

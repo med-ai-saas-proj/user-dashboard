@@ -4,8 +4,14 @@ import { Spinner } from "@/components/shadcn/spinner";
 import { cn } from "@/lib/utils";
 import { useGetInvitations } from "../../hooks/organization-people/use-get-invitations";
 import OrganizationPeopleInvitationItem from "./organization-people-invitation-item";
-import OrganizationPeopleLayout from "./organization-people-layout";
 import InvitationDialog from "./dialogs/invitation-dialog";
+import { Button } from "@/components/shadcn/button";
+import {
+	InputGroup,
+	InputGroupAddon,
+	InputGroupInput,
+} from "@/components/shadcn/input-group";
+import { Plus, Search } from "lucide-react";
 
 const OrganizationPeopleInvitation = () => {
 	const { t } = useTranslation("organization");
@@ -18,10 +24,18 @@ const OrganizationPeopleInvitation = () => {
 
 	return (
 		<>
-			<OrganizationPeopleLayout
-				addedButtonText={t("people.layout.inviteMember")}
-				onAdd={() => setOpenInviteDialog(true)}
-			/>
+			<div className="flex items-center justify-between mb-4 mt-2">
+				<InputGroup className="max-w-xs">
+					<InputGroupInput placeholder={t("people.layout.searchPlaceholder")} />
+					<InputGroupAddon>
+						<Search />
+					</InputGroupAddon>
+				</InputGroup>
+				<Button variant="default" onClick={() => setOpenInviteDialog(true)}>
+					<Plus />
+					{t("people.layout.inviteMember")}
+				</Button>
+			</div>
 			<InvitationDialog
 				open={openInviteDialog}
 				onOpenChange={setOpenInviteDialog}

@@ -4,9 +4,15 @@ import { useGetUsers } from "../../hooks/organization-people/use-get-users";
 import OrganizationPeopleMemberItem from "./organization-people-member-item";
 import type { OrganizationUser } from "../../organization.type";
 import OrganizationPeopleMemberDetails from "./organization-people-member-details";
-import OrganizationPeopleLayout from "./organization-people-layout";
-import { Spinner } from "@/components/shadcn/spinner";
 import InvitationDialog from "./dialogs/invitation-dialog";
+import { Spinner } from "@/components/shadcn/spinner";
+import {
+	InputGroup,
+	InputGroupAddon,
+	InputGroupInput,
+} from "@/components/shadcn/input-group";
+import { Plus, Search } from "lucide-react";
+import { Button } from "@/components/shadcn/button";
 
 const OrganizationPeopleMember = () => {
 	const { t } = useTranslation("organization");
@@ -28,7 +34,18 @@ const OrganizationPeopleMember = () => {
 
 	return (
 		<>
-			<OrganizationPeopleLayout onAdd={() => setOpenAddMemberDialog(true)} />
+			<div className="flex items-center justify-between mb-4 mt-2">
+				<InputGroup className="max-w-xs">
+					<InputGroupInput placeholder={t("people.layout.searchPlaceholder")} />
+					<InputGroupAddon>
+						<Search />
+					</InputGroupAddon>
+				</InputGroup>
+				<Button variant="default" onClick={() => setOpenAddMemberDialog(true)}>
+					<Plus />
+					{t("people.layout.addMember")}
+				</Button>
+			</div>
 			<InvitationDialog
 				open={openAddMemeberDialog}
 				onOpenChange={setOpenAddMemberDialog}

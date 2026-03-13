@@ -9,32 +9,27 @@ import { Plus } from "lucide-react";
 
 type OrganizationPeopleLayoutProps = {
 	addedButtonText?: string;
-	children: React.ReactNode;
+	onAdd?: () => void;
+	// onSearch: (query: string) => void;
 };
 
 const OrganizationPeopleLayout: React.FC<OrganizationPeopleLayoutProps> = ({
 	addedButtonText = "Add member",
-	children,
+	onAdd,
+	// onSearch,
 }) => {
 	return (
-		<div>
-			<div className="flex items-center justify-between my-4">
-				<div>
-					<InputGroup className="max-w-xs">
-						<InputGroupInput placeholder="Search..." />
-						<InputGroupAddon>
-							<Search />
-						</InputGroupAddon>
-					</InputGroup>
-				</div>
-				<div>
-					<Button variant="default">
-						<Plus />
-						{addedButtonText}
-					</Button>
-				</div>
-			</div>
-			<div>{children}</div>
+		<div className="flex items-center justify-between mb-4 mt-2">
+			<InputGroup className="max-w-xs">
+				<InputGroupInput placeholder="Search..." />
+				<InputGroupAddon>
+					<Search />
+				</InputGroupAddon>
+			</InputGroup>
+			<Button variant="default" onClick={onAdd}>
+				<Plus />
+				{addedButtonText}
+			</Button>
 		</div>
 	);
 };

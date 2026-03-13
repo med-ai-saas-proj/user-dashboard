@@ -1,38 +1,53 @@
+import { useState } from "react";
 import { Spinner } from "@/components/shadcn/spinner";
+import { cn } from "@/lib/utils";
 import { useGetInvitations } from "../../hooks/organization-people/use-get-invitations";
 import OrganizationPeopleInvitationItem from "./organization-people-invitation-item";
-import { cn } from "@/lib/utils";
+import OrganizationPeopleLayout from "./organization-people-layout";
+import InvitationDialog from "./dialogs/invitation-dialog";
 
 const OrganizationPeopleInvitation = () => {
 	const fakeOrgId = "123";
+	const [openInviteDialog, setOpenInviteDialog] = useState<boolean>(false);
+
 	const { data: invitations, isPending } = useGetInvitations({
 		organizationId: fakeOrgId,
 	});
 
 	return (
-		<div
-			className={cn("border rounded-md", {
-				"p-4": isPending,
-			})}
-		>
-			{isPending && (
-				<div className="flex items-center justify-center h-full">
-					<div className="flex items-center justify-center gap-2">
-						<Spinner />
-						<p className="text-center text-sm text-muted-foreground">
-							Loading invitations...
-						</p>
+		<>
+			<OrganizationPeopleLayout
+				addedButtonText="Invite member"
+				onAdd={() => setOpenInviteDialog(true)}
+			/>
+			<InvitationDialog
+				open={openInviteDialog}
+				onOpenChange={setOpenInviteDialog}
+			/>
+			<div
+				className={cn("border rounded-md", {
+					"p-4": isPending,
+				})}
+			>
+				{isPending && (
+					<div className="flex items-center justify-center h-full">
+						<div className="flex items-center justify-center gap-2">
+							<Spinner />
+							<p className="text-center text-sm text-muted-foreground">
+								Loading invitations...
+							</p>
+						</div>
 					</div>
-				</div>
-			)}
-			{!isPending &&
-				invitations?.results.map((invitation) => (
-					<OrganizationPeopleInvitationItem
-						key={invitation.id}
-						invitation={invitation}
-					/>
-				))}
-		</div>
+				)}
+				{!isPending &&
+					invitations?.results.map((invitation) => (
+						<OrganizationPeopleInvitationItem
+							key={invitation.id}
+							invitation={invitation}
+						/>
+					))}
+			</div>
+		</>
 	);
 };
 

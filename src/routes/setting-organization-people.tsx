@@ -1,5 +1,4 @@
 import { useState } from "react";
-import OrganizationPeopleLayout from "@/features/organization/components/organization-people/organization-people-layout";
 import DashboardLayout from "@/layouts/dashboard-layout";
 import type { OrganizationPeopleTabs } from "@/features/organization/organization.type";
 import {
@@ -33,25 +32,19 @@ const SettingOrganizationPeoplePage = () => {
 				</div>
 				{organizationPeopleTab === "members" && (
 					<TabsContent value="members">
-						<OrganizationPeopleLayout>
-							<OrganizationPeopleMember />
-						</OrganizationPeopleLayout>
+						<OrganizationPeopleMember />
 					</TabsContent>
 				)}
 				{organizationPeopleTab === "invitations" && (
 					<TabsContent value="invitations">
-						<OrganizationPeopleLayout addedButtonText="Invite member">
-							<OrganizationPeopleInvitation />
-						</OrganizationPeopleLayout>
+						<OrganizationPeopleInvitation />
 					</TabsContent>
 				)}
 				{organizationPeopleTab === "roles" && (
 					<TabsContent value="roles">
-						<OrganizationPeopleLayout addedButtonText="Add role">
-							<p className="text-gray-500">
-								Manage your organization roles and permissions here.
-							</p>
-						</OrganizationPeopleLayout>
+						<p className="text-gray-500">
+							Manage your organization roles and permissions here.
+						</p>
 					</TabsContent>
 				)}
 			</Tabs>

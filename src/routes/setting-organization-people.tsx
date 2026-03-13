@@ -1,6 +1,6 @@
 import { useState } from "react";
 import OrganizationPeopleLayout from "@/features/organization/components/organization-people/organization-people-layout";
-import SettingLayout from "@/layouts/setting-layout";
+import DashboardLayout from "@/layouts/dashboard-layout";
 import type { OrganizationPeopleTabs } from "@/features/organization/organization.type";
 import {
 	Tabs,
@@ -16,7 +16,7 @@ const SettingOrganizationPeoplePage = () => {
 		useState<OrganizationPeopleTabs>("members");
 
 	return (
-		<SettingLayout pageTitle="People">
+		<DashboardLayout pageTitle="People">
 			<h2 className="text-2xl font-bold mb-4">People & Permission</h2>
 			<Tabs
 				value={organizationPeopleTab}
@@ -55,7 +55,7 @@ const SettingOrganizationPeoplePage = () => {
 					</TabsContent>
 				)}
 			</Tabs>
-		</SettingLayout>
+		</DashboardLayout>
 	);
 };
 

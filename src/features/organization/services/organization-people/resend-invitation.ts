@@ -10,12 +10,7 @@ export const resendInvitation = async ({
 	organizationId,
 	invitationId,
 }: ResendInvitationParams): Promise<void> => {
-	try {
-		await apiClient.post(
-			`${API_ROUTES.MANAGEMENT.ORGANIZATION.PEOPLE.replace(":organizationId", organizationId)}/invitations/${invitationId}/resend`
-		);
-	} catch (error) {
-		console.error("Error resending invitation:", error);
-		throw error;
-	}
+	await apiClient.post(
+		`${API_ROUTES.MANAGEMENT.ORGANIZATION.PEOPLE.replace(":organizationId", organizationId)}/invitations/${invitationId}/resend`
+	);
 };

@@ -8,13 +8,7 @@ export type DeleteUserParams = {
 
 export const deleteUser = async (params: DeleteUserParams): Promise<void> => {
 	const { userId } = params;
-
-	try {
-		await apiClient.delete(
-			`${API_ROUTES.MANAGEMENT.ORGANIZATION.PEOPLE.replace(":organizationId", params.organizationId)}/users/${userId}`
-		);
-	} catch (error) {
-		console.error("Error deleting user from organization:", error);
-		throw error;
-	}
+	await apiClient.delete(
+		`${API_ROUTES.MANAGEMENT.ORGANIZATION.PEOPLE.replace(":organizationId", params.organizationId)}/users/${userId}`
+	);
 };

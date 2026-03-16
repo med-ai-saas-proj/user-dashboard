@@ -10,12 +10,7 @@ export const deleteInvitation = async ({
 	organizationId,
 	invitationId,
 }: DeleteInvitationParams): Promise<void> => {
-	try {
-		await apiClient.delete(
-			`${API_ROUTES.MANAGEMENT.ORGANIZATION.PEOPLE.replace(":organizationId", organizationId)}/invitations/${invitationId}`
-		);
-	} catch (error) {
-		console.error("Error deleting organization invitation:", error);
-		throw error;
-	}
+	await apiClient.delete(
+		`${API_ROUTES.MANAGEMENT.ORGANIZATION.PEOPLE.replace(":organizationId", organizationId)}/invitations/${invitationId}`
+	);
 };

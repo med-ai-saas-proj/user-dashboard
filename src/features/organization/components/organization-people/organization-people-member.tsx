@@ -13,12 +13,18 @@ import {
 } from "@/components/shadcn/input-group";
 import { Plus, Search } from "lucide-react";
 import { Button } from "@/components/shadcn/button";
+import { CustomPagination } from "@/components/pagination/pagination";
 
 const OrganizationPeopleMember = () => {
-	const { t } = useTranslation("organization");
 	const fakeOrgId = "123";
+	const { t } = useTranslation("organization");
+
+	const limit = 10;
+	const [page, setPage] = useState<number>(1);
 	const { data: users, isPending } = useGetUsers({
 		organizationId: fakeOrgId,
+		offset: (page - 1) * limit,
+		limit,
 	});
 
 	const [openAddMemeberDialog, setOpenAddMemberDialog] =
@@ -72,6 +78,13 @@ const OrganizationPeopleMember = () => {
 								onClick={() => handleSelectUser(user)}
 							/>
 						))}
+					<CustomPagination
+						className="my-4"
+						currentPage={page}
+						limit={limit}
+						totalElements={users?.total || 1}
+						onPageChange={setPage}
+					/>
 				</div>
 				<div className="flex-3 border-l p-8">
 					{!selectedUser && (

@@ -13,16 +13,14 @@ const OrganizationPeopleMemberDetails = ({
 	user,
 }: OrganizationPeopleMemberDetailsProps) => {
 	return (
-		<div>
-			<div className="flex items-center gap-4">
-				<Avatar>
-					<AvatarImage src="" />
-					<AvatarFallback>{user.username[0].toUpperCase()}</AvatarFallback>
-				</Avatar>
-				<div className="flex flex-col">
-					<p className="font-semibold">{user.username}</p>
-					<p className="text-sm text-muted-foreground">{user.email}</p>
-				</div>
+		<div className="flex items-center gap-4">
+			<Avatar>
+				<AvatarImage src="" />
+				<AvatarFallback>{user.username[0].toUpperCase()}</AvatarFallback>
+			</Avatar>
+			<div className="flex flex-col">
+				<p className="font-semibold">{user.username}</p>
+				<p className="text-sm text-muted-foreground">{user.email}</p>
 			</div>
 		</div>
 	);

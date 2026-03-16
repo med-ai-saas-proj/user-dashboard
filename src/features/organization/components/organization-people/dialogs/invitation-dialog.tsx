@@ -13,6 +13,7 @@ import { useForm } from "react-hook-form";
 import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslation } from "react-i18next";
+import { useSendInvitation } from "@/features/organization/hooks/organization-people/use-send-invitation";
 
 type AddMemeberFormData = {
 	email: string;
@@ -27,7 +28,10 @@ const InvitationDialog: React.FC<InvitationDialogProps> = ({
 	open,
 	onOpenChange,
 }) => {
+	const fakeOrgId = "123"; // Replace with actual organization ID
 	const { t } = useTranslation("organization");
+
+	const { mutate: sendInvitation } = useSendInvitation();
 
 	const addMemeberFormSchema = z.object({
 		email: z.email(t("people.dialog.emailInvalid")),
@@ -42,7 +46,17 @@ const InvitationDialog: React.FC<InvitationDialogProps> = ({
 	});
 
 	const onSubmit = (data: AddMemeberFormData) => {
-		console.log("Form submitted with data:", data);
+		sendInvitation(
+			{
+				organizationId: fakeOrgId,
+				email: data.email,
+			},
+			{
+				onSuccess: () => {
+					onOpenChange(false);
+				},
+			}
+		);
 	};
 
 	return (

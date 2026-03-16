@@ -121,6 +121,29 @@ Mock.mock(
 );
 
 Mock.mock(
+	new RegExp(`^${escapeRegExp(invitationsRoute)}(?:\\?.*)?$`),
+	"post",
+	(options) => {
+		const body = parseBody(options.body);
+		const email = typeof body?.email === "string" ? body.email : "";
+
+		if (email) {
+			const newInvitation: MockInvitation = {
+				id: Mock.mock("@id") as string,
+				email,
+				status: "pending",
+			};
+
+			mockInvitations.unshift(newInvitation);
+		}
+
+		return {
+			success: true,
+		};
+	}
+);
+
+Mock.mock(
 	new RegExp(`^${escapeRegExp(invitationsRoute)}/[^/]+(?:\\?.*)?$`),
 	"delete",
 	(options) => {

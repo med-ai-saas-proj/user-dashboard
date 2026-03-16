@@ -37,7 +37,9 @@ const OrganizationPeopleMemberItem: React.FC<
 	const { t } = useTranslation("organization");
 	const fakeOrgId = "123";
 
-	const [currentPermissions, setCurrentPermissions] = useState<string[]>([]);
+	const [currentPermissions, setCurrentPermissions] = useState<
+		Map<string, boolean>
+	>(new Map());
 
 	const { mutate: deleteUser } = useDeleteUser();
 	const { data: permissions } = useGetPermissions({
@@ -53,25 +55,32 @@ const OrganizationPeopleMemberItem: React.FC<
 		});
 	};
 	const handleUpdatePermissions = () => {
+		const selectedPermissions = Array.from(currentPermissions.entries())
+			.filter(([, isAllowed]) => isAllowed)
+			.map(([permission]) => permission);
+
 		updatePermissions({
 			organizationId: fakeOrgId,
 			userId: id,
 			permissions: {
-				permissions: currentPermissions,
+				permissions: selectedPermissions,
 			},
 		});
 	};
 	const handleChangePermissions = (perm: string) => {
-		setCurrentPermissions(
-			(prev) =>
-				prev.includes(perm)
-					? prev.filter((p) => p !== perm) // remove
-					: [...prev, perm] // add
-		);
+		setCurrentPermissions((prev) => {
+			const next = new Map(prev);
+			next.set(perm, !next.get(perm));
+			return next;
+		});
 	};
 
 	useEffect(() => {
-		setCurrentPermissions(permissions?.permissions || []);
+		const permissionMap = new Map<string, boolean>();
+		permissions?.permissions?.forEach((permission) => {
+			permissionMap.set(permission, true);
+		});
+		setCurrentPermissions(permissionMap);
 	}, [permissions]);
 
 	return (
@@ -137,7 +146,7 @@ const OrganizationPeopleMemberItem: React.FC<
 											<Checkbox
 												id={perm}
 												name={perm}
-												checked={currentPermissions.includes(perm)}
+												checked={currentPermissions.get(perm) === true}
 												onCheckedChange={() => handleChangePermissions(perm)}
 											/>
 											<Label htmlFor={perm}>{perm}</Label>

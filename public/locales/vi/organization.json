@@ -56,5 +56,15 @@
                 }
             }
         }
+    },
+    "billing": {
+        "pageTitle": "Thanh toán",
+        "tabs": {
+            "overview": "Tổng quan",
+            "payment-methods": "Phương thức thanh toán",
+            "billing-history": "Lịch sử thanh toán",
+            "credit-grants": "Cấp tín dụng",
+            "preferences": "Tùy chọn"
+        }
     }
 }

@@ -40,6 +40,7 @@
 	--color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
 	--color-sidebar-border: var(--sidebar-border);
 	--color-sidebar-ring: var(--sidebar-ring);
+	--background-image-card-gradient: var(--card-gradient);
 }
 
 :root {
@@ -75,6 +76,7 @@
 	--sidebar-accent-foreground: oklch(0.205 0 0);
 	--sidebar-border: oklch(0.922 0 0);
 	--sidebar-ring: oklch(0.708 0 0);
+	--card-gradient: linear-gradient(238deg, #f7f7f880 0%, #f7f7f8 100%);
 }
 
 .dark {
@@ -109,6 +111,7 @@
 	--sidebar-accent-foreground: oklch(0.985 0 0);
 	--sidebar-border: oklch(1 0 0 / 10%);
 	--sidebar-ring: oklch(0.556 0 0);
+	--card-gradient: linear-gradient(238deg, #ffffff80 0%, #fafafa 100%);
 }
 
 @utility no-scrollbar {

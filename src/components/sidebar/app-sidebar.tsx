@@ -57,7 +57,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 			},
 			{
 				name: t("management.settings.title"),
-				url: "/settings/organization/general",
+				url: "/settings",
 				icon: Settings,
 			},
 		],
@@ -83,46 +83,18 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 				icon: SearchIcon,
 			},
 		],
-		settings: [
-			{
-				name: t("settings.profile.title"),
-				url: "/settings/profile",
-			},
-		],
 		organization: [
 			{
-				name: t("organization.general.title"),
-				url: "/settings/organization/general",
-			},
-			{
-				name: t("organization.apiKeys.title"),
-				url: "/settings/organization/api-keys",
-			},
-			{
 				name: t("organization.people.title"),
-				url: "/settings/organization/people",
+				url: "/organization/people",
 			},
 			{
 				name: t("organization.project.title"),
-				url: "/settings/organization/projects",
+				url: "/organization/projects",
 			},
 			{
 				name: t("organization.billing.title"),
-				url: "/settings/organization/billing",
-			},
-		],
-		project: [
-			{
-				name: t("project.general.title"),
-				url: "/settings/project/general",
-			},
-			{
-				name: t("project.apiKeys.title"),
-				url: "/settings/project/api-keys",
-			},
-			{
-				name: t("project.people.title"),
-				url: "/settings/project/people",
+				url: "/organization/billing",
 			},
 		],
 	};
@@ -139,8 +111,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 					projects={data.organization}
 					label={t("organization.title")}
 				/>
-				<NavProjects projects={data.project} label={t("project.title")} />
-				<NavProjects projects={data.settings} label={t("settings.title")} />
 			</SidebarContent>
 
 			<SidebarFooter>

@@ -29,19 +29,10 @@
             "title": "Cài đặt"
         }
     },
-    "settings": {
-        "title": "Cài đặt",
-        "profile": {
-            "title": "Hồ sơ của bạn"
-        }
-    },
     "organization": {
         "title": "Tổ chức",
         "general": {
             "title": "Chung"
-        },
-        "apiKeys": {
-            "title": "Khóa API"
         },
         "people": {
             "title": "Người dùng"
@@ -51,18 +42,6 @@
         },
         "billing": {
             "title": "Thanh toán"
-        }
-    },
-    "project": {
-        "title": "Dự án",
-        "general": {
-            "title": "Chung"
-        },
-        "apiKeys": {
-            "title": "Khóa API"
-        },
-        "people": {
-            "title": "Người dùng"
         }
     }
 }

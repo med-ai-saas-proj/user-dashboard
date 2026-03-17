@@ -42,6 +42,9 @@
 	--color-sidebar-ring: var(--sidebar-ring);
 	--background-image-card-gradient: var(--card-gradient);
 	--color-alert: var(--alert);
+	--color-progress-bar: var(--progress-bar);
+	--color-successful: var(--successful);
+	--color-successful-status: var(--successful-status);
 }
 
 :root {
@@ -79,6 +82,9 @@
 	--sidebar-ring: oklch(0.708 0 0);
 	--card-gradient: linear-gradient(238deg, #f7f7f880 0%, #f7f7f8 100%);
 	--alert: oklch(0.6296 0.1894 41.5);
+	--progress-bar: oklch(0.7 0.17 162);
+	--successful: oklch(0.5 0.14 162);
+	--successful-status: oklch(0.9 0.1 162);
 }
 
 .dark {
@@ -114,7 +120,10 @@
 	--sidebar-border: oklch(1 0 0 / 10%);
 	--sidebar-ring: oklch(0.556 0 0);
 	--card-gradient: linear-gradient(238deg, #ffffff80 0%, #fafafa 100%);
-	--alert: oklch(0.704 0.191 22.216);
+	--alert: oklch(0.6296 0.1894 41.5);
+	--progress-bar: oklch(0.7 0.17 162);
+	--successful: oklch(0.5 0.14 162);
+	--successful-status: oklch(0.9 0.1 162);
 }
 
 @utility no-scrollbar {

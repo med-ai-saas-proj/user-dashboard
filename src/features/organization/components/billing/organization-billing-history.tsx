@@ -1,3 +1,5 @@
+// import OrganizationBillingHistoryItem from "./organization-billing-history-item";
+
 const OrganizationBillingHistory = () => {
 	return (
 		<div className="w-full py-10">
@@ -8,6 +10,7 @@ const OrganizationBillingHistory = () => {
 						No invoices found
 					</p>
 				</div>
+				{/* <OrganizationBillingHistoryItem /> */}
 			</div>
 		</div>
 	);

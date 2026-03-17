@@ -97,6 +97,20 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 				url: "/organization/billing",
 			},
 		],
+		project: [
+			{
+				name: t("project.general.title"),
+				url: "/settings/project/general",
+			},
+			{
+				name: t("project.people.title"),
+				url: "/settings/project/people",
+			},
+			{
+				name: t("project.apiKeys.title"),
+				url: "/settings/project/api-keys",
+			},
+		],
 	};
 
 	return (
@@ -111,6 +125,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 					projects={data.organization}
 					label={t("organization.title")}
 				/>
+				<NavProjects projects={data.project} label={t("project.title")} />
 			</SidebarContent>
 
 			<SidebarFooter>

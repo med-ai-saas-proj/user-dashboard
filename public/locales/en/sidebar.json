@@ -43,5 +43,17 @@
         "billing": {
             "title": "Billing"
         }
+    },
+    "project": {
+        "title": "Project",
+        "general": {
+            "title": "General"
+        },
+        "apiKeys": {
+            "title": "API Keys"
+        },
+        "people": {
+            "title": "People"
+        }
     }
 }

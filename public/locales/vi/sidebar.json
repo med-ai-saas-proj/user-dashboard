@@ -43,5 +43,17 @@
         "billing": {
             "title": "Thanh toán"
         }
+    },
+    "project": {
+        "title": "Dự án",
+        "general": {
+            "title": "Chung"
+        },
+        "apiKeys": {
+            "title": "Khóa API"
+        },
+        "people": {
+            "title": "Người dùng"
+        }
     }
 }

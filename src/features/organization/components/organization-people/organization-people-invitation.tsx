@@ -12,10 +12,11 @@ import {
 	InputGroupInput,
 } from "@/components/shadcn/input-group";
 import { Plus, Search } from "lucide-react";
+import { useOrganizationStore } from "../../store/organization";
 
 const OrganizationPeopleInvitation = () => {
 	const { t } = useTranslation("organization");
-	const fakeOrgId = "123";
+	const fakeOrgId = useOrganizationStore((state) => state.organizationId);
 	const [openInviteDialog, setOpenInviteDialog] = useState<boolean>(false);
 
 	const { data: invitations, isPending } = useGetInvitations({

@@ -19,6 +19,7 @@ import {
 	DialogClose,
 	DialogTitle,
 } from "@/components/shadcn/dialog";
+import { useOrganizationStore } from "../../store/organization";
 
 const OrganizationPeopleInvitationItem = ({
 	invitation,
@@ -26,7 +27,7 @@ const OrganizationPeopleInvitationItem = ({
 	invitation: OrganizationInvitation;
 }) => {
 	const { t } = useTranslation("organization");
-	const fakeOrgId = "123";
+	const fakeOrgId = useOrganizationStore((state) => state.organizationId);
 	const [isResendInvitation, setIsResendInvitation] = useState<boolean>(false);
 
 	const { mutate: resendInvitation } = useResendInvitation();

@@ -22,6 +22,7 @@ import { Field } from "@/components/shadcn/field";
 import { Checkbox } from "@/components/shadcn/checkbox";
 import { Label } from "@/components/shadcn/label";
 import { useUpdatePermissions } from "../../hooks/organization-people/use-update-permissions";
+import { useOrganizationStore } from "../../store/organization";
 
 type OrganizationPeopleMemberItemProps =
 	React.HTMLAttributes<HTMLDivElement> & {
@@ -35,7 +36,7 @@ const OrganizationPeopleMemberItem: React.FC<
 	OrganizationPeopleMemberItemProps
 > = ({ id, username, email, imageSrc = "", ...props }) => {
 	const { t } = useTranslation("organization");
-	const fakeOrgId = "123";
+	const fakeOrgId = useOrganizationStore((state) => state.organizationId);
 
 	const [currentPermissions, setCurrentPermissions] = useState<
 		Map<string, boolean>

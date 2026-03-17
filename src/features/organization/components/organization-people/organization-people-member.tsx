@@ -14,9 +14,10 @@ import {
 import { Plus, Search } from "lucide-react";
 import { Button } from "@/components/shadcn/button";
 import { CustomPagination } from "@/components/pagination/pagination";
+import { useOrganizationStore } from "../../store/organization";
 
 const OrganizationPeopleMember = () => {
-	const fakeOrgId = "123";
+	const fakeOrgId = useOrganizationStore((state) => state.organizationId);
 	const { t } = useTranslation("organization");
 
 	const limit = 10;

@@ -14,6 +14,7 @@ import z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslation } from "react-i18next";
 import { useSendInvitation } from "@/features/organization/hooks/organization-people/use-send-invitation";
+import { useOrganizationStore } from "@/features/organization/store/organization";
 
 type AddMemeberFormData = {
 	email: string;
@@ -28,7 +29,7 @@ const InvitationDialog: React.FC<InvitationDialogProps> = ({
 	open,
 	onOpenChange,
 }) => {
-	const fakeOrgId = "123"; // Replace with actual organization ID
+	const fakeOrgId = useOrganizationStore((state) => state.organizationId);
 	const { t } = useTranslation("organization");
 
 	const { mutate: sendInvitation } = useSendInvitation();

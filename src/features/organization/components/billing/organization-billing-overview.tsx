@@ -1,8 +1,12 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/shadcn/button";
 import { CreditCard } from "lucide-react";
+import StripePayment from "./stripe/stripe-payment";
 
 const OrganizationBillingOverview = () => {
+	const [addPaymentDetailsOpen, setAddPaymentDetailsOpen] = useState(false);
+
 	return (
 		<div className="w-full py-10">
 			<div className="max-w-4xl mx-auto">
@@ -13,11 +17,17 @@ const OrganizationBillingOverview = () => {
 							<p className="text-4xl font-semibold">$0.00</p>
 						</div>
 						<div className="flex items-center gap-2">
-							<Button variant="default">Add payment details</Button>
+							<Button
+								variant="default"
+								onClick={() => setAddPaymentDetailsOpen(true)}
+							>
+								Add payment details
+							</Button>
 							<Button variant="outline">
 								<Link to="/dashboard">View usage</Link>
 							</Button>
 						</div>
+						{addPaymentDetailsOpen && <StripePayment />}
 					</div>
 					<div className="grid grid-cols-2 gap-x-36 gap-y-10 w-fit">
 						<Link

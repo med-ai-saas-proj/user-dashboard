@@ -33,6 +33,10 @@ export const API_ROUTES = {
 				`management/${API_VERSION}/organizations/:organizationId`,
 				BASE_API_URL
 			).toString(),
+			BILLING: new URL(
+				`management/${API_VERSION}/billing`,
+				BASE_API_URL
+			).toString(),
 		},
 	},
 	SERVICES: {

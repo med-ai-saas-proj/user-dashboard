@@ -20,11 +20,11 @@ import SettingOrganizationPeoplePage from "@/routes/setting-organization-people"
 import OrganizationPeopleInvitation from "./features/organization/components/organization-people/organization-people-invitation";
 import OrganizationPeopleMember from "./features/organization/components/organization-people/organization-people-member";
 import Billing from "./routes/billing";
-import OrganizationBillingOverview from "./features/organization/components/billing/organization-billing-overview";
-import OrganizationBillingPaymentMethods from "./features/organization/components/billing/organization-billing-payment-methods";
-import OrganizationBillingHistory from "./features/organization/components/billing/organization-billing-history";
-import OrganizationBillingCreditGrants from "./features/organization/components/billing/organization-billing-credit-grants";
-import OrganizationBillingPreferences from "./features/organization/components/billing/organization-billing-preferences";
+import OrganizationBillingOverview from "./features/organization/components/organization-billing/organization-billing-overview";
+import OrganizationBillingPaymentMethods from "./features/organization/components/organization-billing/organization-billing-payment-methods";
+import OrganizationBillingHistory from "./features/organization/components/organization-billing/organization-billing-history";
+import OrganizationBillingCreditGrants from "./features/organization/components/organization-billing/organization-billing-credit-grants";
+import OrganizationBillingPreferences from "./features/organization/components/organization-billing/organization-billing-preferences";
 
 function App() {
     return (

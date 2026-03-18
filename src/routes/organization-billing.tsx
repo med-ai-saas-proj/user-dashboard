@@ -12,6 +12,7 @@ const OrganizationBilling = () => {
 
 	return (
 		<DashboardLayout pageTitle={t("billing.pageTitle")}>
+			<h2 className="text-2xl font-bold mb-4">{t("billing.heading")}</h2>
 			<Tabs value={currentTab} onValueChange={(value) => navigate(value)}>
 				<div className="border-b w-full">
 					<TabsList variant="line">

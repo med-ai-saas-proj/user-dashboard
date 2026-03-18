@@ -59,6 +59,7 @@
     },
     "billing": {
         "pageTitle": "Thanh toán",
+        "heading": "Quản lý thanh toán",
         "tabs": {
             "overview": "Tổng quan",
             "payment-methods": "Phương thức thanh toán",

@@ -59,6 +59,7 @@
     },
     "billing": {
         "pageTitle": "Billing",
+        "heading": "Billing Management",
         "tabs": {
             "overview": "Overview",
             "payment-methods": "Payment Methods",

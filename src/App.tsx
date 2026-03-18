@@ -15,6 +15,10 @@ import { Toaster } from "sonner";
 import PlaygroundChatPage from "./routes/playground-chat";
 import PlaygroundAISearchPage from "@/routes/playground-ai-search";
 import DashboardPage from "@/routes/dashboard";
+import SettingPage from "@/routes/setting";
+import SettingOrganizationPeoplePage from "@/routes/setting-organization-people";
+import OrganizationPeopleInvitation from "./features/organization/components/organization-people/organization-people-invitation";
+import OrganizationPeopleMember from "./features/organization/components/organization-people/organization-people-member";
 
 function App() {
 	return (
@@ -83,7 +87,31 @@ function App() {
 								</ProtectedRoute>
 							}
 						/>
-
+						<Route
+							path="/settings"
+							element={
+								<ProtectedRoute>
+									<SettingPage />
+								</ProtectedRoute>
+							}
+						/>
+						<Route path="/organization">
+							<Route
+								path="people"
+								element={
+									<ProtectedRoute>
+										<SettingOrganizationPeoplePage />
+									</ProtectedRoute>
+								}
+							>
+								<Route index element={<Navigate to="members" replace />} />
+								<Route path="members" element={<OrganizationPeopleMember />} />
+								<Route
+									path="invitations"
+									element={<OrganizationPeopleInvitation />}
+								/>
+							</Route>
+						</Route>
 						<Route path="*" element={<Navigate to="/" replace />} />
 					</Routes>
 				</BrowserRouter>

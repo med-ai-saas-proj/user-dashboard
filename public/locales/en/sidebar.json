@@ -24,6 +24,36 @@
         },
         "apiReference": {
             "title": "API Reference"
+        },
+        "settings": {
+            "title": "Settings"
+        }
+    },
+    "organization": {
+        "title": "Organization",
+        "general": {
+            "title": "General"
+        },
+        "people": {
+            "title": "People"
+        },
+        "project": {
+            "title": "Project"
+        },
+        "billing": {
+            "title": "Billing"
+        }
+    },
+    "project": {
+        "title": "Project",
+        "general": {
+            "title": "General"
+        },
+        "apiKeys": {
+            "title": "API Keys"
+        },
+        "people": {
+            "title": "People"
         }
     }
 }

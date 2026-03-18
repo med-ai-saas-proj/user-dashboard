@@ -9,6 +9,7 @@ import {
 	KeyRound,
 	PillIcon,
 	SearchIcon,
+	Settings,
 } from "lucide-react";
 import type * as React from "react";
 import { useTranslation } from "react-i18next";
@@ -54,6 +55,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 				url: "/api-reference",
 				icon: Book,
 			},
+			{
+				name: t("management.settings.title"),
+				url: "/settings",
+				icon: Settings,
+			},
 		],
 		playground: [
 			{
@@ -77,6 +83,34 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 				icon: SearchIcon,
 			},
 		],
+		organization: [
+			{
+				name: t("organization.people.title"),
+				url: "/organization/people",
+			},
+			{
+				name: t("organization.project.title"),
+				url: "/organization/projects",
+			},
+			{
+				name: t("organization.billing.title"),
+				url: "/organization/billing",
+			},
+		],
+		project: [
+			{
+				name: t("project.general.title"),
+				url: "/settings/project/general",
+			},
+			{
+				name: t("project.people.title"),
+				url: "/settings/project/people",
+			},
+			{
+				name: t("project.apiKeys.title"),
+				url: "/settings/project/api-keys",
+			},
+		],
 	};
 
 	return (
@@ -87,6 +121,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 			<SidebarContent>
 				<NavProjects projects={data.management} label={t("management.title")} />
 				<NavProjects projects={data.playground} label={t("playground.title")} />
+				<NavProjects
+					projects={data.organization}
+					label={t("organization.title")}
+				/>
+				<NavProjects projects={data.project} label={t("project.title")} />
 			</SidebarContent>
 
 			<SidebarFooter>

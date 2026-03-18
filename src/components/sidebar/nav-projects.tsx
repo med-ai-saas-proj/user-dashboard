@@ -1,7 +1,7 @@
 "use client";
 
 import { ChevronDown, type LucideIcon } from "lucide-react";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import {
 	Collapsible,
 	CollapsibleContent,
@@ -15,18 +15,19 @@ import {
 	SidebarMenuButton,
 	SidebarMenuItem,
 } from "@/components/shadcn/sidebar";
+import { useIsActivePath } from "@/hooks/use-is-active-tab";
 
 interface NavProjectsProps {
 	label: string;
 	projects: {
 		name: string;
 		url: string;
-		icon: LucideIcon;
+		icon?: LucideIcon;
 	}[];
 }
 
 export function NavProjects({ label, projects }: NavProjectsProps) {
-	const { pathname } = useLocation();
+	const isActive = useIsActivePath();
 
 	return (
 		<Collapsible defaultOpen className="group/collapsible">
@@ -42,9 +43,9 @@ export function NavProjects({ label, projects }: NavProjectsProps) {
 						<SidebarMenu>
 							{projects.map((item) => (
 								<SidebarMenuItem key={item.name}>
-									<SidebarMenuButton asChild isActive={pathname === item.url}>
+									<SidebarMenuButton asChild isActive={isActive(item.url)}>
 										<NavLink to={item.url}>
-											<item.icon />
+											{item.icon && <item.icon />}
 											<span>{item.name}</span>
 										</NavLink>
 									</SidebarMenuButton>

@@ -12,6 +12,8 @@ import type patientInfoEN from "../public/locales/en/patient-info.json";
 import type summaryResponseEN from "../public/locales/en/summary-response.json";
 import type chatbotEN from "../public/locales/en/chatbot.json";
 import type dashboardEN from "../public/locales/en/dashboard.json";
+import type settingEN from "../public.locales/en/setting.json";
+import type organizationEN from "../public/locales/en/organization.json";
 
 declare module "i18next" {
 	interface CustomTypeOptions {
@@ -30,6 +32,8 @@ declare module "i18next" {
 			"summary-response": typeof summaryResponseEN;
 			chatbot: typeof chatbotEN;
 			dashboard: typeof dashboardEN;
+			setting: typeof settingEN;
+			organization: typeof organizationEN;
 		};
 	}
 }

@@ -1,0 +1,60 @@
+{
+    "people": {
+        "pageTitle": "Thành viên",
+        "heading": "Thành viên & Phân quyền",
+        "tabs": {
+            "members": "Thành viên",
+            "invitations": "Lời mời",
+            "roles": "Vai trò"
+        },
+        "roles": {
+            "description": "Quản lý vai trò và quyền trong tổ chức của bạn tại đây."
+        },
+        "layout": {
+            "searchPlaceholder": "Tìm kiếm...",
+            "addMember": "Thêm thành viên",
+            "inviteMember": "Mời thành viên"
+        },
+        "dialog": {
+            "title": "Thêm thành viên mới",
+            "description": "Mời thành viên mới tham gia tổ chức của bạn qua email.",
+            "emailLabel": "Email",
+            "emailPlaceholder": "Nhập địa chỉ email",
+            "emailInvalid": "Vui lòng nhập địa chỉ email hợp lệ",
+            "submit": "Gửi lời mời"
+        },
+        "members": {
+            "loading": "Đang tải danh sách thành viên...",
+            "emptySelection": "Chọn một thành viên để xem chi tiết",
+            "item": {
+                "actions": {
+                    "remove": "Xóa",
+                    "roles": "Vai trò",
+                    "close": "Đóng",
+                    "save": "Lưu"
+                },
+                "removeDialog": {
+                    "title": "Xác nhận xóa",
+                    "description": "Bạn có chắc chắn muốn xóa {{username}} khỏi tổ chức này không?"
+                },
+                "permissionsDialog": {
+                    "title": "Quyền hạn"
+                }
+            }
+        },
+        "invitations": {
+            "loading": "Đang tải danh sách lời mời...",
+            "item": {
+                "actions": {
+                    "resend": "Gửi lại",
+                    "remove": "Xóa",
+                    "cancel": "Hủy"
+                },
+                "removeDialog": {
+                    "title": "Xác nhận xóa",
+                    "description": "Bạn có chắc chắn muốn xóa lời mời cho {{email}} không?"
+                }
+            }
+        }
+    }
+}

@@ -24,6 +24,36 @@
         },
         "apiReference": {
             "title": "Tham chiếu API"
+        },
+        "settings": {
+            "title": "Cài đặt"
+        }
+    },
+    "organization": {
+        "title": "Tổ chức",
+        "general": {
+            "title": "Chung"
+        },
+        "people": {
+            "title": "Người dùng"
+        },
+        "project": {
+            "title": "Dự án"
+        },
+        "billing": {
+            "title": "Thanh toán"
+        }
+    },
+    "project": {
+        "title": "Dự án",
+        "general": {
+            "title": "Chung"
+        },
+        "apiKeys": {
+            "title": "Khóa API"
+        },
+        "people": {
+            "title": "Người dùng"
         }
     }
 }

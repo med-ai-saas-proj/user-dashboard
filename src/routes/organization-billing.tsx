@@ -3,7 +3,7 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/shadcn/tabs";
 import DashboardLayout from "@/layouts/dashboard-layout";
 import { useTranslation } from "react-i18next";
 
-const Billing = () => {
+const OrganizationBilling = () => {
 	const { t } = useTranslation("organization");
 	const location = useLocation();
 	const navigate = useNavigate();
@@ -39,4 +39,4 @@ const Billing = () => {
 	);
 };
 
-export default Billing;
+export default OrganizationBilling;

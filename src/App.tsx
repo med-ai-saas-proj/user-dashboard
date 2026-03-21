@@ -19,6 +19,7 @@ import SettingPage from "@/routes/setting";
 import SettingOrganizationPeoplePage from "@/routes/setting-organization-people";
 import OrganizationPeopleInvitation from "./features/organization/components/organization-people/organization-people-invitation";
 import OrganizationPeopleMember from "./features/organization/components/organization-people/organization-people-member";
+import ProjectGeneral from "./routes/project-general";
 
 function App() {
 	return (
@@ -111,6 +112,10 @@ function App() {
 									element={<OrganizationPeopleInvitation />}
 								/>
 							</Route>
+						</Route>
+						<Route path="/project">
+							<Route index element={<Navigate to="general" replace />} />
+							<Route path="general" element={<ProjectGeneral />} />
 						</Route>
 						<Route path="*" element={<Navigate to="/" replace />} />
 					</Routes>

@@ -100,15 +100,15 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 		project: [
 			{
 				name: t("project.general.title"),
-				url: "/settings/project/general",
+				url: "/project/general",
 			},
 			{
 				name: t("project.people.title"),
-				url: "/settings/project/people",
+				url: "/project/people",
 			},
 			{
 				name: t("project.apiKeys.title"),
-				url: "/settings/project/api-keys",
+				url: "/project/api-keys",
 			},
 		],
 	};

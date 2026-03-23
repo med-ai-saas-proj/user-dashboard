@@ -10,7 +10,6 @@ import { Plus, Search } from "lucide-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useGetUsers } from "../../hooks/organization-people/use-get-users";
-import type { OrganizationUser } from "../../organization.type";
 import { useOrganizationStore } from "../../store/organization";
 import InvitationDialog from "./invitation-dialog";
 import OrganizationPeopleMemberItem from "./organization-people-member-item";
@@ -29,14 +28,6 @@ const OrganizationPeopleMember = () => {
 
 	const [openAddMemeberDialog, setOpenAddMemberDialog] =
 		useState<boolean>(false);
-	const [selectedUser, setSelectedUser] = useState<OrganizationUser | null>(
-		null
-	);
-
-	const handleSelectUser = (user: OrganizationUser) => {
-		if (!user) return;
-		setSelectedUser(user);
-	};
 
 	return (
 		<>

@@ -66,7 +66,6 @@ const OrganizationPeopleMember = () => {
 								id={user.id}
 								username={user.username}
 								email={user.email}
-								onClick={() => handleSelectUser(user)}
 							/>
 						))}
 					<CustomPagination

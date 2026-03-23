@@ -1,20 +1,19 @@
-import { useState } from "react";
-import { useTranslation } from "react-i18next";
-import { useGetUsers } from "../../hooks/organization-people/use-get-users";
-import OrganizationPeopleMemberItem from "./organization-people-member-item";
-import type { OrganizationUser } from "../../organization.type";
-import OrganizationPeopleMemberDetails from "./organization-people-member-details";
-import InvitationDialog from "./dialogs/invitation-dialog";
-import { Spinner } from "@/components/shadcn/spinner";
+import { CustomPagination } from "@/components/pagination/pagination";
+import { Button } from "@/components/shadcn/button";
 import {
 	InputGroup,
 	InputGroupAddon,
 	InputGroupInput,
 } from "@/components/shadcn/input-group";
+import { Spinner } from "@/components/shadcn/spinner";
 import { Plus, Search } from "lucide-react";
-import { Button } from "@/components/shadcn/button";
-import { CustomPagination } from "@/components/pagination/pagination";
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useGetUsers } from "../../hooks/organization-people/use-get-users";
+import type { OrganizationUser } from "../../organization.type";
 import { useOrganizationStore } from "../../store/organization";
+import InvitationDialog from "./invitation-dialog";
+import OrganizationPeopleMemberItem from "./organization-people-member-item";
 
 const OrganizationPeopleMember = () => {
 	const fakeOrgId = useOrganizationStore((state) => state.organizationId);
@@ -86,18 +85,6 @@ const OrganizationPeopleMember = () => {
 						totalElements={users?.total || 1}
 						onPageChange={setPage}
 					/>
-				</div>
-				<div className="flex-3 border-l p-8">
-					{!selectedUser && (
-						<div className="flex items-center justify-center h-full">
-							<p className="text-center text-muted-foreground">
-								{t("people.members.emptySelection")}
-							</p>
-						</div>
-					)}
-					{selectedUser && (
-						<OrganizationPeopleMemberDetails user={selectedUser} />
-					)}
 				</div>
 			</div>
 		</>

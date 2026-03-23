@@ -17,6 +17,11 @@ type ProjectGeneralFormData = z.infer<typeof projectGeneralSchema>;
 const ProjectGeneralForm = () => {
 	const { register, handleSubmit, control } = useForm<ProjectGeneralFormData>({
 		resolver: zodResolver(projectGeneralSchema),
+		defaultValues: {
+			projectName: "demo",
+			projectId: "123",
+			disableAPIKeys: false,
+		},
 	});
 
 	const onSubmit = (data: ProjectGeneralFormData) => {

@@ -3,5 +3,37 @@
         "pageTitle": "Project Settings",
         "heading": "Project Settings",
         "archiveButton": "Archive"
+    },
+    "people": {
+        "pageTitle": "People",
+        "heading": "People & Permission",
+        "tabs": {
+            "members": "Members",
+            "roles": "Roles"
+        },
+        "layout": {
+            "searchPlaceholder": "Search...",
+            "addMember": "Add member",
+            "inviteMember": "Invite member"
+        },
+        "members": {
+            "loading": "Loading members...",
+            "emptySelection": "Select a member to view details",
+            "item": {
+                "actions": {
+                    "remove": "Remove",
+                    "roles": "Roles",
+                    "close": "Close",
+                    "save": "Save"
+                },
+                "removeDialog": {
+                    "title": "Confirm removal",
+                    "description": "Are you sure you want to remove <bold>{{username}}</bold> from this project?"
+                },
+                "permissionsDialog": {
+                    "title": "Permissions"
+                }
+            }
+        }
     }
 }

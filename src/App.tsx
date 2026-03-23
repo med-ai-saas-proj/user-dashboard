@@ -20,6 +20,9 @@ import SettingOrganizationPeoplePage from "@/routes/setting-organization-people"
 import OrganizationPeopleInvitation from "./features/organization/components/organization-people/organization-people-invitation";
 import OrganizationPeopleMember from "./features/organization/components/organization-people/organization-people-member";
 import ProjectGeneral from "./routes/project-general";
+import ProjectPeople from "./routes/project-people";
+import ProjectPeopleMember from "./features/project/components/project-people/project-people-member";
+import ProjectPeopleRole from "./features/project/components/project-people/project-people-role";
 
 function App() {
 	return (
@@ -115,7 +118,26 @@ function App() {
 						</Route>
 						<Route path="/project">
 							<Route index element={<Navigate to="general" replace />} />
-							<Route path="general" element={<ProjectGeneral />} />
+							<Route
+								path="general"
+								element={
+									<ProtectedRoute>
+										<ProjectGeneral />
+									</ProtectedRoute>
+								}
+							/>
+							<Route
+								path="people"
+								element={
+									<ProtectedRoute>
+										<ProjectPeople />
+									</ProtectedRoute>
+								}
+							>
+								<Route index element={<Navigate to="members" replace />} />
+								<Route path="members" element={<ProjectPeopleMember />} />
+								<Route path="roles" element={<ProjectPeopleRole />} />
+							</Route>
 						</Route>
 						<Route path="*" element={<Navigate to="/" replace />} />
 					</Routes>

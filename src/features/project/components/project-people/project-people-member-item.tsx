@@ -1,12 +1,11 @@
+import type React from "react";
 import { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
+import { useTranslation, Trans } from "react-i18next";
 import {
 	Avatar,
-	AvatarImage,
 	AvatarFallback,
+	AvatarImage,
 } from "@/components/shadcn/avatar";
-import { Button } from "@/components/shadcn/button";
-import { useDeleteUser } from "../../hooks/organization-people/use-delete-user";
 import {
 	Dialog,
 	DialogTrigger,
@@ -17,41 +16,49 @@ import {
 	DialogFooter,
 	DialogClose,
 } from "@/components/shadcn/dialog";
-import { useGetPermissions } from "../../hooks/organization-people/use-get-permissions";
+import { Button } from "@/components/shadcn/button";
+import { useDeleteUser } from "../../hooks/project-people/use-delete-user";
+import { useProjectStore } from "../../store/project";
 import { Field } from "@/components/shadcn/field";
 import { Checkbox } from "@/components/shadcn/checkbox";
+import { useGetPermissions } from "../../hooks/project-people/use-get-permissions";
+import { useUpdatePermissions } from "../../hooks/project-people/use-update-permissions";
 import { Label } from "@/components/shadcn/label";
-import { useUpdatePermissions } from "../../hooks/organization-people/use-update-permissions";
-import { useOrganizationStore } from "../../store/organization";
 
-type OrganizationPeopleMemberItemProps =
-	React.HTMLAttributes<HTMLDivElement> & {
-		id: string;
-		username: string;
-		email: string;
-		imageSrc?: string;
-	};
+type ProjectPeopleMemberItemProps = React.HTMLAttributes<HTMLDivElement> & {
+	id: string;
+	username: string;
+	email: string;
+	roles: string[];
+	imageSrc?: string;
+};
 
-const OrganizationPeopleMemberItem: React.FC<
-	OrganizationPeopleMemberItemProps
-> = ({ id, username, email, imageSrc = "", ...props }) => {
-	const { t } = useTranslation("organization");
-	const fakeOrgId = useOrganizationStore((state) => state.organizationId);
+const ProjectPeopleMemberItem: React.FC<ProjectPeopleMemberItemProps> = ({
+	id,
+	username,
+	email,
+	roles,
+	imageSrc = "",
+	...props
+}) => {
+	const { t } = useTranslation("project");
+	const fakeProjectId = useProjectStore((state) => state.projectId);
 
 	const [currentPermissions, setCurrentPermissions] = useState<
 		Map<string, boolean>
 	>(new Map());
+	const [openRoleDialog, setOpenRoleDialog] = useState<boolean>(false);
 
 	const { mutate: deleteUser } = useDeleteUser();
 	const { data: permissions } = useGetPermissions({
-		organizationId: fakeOrgId,
+		projectId: fakeProjectId,
 		userId: id,
 	});
 	const { mutate: updatePermissions } = useUpdatePermissions();
 
 	const handleRemoveUser = () => {
 		deleteUser({
-			organizationId: fakeOrgId,
+			projectId: fakeProjectId,
 			userId: id,
 		});
 	};
@@ -60,19 +67,26 @@ const OrganizationPeopleMemberItem: React.FC<
 			.filter(([, isAllowed]) => isAllowed)
 			.map(([permission]) => permission);
 
-		updatePermissions({
-			organizationId: fakeOrgId,
-			userId: id,
-			permissions: {
+		updatePermissions(
+			{
+				projectId: fakeProjectId,
+				userId: id,
 				permissions: selectedPermissions,
 			},
-		});
+			{
+				onSuccess: () => {
+					setOpenRoleDialog(false);
+				},
+			}
+		);
 	};
-	const handleChangePermissions = (perm: string) => {
+
+	const handleChangePermissions = (permission: string) => {
 		setCurrentPermissions((prev) => {
-			const next = new Map(prev);
-			next.set(perm, !next.get(perm));
-			return next;
+			const newMap = new Map(prev);
+			const currentValue = newMap.get(permission) || false;
+			newMap.set(permission, !currentValue);
+			return newMap;
 		});
 	};
 
@@ -95,7 +109,19 @@ const OrganizationPeopleMemberItem: React.FC<
 					<AvatarFallback>{username[0].toUpperCase()}</AvatarFallback>
 				</Avatar>
 				<div>
-					<p className="font-medium">{username}</p>
+					<div className="flex items-center gap-2">
+						<p className="font-medium">{username}</p>
+						<div className="flex flex-wrap gap-2">
+							{roles.map((role) => (
+								<span
+									key={role}
+									className="inline-flex items-center rounded-sm bg-primary/10 px-2.5 py-0.5 text-xs font-medium text-muted-foreground"
+								>
+									{role}
+								</span>
+							))}
+						</div>
+					</div>
 					<p className="text-sm text-muted-foreground">{email}</p>
 				</div>
 			</div>
@@ -112,9 +138,12 @@ const OrganizationPeopleMemberItem: React.FC<
 								{t("people.members.item.removeDialog.title")}
 							</DialogTitle>
 							<DialogDescription>
-								{t("people.members.item.removeDialog.description", {
-									username,
-								})}
+								<Trans
+									ns="project"
+									i18nKey="people.members.item.removeDialog.description"
+									values={{ username }}
+									components={{ bold: <strong /> }}
+								/>
 							</DialogDescription>
 						</DialogHeader>
 						<DialogFooter>
@@ -129,7 +158,7 @@ const OrganizationPeopleMemberItem: React.FC<
 						</DialogFooter>
 					</DialogContent>
 				</Dialog>
-				<Dialog>
+				<Dialog open={openRoleDialog} onOpenChange={setOpenRoleDialog}>
 					<DialogTrigger asChild>
 						<Button variant="default" size="sm" className="ml-auto">
 							{t("people.members.item.actions.roles")}
@@ -173,4 +202,4 @@ const OrganizationPeopleMemberItem: React.FC<
 	);
 };
 
-export default OrganizationPeopleMemberItem;
+export default ProjectPeopleMemberItem;

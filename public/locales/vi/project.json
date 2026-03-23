@@ -3,5 +3,37 @@
         "pageTitle": "Cài đặt Dự án",
         "heading": "Cài đặt Dự án",
         "archiveButton": "Lưu trữ"
+    },
+    "people": {
+        "pageTitle": "Mọi người",
+        "heading": "Mọi người & Quyền hạn",
+        "tabs": {
+            "members": "Thành viên",
+            "roles": "Vai trò"
+        },
+        "layout": {
+            "searchPlaceholder": "Tìm kiếm...",
+            "addMember": "Thêm thành viên",
+            "inviteMember": "Mời thành viên"
+        },
+        "members": {
+            "loading": "Đang tải thành viên...",
+            "emptySelection": "Chọn một thành viên để xem chi tiết",
+            "item": {
+                "actions": {
+                    "remove": "Xóa",
+                    "roles": "Vai trò",
+                    "close": "Đóng",
+                    "save": "Lưu"
+                },
+                "removeDialog": {
+                    "title": "Xác nhận xóa",
+                    "description": "Bạn có chắc chắn muốn xóa <bold>{{username}}</bold> khỏi dự án này không?"
+                },
+                "permissionsDialog": {
+                    "title": "Quyền hạn"
+                }
+            }
+        }
     }
 }

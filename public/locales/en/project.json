@@ -30,9 +30,24 @@
                     "title": "Confirm removal",
                     "description": "Are you sure you want to remove <bold>{{username}}</bold> from this project?"
                 },
-                "permissionsDialog": {
-                    "title": "Permissions"
+                "rolesDialog": {
+                    "title": "Roles"
                 }
+            }
+        },
+        "dialog": {
+            "title": "Add new member",
+            "description": "Invite new members to join your project via email.",
+            "submit": "Send invitation",
+            "with-email": {
+                "emailLabel": "Email",
+                "emailPlaceholder": "Enter email address",
+                "emailInvalid": "Please enter a valid email address"
+            },
+            "without-email": {
+                "usernameLabel": "Username",
+                "usernamePlaceholder": "Enter username",
+                "usernameInvalid": "Please enter a valid username"
             }
         }
     }

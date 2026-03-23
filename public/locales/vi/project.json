@@ -30,9 +30,24 @@
                     "title": "Xác nhận xóa",
                     "description": "Bạn có chắc chắn muốn xóa <bold>{{username}}</bold> khỏi dự án này không?"
                 },
-                "permissionsDialog": {
-                    "title": "Quyền hạn"
+                "rolesDialog": {
+                    "title": "Vai trò"
                 }
+            }
+        },
+        "dialog": {
+            "title": "Thêm thành viên mới",
+            "description": "Mời thành viên mới tham gia dự án của bạn qua email.",
+            "submit": "Gửi lời mời",
+            "with-email": {
+                "emailLabel": "Email",
+                "emailPlaceholder": "Nhập địa chỉ email",
+                "emailInvalid": "Vui lòng nhập địa chỉ email hợp lệ"
+            },
+            "without-email": {
+                "usernameLabel": "Tên người dùng",
+                "usernamePlaceholder": "Nhập tên người dùng",
+                "usernameInvalid": "Vui lòng nhập tên người dùng hợp lệ"
             }
         }
     }

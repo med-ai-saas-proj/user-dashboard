@@ -19,10 +19,10 @@ import {
 import { Button } from "@/components/shadcn/button";
 import { useDeleteUser } from "../../hooks/project-people/use-delete-user";
 import { useProjectStore } from "../../store/project";
-import { Field } from "@/components/shadcn/field";
+import { Field, FieldDescription } from "@/components/shadcn/field";
 import { Checkbox } from "@/components/shadcn/checkbox";
-import { useGetPermissions } from "../../hooks/project-people/use-get-permissions";
-import { useUpdatePermissions } from "../../hooks/project-people/use-update-permissions";
+import { useGetRoles } from "../../hooks/project-people/use-get-roles";
+import { useUpdateRoles } from "../../hooks/project-people/use-update-roles";
 import { Label } from "@/components/shadcn/label";
 
 type ProjectPeopleMemberItemProps = React.HTMLAttributes<HTMLDivElement> & {
@@ -44,17 +44,17 @@ const ProjectPeopleMemberItem: React.FC<ProjectPeopleMemberItemProps> = ({
 	const { t } = useTranslation("project");
 	const fakeProjectId = useProjectStore((state) => state.projectId);
 
-	const [currentPermissions, setCurrentPermissions] = useState<
-		Map<string, boolean>
-	>(new Map());
+	const [currentRoles, setCurrentRoles] = useState<Map<string, boolean>>(
+		new Map()
+	);
 	const [openRoleDialog, setOpenRoleDialog] = useState<boolean>(false);
 
 	const { mutate: deleteUser } = useDeleteUser();
-	const { data: permissions } = useGetPermissions({
+	const { data: rolesData } = useGetRoles({
 		projectId: fakeProjectId,
 		userId: id,
 	});
-	const { mutate: updatePermissions } = useUpdatePermissions();
+	const { mutate: updateRoles } = useUpdateRoles();
 
 	const handleRemoveUser = () => {
 		deleteUser({
@@ -62,16 +62,16 @@ const ProjectPeopleMemberItem: React.FC<ProjectPeopleMemberItemProps> = ({
 			userId: id,
 		});
 	};
-	const handleUpdatePermissions = () => {
-		const selectedPermissions = Array.from(currentPermissions.entries())
+	const handleUpdateRoles = () => {
+		const selectedRoles = Array.from(currentRoles.entries())
 			.filter(([, isAllowed]) => isAllowed)
-			.map(([permission]) => permission);
+			.map(([role]) => role);
 
-		updatePermissions(
+		updateRoles(
 			{
 				projectId: fakeProjectId,
 				userId: id,
-				permissions: selectedPermissions,
+				roles: selectedRoles,
 			},
 			{
 				onSuccess: () => {
@@ -81,22 +81,22 @@ const ProjectPeopleMemberItem: React.FC<ProjectPeopleMemberItemProps> = ({
 		);
 	};
 
-	const handleChangePermissions = (permission: string) => {
-		setCurrentPermissions((prev) => {
+	const handleChangeRoles = (role: string) => {
+		setCurrentRoles((prev) => {
 			const newMap = new Map(prev);
-			const currentValue = newMap.get(permission) || false;
-			newMap.set(permission, !currentValue);
+			const currentValue = newMap.get(role) || false;
+			newMap.set(role, !currentValue);
 			return newMap;
 		});
 	};
 
 	useEffect(() => {
-		const permissionMap = new Map<string, boolean>();
-		permissions?.permissions?.forEach((permission) => {
-			permissionMap.set(permission, true);
+		const roleMap = new Map<string, boolean>();
+		rolesData?.forEach((role) => {
+			roleMap.set(role.role, true);
 		});
-		setCurrentPermissions(permissionMap);
-	}, [permissions]);
+		setCurrentRoles(roleMap);
+	}, [rolesData]);
 
 	return (
 		<div
@@ -167,19 +167,24 @@ const ProjectPeopleMemberItem: React.FC<ProjectPeopleMemberItemProps> = ({
 					<DialogContent>
 						<DialogHeader>
 							<DialogTitle>
-								{t("people.members.item.permissionsDialog.title")}
+								{t("people.members.item.rolesDialog.title")}
 							</DialogTitle>
 							<DialogDescription>
 								<div className="flex flex-col gap-4 mt-4">
-									{permissions?.permissions?.map((perm) => (
-										<Field orientation={"horizontal"} key={perm}>
+									{rolesData?.map((role) => (
+										<Field orientation="horizontal" key={role.role}>
 											<Checkbox
-												id={perm}
-												name={perm}
-												checked={currentPermissions.get(perm) === true}
-												onCheckedChange={() => handleChangePermissions(perm)}
+												id={role.role}
+												name={role.role}
+												checked={currentRoles.get(role.role) === true}
+												onCheckedChange={() => handleChangeRoles(role.role)}
 											/>
-											<Label htmlFor={perm}>{perm}</Label>
+
+											<div className="flex flex-col">
+												<Label htmlFor={role.role}>{role.role}</Label>
+
+												<FieldDescription>{role.description}</FieldDescription>
+											</div>
 										</Field>
 									))}
 								</div>
@@ -191,7 +196,7 @@ const ProjectPeopleMemberItem: React.FC<ProjectPeopleMemberItemProps> = ({
 									{t("people.members.item.actions.close")}
 								</Button>
 							</DialogClose>
-							<Button variant="default" onClick={handleUpdatePermissions}>
+							<Button variant="default" onClick={handleUpdateRoles}>
 								{t("people.members.item.actions.save")}
 							</Button>
 						</DialogFooter>

@@ -12,6 +12,11 @@ export type ProjectUserResponse = {
 	results: ProjectUser[];
 };
 
+export type ProjectRole = {
+	role: string;
+	description: string;
+};
+
 export type ProjectPermissions = {
 	permissions: string[];
 };

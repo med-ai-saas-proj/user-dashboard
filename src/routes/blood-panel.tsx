@@ -3,6 +3,7 @@ import { API_ROUTES } from "@/config/api-routes";
 import { ApiKeyRequiredDialog } from "@/features/api-keys/components/api-key-required-dialog";
 import { useServiceApiKeyStore } from "@/features/api-keys/store/service-api-key.store";
 import { ViewCodeDialog } from "@/components/view-code-dialog";
+import { ApiTopology, TOPOLOGIES } from "@/components/api-topology";
 import DashboardLayout from "@/layouts/dashboard-layout";
 import { getAuthHeaders } from "@/lib/auth-headers";
 import { toast } from "sonner";
@@ -82,7 +83,10 @@ const BloodPanelPage = () => {
 	const { selectedApiKey } = useServiceApiKeyStore();
 
 	const requireApiKey = (): boolean => {
-		if (!selectedApiKey) { setShowApiKeyDialog(true); return false; }
+		if (!selectedApiKey) {
+			setShowApiKeyDialog(true);
+			return false;
+		}
 		return true;
 	};
 
@@ -93,31 +97,45 @@ const BloodPanelPage = () => {
 	};
 
 	const addMarker = () => {
-		setMarkers(prev => [...prev, { id: String(Date.now()), name: "", value: "", unit: "" }]);
+		setMarkers((prev) => [
+			...prev,
+			{ id: String(Date.now()), name: "", value: "", unit: "" },
+		]);
 	};
 
 	const removeMarker = (id: string) => {
-		setMarkers(prev => prev.filter(m => m.id !== id));
+		setMarkers((prev) => prev.filter((m) => m.id !== id));
 	};
 
 	const updateMarker = (id: string, field: keyof MarkerInput, val: string) => {
-		setMarkers(prev => prev.map(m => m.id === id ? { ...m, [field]: val } : m));
+		setMarkers((prev) =>
+			prev.map((m) => (m.id === id ? { ...m, [field]: val } : m))
+		);
 	};
 
 	const handleAnalyze = async () => {
 		if (!requireApiKey()) return;
-		const valid = markers.filter(m => m.name && m.value);
-		if (valid.length === 0) { toast.error("Add at least one marker"); return; }
+		const valid = markers.filter((m) => m.name && m.value);
+		if (valid.length === 0) {
+			toast.error("Add at least one marker");
+			return;
+		}
 		setIsLoading(true);
 		setResult(null);
 		try {
-			const headers = await getAuthHeaders(API_ROUTES.SERVICES.BLOOD_PANEL_ANALYZE);
+			const headers = await getAuthHeaders(
+				API_ROUTES.SERVICES.BLOOD_PANEL_ANALYZE
+			);
 			const resp = await fetch(API_ROUTES.SERVICES.BLOOD_PANEL_ANALYZE, {
 				method: "POST",
 				headers,
 				body: JSON.stringify({
-					markers: valid.map(m => ({ name: m.name, value: Number.parseFloat(m.value), unit: m.unit })),
-					patient_age: age ? Number.parseInt(age) : null,
+					markers: valid.map((m) => ({
+						name: m.name,
+						value: Number.parseFloat(m.value),
+						unit: m.unit,
+					})),
+					patient_age: age ? Number.parseInt(age, 10) : null,
 					patient_gender: gender || null,
 					panel_type: panelType,
 				}),
@@ -138,9 +156,19 @@ const BloodPanelPage = () => {
 			<div className="flex flex-col h-[calc(100vh-4rem)] overflow-hidden">
 				<div className="flex items-center justify-between px-4 py-1.5 border-b">
 					<div className="flex items-center gap-1.5">
-						{[["CBC", CBC_PRESET], ["CMP", CMP_PRESET], ["Lipid", LIPID_PRESET]].map(([label, preset]) => (
-							<Button key={label as string} variant={panelType === label ? "default" : "outline"} size="sm"
-								onClick={() => loadPreset(preset as MarkerInput[], label as string)}>
+						{[
+							["CBC", CBC_PRESET],
+							["CMP", CMP_PRESET],
+							["Lipid", LIPID_PRESET],
+						].map(([label, preset]) => (
+							<Button
+								key={label as string}
+								variant={panelType === label ? "default" : "outline"}
+								size="sm"
+								onClick={() =>
+									loadPreset(preset as MarkerInput[], label as string)
+								}
+							>
 								{label as string}
 							</Button>
 						))}
@@ -148,7 +176,10 @@ const BloodPanelPage = () => {
 					<ViewCodeDialog
 						endpoint={API_ROUTES.SERVICES.BLOOD_PANEL_ANALYZE}
 						method="POST"
-						body={{ markers: [{ name: "Hemoglobin", value: 14.2, unit: "g/dL" }], panel_type: "CBC" }}
+						body={{
+							markers: [{ name: "Hemoglobin", value: 14.2, unit: "g/dL" }],
+							panel_type: "CBC",
+						}}
 						description="Analyze blood panel markers with AI-powered interpretation"
 					/>
 				</div>
@@ -159,12 +190,33 @@ const BloodPanelPage = () => {
 						<div className="p-4 border-b">
 							<div className="grid grid-cols-2 gap-2 mb-3">
 								<div>
-									<label className="text-xs text-muted-foreground">Age</label>
-									<input value={age} onChange={e => setAge(e.target.value)} type="number" className="w-full rounded-md border px-3 py-1.5 text-sm bg-background" />
+									<label
+										className="text-xs text-muted-foreground"
+										htmlFor="bp-age"
+									>
+										Age
+									</label>
+									<input
+										id="bp-age"
+										value={age}
+										onChange={(e) => setAge(e.target.value)}
+										type="number"
+										className="w-full rounded-md border px-3 py-1.5 text-sm bg-background"
+									/>
 								</div>
 								<div>
-									<label className="text-xs text-muted-foreground">Gender</label>
-									<select value={gender} onChange={e => setGender(e.target.value)} className="w-full rounded-md border px-3 py-1.5 text-sm bg-background">
+									<label
+										className="text-xs text-muted-foreground"
+										htmlFor="bp-gender"
+									>
+										Gender
+									</label>
+									<select
+										id="bp-gender"
+										value={gender}
+										onChange={(e) => setGender(e.target.value)}
+										className="w-full rounded-md border px-3 py-1.5 text-sm bg-background"
+									>
 										<option value="male">Male</option>
 										<option value="female">Female</option>
 									</select>
@@ -173,19 +225,56 @@ const BloodPanelPage = () => {
 						</div>
 
 						<div className="flex-1 overflow-y-auto p-4 space-y-2">
-							{markers.map(m => (
-								<div key={m.id} className="grid grid-cols-[1fr_80px_80px_32px] gap-1.5 items-center">
-									<input value={m.name} onChange={e => updateMarker(m.id, "name", e.target.value)} placeholder="Marker" className="rounded-md border px-2 py-1.5 text-sm bg-background" />
-									<input value={m.value} onChange={e => updateMarker(m.id, "value", e.target.value)} placeholder="Value" className="rounded-md border px-2 py-1.5 text-sm bg-background text-right" />
-									<input value={m.unit} onChange={e => updateMarker(m.id, "unit", e.target.value)} placeholder="Unit" className="rounded-md border px-2 py-1.5 text-sm bg-background" />
-									<button type="button" onClick={() => removeMarker(m.id)} className="text-muted-foreground hover:text-destructive text-lg">&times;</button>
+							{markers.map((m) => (
+								<div
+									key={m.id}
+									className="grid grid-cols-[1fr_80px_80px_32px] gap-1.5 items-center"
+								>
+									<input
+										value={m.name}
+										onChange={(e) => updateMarker(m.id, "name", e.target.value)}
+										placeholder="Marker"
+										className="rounded-md border px-2 py-1.5 text-sm bg-background"
+									/>
+									<input
+										value={m.value}
+										onChange={(e) =>
+											updateMarker(m.id, "value", e.target.value)
+										}
+										placeholder="Value"
+										className="rounded-md border px-2 py-1.5 text-sm bg-background text-right"
+									/>
+									<input
+										value={m.unit}
+										onChange={(e) => updateMarker(m.id, "unit", e.target.value)}
+										placeholder="Unit"
+										className="rounded-md border px-2 py-1.5 text-sm bg-background"
+									/>
+									<button
+										type="button"
+										onClick={() => removeMarker(m.id)}
+										className="text-muted-foreground hover:text-destructive text-lg"
+									>
+										&times;
+									</button>
 								</div>
 							))}
-							<Button variant="outline" size="sm" onClick={addMarker} className="w-full">+ Add Marker</Button>
+							<Button
+								variant="outline"
+								size="sm"
+								onClick={addMarker}
+								className="w-full"
+							>
+								+ Add Marker
+							</Button>
 						</div>
 
 						<div className="p-4 border-t">
-							<Button onClick={handleAnalyze} disabled={isLoading} className="w-full">
+							<Button
+								onClick={handleAnalyze}
+								disabled={isLoading}
+								className="w-full"
+							>
 								{isLoading ? "Analyzing..." : "Analyze Blood Panel"}
 							</Button>
 						</div>
@@ -198,15 +287,23 @@ const BloodPanelPage = () => {
 								{/* Summary */}
 								<div className="rounded-md border p-4">
 									<span className="text-sm font-medium">Summary</span>
-									<p className="text-sm mt-1 text-muted-foreground leading-relaxed">{result.summary}</p>
+									<p className="text-sm mt-1 text-muted-foreground leading-relaxed">
+										{result.summary}
+									</p>
 								</div>
 
 								{/* Flags */}
 								{result.flags.length > 0 && (
 									<div className="rounded-md border border-amber-500/30 bg-amber-500/5 p-4">
-										<span className="text-sm font-medium text-amber-500">Flags ({result.flags.length})</span>
+										<span className="text-sm font-medium text-amber-500">
+											Flags ({result.flags.length})
+										</span>
 										<ul className="mt-1 space-y-1">
-											{result.flags.map((f, i) => <li key={i} className="text-xs text-muted-foreground">{f}</li>)}
+											{result.flags.map((f, i) => (
+												<li key={i} className="text-xs text-muted-foreground">
+													{f}
+												</li>
+											))}
 										</ul>
 									</div>
 								)}
@@ -219,13 +316,25 @@ const BloodPanelPage = () => {
 											<div className="flex items-center justify-between">
 												<span className="text-sm font-medium">{r.name}</span>
 												<div className="flex items-center gap-2">
-													<span className="text-sm font-mono">{r.value} {r.unit}</span>
-													<span className={`text-xs px-2 py-0.5 rounded-full font-medium ${statusColor(r.status)}`}>{r.status}</span>
+													<span className="text-sm font-mono">
+														{r.value} {r.unit}
+													</span>
+													<span
+														className={`text-xs px-2 py-0.5 rounded-full font-medium ${statusColor(r.status)}`}
+													>
+														{r.status}
+													</span>
 												</div>
 											</div>
-											<div className="text-xs text-muted-foreground mt-1">Ref: {r.reference_range}</div>
+											<div className="text-xs text-muted-foreground mt-1">
+												Ref: {r.reference_range}
+											</div>
 											<div className="text-xs mt-1">{r.interpretation}</div>
-											{r.status !== "NORMAL" && <div className="text-xs text-muted-foreground mt-0.5 italic">{r.clinical_significance}</div>}
+											{r.status !== "NORMAL" && (
+												<div className="text-xs text-muted-foreground mt-0.5 italic">
+													{r.clinical_significance}
+												</div>
+											)}
 										</div>
 									))}
 								</div>
@@ -235,7 +344,11 @@ const BloodPanelPage = () => {
 									<div className="rounded-md border p-4">
 										<span className="text-sm font-medium">Recommendations</span>
 										<ul className="mt-2 space-y-1">
-											{result.recommendations.map((r, i) => <li key={i} className="text-xs text-muted-foreground">{r}</li>)}
+											{result.recommendations.map((r, i) => (
+												<li key={i} className="text-xs text-muted-foreground">
+													{r}
+												</li>
+											))}
 										</ul>
 									</div>
 								)}
@@ -244,13 +357,21 @@ const BloodPanelPage = () => {
 							<div className="flex-1 flex items-center justify-center p-8">
 								<div className="text-center space-y-3 max-w-sm">
 									<div className="w-12 h-12 mx-auto rounded-full bg-muted flex items-center justify-center">
-										<svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-muted-foreground">
+										<svg
+											width="24"
+											height="24"
+											fill="none"
+											stroke="currentColor"
+											strokeWidth="1.5"
+											className="text-muted-foreground"
+										>
 											<title>Blood Panel</title>
 											<path d="M12 2C12 2 5 9 5 13a7 7 0 0 0 14 0c0-4-7-11-7-11z" />
 										</svg>
 									</div>
 									<p className="text-sm text-muted-foreground">
-										Select a panel preset or enter markers manually, then click <strong>Analyze</strong>.
+										Select a panel preset or enter markers manually, then click{" "}
+										<strong>Analyze</strong>.
 									</p>
 								</div>
 							</div>
@@ -259,7 +380,14 @@ const BloodPanelPage = () => {
 				</div>
 			</div>
 
-			<ApiKeyRequiredDialog open={showApiKeyDialog} onOpenChange={setShowApiKeyDialog} />
+			<div className="px-4 py-2 border-t">
+				<ApiTopology {...TOPOLOGIES.blood_panel} />
+			</div>
+
+			<ApiKeyRequiredDialog
+				open={showApiKeyDialog}
+				onOpenChange={setShowApiKeyDialog}
+			/>
 		</DashboardLayout>
 	);
 };

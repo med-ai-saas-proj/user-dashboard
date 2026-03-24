@@ -167,6 +167,8 @@ export const API_ROUTES = {
 		).toString(),
 		PLAYGROUND_STATUS: new URL(
 			`service/api/${API_VERSION}/playground/status`,
+			BASE_API_URL
+		).toString(),
 		BLOOD_PANEL_ANALYZE: new URL(
 			`service/api/${API_VERSION}/blood_panel/analyze`,
 			BASE_API_URL

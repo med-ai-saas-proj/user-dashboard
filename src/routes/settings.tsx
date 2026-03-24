@@ -16,6 +16,7 @@ import {
 	RocketIcon,
 	SquareIcon,
 	RefreshCwIcon,
+	ZapIcon,
 } from "lucide-react";
 import { Button } from "@/components/shadcn/button";
 import { Separator } from "@/components/shadcn/separator";
@@ -146,6 +147,44 @@ const DEFAULT_GROUP_STATE: Record<ApiGroup, GroupFormState> = {
 		provider: "OpenAI",
 		baseUrl: "",
 		apiKey: "",
+	},
+	speech: {
+		name: "openai:whisper-1",
+		provider: "OpenAI",
+		baseUrl: "",
+		apiKey: "",
+	},
+};
+
+/**
+ * Cluster preset — pre-fills all model groups with the Venera cluster endpoint.
+ * SSH tunnel must be active: ssh -L 18888:10.0.190.65:8888 -p 420 minh@ftds.online -N -f
+ * Model: Qwen3.5-35B-A3B (multimodal: text + vision)
+ */
+const CLUSTER_PRESET: Record<ApiGroup, GroupFormState> = {
+	text_reasoning: {
+		name: "openai:Qwen3.5-35B-A3B",
+		provider: "Self-Hosted (vLLM / Ollama)",
+		baseUrl: "http://localhost:18888/v1",
+		apiKey: "910jqka2345678",
+	},
+	text_fast: {
+		name: "openai:Qwen3.5-35B-A3B",
+		provider: "Self-Hosted (vLLM / Ollama)",
+		baseUrl: "http://localhost:18888/v1",
+		apiKey: "910jqka2345678",
+	},
+	vision_ocr: {
+		name: "openai:Qwen3.5-35B-A3B",
+		provider: "Self-Hosted (vLLM / Ollama)",
+		baseUrl: "http://localhost:18888/v1",
+		apiKey: "910jqka2345678",
+	},
+	embedding: {
+		name: "openai:Qwen3.5-35B-A3B",
+		provider: "Self-Hosted (vLLM / Ollama)",
+		baseUrl: "http://localhost:18888/v1",
+		apiKey: "910jqka2345678",
 	},
 	speech: {
 		name: "openai:whisper-1",
@@ -442,9 +481,25 @@ export default function SettingsPage() {
 
 				{/* Model Configuration by API Group */}
 				<section className="space-y-4">
-					<div className="flex items-center gap-2 text-lg font-semibold">
-						<CpuIcon className="size-5" aria-hidden="true" />
-						{t("model.title")}
+					<div className="flex items-center justify-between">
+						<div className="flex items-center gap-2 text-lg font-semibold">
+							<CpuIcon className="size-5" aria-hidden="true" />
+							{t("model.title")}
+						</div>
+						<Button
+							size="sm"
+							variant="outline"
+							className="text-xs gap-1.5"
+							onClick={() => {
+								setGroupConfigs(CLUSTER_PRESET);
+								toast.success(
+									"Loaded cluster config — Qwen3.5-35B-A3B on localhost:18888 (SSH tunnel required)"
+								);
+							}}
+						>
+							<ZapIcon className="size-3.5" />
+							Load Cluster Example
+						</Button>
 					</div>
 					<p className="text-sm text-muted-foreground">
 						Configure which model powers each API group. Group APIs by their

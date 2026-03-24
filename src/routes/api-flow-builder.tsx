@@ -28,6 +28,15 @@ import {
 	LayoutDashboardIcon,
 	GitBranchIcon,
 	ArrowRightIcon,
+	ArrowDownIcon,
+	MicIcon,
+	ImageIcon,
+	DnaIcon,
+	GlobeIcon,
+	FileTextIcon,
+	WatchIcon,
+	BotIcon,
+	DatabaseIcon,
 	type LucideIcon,
 } from "lucide-react";
 
@@ -41,6 +50,13 @@ interface ApiDef {
 	method: string;
 	sampleBody: Record<string, unknown>;
 	outputKey?: string;
+	layer:
+		| "input"
+		| "standardization"
+		| "storage"
+		| "analysis"
+		| "output"
+		| "orchestration";
 }
 
 const AVAILABLE_APIS: ApiDef[] = [
@@ -52,6 +68,7 @@ const AVAILABLE_APIS: ApiDef[] = [
 		method: "POST",
 		sampleBody: { data: "<HL7v2 or CDA data>", validate_output: false },
 		outputKey: "fhir_bundle",
+		layer: "input",
 	},
 	{
 		id: "ehr_summarize",
@@ -60,6 +77,7 @@ const AVAILABLE_APIS: ApiDef[] = [
 		endpoint: `${BASE_API_URL}service/api/v1/ehr_summarize`,
 		method: "POST",
 		sampleBody: { ehr_data: {}, patient_info: {} },
+		layer: "analysis",
 	},
 	{
 		id: "rx_advisor",
@@ -68,6 +86,7 @@ const AVAILABLE_APIS: ApiDef[] = [
 		endpoint: `${BASE_API_URL}service/api/v1/rx_advisor`,
 		method: "POST",
 		sampleBody: { ehr_data: {}, prescription: "" },
+		layer: "analysis",
 	},
 	{
 		id: "health_score",
@@ -76,6 +95,7 @@ const AVAILABLE_APIS: ApiDef[] = [
 		endpoint: `${BASE_API_URL}service/api/v1/health_score/evaluate`,
 		method: "POST",
 		sampleBody: { ehr_data: {} },
+		layer: "analysis",
 	},
 	{
 		id: "data_mask",
@@ -84,6 +104,7 @@ const AVAILABLE_APIS: ApiDef[] = [
 		endpoint: `${BASE_API_URL}service/api/v1/data_masking/mask`,
 		method: "POST",
 		sampleBody: { bundle: {} },
+		layer: "standardization",
 	},
 	{
 		id: "bhxh_validate",
@@ -92,6 +113,7 @@ const AVAILABLE_APIS: ApiDef[] = [
 		endpoint: `${BASE_API_URL}service/api/v1/bhxh_validator/validate`,
 		method: "POST",
 		sampleBody: { xml_data: "", strict: false },
+		layer: "standardization",
 	},
 	{
 		id: "patient_history",
@@ -100,6 +122,7 @@ const AVAILABLE_APIS: ApiDef[] = [
 		endpoint: `${BASE_API_URL}service/api/v1/patient/1/history`,
 		method: "POST",
 		sampleBody: { patient_id: 1, fhir_bundle: {} },
+		layer: "storage",
 	},
 	{
 		id: "pub_health",
@@ -108,6 +131,7 @@ const AVAILABLE_APIS: ApiDef[] = [
 		endpoint: `${BASE_API_URL}service/api/v1/public_health/statistics`,
 		method: "POST",
 		sampleBody: { metric: "overview" },
+		layer: "output",
 	},
 	{
 		id: "kb_search",
@@ -116,6 +140,7 @@ const AVAILABLE_APIS: ApiDef[] = [
 		endpoint: `${BASE_API_URL}service/api/v1/knowledge_base/search`,
 		method: "POST",
 		sampleBody: { query: "", kb_ids: [] },
+		layer: "storage",
 	},
 	{
 		id: "fhir_validate",
@@ -124,6 +149,7 @@ const AVAILABLE_APIS: ApiDef[] = [
 		endpoint: `${BASE_API_URL}service/api/v1/ehr_converter/validate`,
 		method: "POST",
 		sampleBody: { bundle: {} },
+		layer: "standardization",
 	},
 	{
 		id: "fhir_to_hl7v2",
@@ -132,6 +158,7 @@ const AVAILABLE_APIS: ApiDef[] = [
 		endpoint: `${BASE_API_URL}service/api/v1/ehr_converter/convert/fhir-to-hl7v2`,
 		method: "POST",
 		sampleBody: { bundle: {} },
+		layer: "standardization",
 	},
 	{
 		id: "facility_search",
@@ -140,6 +167,7 @@ const AVAILABLE_APIS: ApiDef[] = [
 		endpoint: `${BASE_API_URL}service/api/v1/data_masking/facility/search`,
 		method: "POST",
 		sampleBody: { first_name: "", last_name: "", dob: "" },
+		layer: "orchestration",
 	},
 	{
 		id: "symptom_check",
@@ -148,6 +176,7 @@ const AVAILABLE_APIS: ApiDef[] = [
 		endpoint: `${BASE_API_URL}service/api/v1/symptom_checker/check`,
 		method: "POST",
 		sampleBody: { symptoms: ["headache", "fever"], age: 35, gender: "female" },
+		layer: "analysis",
 	},
 	{
 		id: "clinic_search",
@@ -156,6 +185,7 @@ const AVAILABLE_APIS: ApiDef[] = [
 		endpoint: `${BASE_API_URL}service/api/v1/clinic_search/search`,
 		method: "GET",
 		sampleBody: { q: "đau lưng", province: "Hà Nội", limit: 10 },
+		layer: "output",
 	},
 	{
 		id: "clinic_recommend",
@@ -164,6 +194,7 @@ const AVAILABLE_APIS: ApiDef[] = [
 		endpoint: `${BASE_API_URL}service/api/v1/clinic_search/recommend`,
 		method: "POST",
 		sampleBody: { symptoms: "đau lưng, mất ngủ", province: "Hà Nội", limit: 5 },
+		layer: "output",
 	},
 	{
 		id: "digital_twin",
@@ -173,6 +204,7 @@ const AVAILABLE_APIS: ApiDef[] = [
 		method: "GET",
 		sampleBody: {},
 		outputKey: "profile",
+		layer: "storage",
 	},
 	{
 		id: "digital_twin_predict",
@@ -185,6 +217,7 @@ const AVAILABLE_APIS: ApiDef[] = [
 			prediction_type: "risk",
 			time_horizon_days: 30,
 		},
+		layer: "analysis",
 	},
 	{
 		id: "blood_panel",
@@ -196,6 +229,7 @@ const AVAILABLE_APIS: ApiDef[] = [
 			panel_type: "cbc",
 			results: { wbc: 7.5, rbc: 4.8, hemoglobin: 14.2, hematocrit: 42 },
 		},
+		layer: "analysis",
 	},
 	{
 		id: "federated_create",
@@ -210,6 +244,7 @@ const AVAILABLE_APIS: ApiDef[] = [
 			min_facilities: 2,
 			max_rounds: 5,
 		},
+		layer: "orchestration",
 	},
 	{
 		id: "a2ui_generate",
@@ -223,8 +258,166 @@ const AVAILABLE_APIS: ApiDef[] = [
 			target_system: "his",
 			style: "dashboard",
 		},
+		layer: "output",
+	},
+	{
+		id: "voice_transcribe",
+		label: "Voice Transcribe",
+		icon: MicIcon,
+		endpoint: `${BASE_API_URL}service/api/v1/voice_transcribe`,
+		method: "POST",
+		sampleBody: { audio_url: "https://example.com/recording.wav" },
+		layer: "input",
+	},
+	{
+		id: "medical_image",
+		label: "Medical Image",
+		icon: ImageIcon,
+		endpoint: `${BASE_API_URL}service/api/v1/medical_image/describe`,
+		method: "POST",
+		sampleBody: {
+			image_url: "https://example.com/xray.png",
+			context: "chest X-ray",
+		},
+		layer: "analysis",
+	},
+	{
+		id: "ai_search",
+		label: "AI Search",
+		icon: SearchIcon,
+		endpoint: `${BASE_API_URL}service/api/v1/ai_search`,
+		method: "POST",
+		sampleBody: {
+			query: "treatment for Type 2 Diabetes",
+			model: "gpt-4o-2",
+			stream: false,
+		},
+		layer: "analysis",
+	},
+	{
+		id: "gene_decode",
+		label: "Gene Decode",
+		icon: DnaIcon,
+		endpoint: `${BASE_API_URL}service/api/v1/gene_decoder/decode`,
+		method: "POST",
+		sampleBody: { sequence: "ATCGATCG", format: "raw" },
+		layer: "analysis",
+	},
+	{
+		id: "gene_analyze",
+		label: "Gene Analyze",
+		icon: DnaIcon,
+		endpoint: `${BASE_API_URL}service/api/v1/gene_decoder/analyze`,
+		method: "POST",
+		sampleBody: { sequence: "ATCGATCG", analysis_types: ["variants", "orfs"] },
+		layer: "analysis",
+	},
+	{
+		id: "cross_search",
+		label: "Cross-Provider Search",
+		icon: GlobeIcon,
+		endpoint: `${BASE_API_URL}service/api/v1/cross_search/search`,
+		method: "POST",
+		sampleBody: { first_name: "Nguyen", last_name: "Van A", dob: "1985-03-15" },
+		layer: "orchestration",
+	},
+	{
+		id: "cross_pull_convert",
+		label: "Cross-Search Pull & Convert",
+		icon: GlobeIcon,
+		endpoint: `${BASE_API_URL}service/api/v1/cross_search/pull_and_convert`,
+		method: "POST",
+		sampleBody: { hashed_patient_id: "abc123", facility_ids: [] },
+		layer: "orchestration",
+	},
+	{
+		id: "document_convert",
+		label: "Document → FHIR",
+		icon: FileTextIcon,
+		endpoint: `${BASE_API_URL}service/api/v1/ehr_converter/convert/document`,
+		method: "POST",
+		sampleBody: {},
+		layer: "input",
+	},
+	{
+		id: "ocr",
+		label: "OCR",
+		icon: FileTextIcon,
+		endpoint: `${BASE_API_URL}service/api/v1/ocr`,
+		method: "POST",
+		sampleBody: {},
+		layer: "input",
+	},
+	{
+		id: "digital_twin_sync",
+		label: "Digital Twin Sync",
+		icon: BrainIcon,
+		endpoint: `${BASE_API_URL}service/api/v1/digital_twin/sync`,
+		method: "POST",
+		sampleBody: { patient_id: 1, sources: [] },
+		layer: "storage",
+	},
+	{
+		id: "wearable_ingest",
+		label: "Wearable Data",
+		icon: WatchIcon,
+		endpoint: `${BASE_API_URL}service/api/v1/patient/1/wearable`,
+		method: "POST",
+		sampleBody: { device_type: "apple_watch", metrics: {} },
+		layer: "storage",
+	},
+	{
+		id: "chat",
+		label: "Chat",
+		icon: BotIcon,
+		endpoint: `${BASE_API_URL}service/api/v1/chat`,
+		method: "POST",
+		sampleBody: {
+			message: "Analyze this patient data",
+			model: "gpt-4o-2",
+			stream: false,
+		},
+		layer: "orchestration",
 	},
 ];
+
+// --- Layer metadata ---
+
+const LAYER_META: Record<
+	string,
+	{ label: string; color: string; icon: LucideIcon }
+> = {
+	input: {
+		label: "Input / Ingestion",
+		color: "text-blue-500",
+		icon: ArrowDownIcon,
+	},
+	standardization: {
+		label: "Standardization",
+		color: "text-amber-500",
+		icon: ShieldCheckIcon,
+	},
+	storage: {
+		label: "Storage / Management",
+		color: "text-emerald-500",
+		icon: DatabaseIcon,
+	},
+	analysis: {
+		label: "Analysis / Intelligence",
+		color: "text-purple-500",
+		icon: BrainIcon,
+	},
+	output: {
+		label: "Output / Action",
+		color: "text-rose-500",
+		icon: ArrowRightIcon,
+	},
+	orchestration: {
+		label: "Orchestration",
+		color: "text-cyan-500",
+		icon: GitBranchIcon,
+	},
+};
 
 // --- Demo flows ---
 
@@ -853,18 +1046,34 @@ export default function ApiFlowBuilderPage() {
 						<h3 className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground mb-2">
 							Available APIs
 						</h3>
-						{AVAILABLE_APIS.map((api) => {
-							const IconComp = api.icon;
+						{Object.entries(LAYER_META).map(([layerKey, meta]) => {
+							const layerApis = AVAILABLE_APIS.filter(
+								(a) => a.layer === layerKey
+							);
+							if (!layerApis.length) return null;
 							return (
-								<button
-									key={api.id}
-									type="button"
-									onClick={() => addStep(api)}
-									className="w-full flex items-center gap-2 px-2 py-1.5 rounded-md border text-left text-xs hover:bg-muted/50 transition-colors"
-								>
-									<IconComp className="size-4 shrink-0 text-muted-foreground" />
-									<span className="truncate">{api.label}</span>
-								</button>
+								<div key={layerKey} className="space-y-1">
+									<div
+										className={`flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider ${meta.color} mt-2`}
+									>
+										<meta.icon className="size-3" />
+										{meta.label}
+									</div>
+									{layerApis.map((api) => {
+										const IconComp = api.icon;
+										return (
+											<button
+												key={api.id}
+												type="button"
+												onClick={() => addStep(api)}
+												className="w-full flex items-center gap-2 px-2 py-1.5 rounded-md border text-left text-xs hover:bg-muted/50 transition-colors"
+											>
+												<IconComp className="size-4 shrink-0 text-muted-foreground" />
+												<span className="truncate">{api.label}</span>
+											</button>
+										);
+									})}
+								</div>
 							);
 						})}
 

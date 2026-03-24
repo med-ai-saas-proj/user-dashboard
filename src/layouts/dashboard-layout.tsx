@@ -1,6 +1,7 @@
 import type { PropsWithChildren } from "react";
 import { useTheme } from "next-themes";
-import { MoonIcon, SunIcon } from "lucide-react";
+import { MoonIcon, SunIcon, PaletteIcon } from "lucide-react";
+import { useStyleTheme } from "@/hooks/use-style-theme";
 import {
 	Breadcrumb,
 	BreadcrumbItem,
@@ -29,6 +30,7 @@ const DashboardLayout = ({
 	className?: string;
 }>) => {
 	const { resolvedTheme, setTheme } = useTheme();
+	const { style, toggleStyle } = useStyleTheme();
 	return (
 		<SidebarProvider>
 			<AppSidebar />
@@ -51,8 +53,25 @@ const DashboardLayout = ({
 								</BreadcrumbItem>
 							</BreadcrumbList>
 						</Breadcrumb>
-						<div className="ml-auto flex items-center gap-2">
+						<div className="ml-auto flex items-center gap-1.5">
 							{headerRight}
+							<button
+								type="button"
+								onClick={toggleStyle}
+								className={cn(
+									"p-2 rounded-md transition-colors text-muted-foreground hover:text-foreground",
+									style === "clinical"
+										? "bg-primary/10 text-primary hover:bg-primary/20"
+										: "hover:bg-muted"
+								)}
+								title={
+									style === "clinical"
+										? "Switch to default style"
+										: "Switch to clinical style"
+								}
+							>
+								<PaletteIcon className="size-4" />
+							</button>
 							<button
 								type="button"
 								onClick={() =>

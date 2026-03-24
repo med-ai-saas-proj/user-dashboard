@@ -11,7 +11,6 @@ import {
 	DropletIcon,
 	EyeOffIcon,
 	FileTextIcon,
-	GalleryVerticalEnd,
 	GitBranchPlusIcon,
 	GlobeIcon,
 	HeartPulseIcon,
@@ -64,8 +63,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 	const data = {
 		teams: [
 			{
-				name: "Acme Inc",
-				logo: GalleryVerticalEnd,
+				name: "Venera AI Inc",
+				logo: "/src/image/venera.png",
 				plan: "Enterprise",
 			},
 		],
@@ -126,9 +125,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 		],
 		dataManagement: [
 			{
-				name: t("dataManagement.patientHistory.title"),
-				url: "/patient-history",
-				icon: UserRoundIcon,
+				name: t("operation.healthcareDashboard.title"),
+				url: "/healthcare-dashboard",
+				icon: ActivityIcon,
 			},
 			{
 				name: t("dataManagement.wearableData.title"),
@@ -153,9 +152,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 		],
 		operation: [
 			{
-				name: t("operation.healthcareDashboard.title"),
-				url: "/healthcare-dashboard",
-				icon: ActivityIcon,
+				name: t("dataManagement.patientHistory.title"),
+				url: "/patient-history",
+				icon: UserRoundIcon,
 			},
 			{
 				name: t("operation.ehrSummary.title"),
@@ -196,6 +195,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 				name: t("operation.clinicSearch.title"),
 				url: "/clinic-search",
 				icon: MapPinIcon,
+			},
+			{
 				name: "Blood Panel",
 				url: "/blood-panel",
 				icon: DropletIcon,
@@ -270,11 +271,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 					projects={data.dataProcessing}
 					label={t("dataProcessing.title")}
 				/>
+				<NavProjects projects={data.operation} label={t("operation.title")} />
 				<NavProjects
 					projects={data.dataManagement}
 					label={t("dataManagement.title")}
 				/>
-				<NavProjects projects={data.operation} label={t("operation.title")} />
 				<NavProjects
 					projects={data.development}
 					label={t("development.title")}

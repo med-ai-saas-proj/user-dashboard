@@ -1,18 +1,20 @@
-import { CustomPagination } from "@/components/pagination/pagination";
-import { Button } from "@/components/shadcn/button";
+import { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useGetUsers } from "../../hooks/organization-people/use-get-users";
+import OrganizationPeopleMemberItem from "./organization-people-member-item";
+import type { OrganizationUser } from "../../organization.type";
+import OrganizationPeopleMemberDetails from "./organization-people-member-details";
+import { Spinner } from "@/components/shadcn/spinner";
 import {
 	InputGroup,
 	InputGroupAddon,
 	InputGroupInput,
 } from "@/components/shadcn/input-group";
-import { Spinner } from "@/components/shadcn/spinner";
 import { Plus, Search } from "lucide-react";
-import { useState } from "react";
-import { useTranslation } from "react-i18next";
-import { useGetUsers } from "../../hooks/organization-people/use-get-users";
+import { Button } from "@/components/shadcn/button";
+import { CustomPagination } from "@/components/pagination/pagination";
 import { useOrganizationStore } from "../../store/organization";
 import InvitationDialog from "./invitation-dialog";
-import OrganizationPeopleMemberItem from "./organization-people-member-item";
 
 const OrganizationPeopleMember = () => {
 	const fakeOrgId = useOrganizationStore((state) => state.organizationId);
@@ -28,6 +30,14 @@ const OrganizationPeopleMember = () => {
 
 	const [openAddMemeberDialog, setOpenAddMemberDialog] =
 		useState<boolean>(false);
+	const [selectedUser, setSelectedUser] = useState<OrganizationUser | null>(
+		null
+	);
+
+	const handleSelectUser = (user: OrganizationUser) => {
+		if (!user) return;
+		setSelectedUser(user);
+	};
 
 	return (
 		<>
@@ -66,6 +76,7 @@ const OrganizationPeopleMember = () => {
 								id={user.id}
 								username={user.username}
 								email={user.email}
+								onClick={() => handleSelectUser(user)}
 							/>
 						))}
 					<CustomPagination
@@ -75,6 +86,18 @@ const OrganizationPeopleMember = () => {
 						totalElements={users?.total || 1}
 						onPageChange={setPage}
 					/>
+				</div>
+				<div className="flex-3 border-l p-8">
+					{!selectedUser && (
+						<div className="flex items-center justify-center h-full">
+							<p className="text-center text-muted-foreground">
+								{t("people.members.emptySelection")}
+							</p>
+						</div>
+					)}
+					{selectedUser && (
+						<OrganizationPeopleMemberDetails user={selectedUser} />
+					)}
 				</div>
 			</div>
 		</>

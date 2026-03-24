@@ -618,6 +618,19 @@ const DEMO_FLOWS: {
 				},
 			},
 			{
+				apiId: "ehr_convert",
+				input: {
+					data: "<HoSoBenhAn><ThongTinBenhNhan>...</ThongTinBenhNhan></HoSoBenhAn>",
+					validate_output: false,
+				},
+				output: {
+					success: true,
+					source_format: "hosobenhan",
+					resource_count: 10,
+					bundle: { resourceType: "Bundle", type: "transaction", total: 10 },
+				},
+			},
+			{
 				apiId: "ehr_summarize",
 				input: {
 					input_ehr: { type: "fhir", fhir_bundle: "{{prev.bundle}}" },

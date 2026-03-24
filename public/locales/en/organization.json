@@ -40,6 +40,9 @@
                 "permissionsDialog": {
                     "title": "Permissions"
                 }
+            },
+            "details": {
+                "title": "Member details"
             }
         },
         "invitations": {

@@ -6,14 +6,24 @@ import {
 	InputGroupAddon,
 	InputGroupInput,
 } from "@/components/shadcn/input-group";
-import { Plus, Search } from "lucide-react";
 import { Button } from "@/components/shadcn/button";
+import { Spinner } from "@/components/shadcn/spinner";
+import {
+	Dialog,
+	DialogClose,
+	DialogContent,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
+} from "@/components/shadcn/dialog";
+import { Plus, Search } from "lucide-react";
 import { useGetUsers } from "../../hooks/project-people/use-get-users";
 import type { ProjectUser } from "../../project.type";
-import { Spinner } from "@/components/shadcn/spinner";
 import { CustomPagination } from "@/components/pagination/pagination";
 import ProjectPeopleMemberItem from "./project-people-member-item";
 import ProjectPeopleMemberDetails from "./project-people-member-details";
+import AddMemberDialog from "./dialog/add-member-dialog";
 
 const ProjectPeopleMember = () => {
 	const fakeProjectId = useProjectStore((state) => state.projectId);
@@ -45,12 +55,35 @@ const ProjectPeopleMember = () => {
 						<Search />
 					</InputGroupAddon>
 				</InputGroup>
-				<Button variant="default" onClick={() => setOpenAddMemberDialog(true)}>
-					<Plus />
-					{t("people.layout.addMember")}
-				</Button>
+				<Dialog
+					open={openAddMemeberDialog}
+					onOpenChange={setOpenAddMemberDialog}
+				>
+					<DialogTrigger asChild>
+						<Button
+							variant="default"
+							onClick={() => setOpenAddMemberDialog(true)}
+						>
+							<Plus />
+							{t("people.layout.addMember")}
+						</Button>
+					</DialogTrigger>
+					<DialogContent>
+						<DialogHeader>
+							<DialogTitle>Add New Member</DialogTitle>
+						</DialogHeader>
+						<AddMemberDialog />
+						<DialogFooter>
+							<DialogClose asChild>
+								<Button variant="outline">Close</Button>
+							</DialogClose>
+							<Button onClick={() => setOpenAddMemberDialog(false)}>
+								Add Member
+							</Button>
+						</DialogFooter>
+					</DialogContent>
+				</Dialog>
 			</div>
-			<div></div>
 			<div className="flex gap-8">
 				<div className="flex-7 flex-col border rounded-md">
 					{isPending && (

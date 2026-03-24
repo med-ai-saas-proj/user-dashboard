@@ -23,6 +23,7 @@ import { useDeleteUser } from "../../hooks/organization-people/use-delete-user";
 import { useGetPermissions } from "../../hooks/organization-people/use-get-permissions";
 import { useUpdatePermissions } from "../../hooks/organization-people/use-update-permissions";
 import { useOrganizationStore } from "../../store/organization";
+import { EditIcon } from "lucide-react";
 
 type OrganizationPeopleMemberItemProps =
 	React.HTMLAttributes<HTMLDivElement> & {
@@ -132,6 +133,7 @@ const OrganizationPeopleMemberItem: React.FC<
 				<Dialog>
 					<DialogTrigger asChild>
 						<Button variant="default" size="sm" className="ml-auto mt-2">
+							<EditIcon />
 							{t("people.members.item.actions.roles")}
 						</Button>
 					</DialogTrigger>

@@ -64,7 +64,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 		teams: [
 			{
 				name: "Venera AI Inc",
-				logo: "/src/image/venera.png",
+				logo: SparklesIcon,
 				plan: "Enterprise",
 			},
 		],

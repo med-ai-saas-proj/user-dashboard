@@ -54,6 +54,11 @@ import { NavProjects } from "@/components/sidebar/nav-projects";
 import { NavUser } from "@/components/sidebar/nav-user";
 import { TeamSwitcher } from "@/components/sidebar/team-switcher";
 import { useAuthStore } from "@/features/auth/store/auth-store";
+import veneraLogo from "@/assets/venera.png";
+
+function VeneraLogo({ className }: { className?: string }) {
+	return <img src={veneraLogo} alt="Venera" className={className} />;
+}
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 	const { t } = useTranslation("sidebar");
@@ -64,7 +69,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 		teams: [
 			{
 				name: "Venera AI Inc",
-				logo: SparklesIcon,
+				logo: VeneraLogo,
 				plan: "Enterprise",
 			},
 		],

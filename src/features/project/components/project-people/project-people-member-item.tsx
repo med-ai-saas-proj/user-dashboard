@@ -21,7 +21,7 @@ import { useDeleteUser } from "../../hooks/project-people/use-delete-user";
 import { useProjectStore } from "../../store/project";
 import { Field, FieldDescription } from "@/components/shadcn/field";
 import { Checkbox } from "@/components/shadcn/checkbox";
-import { useGetRoles } from "../../hooks/project-people/use-get-roles";
+import { useGetRoles } from "../../hooks/project-people/use-get-user-roles";
 import { useUpdateRoles } from "../../hooks/project-people/use-update-roles";
 import { Label } from "@/components/shadcn/label";
 
@@ -93,7 +93,7 @@ const ProjectPeopleMemberItem: React.FC<ProjectPeopleMemberItemProps> = ({
 	useEffect(() => {
 		const roleMap = new Map<string, boolean>();
 		rolesData?.forEach((role) => {
-			roleMap.set(role.role, true);
+			roleMap.set(role.roleName, true);
 		});
 		setCurrentRoles(roleMap);
 	}, [rolesData]);
@@ -172,16 +172,16 @@ const ProjectPeopleMemberItem: React.FC<ProjectPeopleMemberItemProps> = ({
 							<DialogDescription>
 								<div className="flex flex-col gap-4 mt-4">
 									{rolesData?.map((role) => (
-										<Field orientation="horizontal" key={role.role}>
+										<Field orientation="horizontal" key={role.roleName}>
 											<Checkbox
-												id={role.role}
-												name={role.role}
-												checked={currentRoles.get(role.role) === true}
-												onCheckedChange={() => handleChangeRoles(role.role)}
+												id={role.id}
+												name={role.roleName}
+												checked={currentRoles.get(role.roleName) === true}
+												onCheckedChange={() => handleChangeRoles(role.roleName)}
 											/>
 
 											<div className="flex flex-col">
-												<Label htmlFor={role.role}>{role.role}</Label>
+												<Label htmlFor={role.roleName}>{role.roleName}</Label>
 
 												<FieldDescription>{role.description}</FieldDescription>
 											</div>

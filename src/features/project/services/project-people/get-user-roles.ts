@@ -7,7 +7,7 @@ export type GetProjectRolesParams = {
 	userId: string;
 };
 
-export const getProjectRoles = async (
+export const getUserProjectRoles = async (
 	params: GetProjectRolesParams
 ): Promise<ProjectRole[]> => {
 	const { projectId, userId } = params;

@@ -13,7 +13,8 @@ export type ProjectUserResponse = {
 };
 
 export type ProjectRole = {
-	role: string;
+	id: string;
+	roleName: string;
 	description: string;
 };
 

@@ -10,9 +10,7 @@ import { Button } from "@/components/shadcn/button";
 import { Spinner } from "@/components/shadcn/spinner";
 import {
 	Dialog,
-	DialogClose,
 	DialogContent,
-	DialogFooter,
 	DialogHeader,
 	DialogTitle,
 	DialogTrigger,
@@ -72,15 +70,9 @@ const ProjectPeopleMember = () => {
 						<DialogHeader>
 							<DialogTitle>Add New Member</DialogTitle>
 						</DialogHeader>
-						<AddMemberDialog />
-						<DialogFooter>
-							<DialogClose asChild>
-								<Button variant="outline">Close</Button>
-							</DialogClose>
-							<Button onClick={() => setOpenAddMemberDialog(false)}>
-								Add Member
-							</Button>
-						</DialogFooter>
+						<AddMemberDialog
+							openDialog={(success) => setOpenAddMemberDialog(success)}
+						/>
 					</DialogContent>
 				</Dialog>
 			</div>

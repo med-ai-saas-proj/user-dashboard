@@ -1,4 +1,4 @@
-import { useMemo, useRef } from "react";
+import { useImperativeHandle, useMemo, useRef } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -32,7 +32,17 @@ type AddMemberWithoutEmailDialogFormValues = z.infer<
 	typeof addMemeberWithoutEmailDialogSchema
 >;
 
-const AddMemberWithoutEmailDialog = () => {
+type AddMemberWithoutEmailDialogRef = {
+	submit: () => Promise<boolean>;
+};
+
+type AddMemberWithoutEmailDialogProps = {
+	ref?: React.Ref<AddMemberWithoutEmailDialogRef>;
+};
+
+const AddMemberWithoutEmailDialog = ({
+	ref,
+}: AddMemberWithoutEmailDialogProps) => {
 	const portalContainerRef = useRef<HTMLDivElement | null>(null);
 	const fakeOrgId = useOrganizationStore((state) => state.organizationId);
 
@@ -61,11 +71,24 @@ const AddMemberWithoutEmailDialog = () => {
 		);
 	}, [users?.results]);
 
+	const onSubmit = async (values: AddMemberWithoutEmailDialogFormValues) => {
+		console.log(values);
+		return true;
+	};
+
+	useImperativeHandle(ref, () => ({
+		submit: () => {
+			return new Promise((resolve) => {
+				handleSubmit(async (values) => {
+					const result = await onSubmit(values);
+					resolve(result);
+				})();
+			});
+		},
+	}));
+
 	return (
-		<form
-			className="w-full mt-2"
-			onSubmit={handleSubmit((values) => console.log(values))}
-		>
+		<form className="w-full mt-2">
 			<FieldGroup ref={portalContainerRef} className="w-full max-w-sm gap-y-2">
 				<Field>
 					<Controller
@@ -159,5 +182,7 @@ const AddMemberWithoutEmailDialog = () => {
 		</form>
 	);
 };
+
+export type { AddMemberWithoutEmailDialogRef };
 
 export default AddMemberWithoutEmailDialog;

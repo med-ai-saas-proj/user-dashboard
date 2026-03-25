@@ -12,6 +12,7 @@ import {
 } from "@/components/shadcn/select";
 import { Label } from "@/components/shadcn/label";
 import { Input } from "@/components/shadcn/input";
+import { useImperativeHandle } from "react";
 
 const addMemeberWithEmailDialogSchema = z.object({
 	email: z.email("Invalid email address").min(1, "Email is required"),
@@ -22,11 +23,19 @@ type AddMemberWithEmailDialogFormValues = z.infer<
 	typeof addMemeberWithEmailDialogSchema
 >;
 
-const AddMemberWithEmailDialog = () => {
+type AddMemberWithEmailDialogRef = {
+	submit: () => Promise<boolean>;
+};
+
+type AddMemberWithEmailDialogProps = {
+	ref?: React.Ref<AddMemberWithEmailDialogRef>;
+};
+
+const AddMemberWithEmailDialog = ({ ref }: AddMemberWithEmailDialogProps) => {
 	const {
 		control,
 		register,
-		formState: { errors },
+		formState: { errors, isSubmitting },
 		handleSubmit,
 	} = useForm<AddMemberWithEmailDialogFormValues>({
 		resolver: zodResolver(addMemeberWithEmailDialogSchema),
@@ -36,11 +45,25 @@ const AddMemberWithEmailDialog = () => {
 		},
 	});
 
+	const onSubmit = async (values: AddMemberWithEmailDialogFormValues) => {
+		console.log(values);
+		return true;
+	};
+
+	useImperativeHandle(ref, () => ({
+		isSubmitting,
+		submit: () => {
+			return new Promise((resolve) => {
+				handleSubmit(async (values) => {
+					const result = await onSubmit(values);
+					resolve(result);
+				})();
+			});
+		},
+	}));
+
 	return (
-		<form
-			className="w-full mt-2"
-			onSubmit={handleSubmit((values) => console.log(values))}
-		>
+		<form className="w-full mt-2">
 			<FieldGroup>
 				<Field>
 					<Label htmlFor="email">Email</Label>
@@ -109,5 +132,7 @@ const AddMemberWithEmailDialog = () => {
 		</form>
 	);
 };
+
+export type { AddMemberWithEmailDialogRef };
 
 export default AddMemberWithEmailDialog;

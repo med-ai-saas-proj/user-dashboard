@@ -13,7 +13,7 @@ export const useDeleteRole = () => {
 			deleteProjectRole(credentials),
 		onSuccess: () => {
 			queryClient.invalidateQueries({
-				queryKey: ["project-roles"],
+				queryKey: ["project-get-all-roles"],
 				exact: false,
 			});
 		},

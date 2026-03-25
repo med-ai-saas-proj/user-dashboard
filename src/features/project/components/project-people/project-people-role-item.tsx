@@ -1,6 +1,7 @@
 import { Avatar, AvatarFallback } from "@/components/shadcn/avatar";
 import type { ProjectRole } from "../../project.type";
 import { Button } from "@/components/shadcn/button";
+import ProjectPeopleRoleItemDropdown from "./project-people-role-item-dropdown";
 
 type ProjectPeopleRoleItemProps = React.HTMLAttributes<HTMLDivElement> & {
 	projectRole: ProjectRole;
@@ -35,6 +36,10 @@ const ProjectPeopleRoleItem: React.FC<ProjectPeopleRoleItemProps> = ({
 				<Button variant="default" size="sm">
 					Permissions
 				</Button>
+				<ProjectPeopleRoleItemDropdown
+					roleId={projectRole.id}
+					roleName={projectRole.roleName}
+				/>
 			</div>
 		</div>
 	);

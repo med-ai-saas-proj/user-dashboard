@@ -17,6 +17,7 @@ import { useProjectStore } from "@/features/project/store/project";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import z from "zod";
+import { Textarea } from "@/components/shadcn/textarea";
 
 const CreateRoleDialogSchema = z.object({
 	roleName: z.string().min(1, "Role name is required"),
@@ -82,7 +83,7 @@ const CreateRoleDialog = () => {
 						</Field>
 						<Field>
 							<Label>Description</Label>
-							<Input {...register("description")} />
+							<Textarea {...register("description")} />
 							{errors.description && (
 								<p className="text-sm text-destructive mt-1">
 									{errors.description.message}

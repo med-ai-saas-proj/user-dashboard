@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Button } from "@/components/shadcn/button";
 import {
 	Dialog,
@@ -13,62 +12,114 @@ import { Field, FieldGroup } from "@/components/shadcn/field";
 import { Input } from "@/components/shadcn/input";
 import { Label } from "@/components/shadcn/label";
 import { useCreateRole } from "@/features/project/hooks/project-people/use-create-role";
+import { useUpdateRole } from "@/features/project/hooks/project-people/use-update-role";
 import { useProjectStore } from "@/features/project/store/project";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import z from "zod";
 import { Textarea } from "@/components/shadcn/textarea";
 
-const CreateRoleDialogSchema = z.object({
+const RoleDialogSchema = z.object({
 	roleName: z.string().min(1, "Role name is required"),
 	description: z.string(),
 });
 
-type CreateRoleDialogFormValues = z.infer<typeof CreateRoleDialogSchema>;
+type RoleDialogFormValues = z.infer<typeof RoleDialogSchema>;
+type RoleDialogProps = {
+	mode?: "create" | "edit";
+	roleId?: string;
+	roleName?: string;
+	roleDescription?: string;
+	triggerElement?: React.ReactNode;
+	open: boolean;
+	onOpenChange: (open: boolean) => void;
+};
 
-const CreateRoleDialog = () => {
+const RoleDialog = ({
+	mode = "create",
+	roleId,
+	roleName,
+	roleDescription,
+	triggerElement,
+	open,
+	onOpenChange,
+}: RoleDialogProps) => {
 	const fakeProjectId = useProjectStore((state) => state.projectId);
 	const {
 		register,
 		formState: { errors, isSubmitting },
 		handleSubmit,
-	} = useForm<CreateRoleDialogFormValues>({
-		resolver: zodResolver(CreateRoleDialogSchema),
+		reset,
+	} = useForm<RoleDialogFormValues>({
+		resolver: zodResolver(RoleDialogSchema),
 		defaultValues: {
 			roleName: "",
 			description: "",
 		},
 	});
 
+	useEffect(() => {
+		if (!open) return;
+
+		if (mode === "edit") {
+			reset({
+				roleName: roleName || "",
+				description: roleDescription || "",
+			});
+			return;
+		}
+
+		reset({
+			roleName: "",
+			description: "",
+		});
+	}, [open, mode, roleName, roleDescription, reset]);
+
 	const { mutate: createRole } = useCreateRole();
+	const { mutate: updateRole } = useUpdateRole();
 
-	const [openDialog, setOpenDialog] = useState(false);
-
-	const onSubmit = (values: CreateRoleDialogFormValues) => {
-		createRole(
-			{
-				projectId: fakeProjectId,
-				roleName: values.roleName,
-				description: values.description,
-			},
-			{
-				onSuccess: () => {
-					setOpenDialog(false);
+	const onSubmit = (values: RoleDialogFormValues) => {
+		if (mode === "create") {
+			createRole(
+				{
+					projectId: fakeProjectId,
+					roleName: values.roleName,
+					description: values.description,
 				},
-			}
-		);
+				{
+					onSuccess: () => {
+						onOpenChange(false);
+					},
+				}
+			);
+		} else if (mode === "edit" && roleId) {
+			updateRole(
+				{
+					projectId: fakeProjectId,
+					roleId: roleId,
+					roleName: values.roleName,
+					description: values.description,
+				},
+				{
+					onSuccess: () => {
+						onOpenChange(false);
+					},
+				}
+			);
+		}
 	};
 
 	return (
-		<Dialog open={openDialog} onOpenChange={setOpenDialog}>
-			<DialogTrigger asChild>
-				<Button variant="default" size="sm" className="mb-4">
-					Create Role
-				</Button>
-			</DialogTrigger>
+		<Dialog open={open} onOpenChange={onOpenChange}>
+			{triggerElement && (
+				<DialogTrigger asChild>{triggerElement}</DialogTrigger>
+			)}
 			<DialogContent>
 				<DialogHeader>
-					<DialogTitle>Create Role</DialogTitle>
+					<DialogTitle>
+						{mode === "create" ? "Create Role" : "Edit Role"}
+					</DialogTitle>
 				</DialogHeader>
 				<form onSubmit={handleSubmit(onSubmit)}>
 					<FieldGroup>
@@ -98,7 +149,11 @@ const CreateRoleDialog = () => {
 							</Button>
 						</DialogClose>
 						<Button type="submit" variant="default" disabled={isSubmitting}>
-							{isSubmitting ? "Creating..." : "Create"}
+							{isSubmitting
+								? "Saving..."
+								: mode === "create"
+									? "Create"
+									: "Save Changes"}
 						</Button>
 					</DialogFooter>
 				</form>
@@ -107,4 +162,4 @@ const CreateRoleDialog = () => {
 	);
 };
 
-export default CreateRoleDialog;
+export default RoleDialog;

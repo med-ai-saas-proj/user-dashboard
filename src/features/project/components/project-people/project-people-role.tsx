@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
 	InputGroup,
 	InputGroupAddon,
@@ -9,7 +10,8 @@ import { useTranslation } from "react-i18next";
 import { useGetAllRoles } from "../../hooks/project-people/use-get-all-roles";
 import { useProjectStore } from "../../store/project";
 import ProjectPeopleRoleItem from "./project-people-role-item";
-import CreateRoleDialog from "./dialog/create-role-dialog";
+import RoleDialog from "./dialog/role-dialog";
+import { Button } from "@/components/shadcn/button";
 
 const ProjectPeopleRole = () => {
 	const fakeProjectId = useProjectStore((state) => state.projectId);
@@ -18,6 +20,8 @@ const ProjectPeopleRole = () => {
 	const { data: roles, isPending } = useGetAllRoles({
 		projectId: fakeProjectId,
 	});
+
+	const [openRoleDialog, setOpenRoleDialog] = useState(false);
 
 	return (
 		<>
@@ -28,7 +32,15 @@ const ProjectPeopleRole = () => {
 						<Search />
 					</InputGroupAddon>
 				</InputGroup>
-				<CreateRoleDialog />
+				<RoleDialog
+					open={openRoleDialog}
+					onOpenChange={setOpenRoleDialog}
+					triggerElement={
+						<Button variant="default" size="sm" className="mb-4">
+							Create Role
+						</Button>
+					}
+				/>
 			</div>
 			<div className="flex flex-col border rounded-md">
 				{isPending && (

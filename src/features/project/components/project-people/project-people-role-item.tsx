@@ -39,6 +39,7 @@ const ProjectPeopleRoleItem: React.FC<ProjectPeopleRoleItemProps> = ({
 				<ProjectPeopleRoleItemDropdown
 					roleId={projectRole.id}
 					roleName={projectRole.roleName}
+					roleDescription={projectRole.description}
 				/>
 			</div>
 		</div>

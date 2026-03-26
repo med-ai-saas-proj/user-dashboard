@@ -7,34 +7,22 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/shadcn/dropdown-menu";
 import { Button } from "@/components/shadcn/button";
-import { useDeleteRole } from "../../hooks/project-people/use-delete-role";
-import { useProjectStore } from "../../store/project";
 import ConfirmDeleteRoleDialog from "./dialog/confirm-delete-role-dialog";
-import { useUpdateRole } from "../../hooks/project-people/use-update-role";
+import RoleDialog from "./dialog/role-dialog";
 
 type ProjectPeopleRoleItemDropdownProps = {
 	roleId: string;
 	roleName: string;
+	roleDescription: string;
 };
 
 const ProjectPeopleRoleItemDropdown = ({
 	roleId,
 	roleName,
+	roleDescription,
 }: ProjectPeopleRoleItemDropdownProps) => {
-	const fakeProjectId = useProjectStore((state) => state.projectId);
-
-	const { mutate: deleteRole } = useDeleteRole();
-	const { mutate: updateRole } = useUpdateRole();
-
 	const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-
-	const handleDeleteRole = () => {
-		deleteRole({
-			projectId: fakeProjectId,
-			roleId,
-		});
-		setOpenDeleteDialog(false);
-	};
+	const [openEditDialog, setOpenEditDialog] = useState(false);
 
 	return (
 		<>
@@ -45,35 +33,33 @@ const ProjectPeopleRoleItemDropdown = ({
 					</Button>
 				</DropdownMenuTrigger>
 				<DropdownMenuContent>
-					<DropdownMenuItem>
-						<Button
-							variant="ghost"
-							size="sm"
-							className="w-full flex items-center justify-start gap-x-2"
-							onClick={() => setOpenDeleteDialog(true)}
-						>
+					<DropdownMenuItem onSelect={() => setOpenEditDialog(true)}>
+						<div className="w-full flex items-center justify-start gap-x-2">
 							<SquarePen size={16} className="text-primary" />
 							<p className="text-primary">Edit</p>
-						</Button>
+						</div>
 					</DropdownMenuItem>
-					<DropdownMenuItem>
-						<Button
-							variant="ghost"
-							size="sm"
-							className="w-full flex items-center justify-start gap-x-2"
-							onClick={() => setOpenDeleteDialog(true)}
-						>
+					<DropdownMenuItem onClick={() => setOpenDeleteDialog(true)}>
+						<div className="w-full flex items-center justify-start gap-x-2">
 							<Trash2 size={16} className="text-destructive" />
 							<p className="text-destructive">Delete</p>
-						</Button>
+						</div>
 					</DropdownMenuItem>
 				</DropdownMenuContent>
 			</DropdownMenu>
 			<ConfirmDeleteRoleDialog
+				roleId={roleId}
 				roleName={roleName}
 				open={openDeleteDialog}
 				onOpenChange={setOpenDeleteDialog}
-				onConfirm={handleDeleteRole}
+			/>
+			<RoleDialog
+				mode="edit"
+				roleId={roleId}
+				roleName={roleName}
+				roleDescription={roleDescription}
+				open={openEditDialog}
+				onOpenChange={setOpenEditDialog}
 			/>
 		</>
 	);

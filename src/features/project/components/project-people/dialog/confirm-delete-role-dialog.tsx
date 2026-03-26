@@ -8,20 +8,40 @@ import {
 	DialogHeader,
 	DialogTitle,
 } from "@/components/shadcn/dialog";
+import { useProjectStore } from "@/features/project/store/project";
+import { useDeleteRole } from "@/features/project/hooks/project-people/use-delete-role";
 
 type ConfirmDeleteRoleDialogProps = {
+	roleId: string;
 	roleName: string;
 	open: boolean;
 	onOpenChange: (open: boolean) => void;
-	onConfirm: () => void;
 };
 
 const ConfirmDeleteRoleDialog = ({
+	roleId,
 	roleName,
 	open,
 	onOpenChange,
-	onConfirm,
 }: ConfirmDeleteRoleDialogProps) => {
+	const fakeProjectId = useProjectStore((state) => state.projectId);
+
+	const { mutate: deleteRole } = useDeleteRole();
+
+	const handleDeleteRole = () => {
+		deleteRole(
+			{
+				projectId: fakeProjectId,
+				roleId,
+			},
+			{
+				onSuccess: () => {
+					onOpenChange(false);
+				},
+			}
+		);
+	};
+
 	return (
 		<Dialog open={open} onOpenChange={onOpenChange}>
 			<DialogContent>
@@ -38,7 +58,11 @@ const ConfirmDeleteRoleDialog = ({
 							Cancel
 						</Button>
 					</DialogClose>
-					<Button type="button" variant="destructive" onClick={onConfirm}>
+					<Button
+						type="button"
+						variant="destructive"
+						onClick={handleDeleteRole}
+					>
 						Delete
 					</Button>
 				</DialogFooter>

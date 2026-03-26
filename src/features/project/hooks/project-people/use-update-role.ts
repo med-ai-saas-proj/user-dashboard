@@ -3,6 +3,7 @@ import {
 	updateProjectRole,
 	type UpdateProjectRoleCredentials,
 } from "../../services/project-people/update-role";
+import type { ProjectRole } from "../../project.type";
 
 export const useUpdateRole = () => {
 	const queryClient = useQueryClient();
@@ -11,11 +12,20 @@ export const useUpdateRole = () => {
 		mutationKey: ["project-update-role"],
 		mutationFn: (credentials: UpdateProjectRoleCredentials) =>
 			updateProjectRole(credentials),
-		onSuccess: () => {
-			queryClient.invalidateQueries({
-				queryKey: ["project-roles"],
-				exact: false,
-			});
+		onSuccess: (updatedRole) => {
+			queryClient.setQueriesData<ProjectRole[]>(
+				{
+					queryKey: ["project-get-all-roles"],
+					exact: false,
+				},
+				(oldRoles) => {
+					if (!oldRoles) return oldRoles;
+
+					return oldRoles.map((role) =>
+						role.id === updatedRole.id ? updatedRole : role
+					);
+				}
+			);
 		},
 	});
 };

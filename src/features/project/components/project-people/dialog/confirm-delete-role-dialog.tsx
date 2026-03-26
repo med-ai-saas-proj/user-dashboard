@@ -10,6 +10,7 @@ import {
 } from "@/components/shadcn/dialog";
 import { useProjectStore } from "@/features/project/store/project";
 import { useDeleteRole } from "@/features/project/hooks/project-people/use-delete-role";
+import { Trans, useTranslation } from "react-i18next";
 
 type ConfirmDeleteRoleDialogProps = {
 	roleId: string;
@@ -24,6 +25,7 @@ const ConfirmDeleteRoleDialog = ({
 	open,
 	onOpenChange,
 }: ConfirmDeleteRoleDialogProps) => {
+	const { t } = useTranslation("project");
 	const fakeProjectId = useProjectStore((state) => state.projectId);
 
 	const { mutate: deleteRole } = useDeleteRole();
@@ -46,16 +48,20 @@ const ConfirmDeleteRoleDialog = ({
 		<Dialog open={open} onOpenChange={onOpenChange}>
 			<DialogContent>
 				<DialogHeader>
-					<DialogTitle>Delete Role</DialogTitle>
+					<DialogTitle>{t("people.role.deleteDialog.title")}</DialogTitle>
 					<DialogDescription>
-						Are you sure you want to delete the role "
-						<strong>{roleName}</strong>"?
+						<Trans
+							ns="project"
+							i18nKey="people.role.deleteDialog.description"
+							values={{ roleName }}
+							components={{ bold: <strong /> }}
+						/>
 					</DialogDescription>
 				</DialogHeader>
 				<DialogFooter>
 					<DialogClose asChild>
 						<Button type="button" variant="outline">
-							Cancel
+							{t("people.role.deleteDialog.cancel")}
 						</Button>
 					</DialogClose>
 					<Button
@@ -63,7 +69,7 @@ const ConfirmDeleteRoleDialog = ({
 						variant="destructive"
 						onClick={handleDeleteRole}
 					>
-						Delete
+						{t("people.role.deleteDialog.delete")}
 					</Button>
 				</DialogFooter>
 			</DialogContent>

@@ -37,7 +37,7 @@ const ProjectPeopleRole = () => {
 					onOpenChange={setOpenRoleDialog}
 					triggerElement={
 						<Button variant="default" size="sm" className="mb-4">
-							Create Role
+							{t("people.role.createRole")}
 						</Button>
 					}
 				/>
@@ -48,7 +48,7 @@ const ProjectPeopleRole = () => {
 						<div className="flex items-center justify-center gap-2">
 							<Spinner />
 							<p className="text-center text-sm text-muted-foreground">
-								{t("people.members.loading")}
+								{t("people.role.loading")}
 							</p>
 						</div>
 					</div>

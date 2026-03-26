@@ -68,7 +68,7 @@ const ProjectPeopleMember = () => {
 					</DialogTrigger>
 					<DialogContent>
 						<DialogHeader>
-							<DialogTitle>Add New Member</DialogTitle>
+							<DialogTitle>{t("people.dialog.title")}</DialogTitle>
 						</DialogHeader>
 						<AddMemberDialog
 							openDialog={(success) => setOpenAddMemberDialog(success)}

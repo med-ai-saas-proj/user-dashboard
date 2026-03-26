@@ -12,15 +12,23 @@ import {
 } from "@/components/shadcn/select";
 import { Label } from "@/components/shadcn/label";
 import { Input } from "@/components/shadcn/input";
-import { useImperativeHandle } from "react";
+import { useImperativeHandle, useMemo } from "react";
+import { useTranslation } from "react-i18next";
 
-const addMemeberWithEmailDialogSchema = z.object({
-	email: z.email("Invalid email address").min(1, "Email is required"),
-	role: z.string().min(1, "Role is required"),
-});
+const createAddMemberWithEmailDialogSchema = (messages: {
+	emailInvalid: string;
+	roleInvalid: string;
+}) =>
+	z.object({
+		email: z
+			.string()
+			.min(1, messages.emailInvalid)
+			.email(messages.emailInvalid),
+		role: z.string().min(1, messages.roleInvalid),
+	});
 
 type AddMemberWithEmailDialogFormValues = z.infer<
-	typeof addMemeberWithEmailDialogSchema
+	ReturnType<typeof createAddMemberWithEmailDialogSchema>
 >;
 
 type AddMemberWithEmailDialogRef = {
@@ -32,6 +40,19 @@ type AddMemberWithEmailDialogProps = {
 };
 
 const AddMemberWithEmailDialog = ({ ref }: AddMemberWithEmailDialogProps) => {
+	const { t } = useTranslation("project");
+	const validationMessages = useMemo(
+		() => ({
+			emailInvalid: t("people.dialog.with-email.emailInvalid"),
+			roleInvalid: t("people.dialog.roleInvalid"),
+		}),
+		[t]
+	);
+	const addMemeberWithEmailDialogSchema = useMemo(
+		() => createAddMemberWithEmailDialogSchema(validationMessages),
+		[validationMessages]
+	);
+
 	const {
 		control,
 		register,
@@ -66,11 +87,13 @@ const AddMemberWithEmailDialog = ({ ref }: AddMemberWithEmailDialogProps) => {
 		<form className="w-full mt-2">
 			<FieldGroup>
 				<Field>
-					<Label htmlFor="email">Email</Label>
+					<Label htmlFor="email">
+						{t("people.dialog.with-email.emailLabel")}
+					</Label>
 					<Input
 						id="email"
 						type="email"
-						placeholder={"jane@example.com"}
+						placeholder={t("people.dialog.with-email.emailPlaceholder")}
 						{...register("email")}
 						aria-invalid={errors.email ? "true" : "false"}
 					/>
@@ -86,16 +109,20 @@ const AddMemberWithEmailDialog = ({ ref }: AddMemberWithEmailDialogProps) => {
 						control={control}
 						render={({ field }) => (
 							<div className="space-y-2">
-								<Label htmlFor="role">Role</Label>
+								<Label htmlFor="role">{t("people.dialog.roleLabel")}</Label>
 
 								<Select onValueChange={field.onChange} value={field.value}>
 									<SelectTrigger id="role" className="w-full">
 										<SelectValue>
 											{field.value === "member" && (
-												<p className="font-medium">Member</p>
+												<p className="font-medium">
+													{t("people.dialog.roles.member.name")}
+												</p>
 											)}
 											{field.value === "owner" && (
-												<p className="font-medium">Owner</p>
+												<p className="font-medium">
+													{t("people.dialog.roles.owner.name")}
+												</p>
 											)}
 										</SelectValue>
 									</SelectTrigger>
@@ -104,26 +131,33 @@ const AddMemberWithEmailDialog = ({ ref }: AddMemberWithEmailDialogProps) => {
 										<SelectGroup>
 											<SelectItem value="member">
 												<div className="flex flex-col">
-													<p className="font-medium">Member</p>
+													<p className="font-medium">
+														{t("people.dialog.roles.member.name")}
+													</p>
 													<p className="text-muted-foreground text-sm">
-														Can read/write data. No direct member-management
-														controls.
+														{t("people.dialog.roles.member.description")}
 													</p>
 												</div>
 											</SelectItem>
 
 											<SelectItem value="owner">
 												<div className="flex flex-col">
-													<p className="font-medium">Owner</p>
+													<p className="font-medium">
+														{t("people.dialog.roles.owner.name")}
+													</p>
 													<p className="text-muted-foreground text-sm">
-														Full control: can manage project settings and
-														members.
+														{t("people.dialog.roles.owner.description")}
 													</p>
 												</div>
 											</SelectItem>
 										</SelectGroup>
 									</SelectContent>
 								</Select>
+								{errors.role && (
+									<p className="text-sm text-destructive mt-1" role="alert">
+										{errors.role.message}
+									</p>
+								)}
 							</div>
 						)}
 					/>

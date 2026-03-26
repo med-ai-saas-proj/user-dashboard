@@ -9,6 +9,7 @@ import {
 import { Button } from "@/components/shadcn/button";
 import ConfirmDeleteRoleDialog from "./dialog/confirm-delete-role-dialog";
 import RoleDialog from "./dialog/role-dialog";
+import { useTranslation } from "react-i18next";
 
 type ProjectPeopleRoleItemDropdownProps = {
 	roleId: string;
@@ -21,6 +22,7 @@ const ProjectPeopleRoleItemDropdown = ({
 	roleName,
 	roleDescription,
 }: ProjectPeopleRoleItemDropdownProps) => {
+	const { t } = useTranslation("project");
 	const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 	const [openEditDialog, setOpenEditDialog] = useState(false);
 
@@ -36,13 +38,15 @@ const ProjectPeopleRoleItemDropdown = ({
 					<DropdownMenuItem onSelect={() => setOpenEditDialog(true)}>
 						<div className="w-full flex items-center justify-start gap-x-2">
 							<SquarePen size={16} className="text-primary" />
-							<p className="text-primary">Edit</p>
+							<p className="text-primary">{t("people.role.dropdown.edit")}</p>
 						</div>
 					</DropdownMenuItem>
 					<DropdownMenuItem onClick={() => setOpenDeleteDialog(true)}>
 						<div className="w-full flex items-center justify-start gap-x-2">
 							<Trash2 size={16} className="text-destructive" />
-							<p className="text-destructive">Delete</p>
+							<p className="text-destructive">
+								{t("people.role.dropdown.delete")}
+							</p>
 						</div>
 					</DropdownMenuItem>
 				</DropdownMenuContent>

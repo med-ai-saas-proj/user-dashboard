@@ -15,17 +15,19 @@ import { useCreateRole } from "@/features/project/hooks/project-people/use-creat
 import { useUpdateRole } from "@/features/project/hooks/project-people/use-update-role";
 import { useProjectStore } from "@/features/project/store/project";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
 import z from "zod";
 import { Textarea } from "@/components/shadcn/textarea";
 
-const RoleDialogSchema = z.object({
-	roleName: z.string().min(1, "Role name is required"),
-	description: z.string(),
-});
+const createRoleDialogSchema = (messages: { roleNameRequired: string }) =>
+	z.object({
+		roleName: z.string().min(1, messages.roleNameRequired),
+		description: z.string(),
+	});
 
-type RoleDialogFormValues = z.infer<typeof RoleDialogSchema>;
+type RoleDialogFormValues = z.infer<ReturnType<typeof createRoleDialogSchema>>;
 type RoleDialogProps = {
 	mode?: "create" | "edit";
 	roleId?: string;
@@ -45,14 +47,26 @@ const RoleDialog = ({
 	open,
 	onOpenChange,
 }: RoleDialogProps) => {
+	const { t } = useTranslation("project");
 	const fakeProjectId = useProjectStore((state) => state.projectId);
+	const validationMessages = useMemo(
+		() => ({
+			roleNameRequired: t("people.role.dialog.validation.roleNameRequired"),
+		}),
+		[t]
+	);
+	const roleDialogSchema = useMemo(
+		() => createRoleDialogSchema(validationMessages),
+		[validationMessages]
+	);
+
 	const {
 		register,
 		formState: { errors, isSubmitting },
 		handleSubmit,
 		reset,
 	} = useForm<RoleDialogFormValues>({
-		resolver: zodResolver(RoleDialogSchema),
+		resolver: zodResolver(roleDialogSchema),
 		defaultValues: {
 			roleName: "",
 			description: "",
@@ -118,13 +132,15 @@ const RoleDialog = ({
 			<DialogContent>
 				<DialogHeader>
 					<DialogTitle>
-						{mode === "create" ? "Create Role" : "Edit Role"}
+						{mode === "create"
+							? t("people.role.dialog.title.create")
+							: t("people.role.dialog.title.edit")}
 					</DialogTitle>
 				</DialogHeader>
 				<form onSubmit={handleSubmit(onSubmit)}>
 					<FieldGroup>
 						<Field>
-							<Label>Role Name</Label>
+							<Label>{t("people.role.dialog.fields.roleName")}</Label>
 							<Input {...register("roleName")} />
 							{errors.roleName && (
 								<p className="text-sm text-destructive mt-1">
@@ -133,7 +149,7 @@ const RoleDialog = ({
 							)}
 						</Field>
 						<Field>
-							<Label>Description</Label>
+							<Label>{t("people.role.dialog.fields.description")}</Label>
 							<Textarea {...register("description")} />
 							{errors.description && (
 								<p className="text-sm text-destructive mt-1">
@@ -145,15 +161,15 @@ const RoleDialog = ({
 					<DialogFooter className="mt-4">
 						<DialogClose asChild>
 							<Button type="button" variant="outline">
-								Close
+								{t("people.role.dialog.actions.close")}
 							</Button>
 						</DialogClose>
 						<Button type="submit" variant="default" disabled={isSubmitting}>
 							{isSubmitting
-								? "Saving..."
+								? t("people.role.dialog.actions.saving")
 								: mode === "create"
-									? "Create"
-									: "Save Changes"}
+									? t("people.role.dialog.actions.create")
+									: t("people.role.dialog.actions.saveChanges")}
 						</Button>
 					</DialogFooter>
 				</form>

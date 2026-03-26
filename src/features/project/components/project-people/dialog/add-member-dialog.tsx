@@ -13,12 +13,14 @@ import AddMemberWithoutEmailDialog, {
 } from "./add-member-without-email-dialog";
 import { DialogClose, DialogFooter } from "@/components/shadcn/dialog";
 import { Button } from "@/components/shadcn/button";
+import { useTranslation } from "react-i18next";
 
 type AddMemberDialogProps = {
 	openDialog: (success: boolean) => void;
 };
 
 const AddMemberDialog = ({ openDialog }: AddMemberDialogProps) => {
+	const { t } = useTranslation("project");
 	const addMemberWithEmailDialogRef = useRef<AddMemberWithEmailDialogRef>(null);
 	const addMemberWithoutEmailDialogRef =
 		useRef<AddMemberWithoutEmailDialogRef>(null);
@@ -48,8 +50,12 @@ const AddMemberDialog = ({ openDialog }: AddMemberDialogProps) => {
 				className="w-[400px]"
 			>
 				<TabsList>
-					<TabsTrigger value="without-email">Select user</TabsTrigger>
-					<TabsTrigger value="with-email">Enter user Email</TabsTrigger>
+					<TabsTrigger value="without-email">
+						{t("people.dialog.tabs.selectUser")}
+					</TabsTrigger>
+					<TabsTrigger value="with-email">
+						{t("people.dialog.tabs.enterUserEmail")}
+					</TabsTrigger>
 				</TabsList>
 				<TabsContent value="without-email">
 					<AddMemberWithoutEmailDialog ref={addMemberWithoutEmailDialogRef} />
@@ -60,9 +66,11 @@ const AddMemberDialog = ({ openDialog }: AddMemberDialogProps) => {
 			</Tabs>
 			<DialogFooter>
 				<DialogClose asChild>
-					<Button variant="outline">Close</Button>
+					<Button variant="outline">{t("people.dialog.actions.close")}</Button>
 				</DialogClose>
-				<Button onClick={handleAddNewMemberForm}>Add Member</Button>
+				<Button onClick={handleAddNewMemberForm}>
+					{t("people.dialog.actions.addMember")}
+				</Button>
 			</DialogFooter>
 		</>
 	);

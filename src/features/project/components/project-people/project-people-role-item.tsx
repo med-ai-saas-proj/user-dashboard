@@ -2,6 +2,7 @@ import { Avatar, AvatarFallback } from "@/components/shadcn/avatar";
 import type { ProjectRole } from "../../project.type";
 import { Button } from "@/components/shadcn/button";
 import ProjectPeopleRoleItemDropdown from "./project-people-role-item-dropdown";
+import { useTranslation } from "react-i18next";
 
 type ProjectPeopleRoleItemProps = React.HTMLAttributes<HTMLDivElement> & {
 	projectRole: ProjectRole;
@@ -11,6 +12,8 @@ const ProjectPeopleRoleItem: React.FC<ProjectPeopleRoleItemProps> = ({
 	projectRole,
 	...props
 }) => {
+	const { t } = useTranslation("project");
+
 	return (
 		<div
 			className="p-4 border-b last:border-b-0 flex items-center justify-between"
@@ -31,10 +34,10 @@ const ProjectPeopleRoleItem: React.FC<ProjectPeopleRoleItemProps> = ({
 			</div>
 			<div className="flex items-center gap-x-4">
 				<Button variant="secondary" size="sm">
-					Assignments
+					{t("people.role.actions.assignments")}
 				</Button>
 				<Button variant="default" size="sm">
-					Permissions
+					{t("people.role.actions.permissions")}
 				</Button>
 				<ProjectPeopleRoleItemDropdown
 					roleId={projectRole.id}

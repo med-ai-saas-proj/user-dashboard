@@ -23,6 +23,8 @@ import {
 import { useGetUsers } from "@/features/organization/hooks/organization-people/use-get-users";
 import { useOrganizationStore } from "@/features/organization/store/organization";
 import { useTranslation } from "react-i18next";
+import { useAddUser } from "@/features/project/hooks/project-people/use-add-user";
+import { useProjectStore } from "@/features/project/store/project";
 
 const createAddMemberWithoutEmailDialogSchema = (messages: {
 	userInvalid: string;
@@ -51,6 +53,7 @@ const AddMemberWithoutEmailDialog = ({
 	const { t } = useTranslation("project");
 	const portalContainerRef = useRef<HTMLDivElement | null>(null);
 	const fakeOrgId = useOrganizationStore((state) => state.organizationId);
+	const fakeProjectId = useProjectStore((state) => state.projectId);
 	const validationMessages = useMemo(
 		() => ({
 			userInvalid: t("people.dialog.without-email.userInvalid"),
@@ -78,6 +81,7 @@ const AddMemberWithoutEmailDialog = ({
 	const { data: users } = useGetUsers({
 		organizationId: fakeOrgId,
 	});
+	const { mutate: addUser } = useAddUser();
 
 	const userLabelById = useMemo(() => {
 		return Object.fromEntries(
@@ -88,8 +92,11 @@ const AddMemberWithoutEmailDialog = ({
 		);
 	}, [users?.results]);
 
-	const onSubmit = async (values: AddMemberWithoutEmailDialogFormValues) => {
-		console.log(values);
+	const onSubmit = (values: AddMemberWithoutEmailDialogFormValues) => {
+		addUser({
+			projectId: fakeProjectId,
+			userId: values.userId,
+		});
 		return true;
 	};
 

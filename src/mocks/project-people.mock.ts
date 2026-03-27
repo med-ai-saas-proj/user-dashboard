@@ -59,7 +59,8 @@ for (const user of mockUsers) {
 
 const toProjectRoles = (roles: string[]): ProjectRole[] =>
 	roles.map((role) => ({
-		role,
+		id: role,
+		roleName: role,
 		description:
 			roleDescriptionMap[role.toLowerCase()] ?? `No description for ${role}.`,
 	}));
@@ -88,6 +89,46 @@ const buildGetUsersHandler = (options: { url: string }) => {
 
 	return response;
 };
+
+Mock.mock(
+	new RegExp(`^${escapeRegExp(usersRoute)}(?:\\?.*)?$`),
+	"post",
+	(options) => {
+		const body = parseBody(options.body);
+		const userId = typeof body?.userId === "string" ? body.userId : "";
+
+		if (!userId) {
+			const response: ProjectUserResponse = {
+				total: mockUsers.length,
+				results: [...mockUsers],
+			};
+
+			return response;
+		}
+
+		let existingUser = mockUsers.find((user) => user.id === userId);
+
+		if (!existingUser) {
+			existingUser = {
+				id: userId,
+				username: `user-${userId.slice(0, 8)}`,
+				email: `${userId.slice(0, 8)}@example.com`,
+				roles: ["member"],
+			};
+			mockUsers.unshift(existingUser);
+		}
+
+		rolesByUser.set(userId, [...existingUser.roles]);
+		permissionsByUser.set(userId, [...defaultPermissions]);
+
+		const response: ProjectUserResponse = {
+			total: mockUsers.length,
+			results: [...mockUsers],
+		};
+
+		return response;
+	}
+);
 
 Mock.mock(
 	new RegExp(`^${escapeRegExp(userRoute)}(?:\\?.*)?$`),

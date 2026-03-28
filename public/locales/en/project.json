@@ -36,7 +36,7 @@
             "item": {
                 "actions": {
                     "remove": "Remove",
-                    "roles": "Roles",
+                    "permissions": "Permissions",
                     "close": "Close",
                     "save": "Save"
                 },
@@ -44,8 +44,8 @@
                     "title": "Confirm removal",
                     "description": "Are you sure you want to remove <bold>{{username}}</bold> from this project?"
                 },
-                "rolesDialog": {
-                    "title": "Roles"
+                "permissionsDialog": {
+                    "title": "Permissions"
                 }
             }
         },

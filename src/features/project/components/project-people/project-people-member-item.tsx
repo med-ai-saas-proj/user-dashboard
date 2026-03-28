@@ -161,13 +161,13 @@ const ProjectPeopleMemberItem: React.FC<ProjectPeopleMemberItemProps> = ({
 				<Dialog open={openRoleDialog} onOpenChange={setOpenRoleDialog}>
 					<DialogTrigger asChild>
 						<Button variant="default" size="sm" className="ml-auto">
-							{t("people.members.item.actions.roles")}
+							{t("people.members.item.actions.permissions")}
 						</Button>
 					</DialogTrigger>
 					<DialogContent>
 						<DialogHeader>
 							<DialogTitle>
-								{t("people.members.item.rolesDialog.title")}
+								{t("people.members.item.permissionsDialog.title")}
 							</DialogTitle>
 							<DialogDescription>
 								<div className="flex flex-col gap-4 mt-4">

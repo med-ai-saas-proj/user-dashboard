@@ -13,7 +13,7 @@ export const updateProjectRoles = async (
 ): Promise<ProjectRole[]> => {
 	const { projectId, userId, roles } = params;
 	const response = await apiClient.put(
-		`${API_ROUTES.MANAGEMENT.PROJECT.PEOPLE.replace(":projectId", projectId)}/users/${userId}/roles`,
+		`${API_ROUTES.MANAGEMENT.PROJECT.PEOPLE}/${projectId}/users/${userId}/roles`,
 		{
 			roles,
 		}

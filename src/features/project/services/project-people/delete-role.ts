@@ -12,6 +12,6 @@ export const deleteProjectRole = async (
 	const { projectId, roleId } = credentials;
 
 	await apiClient.delete(
-		`${API_ROUTES.MANAGEMENT.PROJECT.PEOPLE.replace(":projectId", projectId)}/roles/${roleId}`
+		`${API_ROUTES.MANAGEMENT.PROJECT.PEOPLE}/${projectId}/roles/${roleId}`
 	);
 };

@@ -36,7 +36,7 @@ export const API_ROUTES = {
 		},
 		PROJECT: {
 			PEOPLE: new URL(
-				`management/${API_VERSION}/projects/:projectId`,
+				`management/${API_VERSION}/projects`,
 				BASE_API_URL
 			).toString(),
 		},

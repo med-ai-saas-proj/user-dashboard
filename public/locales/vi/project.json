@@ -36,7 +36,7 @@
             "item": {
                 "actions": {
                     "remove": "Xóa",
-                    "roles": "Vai trò",
+                    "permissions": "Quyền hạn",
                     "close": "Đóng",
                     "save": "Lưu"
                 },
@@ -44,8 +44,8 @@
                     "title": "Xác nhận xóa",
                     "description": "Bạn có chắc chắn muốn xóa <bold>{{username}}</bold> khỏi dự án này không?"
                 },
-                "rolesDialog": {
-                    "title": "Vai trò"
+                "permissionsDialog": {
+                    "title": "Quyền hạn"
                 }
             }
         },

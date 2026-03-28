@@ -14,7 +14,7 @@ export const getAllProjectRoles = async (
 	const { projectId } = params;
 
 	const response = await apiClient.get(
-		`${API_ROUTES.MANAGEMENT.PROJECT.PEOPLE.replace(":projectId", projectId)}/roles`,
+		`${API_ROUTES.MANAGEMENT.PROJECT.PEOPLE}/${projectId}/roles`,
 		{
 			params: {
 				offset: params.offset,

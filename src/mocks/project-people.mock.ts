@@ -8,7 +8,6 @@ import type {
 
 type MockUser = ProjectUserResponse["results"][number];
 
-const fakeProjectId = "123";
 const defaultPermissions = ["read:project", "write:project"];
 
 const roleDescriptionMap: Record<string, string> = {
@@ -43,13 +42,25 @@ const mockUsers: MockUser[] = Mock.mock({
 	],
 }).results;
 
-const peopleBaseRoute = API_ROUTES.MANAGEMENT.PROJECT.PEOPLE.replace(
-	":projectId",
-	fakeProjectId
+const peopleBaseRoute = API_ROUTES.MANAGEMENT.PROJECT.PEOPLE;
+const usersRoutePattern = new RegExp(
+	`^${escapeRegExp(peopleBaseRoute)}/[^/]+/users(?:\\?.*)?$`
 );
-
-const userRoute = `${peopleBaseRoute}/user`;
-const usersRoute = `${peopleBaseRoute}/users`;
+const userRoutePattern = new RegExp(
+	`^${escapeRegExp(peopleBaseRoute)}/[^/]+/user(?:\\?.*)?$`
+);
+const userByIdRoutePattern = new RegExp(
+	`^${escapeRegExp(peopleBaseRoute)}/[^/]+/users/[^/]+(?:\\?.*)?$`
+);
+const userRolesRoutePattern = new RegExp(
+	`^${escapeRegExp(peopleBaseRoute)}/[^/]+/users/[^/]+/roles(?:\\?.*)?$`
+);
+const userPermissionsRoutePattern = new RegExp(
+	`^${escapeRegExp(peopleBaseRoute)}/[^/]+/users/[^/]+/permissions(?:\\?.*)?$`
+);
+const permissionsRoutePattern = new RegExp(
+	`^${escapeRegExp(peopleBaseRoute)}/permissions(?:\\?.*)?$`
+);
 const permissionsByUser = new Map<string, string[]>();
 const rolesByUser = new Map<string, string[]>();
 for (const user of mockUsers) {
@@ -90,37 +101,11 @@ const buildGetUsersHandler = (options: { url: string }) => {
 	return response;
 };
 
-Mock.mock(
-	new RegExp(`^${escapeRegExp(usersRoute)}(?:\\?.*)?$`),
-	"post",
-	(options) => {
-		const body = parseBody(options.body);
-		const userId = typeof body?.userId === "string" ? body.userId : "";
+Mock.mock(usersRoutePattern, "post", (options) => {
+	const body = parseBody(options.body);
+	const userId = typeof body?.userId === "string" ? body.userId : "";
 
-		if (!userId) {
-			const response: ProjectUserResponse = {
-				total: mockUsers.length,
-				results: [...mockUsers],
-			};
-
-			return response;
-		}
-
-		let existingUser = mockUsers.find((user) => user.id === userId);
-
-		if (!existingUser) {
-			existingUser = {
-				id: userId,
-				username: `user-${userId.slice(0, 8)}`,
-				email: `${userId.slice(0, 8)}@example.com`,
-				roles: ["member"],
-			};
-			mockUsers.unshift(existingUser);
-		}
-
-		rolesByUser.set(userId, [...existingUser.roles]);
-		permissionsByUser.set(userId, [...defaultPermissions]);
-
+	if (!userId) {
 		const response: ProjectUserResponse = {
 			total: mockUsers.length,
 			results: [...mockUsers],
@@ -128,115 +113,115 @@ Mock.mock(
 
 		return response;
 	}
-);
 
-Mock.mock(
-	new RegExp(`^${escapeRegExp(userRoute)}(?:\\?.*)?$`),
-	"get",
-	buildGetUsersHandler
-);
+	let existingUser = mockUsers.find((user) => user.id === userId);
 
-Mock.mock(
-	new RegExp(`^${escapeRegExp(usersRoute)}(?:\\?.*)?$`),
-	"get",
-	buildGetUsersHandler
-);
-
-Mock.mock(
-	new RegExp(`^${escapeRegExp(usersRoute)}/[^/]+(?:\\?.*)?$`),
-	"delete",
-	(options) => {
-		const url = new URL(options.url, "http://dummy");
-		const userId = url.pathname.split("/").at(-1);
-
-		if (userId) {
-			const userIndex = mockUsers.findIndex((user) => user.id === userId);
-			if (userIndex !== -1) {
-				mockUsers.splice(userIndex, 1);
-			}
-			permissionsByUser.delete(userId);
-			rolesByUser.delete(userId);
-		}
-
-		return {
-			success: true,
+	if (!existingUser) {
+		existingUser = {
+			id: userId,
+			username: `user-${userId.slice(0, 8)}`,
+			email: `${userId.slice(0, 8)}@example.com`,
+			roles: ["member"],
 		};
+		mockUsers.unshift(existingUser);
 	}
-);
 
-Mock.mock(
-	new RegExp(`^${escapeRegExp(usersRoute)}/[^/]+/roles(?:\\?.*)?$`),
-	"get",
-	(options) => {
-		const url = new URL(options.url, "http://dummy");
-		const userId = url.pathname.split("/").at(-2) ?? "";
-		const roles = rolesByUser.get(userId) ?? ["member"];
+	rolesByUser.set(userId, [...existingUser.roles]);
+	permissionsByUser.set(userId, [...defaultPermissions]);
 
-		return toProjectRoles(roles);
-	}
-);
+	const response: ProjectUserResponse = {
+		total: mockUsers.length,
+		results: [...mockUsers],
+	};
 
-Mock.mock(
-	new RegExp(`^${escapeRegExp(usersRoute)}/[^/]+/roles(?:\\?.*)?$`),
-	"put",
-	(options) => {
-		const url = new URL(options.url, "http://dummy");
-		const userId = url.pathname.split("/").at(-2) ?? "";
-		const body = parseBody(options.body);
-		const payload = body?.roles;
-		let nextRoles: string[] = ["member"];
+	return response;
+});
 
-		if (Array.isArray(payload)) {
-			nextRoles = payload.filter(
-				(role): role is string => typeof role === "string"
-			);
+Mock.mock(userRoutePattern, "get", buildGetUsersHandler);
+
+Mock.mock(usersRoutePattern, "get", buildGetUsersHandler);
+
+Mock.mock(userByIdRoutePattern, "delete", (options) => {
+	const url = new URL(options.url, "http://dummy");
+	const userId = url.pathname.split("/").at(-1);
+
+	if (userId) {
+		const userIndex = mockUsers.findIndex((user) => user.id === userId);
+		if (userIndex !== -1) {
+			mockUsers.splice(userIndex, 1);
 		}
-
-		rolesByUser.set(userId, nextRoles);
-
-		const user = mockUsers.find((item) => item.id === userId);
-		if (user) {
-			user.roles = [...nextRoles];
-		}
-
-		return toProjectRoles(nextRoles);
+		permissionsByUser.delete(userId);
+		rolesByUser.delete(userId);
 	}
-);
 
-Mock.mock(
-	new RegExp(`^${escapeRegExp(usersRoute)}/[^/]+/permissions(?:\\?.*)?$`),
-	"get",
-	(options) => {
-		const url = new URL(options.url, "http://dummy");
-		const userId = url.pathname.split("/").at(-2) ?? "";
-		const permissions = permissionsByUser.get(userId) ?? defaultPermissions;
+	return {
+		success: true,
+	};
+});
 
-		return {
-			permissions,
-		} satisfies ProjectPermissions;
+Mock.mock(userRolesRoutePattern, "get", (options) => {
+	const url = new URL(options.url, "http://dummy");
+	const userId = url.pathname.split("/").at(-2) ?? "";
+	const roles = rolesByUser.get(userId) ?? ["member"];
+
+	return toProjectRoles(roles);
+});
+
+Mock.mock(userRolesRoutePattern, "put", (options) => {
+	const url = new URL(options.url, "http://dummy");
+	const userId = url.pathname.split("/").at(-2) ?? "";
+	const body = parseBody(options.body);
+	const payload = body?.roles;
+	let nextRoles: string[] = ["member"];
+
+	if (Array.isArray(payload)) {
+		nextRoles = payload.filter(
+			(role): role is string => typeof role === "string"
+		);
 	}
-);
 
-Mock.mock(
-	new RegExp(`^${escapeRegExp(usersRoute)}/[^/]+/permissions(?:\\?.*)?$`),
-	"put",
-	(options) => {
-		const url = new URL(options.url, "http://dummy");
-		const userId = url.pathname.split("/").at(-2) ?? "";
-		const body = parseBody(options.body);
-		const payload = body?.permissions;
-		let nextPermissions: string[] = [...defaultPermissions];
+	rolesByUser.set(userId, nextRoles);
 
-		if (Array.isArray(payload)) {
-			nextPermissions = payload.filter(
-				(permission): permission is string => typeof permission === "string"
-			);
-		}
-
-		permissionsByUser.set(userId, nextPermissions);
-
-		return {
-			permissions: nextPermissions,
-		} satisfies ProjectPermissions;
+	const user = mockUsers.find((item) => item.id === userId);
+	if (user) {
+		user.roles = [...nextRoles];
 	}
-);
+
+	return toProjectRoles(nextRoles);
+});
+
+Mock.mock(permissionsRoutePattern, "get", () => {
+	return {
+		permissions: [...defaultPermissions],
+	} satisfies ProjectPermissions;
+});
+
+Mock.mock(userPermissionsRoutePattern, "get", (options) => {
+	const url = new URL(options.url, "http://dummy");
+	const userId = url.pathname.split("/").at(-2) ?? "";
+	const permissions = permissionsByUser.get(userId) ?? defaultPermissions;
+
+	return {
+		permissions,
+	} satisfies ProjectPermissions;
+});
+
+Mock.mock(userPermissionsRoutePattern, "put", (options) => {
+	const url = new URL(options.url, "http://dummy");
+	const userId = url.pathname.split("/").at(-2) ?? "";
+	const body = parseBody(options.body);
+	const payload = body?.permissions;
+	let nextPermissions: string[] = [...defaultPermissions];
+
+	if (Array.isArray(payload)) {
+		nextPermissions = payload.filter(
+			(permission): permission is string => typeof permission === "string"
+		);
+	}
+
+	permissionsByUser.set(userId, nextPermissions);
+
+	return {
+		permissions: nextPermissions,
+	} satisfies ProjectPermissions;
+});

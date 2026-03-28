@@ -1,28 +1,29 @@
-import { useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
 import {
 	Avatar,
-	AvatarImage,
 	AvatarFallback,
+	AvatarImage,
 } from "@/components/shadcn/avatar";
 import { Button } from "@/components/shadcn/button";
-import { useDeleteUser } from "../../hooks/organization-people/use-delete-user";
+import { Checkbox } from "@/components/shadcn/checkbox";
 import {
 	Dialog,
-	DialogTrigger,
+	DialogClose,
 	DialogContent,
-	DialogHeader,
-	DialogTitle,
 	DialogDescription,
 	DialogFooter,
-	DialogClose,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
 } from "@/components/shadcn/dialog";
-import { useGetPermissions } from "../../hooks/organization-people/use-get-permissions";
 import { Field } from "@/components/shadcn/field";
-import { Checkbox } from "@/components/shadcn/checkbox";
 import { Label } from "@/components/shadcn/label";
+import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useDeleteUser } from "../../hooks/organization-people/use-delete-user";
+import { useGetPermissions } from "../../hooks/organization-people/use-get-permissions";
 import { useUpdatePermissions } from "../../hooks/organization-people/use-update-permissions";
 import { useOrganizationStore } from "../../store/organization";
+import { EditIcon } from "lucide-react";
 
 type OrganizationPeopleMemberItemProps =
 	React.HTMLAttributes<HTMLDivElement> & {
@@ -132,6 +133,7 @@ const OrganizationPeopleMemberItem: React.FC<
 				<Dialog>
 					<DialogTrigger asChild>
 						<Button variant="default" size="sm" className="ml-auto mt-2">
+							<EditIcon />
 							{t("people.members.item.actions.roles")}
 						</Button>
 					</DialogTrigger>

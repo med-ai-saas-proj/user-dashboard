@@ -4,7 +4,7 @@ import { Spinner } from "@/components/shadcn/spinner";
 import { cn } from "@/lib/utils";
 import { useGetInvitations } from "../../hooks/organization-people/use-get-invitations";
 import OrganizationPeopleInvitationItem from "./organization-people-invitation-item";
-import InvitationDialog from "./dialogs/invitation-dialog";
+import InvitationDialog from "./invitation-dialog";
 import { Button } from "@/components/shadcn/button";
 import {
 	InputGroup,

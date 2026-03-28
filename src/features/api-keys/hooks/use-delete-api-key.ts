@@ -5,7 +5,6 @@ import { deleteApiKey } from "@/features/api-keys/services/delete-api-key";
 
 export const useDeleteApiKey = () => {
 	const queryClient = useQueryClient();
-	const { t } = useTranslation("api-keys");
 	const { t: tCommon } = useTranslation("common");
 
 	return useMutation({
@@ -15,7 +14,7 @@ export const useDeleteApiKey = () => {
 		},
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ["api-keys"] });
-			toast.success(t("table.successMessages.delete"));
+			toast.success(tCommon("requestDone"));
 		},
 		onError: () => {
 			toast.error(tCommon("error"));

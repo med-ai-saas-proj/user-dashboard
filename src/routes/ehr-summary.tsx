@@ -47,6 +47,7 @@ const EHRSummaryPage = () => {
 					setSummary(content);
 				},
 				onError: (error) => {
+					toast.error(tCommon("error"));
 					console.error("EHR summary streaming error:", error);
 				},
 				onComplete: () => {

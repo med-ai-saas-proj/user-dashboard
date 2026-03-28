@@ -54,6 +54,7 @@ const RxAdvisorPage = () => {
 					setAnalysis(content);
 				},
 				onError: (error) => {
+					toast.error(tCommon("error"));
 					console.error("RX Advisor streaming error:", error);
 				},
 				onComplete: () => {

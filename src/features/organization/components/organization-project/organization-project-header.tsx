@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
 	InputGroup,
 	InputGroupAddon,
@@ -15,8 +15,18 @@ import {
 import { Search } from "lucide-react";
 import OrganizationPorjectCreateDialog from "./organization-project-create-dialog";
 
-const OrganizationProjectHeader = () => {
+type OrganizationProjectHeaderProps = {
+	setIsArchived: (value: boolean) => void;
+};
+
+const OrganizationProjectHeader = ({
+	setIsArchived,
+}: OrganizationProjectHeaderProps) => {
 	const [filterTerm, setFilterTerm] = useState<"active" | "archived">("active");
+
+	useEffect(() => {
+		setIsArchived(filterTerm === "archived");
+	}, [filterTerm, setIsArchived]);
 
 	return (
 		<div className="flex items-center justify-between mb-4 mt-2">

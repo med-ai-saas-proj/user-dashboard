@@ -8,13 +8,29 @@ import {
 } from "@/components/shadcn/table";
 import { useGetOrganizationProjects } from "../../hooks/organization-projects/use-get-projects";
 import { useOrganizationStore } from "../../store/organization";
-import { Archive, Settings } from "lucide-react";
+import { Settings } from "lucide-react";
+import OrganizationProjectArchiveDialog from "./organization-project-archive-dialog";
+import { useMemo } from "react";
 
-const OrganizationProjectContent = () => {
+type OrganizationProjectContentProps = {
+	isArchived: boolean;
+};
+
+const OrganizationProjectContent = ({
+	isArchived,
+}: OrganizationProjectContentProps) => {
 	const fakeOrgId = useOrganizationStore((state) => state.organizationId);
 	const { data: projects } = useGetOrganizationProjects({
 		organizationId: fakeOrgId,
 	});
+
+	const filteredProjects = useMemo(() => {
+		if (!projects) return [];
+
+		return projects.results.filter(
+			(project) => project.archived === isArchived
+		);
+	}, [projects, isArchived]);
 
 	return (
 		<Table>
@@ -27,7 +43,7 @@ const OrganizationProjectContent = () => {
 				</TableRow>
 			</TableHeader>
 			<TableBody>
-				{projects?.results.map((project) => (
+				{filteredProjects.map((project) => (
 					<TableRow key={project.id}>
 						<TableCell>{project.name}</TableCell>
 						<TableCell>{project.id}</TableCell>
@@ -35,7 +51,10 @@ const OrganizationProjectContent = () => {
 						<TableCell>
 							<div className="flex items-center gap-x-6 justify-end">
 								<Settings size={"16"} />
-								<Archive size={"16"} className="text-destructive" />
+								<OrganizationProjectArchiveDialog
+									projectId={project.id}
+									projectName={project.name}
+								/>
 							</div>
 						</TableCell>
 					</TableRow>

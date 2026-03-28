@@ -37,3 +37,8 @@ export type OrganizationProjectsResponse = {
 	total: number;
 	results: OrganizationProject[];
 };
+
+export type OrganizationProjectArchive = {
+	project_id: string;
+	archived: boolean;
+};

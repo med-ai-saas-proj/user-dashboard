@@ -31,7 +31,7 @@ const buildMockProjects = (organizationId: string) => {
 				id: "@id",
 				name: "@title(2,4)",
 				description: "@sentence(6,12)",
-				archived: false,
+				archived: "@boolean(30, 70, true)", // 30% chance to be archived, 70% chance to be active
 			},
 		],
 	}).results as Array<

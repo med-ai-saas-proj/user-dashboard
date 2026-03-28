@@ -14,7 +14,7 @@ export const createProjectRole = async (
 	const { projectId } = credentials;
 
 	const response = await apiClient.post(
-		`${API_ROUTES.MANAGEMENT.PROJECT.PEOPLE}/${projectId}/roles`,
+		`${API_ROUTES.MANAGEMENT.PROJECT}/${projectId}/roles`,
 		{
 			roleName: credentials.roleName,
 			description: credentials.description,

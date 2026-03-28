@@ -15,7 +15,7 @@ export const getProjectUsers = async (
 	const { projectId, limit, offset, q } = params;
 
 	const response = await apiClient.get(
-		`${API_ROUTES.MANAGEMENT.PROJECT.PEOPLE}/${projectId}/users`,
+		`${API_ROUTES.MANAGEMENT.PROJECT}/${projectId}/users`,
 		{
 			params: {
 				offset,

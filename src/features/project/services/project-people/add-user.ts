@@ -13,7 +13,7 @@ export const addProjectUser = async (
 	const { projectId, userId } = params;
 
 	const response = await apiClient.post(
-		`${API_ROUTES.MANAGEMENT.PROJECT.PEOPLE}/${projectId}/users`,
+		`${API_ROUTES.MANAGEMENT.PROJECT}/${projectId}/users`,
 		{
 			userId,
 		}

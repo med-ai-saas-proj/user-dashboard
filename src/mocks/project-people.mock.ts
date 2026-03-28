@@ -42,7 +42,7 @@ const mockUsers: MockUser[] = Mock.mock({
 	],
 }).results;
 
-const peopleBaseRoute = API_ROUTES.MANAGEMENT.PROJECT.PEOPLE;
+const peopleBaseRoute = API_ROUTES.MANAGEMENT.PROJECT;
 const usersRoutePattern = new RegExp(
 	`^${escapeRegExp(peopleBaseRoute)}/[^/]+/users(?:\\?.*)?$`
 );

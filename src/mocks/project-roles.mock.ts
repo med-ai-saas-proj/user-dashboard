@@ -42,10 +42,10 @@ const defaultProjectRoles: ProjectRole[] = [
 ];
 
 const rolesRoutePattern = new RegExp(
-	`^${escapeRegExp(API_ROUTES.MANAGEMENT.PROJECT.PEOPLE)}/[^/]+/roles(?:\\?.*)?$`
+	`^${escapeRegExp(API_ROUTES.MANAGEMENT.PROJECT)}/[^/]+/roles(?:\\?.*)?$`
 );
 const roleByIdRoutePattern = new RegExp(
-	`^${escapeRegExp(API_ROUTES.MANAGEMENT.PROJECT.PEOPLE)}/[^/]+/roles/[^/]+(?:\\?.*)?$`
+	`^${escapeRegExp(API_ROUTES.MANAGEMENT.PROJECT)}/[^/]+/roles/[^/]+(?:\\?.*)?$`
 );
 const mockRoles: ProjectRole[] = [...defaultProjectRoles];
 

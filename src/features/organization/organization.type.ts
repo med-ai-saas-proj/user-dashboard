@@ -24,3 +24,16 @@ export type OrganizationInvitationResponse = {
 export type OrganizationPermissions = {
 	permissions: string[];
 };
+
+export type OrganizationProject = {
+	id: string;
+	name: string;
+	description: string;
+	organization_id: string;
+	archived: boolean;
+};
+
+export type OrganizationProjectsResponse = {
+	total: number;
+	results: OrganizationProject[];
+};

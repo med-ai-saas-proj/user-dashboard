@@ -23,6 +23,7 @@ import ProjectGeneral from "./routes/project-general";
 import ProjectPeople from "./routes/project-people";
 import ProjectPeopleMember from "./features/project/components/project-people/project-people-member";
 import ProjectPeopleRole from "./features/project/components/project-people/project-people-role";
+import OrganizationProjects from "./routes/organization-projects";
 
 function App() {
 	return (
@@ -115,6 +116,14 @@ function App() {
 									element={<OrganizationPeopleInvitation />}
 								/>
 							</Route>
+							<Route
+								path="projects"
+								element={
+									<ProtectedRoute>
+										<OrganizationProjects />
+									</ProtectedRoute>
+								}
+							/>
 						</Route>
 						<Route path="/project">
 							<Route index element={<Navigate to="general" replace />} />

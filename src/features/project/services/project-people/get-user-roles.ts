@@ -13,7 +13,7 @@ export const getUserProjectRoles = async (
 	const { projectId, userId } = params;
 
 	const response = await apiClient.get(
-		`${API_ROUTES.MANAGEMENT.PROJECT.PEOPLE}/${projectId}/users/${userId}/roles`
+		`${API_ROUTES.MANAGEMENT.PROJECT}/${projectId}/users/${userId}/roles`
 	);
 
 	const data = await response.data;

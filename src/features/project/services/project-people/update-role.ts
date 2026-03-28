@@ -15,7 +15,7 @@ export const updateProjectRole = async (
 	const { projectId, roleId, roleName, description } = credentials;
 
 	const response = await apiClient.put(
-		`${API_ROUTES.MANAGEMENT.PROJECT.PEOPLE}/${projectId}/roles/${roleId}`,
+		`${API_ROUTES.MANAGEMENT.PROJECT}/${projectId}/roles/${roleId}`,
 		{
 			roleName,
 			description,

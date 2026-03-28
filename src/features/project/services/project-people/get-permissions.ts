@@ -3,7 +3,7 @@ import apiClient from "@/query/api-client";
 
 export const getPermissions = async () => {
 	const response = await apiClient.get(
-		`${API_ROUTES.MANAGEMENT.PROJECT.PEOPLE}/permissions`
+		`${API_ROUTES.MANAGEMENT.PROJECT}/permissions`
 	);
 	return response.data;
 };

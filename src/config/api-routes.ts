@@ -34,12 +34,10 @@ export const API_ROUTES = {
 				BASE_API_URL
 			).toString(),
 		},
-		PROJECT: {
-			PEOPLE: new URL(
-				`management/${API_VERSION}/projects`,
-				BASE_API_URL
-			).toString(),
-		},
+		PROJECT: new URL(
+			`management/${API_VERSION}/projects`,
+			BASE_API_URL
+		).toString(),
 	},
 	SERVICES: {
 		EHR_SUMMARIZE: new URL(

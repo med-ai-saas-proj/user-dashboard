@@ -21,6 +21,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useCreateProject } from "../../hooks/organization-projects/use-create-project";
 import { useOrganizationStore } from "../../store/organization";
+import { useState } from "react";
 
 const CreateProjectSchema = z.object({
 	name: z.string().min(1, "Project name is required"),
@@ -34,23 +35,37 @@ const OrganizationProjectCreateDialog = () => {
 	const {
 		register,
 		handleSubmit,
+		reset,
 		formState: { errors },
 	} = useForm<CreateProjectFormData>({
 		resolver: zodResolver(CreateProjectSchema),
+		defaultValues: {
+			name: "",
+			description: "",
+		},
 	});
 
 	const { mutate: createProject } = useCreateProject();
+	const [openDialog, setOpenDialog] = useState(false);
 
 	const onSubmit = (data: CreateProjectFormData) => {
-		createProject({
-			organizationId: fakeOrgId,
-			projectName: data.name,
-			projectDescription: data.description,
-		});
+		createProject(
+			{
+				organizationId: fakeOrgId,
+				projectName: data.name,
+				projectDescription: data.description,
+			},
+			{
+				onSuccess: () => {
+					reset();
+					setOpenDialog(false);
+				},
+			}
+		);
 	};
 
 	return (
-		<Dialog>
+		<Dialog open={openDialog} onOpenChange={setOpenDialog}>
 			<DialogTrigger asChild>
 				<Button variant="default">Create Project</Button>
 			</DialogTrigger>
@@ -96,7 +111,9 @@ const OrganizationProjectCreateDialog = () => {
 						<DialogClose asChild>
 							<Button variant="outline">Cancel</Button>
 						</DialogClose>
-						<Button variant="default">Create</Button>
+						<Button variant="default" type="submit">
+							Create
+						</Button>
 					</DialogFooter>
 				</form>
 			</DialogContent>

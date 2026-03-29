@@ -11,6 +11,7 @@ import { useOrganizationStore } from "../../store/organization";
 import { Settings } from "lucide-react";
 import OrganizationProjectArchiveDialog from "./organization-project-archive-dialog";
 import { useMemo } from "react";
+import OrganizationProjectUnarchiveDialog from "./organization-project-unarchive-dialog";
 
 type OrganizationProjectContentProps = {
 	isArchived: boolean;
@@ -51,10 +52,18 @@ const OrganizationProjectContent = ({
 						<TableCell>
 							<div className="flex items-center gap-x-6 justify-end">
 								<Settings size={"16"} />
-								<OrganizationProjectArchiveDialog
-									projectId={project.id}
-									projectName={project.name}
-								/>
+								{!project.archived && (
+									<OrganizationProjectArchiveDialog
+										projectId={project.id}
+										projectName={project.name}
+									/>
+								)}
+								{project.archived && (
+									<OrganizationProjectUnarchiveDialog
+										projectId={project.id}
+										projectName={project.name}
+									/>
+								)}
 							</div>
 						</TableCell>
 					</TableRow>

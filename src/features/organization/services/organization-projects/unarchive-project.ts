@@ -10,7 +10,7 @@ export const unarchiveProject = async ({
 	projectId,
 }: OrganizationProjectUnarchiveCredentials) => {
 	const response = await apiClient.post<OrganizationProjectArchive>(
-		`${API_ROUTES.MANAGEMENT.PROJECT}/${projectId}/archive`
+		`${API_ROUTES.MANAGEMENT.PROJECT}/${projectId}/unarchive`
 	);
 	return response.data;
 };

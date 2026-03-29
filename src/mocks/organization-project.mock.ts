@@ -2,6 +2,7 @@ import Mock from "mockjs";
 import { API_ROUTES } from "@/config/api-routes";
 import type {
 	OrganizationProject,
+	OrganizationProjectArchive,
 	OrganizationProjectsResponse,
 } from "@/features/organization/organization.type";
 
@@ -57,6 +58,25 @@ const getProjects = (organizationId: string) => {
 	return projectsByOrganization.get(organizationId) ?? [];
 };
 
+const findProjectById = (projectId: string) => {
+	for (const projects of projectsByOrganization.values()) {
+		const project = projects.find((item) => item.id === projectId);
+		if (project) {
+			return project;
+		}
+	}
+
+	return null;
+};
+
+const buildArchiveResponse = (
+	projectId: string,
+	archived: boolean
+): OrganizationProjectArchive => ({
+	project_id: projectId,
+	archived,
+});
+
 const projectsRoute = API_ROUTES.MANAGEMENT.PROJECT;
 
 Mock.mock(
@@ -86,6 +106,44 @@ Mock.mock(
 		};
 
 		return response;
+	}
+);
+
+Mock.mock(
+	new RegExp(`^${escapeRegExp(projectsRoute)}/([^/]+)/archive(?:\\?.*)?$`),
+	"post",
+	(options) => {
+		const url = new URL(options.url, "http://dummy");
+		const [, projectId = ""] =
+			url.pathname.match(
+				new RegExp(`${new URL(projectsRoute).pathname}/([^/]+)/archive$`)
+			) ?? [];
+
+		const project = findProjectById(projectId);
+		if (project) {
+			project.archived = true;
+		}
+
+		return buildArchiveResponse(projectId, true);
+	}
+);
+
+Mock.mock(
+	new RegExp(`^${escapeRegExp(projectsRoute)}/([^/]+)/unarchive(?:\\?.*)?$`),
+	"post",
+	(options) => {
+		const url = new URL(options.url, "http://dummy");
+		const [, projectId = ""] =
+			url.pathname.match(
+				new RegExp(`${new URL(projectsRoute).pathname}/([^/]+)/unarchive$`)
+			) ?? [];
+
+		const project = findProjectById(projectId);
+		if (project) {
+			project.archived = false;
+		}
+
+		return buildArchiveResponse(projectId, false);
 	}
 );
 

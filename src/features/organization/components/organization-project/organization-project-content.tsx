@@ -1,3 +1,5 @@
+import { useEffect, useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import {
 	Table,
 	TableBody,
@@ -10,7 +12,6 @@ import { useGetOrganizationProjects } from "../../hooks/organization-projects/us
 import { useOrganizationStore } from "../../store/organization";
 import { Settings } from "lucide-react";
 import OrganizationProjectArchiveDialog from "./organization-project-archive-dialog";
-import { useEffect, useMemo, useState } from "react";
 import OrganizationProjectUnarchiveDialog from "./organization-project-unarchive-dialog";
 import { Button } from "@/components/shadcn/button";
 import type { OrganizationProjectsResponse } from "../../organization.type";
@@ -24,6 +25,7 @@ const OrganizationProjectContent = ({
 	isArchived,
 }: OrganizationProjectContentProps) => {
 	const fakeOrgId = useOrganizationStore((state) => state.organizationId);
+	const navigate = useNavigate();
 
 	const limit = 10;
 	const [page, setPage] = useState(1);
@@ -56,6 +58,10 @@ const OrganizationProjectContent = ({
 		} else {
 			setCanLoadMore(false);
 		}
+	};
+
+	const handleNavigateToProject = (projectId: string) => {
+		navigate(`/project/${projectId}/general`);
 	};
 
 	useEffect(() => {
@@ -98,7 +104,10 @@ const OrganizationProjectContent = ({
 							<TableCell>{project.description}</TableCell>
 							<TableCell>
 								<div className="flex items-center gap-x-6 justify-end">
-									<Settings size={"16"} />
+									<Settings
+										size={"16"}
+										onClick={() => handleNavigateToProject(project.id)}
+									/>
 									{!project.archived && (
 										<OrganizationProjectArchiveDialog
 											projectId={project.id}

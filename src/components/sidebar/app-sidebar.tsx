@@ -25,10 +25,14 @@ import { NavProjects } from "@/components/sidebar/nav-projects";
 import { NavUser } from "@/components/sidebar/nav-user";
 import { TeamSwitcher } from "@/components/sidebar/team-switcher";
 import { useAuthStore } from "@/features/auth/store/auth-store";
+import { useParams } from "react-router-dom";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 	const { t } = useTranslation("sidebar");
 	const { userInfo } = useAuthStore();
+
+	const params = useParams();
+	const projectId = params.projectId;
 
 	const data = {
 		teams: [
@@ -100,15 +104,24 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 		project: [
 			{
 				name: t("project.general.title"),
-				url: "/project/general",
+				url: projectId
+					? `/project/${projectId}/general`
+					: "/organization/projects",
+				disableActive: !projectId,
 			},
 			{
 				name: t("project.people.title"),
-				url: "/project/people",
+				url: projectId
+					? `/project/${projectId}/people`
+					: "/organization/projects",
+				disableActive: !projectId,
 			},
 			{
 				name: t("project.apiKeys.title"),
-				url: "/project/api-keys",
+				url: projectId
+					? `/project/${projectId}/api-keys`
+					: "/organization/projects",
+				disableActive: !projectId,
 			},
 		],
 	};

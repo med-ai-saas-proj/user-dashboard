@@ -92,7 +92,12 @@ const ArchiveProjectDialogContent = ({
 					<DialogClose asChild>
 						<Button variant="outline">Cancel</Button>
 					</DialogClose>
-					<Button type="submit" variant="default" disabled={!isConfirmed}>
+					<Button
+						type="submit"
+						variant="default"
+						disabled={!isConfirmed}
+						className="bg-destructive"
+					>
 						Archive
 					</Button>
 				</DialogFooter>

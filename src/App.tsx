@@ -24,6 +24,7 @@ import ProjectPeople from "./routes/project-people";
 import ProjectPeopleMember from "./features/project/components/project-people/project-people-member";
 import ProjectPeopleRole from "./features/project/components/project-people/project-people-role";
 import OrganizationProjects from "./routes/organization-projects";
+import ProjectRouteGuard from "./routes/project-route-guard";
 
 function App() {
 	return (
@@ -125,27 +126,29 @@ function App() {
 								}
 							/>
 						</Route>
-						<Route path="/project">
-							<Route index element={<Navigate to="general" replace />} />
-							<Route
-								path="general"
-								element={
-									<ProtectedRoute>
-										<ProjectGeneral />
-									</ProtectedRoute>
-								}
-							/>
-							<Route
-								path="people"
-								element={
-									<ProtectedRoute>
-										<ProjectPeople />
-									</ProtectedRoute>
-								}
-							>
-								<Route index element={<Navigate to="members" replace />} />
-								<Route path="members" element={<ProjectPeopleMember />} />
-								<Route path="roles" element={<ProjectPeopleRole />} />
+						<Route path="/project/:projectId">
+							<Route element={<ProjectRouteGuard />}>
+								<Route index element={<Navigate to="general" replace />} />
+								<Route
+									path="general"
+									element={
+										<ProtectedRoute>
+											<ProjectGeneral />
+										</ProtectedRoute>
+									}
+								/>
+								<Route
+									path="people"
+									element={
+										<ProtectedRoute>
+											<ProjectPeople />
+										</ProtectedRoute>
+									}
+								>
+									<Route index element={<Navigate to="members" replace />} />
+									<Route path="members" element={<ProjectPeopleMember />} />
+									<Route path="roles" element={<ProjectPeopleRole />} />
+								</Route>
 							</Route>
 						</Route>
 						<Route path="*" element={<Navigate to="/" replace />} />

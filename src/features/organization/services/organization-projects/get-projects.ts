@@ -4,6 +4,8 @@ import type { OrganizationProjectsResponse } from "../../organization.type";
 
 export type OrganizationProjectsParams = {
 	organizationId: string;
+	offset?: number;
+	limit?: number;
 };
 
 export const getOrganizationProjects = async (
@@ -14,6 +16,8 @@ export const getOrganizationProjects = async (
 		{
 			params: {
 				organization: params.organizationId,
+				offset: params.offset,
+				limit: params.limit,
 			},
 		}
 	);

@@ -27,7 +27,7 @@ const parseBody = (body?: string) => {
 
 const buildMockProjects = (organizationId: string) => {
 	const seed = Mock.mock({
-		"results|20": [
+		"results|40": [
 			{
 				id: "@id",
 				name: "@title(2,4)",

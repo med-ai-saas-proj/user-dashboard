@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
 	Table,
@@ -14,7 +14,6 @@ import { Settings } from "lucide-react";
 import OrganizationProjectArchiveDialog from "./organization-project-archive-dialog";
 import OrganizationProjectUnarchiveDialog from "./organization-project-unarchive-dialog";
 import { Button } from "@/components/shadcn/button";
-import type { OrganizationProjectsResponse } from "../../organization.type";
 import { Spinner } from "@/components/shadcn/spinner";
 import { useTranslation } from "react-i18next";
 
@@ -29,59 +28,36 @@ const OrganizationProjectContent = ({
 	const fakeOrgId = useOrganizationStore((state) => state.organizationId);
 	const navigate = useNavigate();
 
-	const limit = 10;
+	const baseLimit = 10;
 	const [page, setPage] = useState(1);
 
-	const [projects, setProjects] = useState<OrganizationProjectsResponse | null>(
-		null
-	);
-	const [canLoadMore, setCanLoadMore] = useState(true);
 	const { data: projectsResponse, isPending } = useGetOrganizationProjects({
 		organizationId: fakeOrgId,
-		offset: (page - 1) * limit,
-		limit,
+		offset: 0,
+		limit: page * baseLimit,
 	});
 
-	const filteredProjects = useMemo(() => {
-		if (!projects) return [];
+	const canLoadMore =
+		projectsResponse !== undefined &&
+		projectsResponse.results.length < projectsResponse.total;
 
-		return projects.results.filter(
+	const filteredProjects = useMemo(() => {
+		if (!projectsResponse) return [];
+
+		return projectsResponse.results.filter(
 			(project) => project.archived === isArchived
 		);
-	}, [projects, isArchived]);
+	}, [projectsResponse, isArchived]);
 
 	const handleLoadMore = () => {
-		if (
-			projectsResponse &&
-			projectsResponse.results.length === limit &&
-			filteredProjects.length < projectsResponse.total
-		) {
+		if (canLoadMore) {
 			setPage((prevPage) => prevPage + 1);
-		} else {
-			setCanLoadMore(false);
 		}
 	};
 
 	const handleNavigateToProject = (projectId: string) => {
 		navigate(`/project/${projectId}/general`);
 	};
-
-	useEffect(() => {
-		if (projectsResponse) {
-			if (page === 1) {
-				setProjects(projectsResponse);
-			} else {
-				setProjects((prevProjects) => {
-					if (!prevProjects) return projectsResponse;
-
-					return {
-						total: projectsResponse.total,
-						results: [...prevProjects.results, ...projectsResponse.results],
-					};
-				});
-			}
-		}
-	}, [projectsResponse, page]);
 
 	return (
 		<div className="flex flex-col items-center gap-y-4">

@@ -19,6 +19,7 @@ export const useCreateProject = () => {
 		onSuccess: (_, variables) => {
 			queryClient.invalidateQueries({
 				queryKey: ["organizationProjects", variables.organizationId],
+				exact: false,
 			});
 		},
 	});

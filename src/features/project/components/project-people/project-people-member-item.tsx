@@ -1,5 +1,6 @@
 import type React from "react";
 import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import { useTranslation, Trans } from "react-i18next";
 import {
 	Avatar,
@@ -30,7 +31,6 @@ type ProjectPeopleMemberItemProps = React.HTMLAttributes<HTMLDivElement> & {
 	id: string;
 	username: string;
 	email: string;
-	roles: string[];
 	imageSrc?: string;
 };
 
@@ -38,12 +38,13 @@ const ProjectPeopleMemberItem: React.FC<ProjectPeopleMemberItemProps> = ({
 	id,
 	username,
 	email,
-	roles,
 	imageSrc = "",
 	...props
 }) => {
 	const { t } = useTranslation("project");
-	const fakeProjectId = useProjectStore((state) => state.projectId);
+	const params = useParams();
+	const projectId =
+		useProjectStore((state) => state.projectId) || params.projectId || "";
 
 	const [currentPermissions, setCurrentPermissions] = useState<
 		Map<string, boolean>
@@ -54,14 +55,14 @@ const ProjectPeopleMemberItem: React.FC<ProjectPeopleMemberItemProps> = ({
 	const { mutate: deleteUser } = useDeleteUser();
 	const { data: projectPermissionsData } = useGetPermissions();
 	const { data: permissionsData } = useGetUserProjectPermissions({
-		projectId: fakeProjectId,
+		projectId,
 		userId: id,
 	});
 	const { mutate: updatePermissions } = useUpdateProjectUserPermissions();
 
 	const handleRemoveUser = () => {
 		deleteUser({
-			projectId: fakeProjectId,
+			projectId,
 			userId: id,
 		});
 	};
@@ -72,13 +73,26 @@ const ProjectPeopleMemberItem: React.FC<ProjectPeopleMemberItemProps> = ({
 
 		updatePermissions(
 			{
-				projectId: fakeProjectId,
+				projectId,
 				userId: id,
 				permissions: selectedPermissions,
 			},
 			{
 				onSuccess: () => {
 					setOpenPermissionDialog(false);
+
+					// optimistic update for permissions
+					if (!permissionsData) return;
+
+					const updatedPermissions = new Set(permissionsData.permissions);
+					projectPermissionsData?.permissions.forEach((permission) => {
+						if (currentPermissions.get(permission)) {
+							updatedPermissions.add(permission);
+						} else {
+							updatedPermissions.delete(permission);
+						}
+					});
+					permissionsData.permissions = Array.from(updatedPermissions);
 				},
 			}
 		);
@@ -118,12 +132,12 @@ const ProjectPeopleMemberItem: React.FC<ProjectPeopleMemberItemProps> = ({
 					<div className="flex items-center gap-2">
 						<p className="font-medium">{username}</p>
 						<div className="flex flex-wrap gap-2">
-							{roles.map((role) => (
+							{permissionsData?.permissions.map((permission) => (
 								<span
-									key={role}
+									key={permission}
 									className="inline-flex items-center rounded-sm bg-primary/10 px-2.5 py-0.5 text-xs font-medium text-muted-foreground"
 								>
-									{role}
+									{permission}
 								</span>
 							))}
 						</div>

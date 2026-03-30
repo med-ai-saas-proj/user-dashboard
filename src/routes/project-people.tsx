@@ -19,7 +19,7 @@ const ProjectPeople = () => {
 						<TabsTrigger value="members">
 							{t("people.tabs.members")}
 						</TabsTrigger>
-						<TabsTrigger value="roles">{t("people.tabs.roles")}</TabsTrigger>
+						{/* <TabsTrigger value="roles">{t("people.tabs.roles")}</TabsTrigger> */}
 					</TabsList>
 				</div>
 				<Outlet />

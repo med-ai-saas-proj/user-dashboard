@@ -9,6 +9,6 @@ interface ProjectActions {
 }
 
 export const useProjectStore = create<ProjectState & ProjectActions>((set) => ({
-	projectId: "123",
+	projectId: "",
 	setProjectId: (id: string) => set({ projectId: id }),
 }));

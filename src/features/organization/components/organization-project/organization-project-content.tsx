@@ -16,6 +16,7 @@ import OrganizationProjectUnarchiveDialog from "./organization-project-unarchive
 import { Button } from "@/components/shadcn/button";
 import { Spinner } from "@/components/shadcn/spinner";
 import { useTranslation } from "react-i18next";
+import { useProjectStore } from "@/features/project/store/project";
 
 type OrganizationProjectContentProps = {
 	isArchived: boolean;
@@ -25,14 +26,15 @@ const OrganizationProjectContent = ({
 	isArchived,
 }: OrganizationProjectContentProps) => {
 	const { t } = useTranslation("organization");
-	const fakeOrgId = useOrganizationStore((state) => state.organizationId);
+	const organizationId = useOrganizationStore((state) => state.organizationId);
+	const setProjectId = useProjectStore((state) => state.setProjectId);
 	const navigate = useNavigate();
 
 	const baseLimit = 10;
 	const [page, setPage] = useState(1);
 
 	const { data: projectsResponse, isPending } = useGetOrganizationProjects({
-		organizationId: fakeOrgId,
+		organizationId,
 		offset: 0,
 		limit: page * baseLimit,
 	});
@@ -56,6 +58,7 @@ const OrganizationProjectContent = ({
 	};
 
 	const handleNavigateToProject = (projectId: string) => {
+		setProjectId(projectId);
 		navigate(`/project/${projectId}/general`);
 	};
 
@@ -71,16 +74,24 @@ const OrganizationProjectContent = ({
 
 	return (
 		<div className="flex flex-col items-center gap-y-4">
-			<Table>
+			<Table className="table-fixed w-full">
 				<TableHeader>
 					<TableRow>
-						<TableHead>#</TableHead>
-						<TableHead>{t("project.content.tableHeaders.name")}</TableHead>
-						<TableHead>{t("project.content.tableHeaders.id")}</TableHead>
+						<TableHead className="w-10">#</TableHead>
+
+						<TableHead className="w-xs truncate">
+							{t("project.content.tableHeaders.name")}
+						</TableHead>
+
+						<TableHead className="w-xs truncate">
+							{t("project.content.tableHeaders.id")}
+						</TableHead>
+
 						<TableHead>
 							{t("project.content.tableHeaders.description")}
 						</TableHead>
-						<TableHead></TableHead>
+
+						<TableHead className="w-20"></TableHead>
 					</TableRow>
 				</TableHeader>
 				<TableBody>

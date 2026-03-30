@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useProjectStore } from "../../store/project";
 import {
@@ -24,13 +25,15 @@ import ProjectPeopleMemberDetails from "./project-people-member-details";
 import AddMemberDialog from "./dialog/add-member-dialog";
 
 const ProjectPeopleMember = () => {
-	const fakeProjectId = useProjectStore((state) => state.projectId);
+	const params = useParams();
+	const projectId =
+		useProjectStore((state) => state.projectId) || params.projectId || "";
 	const { t } = useTranslation("project");
 
 	const limit = 10;
 	const [page, setPage] = useState<number>(1);
 	const { data: users, isPending } = useGetUsers({
-		projectId: fakeProjectId,
+		projectId,
 		offset: (page - 1) * limit,
 		limit,
 	});
@@ -95,7 +98,6 @@ const ProjectPeopleMember = () => {
 								id={user.id}
 								username={user.username}
 								email={user.email}
-								roles={user.roles}
 								onClick={() => handleSelectUser(user)}
 							/>
 						))}

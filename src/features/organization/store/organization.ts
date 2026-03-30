@@ -11,6 +11,6 @@ interface OrganizationActions {
 export const useOrganizationStore = create<
 	OrganizationState & OrganizationActions
 >((set) => ({
-	organizationId: "07fe506a-43ec-46f0-9645-ac3f80e87f85", // fake organization ID for testing
+	organizationId: "33104fd0-9da3-4403-a3cf-40614acf98bc", // fake organization ID for testing
 	setOrganizationId: (id: string) => set({ organizationId: id }),
 }));

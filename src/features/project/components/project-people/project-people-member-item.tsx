@@ -19,11 +19,12 @@ import {
 import { Button } from "@/components/shadcn/button";
 import { useDeleteUser } from "../../hooks/project-people/use-delete-user";
 import { useProjectStore } from "../../store/project";
-import { Field, FieldDescription } from "@/components/shadcn/field";
+import { Field } from "@/components/shadcn/field";
 import { Checkbox } from "@/components/shadcn/checkbox";
-import { useGetRoles } from "../../hooks/project-people/use-get-user-roles";
-import { useUpdateRoles } from "../../hooks/project-people/use-update-roles";
+import { useGetUserProjectPermissions } from "../../hooks/project-people/use-get-user-permissions";
+import { useUpdateProjectUserPermissions } from "../../hooks/project-people/use-update-permissions";
 import { Label } from "@/components/shadcn/label";
+import { useGetPermissions } from "../../hooks/project-people/use-get-permissions";
 
 type ProjectPeopleMemberItemProps = React.HTMLAttributes<HTMLDivElement> & {
 	id: string;
@@ -44,17 +45,19 @@ const ProjectPeopleMemberItem: React.FC<ProjectPeopleMemberItemProps> = ({
 	const { t } = useTranslation("project");
 	const fakeProjectId = useProjectStore((state) => state.projectId);
 
-	const [currentRoles, setCurrentRoles] = useState<Map<string, boolean>>(
-		new Map()
-	);
-	const [openRoleDialog, setOpenRoleDialog] = useState<boolean>(false);
+	const [currentPermissions, setCurrentPermissions] = useState<
+		Map<string, boolean>
+	>(new Map());
+	const [openPermissionDialog, setOpenPermissionDialog] =
+		useState<boolean>(false);
 
 	const { mutate: deleteUser } = useDeleteUser();
-	const { data: rolesData } = useGetRoles({
+	const { data: projectPermissionsData } = useGetPermissions();
+	const { data: permissionsData } = useGetUserProjectPermissions({
 		projectId: fakeProjectId,
 		userId: id,
 	});
-	const { mutate: updateRoles } = useUpdateRoles();
+	const { mutate: updatePermissions } = useUpdateProjectUserPermissions();
 
 	const handleRemoveUser = () => {
 		deleteUser({
@@ -62,41 +65,44 @@ const ProjectPeopleMemberItem: React.FC<ProjectPeopleMemberItemProps> = ({
 			userId: id,
 		});
 	};
-	const handleUpdateRoles = () => {
-		const selectedRoles = Array.from(currentRoles.entries())
+	const handleUpdatePermissions = () => {
+		const selectedPermissions = Array.from(currentPermissions.entries())
 			.filter(([, isAllowed]) => isAllowed)
-			.map(([role]) => role);
+			.map(([permission]) => permission);
 
-		updateRoles(
+		updatePermissions(
 			{
 				projectId: fakeProjectId,
 				userId: id,
-				roles: selectedRoles,
+				permissions: selectedPermissions,
 			},
 			{
 				onSuccess: () => {
-					setOpenRoleDialog(false);
+					setOpenPermissionDialog(false);
 				},
 			}
 		);
 	};
 
-	const handleChangeRoles = (role: string) => {
-		setCurrentRoles((prev) => {
+	const handleChangePermissions = (permission: string) => {
+		setCurrentPermissions((prev) => {
 			const newMap = new Map(prev);
-			const currentValue = newMap.get(role) || false;
-			newMap.set(role, !currentValue);
+			const currentValue = newMap.get(permission) || false;
+			newMap.set(permission, !currentValue);
 			return newMap;
 		});
 	};
 
 	useEffect(() => {
-		const roleMap = new Map<string, boolean>();
-		rolesData?.forEach((role) => {
-			roleMap.set(role.roleName, true);
+		const permissionsMap = new Map<string, boolean>();
+		projectPermissionsData?.permissions.forEach((permission) => {
+			permissionsMap.set(
+				permission,
+				permissionsData?.permissions.includes(permission) || false
+			);
 		});
-		setCurrentRoles(roleMap);
-	}, [rolesData]);
+		setCurrentPermissions(permissionsMap);
+	}, [projectPermissionsData, permissionsData]);
 
 	return (
 		<div
@@ -158,7 +164,10 @@ const ProjectPeopleMemberItem: React.FC<ProjectPeopleMemberItemProps> = ({
 						</DialogFooter>
 					</DialogContent>
 				</Dialog>
-				<Dialog open={openRoleDialog} onOpenChange={setOpenRoleDialog}>
+				<Dialog
+					open={openPermissionDialog}
+					onOpenChange={setOpenPermissionDialog}
+				>
 					<DialogTrigger asChild>
 						<Button variant="default" size="sm" className="ml-auto">
 							{t("people.members.item.actions.permissions")}
@@ -171,20 +180,18 @@ const ProjectPeopleMemberItem: React.FC<ProjectPeopleMemberItemProps> = ({
 							</DialogTitle>
 							<DialogDescription>
 								<div className="flex flex-col gap-4 mt-4">
-									{rolesData?.map((role) => (
-										<Field orientation="horizontal" key={role.roleName}>
+									{projectPermissionsData?.permissions.map((permission) => (
+										<Field orientation="horizontal" key={permission}>
 											<Checkbox
-												id={role.id}
-												name={role.roleName}
-												checked={currentRoles.get(role.roleName) === true}
-												onCheckedChange={() => handleChangeRoles(role.roleName)}
+												id={permission}
+												name={permission}
+												checked={currentPermissions.get(permission) === true}
+												onCheckedChange={() =>
+													handleChangePermissions(permission)
+												}
 											/>
 
-											<div className="flex flex-col">
-												<Label htmlFor={role.roleName}>{role.roleName}</Label>
-
-												<FieldDescription>{role.description}</FieldDescription>
-											</div>
+											<Label htmlFor={permission}>{permission}</Label>
 										</Field>
 									))}
 								</div>
@@ -196,7 +203,7 @@ const ProjectPeopleMemberItem: React.FC<ProjectPeopleMemberItemProps> = ({
 									{t("people.members.item.actions.close")}
 								</Button>
 							</DialogClose>
-							<Button variant="default" onClick={handleUpdateRoles}>
+							<Button variant="default" onClick={handleUpdatePermissions}>
 								{t("people.members.item.actions.save")}
 							</Button>
 						</DialogFooter>

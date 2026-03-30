@@ -8,7 +8,25 @@ import type {
 
 type MockUser = ProjectUserResponse["results"][number];
 
-const defaultPermissions = ["read:project", "write:project"];
+const projectAssignablePermissions = [
+	"project.owner",
+	"projects.get_all",
+	"project.users.add",
+	"project.users.get_all",
+	"project.users.remove",
+	"project.users.permissions.read_write",
+	"project.settings.read",
+	"project.settings.write",
+	"apikey.read",
+	"apikey.write",
+];
+
+const defaultUserPermissions = [
+	"projects.get_all",
+	"project.users.get_all",
+	"project.settings.read",
+	"apikey.read",
+];
 
 const roleDescriptionMap: Record<string, string> = {
 	owner: "Owner can manage project settings, members, roles, and permissions.",
@@ -64,7 +82,7 @@ const permissionsRoutePattern = new RegExp(
 const permissionsByUser = new Map<string, string[]>();
 const rolesByUser = new Map<string, string[]>();
 for (const user of mockUsers) {
-	permissionsByUser.set(user.id, [...defaultPermissions]);
+	permissionsByUser.set(user.id, [...defaultUserPermissions]);
 	rolesByUser.set(user.id, [...user.roles]);
 }
 
@@ -127,7 +145,7 @@ Mock.mock(usersRoutePattern, "post", (options) => {
 	}
 
 	rolesByUser.set(userId, [...existingUser.roles]);
-	permissionsByUser.set(userId, [...defaultPermissions]);
+	permissionsByUser.set(userId, [...defaultUserPermissions]);
 
 	const response: ProjectUserResponse = {
 		total: mockUsers.length,
@@ -192,14 +210,14 @@ Mock.mock(userRolesRoutePattern, "put", (options) => {
 
 Mock.mock(permissionsRoutePattern, "get", () => {
 	return {
-		permissions: [...defaultPermissions],
+		permissions: [...projectAssignablePermissions],
 	} satisfies ProjectPermissions;
 });
 
 Mock.mock(userPermissionsRoutePattern, "get", (options) => {
 	const url = new URL(options.url, "http://dummy");
 	const userId = url.pathname.split("/").at(-2) ?? "";
-	const permissions = permissionsByUser.get(userId) ?? defaultPermissions;
+	const permissions = permissionsByUser.get(userId) ?? defaultUserPermissions;
 
 	return {
 		permissions,
@@ -211,12 +229,19 @@ Mock.mock(userPermissionsRoutePattern, "put", (options) => {
 	const userId = url.pathname.split("/").at(-2) ?? "";
 	const body = parseBody(options.body);
 	const payload = body?.permissions;
-	let nextPermissions: string[] = [...defaultPermissions];
+	let nextPermissions: string[] = [...defaultUserPermissions];
 
 	if (Array.isArray(payload)) {
-		nextPermissions = payload.filter(
-			(permission): permission is string => typeof permission === "string"
+		const filteredPermissions = payload.filter(
+			(permission): permission is string =>
+				typeof permission === "string" &&
+				projectAssignablePermissions.includes(permission)
 		);
+
+		nextPermissions =
+			filteredPermissions.length > 0
+				? filteredPermissions
+				: [...defaultUserPermissions];
 	}
 
 	permissionsByUser.set(userId, nextPermissions);

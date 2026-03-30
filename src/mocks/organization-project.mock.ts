@@ -5,10 +5,11 @@ import type {
 	OrganizationProjectArchive,
 	OrganizationProjectsResponse,
 } from "@/features/organization/organization.type";
+import { useOrganizationStore } from "@/features/organization/store/organization";
 
 type MockProject = OrganizationProject;
 
-const fallbackOrganizationId = "07fe506a-43ec-46f0-9645-ac3f80e87f85";
+const fallbackOrganizationId = useOrganizationStore.getState().organizationId;
 
 const escapeRegExp = (value: string) =>
 	value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");

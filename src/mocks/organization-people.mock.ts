@@ -5,11 +5,12 @@ import type {
 	OrganizationPermissions,
 	OrganizationUserResponse,
 } from "../features/organization/organization.type";
+import { useOrganizationStore } from "@/features/organization/store/organization";
 
 type MockUser = OrganizationUserResponse["results"][number];
 type MockInvitation = OrganizationInvitationResponse["results"][number];
 
-const fakeOrgId = "123";
+const fakeOrgId = useOrganizationStore.getState().organizationId;
 const defaultPermissions = ["read:organization", "write:organization"];
 
 const escapeRegExp = (value: string) =>

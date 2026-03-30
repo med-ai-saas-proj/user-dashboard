@@ -14,6 +14,7 @@ import {
 } from "@/components/shadcn/select";
 import { Search } from "lucide-react";
 import OrganizationPorjectCreateDialog from "./organization-project-create-dialog";
+import { useTranslation } from "react-i18next";
 
 type OrganizationProjectHeaderProps = {
 	setIsArchived: (value: boolean) => void;
@@ -22,6 +23,7 @@ type OrganizationProjectHeaderProps = {
 const OrganizationProjectHeader = ({
 	setIsArchived,
 }: OrganizationProjectHeaderProps) => {
+	const { t } = useTranslation("organization");
 	const [filterTerm, setFilterTerm] = useState<"active" | "archived">("active");
 
 	useEffect(() => {
@@ -32,7 +34,9 @@ const OrganizationProjectHeader = ({
 		<div className="flex items-center justify-between mb-4 mt-2">
 			<div className="flex items-center gap-x-2 w-full">
 				<InputGroup className="max-w-xs">
-					<InputGroupInput placeholder="Search projects..." />
+					<InputGroupInput
+						placeholder={t("project.header.searchPlaceholder")}
+					/>
 					<InputGroupAddon>
 						<Search />
 					</InputGroupAddon>
@@ -44,12 +48,16 @@ const OrganizationProjectHeader = ({
 					}
 				>
 					<SelectTrigger className="max-w-sm">
-						<SelectValue placeholder="Filter by status" />
+						<SelectValue placeholder={t("project.header.filterPlaceholder")} />
 					</SelectTrigger>
 					<SelectContent>
 						<SelectGroup>
-							<SelectItem value="active">Active</SelectItem>
-							<SelectItem value="archived">Archived</SelectItem>
+							<SelectItem value="active">
+								{t("project.header.filterOptions.active")}
+							</SelectItem>
+							<SelectItem value="archived">
+								{t("project.header.filterOptions.archived")}
+							</SelectItem>
 						</SelectGroup>
 					</SelectContent>
 				</Select>

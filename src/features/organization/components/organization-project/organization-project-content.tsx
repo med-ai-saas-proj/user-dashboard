@@ -16,6 +16,7 @@ import OrganizationProjectUnarchiveDialog from "./organization-project-unarchive
 import { Button } from "@/components/shadcn/button";
 import type { OrganizationProjectsResponse } from "../../organization.type";
 import { Spinner } from "@/components/shadcn/spinner";
+import { useTranslation } from "react-i18next";
 
 type OrganizationProjectContentProps = {
 	isArchived: boolean;
@@ -24,6 +25,7 @@ type OrganizationProjectContentProps = {
 const OrganizationProjectContent = ({
 	isArchived,
 }: OrganizationProjectContentProps) => {
+	const { t } = useTranslation("organization");
 	const fakeOrgId = useOrganizationStore((state) => state.organizationId);
 	const navigate = useNavigate();
 
@@ -87,9 +89,11 @@ const OrganizationProjectContent = ({
 				<TableHeader>
 					<TableRow>
 						<TableHead>#</TableHead>
-						<TableHead>NAME</TableHead>
-						<TableHead>ID</TableHead>
-						<TableHead>DESCRIPTION</TableHead>
+						<TableHead>{t("project.content.tableHeaders.name")}</TableHead>
+						<TableHead>{t("project.content.tableHeaders.id")}</TableHead>
+						<TableHead>
+							{t("project.content.tableHeaders.description")}
+						</TableHead>
 						<TableHead></TableHead>
 					</TableRow>
 				</TableHeader>
@@ -130,18 +134,20 @@ const OrganizationProjectContent = ({
 				<div className="flex items-center justify-center h-full">
 					<div className="flex items-center justify-center gap-2">
 						<Spinner />
-						<p className="text-muted-foreground">Loading projects...</p>
+						<p className="text-muted-foreground">
+							{t("project.content.loading")}
+						</p>
 					</div>
 				</div>
 			)}
 			{canLoadMore && !isPending && (
 				<Button variant={"secondary"} onClick={handleLoadMore}>
-					Load More
+					{t("project.content.actions.loadMore")}
 				</Button>
 			)}
 			{!canLoadMore && !isPending && (
 				<p className="text-sm text-muted-foreground">
-					You have reached the end of the list. No more projects to load.
+					{t("project.content.endOfList")}
 				</p>
 			)}
 		</div>

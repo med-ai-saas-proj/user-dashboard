@@ -21,24 +21,45 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useCreateProject } from "../../hooks/organization-projects/use-create-project";
 import { useOrganizationStore } from "../../store/organization";
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 
-const CreateProjectSchema = z.object({
-	name: z.string().min(1, "Project name is required"),
-	description: z.string().min(1, "Project description is required"),
-});
+const createProjectSchema = (messages: {
+	projectNameRequired: string;
+	projectDescriptionRequired: string;
+}) =>
+	z.object({
+		name: z.string().min(1, messages.projectNameRequired),
+		description: z.string().min(1, messages.projectDescriptionRequired),
+	});
 
-type CreateProjectFormData = z.infer<typeof CreateProjectSchema>;
+type CreateProjectFormData = z.infer<ReturnType<typeof createProjectSchema>>;
 
 const OrganizationProjectCreateDialog = () => {
+	const { t } = useTranslation("organization");
 	const fakeOrgId = useOrganizationStore((state) => state.organizationId);
+	const validationMessages = useMemo(
+		() => ({
+			projectNameRequired: t(
+				"project.createDialog.validation.projectNameRequired"
+			),
+			projectDescriptionRequired: t(
+				"project.createDialog.validation.projectDescriptionRequired"
+			),
+		}),
+		[t]
+	);
+	const projectSchema = useMemo(
+		() => createProjectSchema(validationMessages),
+		[validationMessages]
+	);
 	const {
 		register,
 		handleSubmit,
 		reset,
 		formState: { errors },
 	} = useForm<CreateProjectFormData>({
-		resolver: zodResolver(CreateProjectSchema),
+		resolver: zodResolver(projectSchema),
 		defaultValues: {
 			name: "",
 			description: "",
@@ -67,24 +88,30 @@ const OrganizationProjectCreateDialog = () => {
 	return (
 		<Dialog open={openDialog} onOpenChange={setOpenDialog}>
 			<DialogTrigger asChild>
-				<Button variant="default">Create Project</Button>
+				<Button variant="default">
+					{t("project.createDialog.actions.trigger")}
+				</Button>
 			</DialogTrigger>
 			<DialogContent>
 				<DialogHeader>
-					<DialogTitle>Create a new project</DialogTitle>
+					<DialogTitle>{t("project.createDialog.title")}</DialogTitle>
 					<DialogDescription>
-						Projects are shared environments where teams can collaborate and
-						share API resources.
+						{t("project.createDialog.description")}
 					</DialogDescription>
 				</DialogHeader>
 				<form onSubmit={handleSubmit(onSubmit)}>
 					<FieldGroup className="flex flex-col items-center gap-y-4">
 						<Field>
-							<FieldLabel>Name</FieldLabel>
+							<FieldLabel>
+								{t("project.createDialog.fields.name.label")}
+							</FieldLabel>
 							<FieldDescription>
-								Human-friendly label for your project, shown in user interfaces.
+								{t("project.createDialog.fields.name.description")}
 							</FieldDescription>
-							<Input placeholder="Enter project name" {...register("name")} />
+							<Input
+								placeholder={t("project.createDialog.fields.name.placeholder")}
+								{...register("name")}
+							/>
 							{errors.name && (
 								<p className="text-sm text-destructive mt-1">
 									{errors.name.message}
@@ -92,12 +119,16 @@ const OrganizationProjectCreateDialog = () => {
 							)}
 						</Field>
 						<Field>
-							<FieldLabel>Description</FieldLabel>
+							<FieldLabel>
+								{t("project.createDialog.fields.description.label")}
+							</FieldLabel>
 							<FieldDescription>
-								A brief description of your project.
+								{t("project.createDialog.fields.description.description")}
 							</FieldDescription>
 							<Input
-								placeholder="Enter project description"
+								placeholder={t(
+									"project.createDialog.fields.description.placeholder"
+								)}
 								{...register("description")}
 							/>
 							{errors.description && (
@@ -109,10 +140,12 @@ const OrganizationProjectCreateDialog = () => {
 					</FieldGroup>
 					<DialogFooter className="mt-4">
 						<DialogClose asChild>
-							<Button variant="outline">Cancel</Button>
+							<Button variant="outline">
+								{t("project.createDialog.actions.cancel")}
+							</Button>
 						</DialogClose>
 						<Button variant="default" type="submit">
-							Create
+							{t("project.createDialog.actions.create")}
 						</Button>
 					</DialogFooter>
 				</form>

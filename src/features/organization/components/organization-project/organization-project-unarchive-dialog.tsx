@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Button } from "@/components/shadcn/button";
 import {
 	Dialog,
@@ -16,12 +16,18 @@ import { useUnarchiveProject } from "../../hooks/organization-projects/use-unarc
 import z from "zod";
 import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useTranslation } from "react-i18next";
 
-const UnarchiveProjectSchema = z.object({
-	projectName: z.string(),
-});
+const createUnarchiveProjectSchema = (messages: {
+	projectNameRequired: string;
+}) =>
+	z.object({
+		projectName: z.string().min(1, messages.projectNameRequired),
+	});
 
-type UnarchiveProjectFormData = z.infer<typeof UnarchiveProjectSchema>;
+type UnarchiveProjectFormData = z.infer<
+	ReturnType<typeof createUnarchiveProjectSchema>
+>;
 
 type OrganizationProjectUnarchiveDialogProps = {
 	projectId: string;
@@ -37,11 +43,24 @@ const UnarchiveProjectDialogContent = ({
 	projectId,
 	projectName,
 }: UnarchiveProjectDialogContentProps) => {
+	const { t } = useTranslation("organization");
 	const { mutate: unarchiveProject } = useUnarchiveProject();
+	const validationMessages = useMemo(
+		() => ({
+			projectNameRequired: t(
+				"project.unarchiveDialog.validation.projectNameRequired"
+			),
+		}),
+		[t]
+	);
+	const unarchiveProjectSchema = useMemo(
+		() => createUnarchiveProjectSchema(validationMessages),
+		[validationMessages]
+	);
 
 	const { register, control, handleSubmit } = useForm<UnarchiveProjectFormData>(
 		{
-			resolver: zodResolver(UnarchiveProjectSchema),
+			resolver: zodResolver(unarchiveProjectSchema),
 			defaultValues: {
 				projectName: "",
 			},
@@ -67,35 +86,39 @@ const UnarchiveProjectDialogContent = ({
 	return (
 		<DialogContent>
 			<DialogHeader>
-				<DialogTitle>Unarchive {projectName}</DialogTitle>
+				<DialogTitle>
+					{t("project.unarchiveDialog.title", { projectName })}
+				</DialogTitle>
 				<DialogDescription>
-					<p>
-						By unarchiving, members with access to this project will be able to
-						use the project API keys again. You can archive this project again
-						at any time.
-					</p>
+					<p>{t("project.unarchiveDialog.description")}</p>
 					<p className="font-semibold mt-1">
-						To confirm, type "{projectName}" in the input box
+						{t("project.unarchiveDialog.confirmInstruction", {
+							projectName,
+						})}
 					</p>
 				</DialogDescription>
 			</DialogHeader>
 			<form onSubmit={handleSubmit(onSubmit)}>
 				<Input
-					placeholder="Confirm by typing the project's name"
+					placeholder={t(
+						"project.unarchiveDialog.fields.projectName.placeholder"
+					)}
 					autoComplete="off"
 					{...register("projectName")}
 				/>
 				{!isConfirmed && typedProjectName.length > 0 && (
 					<p className="text-sm text-destructive mt-2">
-						Project name does not match.
+						{t("project.unarchiveDialog.validation.projectNameMismatch")}
 					</p>
 				)}
 				<DialogFooter className="mt-4">
 					<DialogClose asChild>
-						<Button variant="outline">Cancel</Button>
+						<Button variant="outline">
+							{t("project.unarchiveDialog.actions.cancel")}
+						</Button>
 					</DialogClose>
 					<Button type="submit" variant="default" disabled={!isConfirmed}>
-						Unarchive
+						{t("project.unarchiveDialog.actions.unarchive")}
 					</Button>
 				</DialogFooter>
 			</form>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Button } from "@/components/shadcn/button";
 import {
 	Dialog,
@@ -16,12 +16,18 @@ import { useArchiveProject } from "../../hooks/organization-projects/use-archive
 import z from "zod";
 import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useTranslation } from "react-i18next";
 
-const ArchiveProjectSchema = z.object({
-	projectName: z.string(),
-});
+const createArchiveProjectSchema = (messages: {
+	projectNameRequired: string;
+}) =>
+	z.object({
+		projectName: z.string().min(1, messages.projectNameRequired),
+	});
 
-type ArchiveProjectFormData = z.infer<typeof ArchiveProjectSchema>;
+type ArchiveProjectFormData = z.infer<
+	ReturnType<typeof createArchiveProjectSchema>
+>;
 
 type OrganizationProjectArchiveDialogProps = {
 	projectId: string;
@@ -37,10 +43,23 @@ const ArchiveProjectDialogContent = ({
 	projectId,
 	projectName,
 }: ArchiveProjectDialogContentProps) => {
+	const { t } = useTranslation("organization");
 	const { mutate: archiveProject } = useArchiveProject();
+	const validationMessages = useMemo(
+		() => ({
+			projectNameRequired: t(
+				"project.archiveDialog.validation.projectNameRequired"
+			),
+		}),
+		[t]
+	);
+	const archiveProjectSchema = useMemo(
+		() => createArchiveProjectSchema(validationMessages),
+		[validationMessages]
+	);
 
 	const { register, control, handleSubmit } = useForm<ArchiveProjectFormData>({
-		resolver: zodResolver(ArchiveProjectSchema),
+		resolver: zodResolver(archiveProjectSchema),
 		defaultValues: {
 			projectName: "",
 		},
@@ -65,32 +84,36 @@ const ArchiveProjectDialogContent = ({
 	return (
 		<DialogContent>
 			<DialogHeader>
-				<DialogTitle>Archive {projectName}</DialogTitle>
+				<DialogTitle>
+					{t("project.archiveDialog.title", { projectName })}
+				</DialogTitle>
 				<DialogDescription>
-					<p>
-						By archiving, you will be removing access to all members of this
-						project including yourself. All requests using project's API keys
-						will be rejected. Archived projects cannot be restored.
-					</p>
+					<p>{t("project.archiveDialog.description")}</p>
 					<p className="font-semibold mt-1">
-						To confirm, type "{projectName}" in the input box
+						{t("project.archiveDialog.confirmInstruction", {
+							projectName,
+						})}
 					</p>
 				</DialogDescription>
 			</DialogHeader>
 			<form onSubmit={handleSubmit(onSubmit)}>
 				<Input
-					placeholder="Confirm by typing the project's name"
+					placeholder={t(
+						"project.archiveDialog.fields.projectName.placeholder"
+					)}
 					autoComplete="off"
 					{...register("projectName")}
 				/>
 				{!isConfirmed && typedProjectName.length > 0 && (
 					<p className="text-sm text-destructive mt-2">
-						Project name does not match.
+						{t("project.archiveDialog.validation.projectNameMismatch")}
 					</p>
 				)}
 				<DialogFooter className="mt-4">
 					<DialogClose asChild>
-						<Button variant="outline">Cancel</Button>
+						<Button variant="outline">
+							{t("project.archiveDialog.actions.cancel")}
+						</Button>
 					</DialogClose>
 					<Button
 						type="submit"
@@ -98,7 +121,7 @@ const ArchiveProjectDialogContent = ({
 						disabled={!isConfirmed}
 						className="bg-destructive"
 					>
-						Archive
+						{t("project.archiveDialog.actions.archive")}
 					</Button>
 				</DialogFooter>
 			</form>

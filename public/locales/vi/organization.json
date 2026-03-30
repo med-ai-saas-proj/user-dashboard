@@ -79,7 +79,8 @@
             "endOfList": "Bạn đã đến cuối danh sách. Không còn dự án để tải.",
             "actions": {
                 "loadMore": "Tải thêm"
-            }
+            },
+            "noProjects": "Không tìm thấy dự án nào."
         },
         "createDialog": {
             "title": "Tạo dự án mới",

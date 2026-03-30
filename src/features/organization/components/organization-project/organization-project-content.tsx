@@ -59,6 +59,16 @@ const OrganizationProjectContent = ({
 		navigate(`/project/${projectId}/general`);
 	};
 
+	if (!isPending && filteredProjects.length === 0) {
+		return (
+			<div className="flex flex-col items-center gap-y-4">
+				<p className="text-muted-foreground">
+					{t("project.content.noProjects")}
+				</p>
+			</div>
+		);
+	}
+
 	return (
 		<div className="flex flex-col items-center gap-y-4">
 			<Table>

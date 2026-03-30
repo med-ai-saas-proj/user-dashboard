@@ -81,7 +81,8 @@
             "endOfList": "You have reached the end of the list. No more projects to load.",
             "actions": {
                 "loadMore": "Load More"
-            }
+            },
+            "noProjects": "No projects found."
         },
         "createDialog": {
             "title": "Create a new project",

@@ -52,7 +52,7 @@ const AddMemberWithoutEmailDialog = ({
 }: AddMemberWithoutEmailDialogProps) => {
 	const { t } = useTranslation("project");
 	const portalContainerRef = useRef<HTMLDivElement | null>(null);
-	const fakeOrgId = useOrganizationStore((state) => state.organizationId);
+	const organizationId = useOrganizationStore((state) => state.organizationId);
 	const fakeProjectId = useProjectStore((state) => state.projectId);
 	const validationMessages = useMemo(
 		() => ({
@@ -79,7 +79,7 @@ const AddMemberWithoutEmailDialog = ({
 	});
 
 	const { data: users } = useGetUsers({
-		organizationId: fakeOrgId,
+		organizationId,
 	});
 	const { mutate: addUser } = useAddUser();
 

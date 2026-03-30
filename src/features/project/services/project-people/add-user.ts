@@ -15,7 +15,7 @@ export const addProjectUser = async (
 	const response = await apiClient.post(
 		`${API_ROUTES.MANAGEMENT.PROJECT}/${projectId}/users`,
 		{
-			userId,
+			user_id: userId,
 		}
 	);
 	return response.data;

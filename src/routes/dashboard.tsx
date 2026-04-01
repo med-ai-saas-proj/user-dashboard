@@ -76,7 +76,7 @@ const DashboardPage = () => {
 					<div className="flex items-center gap-4">
 						<DropdownMenu>
 							<DropdownMenuTrigger asChild>
-								<Button variant="outline" className="gap-2">
+								<Button variant="outline" className="gap-2 min-w-36">
 									{pickerLabels[selectedPicker]}
 									<ChevronDown size={16} />
 								</Button>

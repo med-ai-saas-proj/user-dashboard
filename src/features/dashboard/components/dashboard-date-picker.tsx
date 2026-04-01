@@ -24,6 +24,7 @@ const DashboardDatePicker: React.FC<DashboardDatePickerProps> = ({
 		<DatePickerCustom
 			placeholder={t("datePicker.placeholder")}
 			onDateChange={handleDateSelect}
+			className="min-w-36"
 			locale={currentLocale === "vi" ? "vi" : "en-US"}
 			defaultDate={defaultDate}
 		/>

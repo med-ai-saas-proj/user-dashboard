@@ -65,7 +65,7 @@ const DatePickerCustom: React.FC<DatePickerCustomProps> = ({
 					<Button
 						variant="outline"
 						id={id}
-						className="justify-start font-normal"
+						className="justify-center font-normal"
 					>
 						{date ? (
 							format(date, "PPP", { locale: dfLocale })

@@ -35,6 +35,7 @@ const DashboardMonthPicker: React.FC<DashboardMonthPickerProps> = ({
 		<MonthPickerCustom
 			placeholder={t("monthPicker.placeholder")}
 			onMonthChange={handleMonthSelect}
+			className="min-w-36"
 			locale={currentLocale === "vi" ? "vi" : "en-US"}
 			defaultMonth={defaultDate}
 		/>

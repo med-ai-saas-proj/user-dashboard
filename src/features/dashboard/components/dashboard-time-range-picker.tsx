@@ -3,7 +3,13 @@ import { useChartTimePickerStore } from "../store/chart-time-picker";
 import TimeRangePickerCustom from "@/components/shadcn/timerangepicker-custom";
 import type { DateRange } from "react-day-picker";
 
-const DashboardTimeRangePicker = () => {
+interface DashboardTimeRangePickerProps {
+	defaultDate?: DateRange;
+}
+
+const DashboardTimeRangePicker: React.FC<DashboardTimeRangePickerProps> = ({
+	defaultDate,
+}) => {
 	const { t, i18n } = useTranslation("dashboard");
 	const currentLocale = i18n.language || "en-US";
 
@@ -26,6 +32,7 @@ const DashboardTimeRangePicker = () => {
 			placeholder={t("rangePicker.placeholder")}
 			onDateChange={handleDateSelect}
 			locale={currentLocale === "vi" ? "vi" : "en-US"}
+			defaultDate={defaultDate}
 		/>
 	);
 };

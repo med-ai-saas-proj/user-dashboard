@@ -2,7 +2,13 @@ import { useTranslation } from "react-i18next";
 import { useChartTimePickerStore } from "../store/chart-time-picker";
 import YearPickerCustom from "@/components/shadcn/yearpicker-custom";
 
-const DashboardYearPicker = () => {
+interface DashboardYearPickerProps {
+	defaultDate?: Date;
+}
+
+const DashboardYearPicker: React.FC<DashboardYearPickerProps> = ({
+	defaultDate,
+}) => {
 	const { t, i18n } = useTranslation("dashboard");
 	const currentLocale = i18n.language || "en-US";
 
@@ -21,6 +27,7 @@ const DashboardYearPicker = () => {
 			placeholder={t("yearPicker.placeholder")}
 			onYearChange={handleYearSelect}
 			locale={currentLocale === "vi" ? "vi" : "en-US"}
+			defaultYear={defaultDate}
 		/>
 	);
 };

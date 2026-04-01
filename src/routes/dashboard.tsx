@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import DashboardChart from "@/features/dashboard/components/dashboard-chart";
 import DashboardDatePicker from "@/features/dashboard/components/dashboard-date-picker";
 import DashboardMonthPicker from "@/features/dashboard/components/dashboard-month-picker";
@@ -28,6 +28,21 @@ const DashboardPage = () => {
 	const { t } = useTranslation("dashboard");
 	const [selectedPicker, setSelectedPicker] = useState<TimePickerType>("date");
 
+	// Generate default values for each picker
+	const defaultValues = useMemo(() => {
+		const today = new Date();
+		const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+		const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+		const startOfYear = new Date(today.getFullYear(), 0, 1);
+
+		return {
+			date: today,
+			month: startOfMonth,
+			dateRange: { from: startOfMonth, to: endOfMonth },
+			year: startOfYear,
+		};
+	}, []);
+
 	const pickerLabels: Record<TimePickerType, string> = {
 		date: t("datePicker.label"),
 		month: t("monthPicker.label"),
@@ -38,23 +53,25 @@ const DashboardPage = () => {
 	const renderTimePicker = () => {
 		switch (selectedPicker) {
 			case "date":
-				return <DashboardDatePicker />;
+				return <DashboardDatePicker defaultDate={defaultValues.date} />;
 			case "month":
-				return <DashboardMonthPicker />;
+				return <DashboardMonthPicker defaultDate={defaultValues.month} />;
 			case "date-range":
-				return <DashboardTimeRangePicker />;
+				return (
+					<DashboardTimeRangePicker defaultDate={defaultValues.dateRange} />
+				);
 			case "year":
-				return <DashboardYearPicker />;
+				return <DashboardYearPicker defaultDate={defaultValues.year} />;
 			default:
-				return <DashboardDatePicker />;
+				return <DashboardDatePicker defaultDate={defaultValues.date} />;
 		}
 	};
 
 	return (
 		<DashboardLayout pageTitle="Dashboard">
-			<div className="px-6 flex flex-col gap-6">
+			<div className="px-6 flex flex-col gap-6 w-full">
 				{/* Time Select Bar */}
-				<div className="flex items-center justify-between">
+				<div className="flex md:flex-row flex-col gap-2 items-center justify-between">
 					<h2 className="text-lg font-semibold">Analytics</h2>
 					<div className="flex items-center gap-4">
 						<DropdownMenu>
@@ -104,13 +121,13 @@ const DashboardPage = () => {
 						</p>
 					</div>
 					{/* KPI Cards */}
-					<div className="xl:col-span-2">
+					<div className="xl:col-span-2 w-full">
 						<KPICard />
 					</div>
 				</div>
 
 				{/* Charts Section */}
-				<div className="flex flex-col gap-4">
+				<div className="flex flex-col gap-4 w-full">
 					<DashboardChart
 						title={t("chart.requestVolumeAndCost")}
 						chartConfig={chartConfigurationVolumeAndCost}

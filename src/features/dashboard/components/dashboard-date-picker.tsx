@@ -2,7 +2,13 @@ import { useTranslation } from "react-i18next";
 import { useChartTimePickerStore } from "../store/chart-time-picker";
 import DatePickerCustom from "@/components/shadcn/datepicker-custom";
 
-const DashboardDatePicker = () => {
+interface DashboardDatePickerProps {
+	defaultDate?: Date;
+}
+
+const DashboardDatePicker: React.FC<DashboardDatePickerProps> = ({
+	defaultDate,
+}) => {
 	const { t, i18n } = useTranslation("dashboard");
 	const currentLocale = i18n.language || "en-US";
 
@@ -19,6 +25,7 @@ const DashboardDatePicker = () => {
 			placeholder={t("datePicker.placeholder")}
 			onDateChange={handleDateSelect}
 			locale={currentLocale === "vi" ? "vi" : "en-US"}
+			defaultDate={defaultDate}
 		/>
 	);
 };

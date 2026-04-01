@@ -55,7 +55,8 @@
                     "title": "Xác nhận xóa",
                     "description": "Bạn có chắc chắn muốn xóa lời mời cho {{email}} không?"
                 }
-            }
+            },
+            "noInvitations": "Không có lời mời nào đang chờ xử lý."
         }
     },
     "project": {

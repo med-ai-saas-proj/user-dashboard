@@ -57,7 +57,8 @@
                     "title": "Removal Confirm",
                     "description": "Are you sure you want to remove the invitation for {{email}}?"
                 }
-            }
+            },
+            "noInvitations": "No pending invitations."
         }
     },
     "project": {

@@ -42,7 +42,7 @@ const OrganizationPeopleInvitation = () => {
 				onOpenChange={setOpenInviteDialog}
 			/>
 			<div
-				className={cn("border rounded-md", {
+				className={cn("border rounded-md min-h-fit", {
 					"p-4": isPending,
 				})}
 			>
@@ -63,6 +63,13 @@ const OrganizationPeopleInvitation = () => {
 							invitation={invitation}
 						/>
 					))}
+				{!isPending && !invitations?.results.length && (
+					<div className="py-8">
+						<p className="text-center text-sm text-muted-foreground">
+							{t("people.invitations.noInvitations")}
+						</p>
+					</div>
+				)}
 			</div>
 		</>
 	);

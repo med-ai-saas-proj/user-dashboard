@@ -70,7 +70,7 @@ const OrganizationPeopleMember = () => {
 				open={openAddMemeberDialog}
 				onOpenChange={setOpenAddMemberDialog}
 			/>
-			<div className="flex gap-8">
+			<div className="flex gap-8 min-h-fit">
 				<div className="flex-7 flex-col border rounded-md">
 					{isPending && (
 						<div className="flex items-center justify-center h-full">

@@ -1,17 +1,17 @@
 import { useQuery } from "@tanstack/react-query";
 import {
-	getPermissions,
-	type GetPermissionsParams,
-} from "../../services/organization-people/get-permissions";
+	getUserPermissions,
+	type GetUserPermissionsParams,
+} from "../../services/organization-people/get-user-permissions";
 
-export const useGetPermissions = (params: GetPermissionsParams) => {
+export const useGetUserPermissions = (params: GetUserPermissionsParams) => {
 	return useQuery({
 		queryKey: [
-			"organization-permissions",
+			"organization-user-permissions",
 			params.organizationId,
 			params.userId,
 		],
-		queryFn: () => getPermissions(params),
+		queryFn: () => getUserPermissions(params),
 		enabled: !!params.organizationId && !!params.userId,
 	});
 };

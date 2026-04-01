@@ -20,8 +20,8 @@ import { Label } from "@/components/shadcn/label";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDeleteUser } from "../../hooks/organization-people/use-delete-user";
-import { useGetPermissions } from "../../hooks/organization-people/use-get-permissions";
-import { useUpdatePermissions } from "../../hooks/organization-people/use-update-permissions";
+import { useGetUserPermissions } from "../../hooks/organization-people/use-get-permissions";
+import { useUpdateUserPermissions } from "../../hooks/organization-people/use-update-permissions";
 import { useOrganizationStore } from "../../store/organization";
 import { EditIcon } from "lucide-react";
 
@@ -44,11 +44,11 @@ const OrganizationPeopleMemberItem: React.FC<
 	>(new Map());
 
 	const { mutate: deleteUser } = useDeleteUser();
-	const { data: permissions } = useGetPermissions({
+	const { data: permissions } = useGetUserPermissions({
 		organizationId: fakeOrgId,
 		userId: id,
 	});
-	const { mutate: updatePermissions } = useUpdatePermissions();
+	const { mutate: updateUserPermissions } = useUpdateUserPermissions();
 
 	const handleRemoveUser = () => {
 		deleteUser({
@@ -61,7 +61,7 @@ const OrganizationPeopleMemberItem: React.FC<
 			.filter(([, isAllowed]) => isAllowed)
 			.map(([permission]) => permission);
 
-		updatePermissions({
+		updateUserPermissions({
 			organizationId: fakeOrgId,
 			userId: id,
 			permissions: {
@@ -132,7 +132,7 @@ const OrganizationPeopleMemberItem: React.FC<
 				</Dialog>
 				<Dialog>
 					<DialogTrigger asChild>
-						<Button variant="default" size="sm" className="ml-auto mt-2">
+						<Button variant="default" size="sm" className="ml-auto">
 							<EditIcon />
 							{t("people.members.item.actions.roles")}
 						</Button>

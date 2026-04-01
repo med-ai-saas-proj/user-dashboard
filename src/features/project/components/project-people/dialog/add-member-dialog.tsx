@@ -5,9 +5,8 @@ import {
 	TabsList,
 	TabsTrigger,
 } from "@/components/shadcn/tabs";
-import AddMemberWithEmailDialog, {
-	type AddMemberWithEmailDialogRef,
-} from "./add-member-with-email-dialog";
+// import AddMemberWithEmailDialog from "./add-member-with-email-dialog";
+import type { AddMemberWithEmailDialogRef } from "./add-member-with-email-dialog";
 import AddMemberWithoutEmailDialog, {
 	type AddMemberWithoutEmailDialogRef,
 } from "./add-member-without-email-dialog";
@@ -60,9 +59,9 @@ const AddMemberDialog = ({ openDialog }: AddMemberDialogProps) => {
 				<TabsContent value="without-email">
 					<AddMemberWithoutEmailDialog ref={addMemberWithoutEmailDialogRef} />
 				</TabsContent>
-				<TabsContent value="with-email">
+				{/* <TabsContent value="with-email">
 					<AddMemberWithEmailDialog ref={addMemberWithEmailDialogRef} />
-				</TabsContent>
+				</TabsContent> */}
 			</Tabs>
 			<DialogFooter>
 				<DialogClose asChild>

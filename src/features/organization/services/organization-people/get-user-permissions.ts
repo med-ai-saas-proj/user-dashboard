@@ -2,19 +2,21 @@ import apiClient from "@/query/api-client";
 import { API_ROUTES } from "@/config/api-routes";
 import type { OrganizationPermissions } from "../../organization.type";
 
-export type UpdatePermissionsRequest = {
+export type GetUserPermissionsParams = {
 	organizationId: string;
 	userId: string;
-	permissions: OrganizationPermissions;
 };
 
-export const updatePermissions = async (params: UpdatePermissionsRequest) => {
-	const { organizationId, userId, permissions } = params;
-	return apiClient.put(
+export const getUserPermissions = async (
+	params: GetUserPermissionsParams
+): Promise<OrganizationPermissions> => {
+	const { organizationId, userId } = params;
+	const response = await apiClient.get(
 		`${API_ROUTES.MANAGEMENT.ORGANIZATION.PEOPLE.replace(
 			":organizationId",
 			organizationId
-		)}/users/${userId}/permissions`,
-		{ permissions }
+		)}/users/${userId}/permissions`
 	);
+
+	return response.data;
 };

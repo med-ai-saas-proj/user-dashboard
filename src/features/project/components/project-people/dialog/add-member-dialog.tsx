@@ -52,9 +52,9 @@ const AddMemberDialog = ({ openDialog }: AddMemberDialogProps) => {
 					<TabsTrigger value="without-email">
 						{t("people.dialog.tabs.selectUser")}
 					</TabsTrigger>
-					<TabsTrigger value="with-email">
+					{/* <TabsTrigger value="with-email">
 						{t("people.dialog.tabs.enterUserEmail")}
-					</TabsTrigger>
+					</TabsTrigger> */}
 				</TabsList>
 				<TabsContent value="without-email">
 					<AddMemberWithoutEmailDialog ref={addMemberWithoutEmailDialogRef} />

@@ -29,7 +29,7 @@
             "item": {
                 "actions": {
                     "remove": "Xóa",
-                    "roles": "Vai trò",
+                    "permissions": "Quyền hạn",
                     "close": "Đóng",
                     "save": "Lưu"
                 },

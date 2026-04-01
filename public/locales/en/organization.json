@@ -29,7 +29,7 @@
             "item": {
                 "actions": {
                     "remove": "Remove",
-                    "roles": "Roles",
+                    "permissions": "Permissions",
                     "close": "Close",
                     "save": "Save"
                 },

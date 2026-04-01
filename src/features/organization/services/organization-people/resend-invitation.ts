@@ -11,6 +11,6 @@ export const resendInvitation = async ({
 	invitationId,
 }: ResendInvitationParams): Promise<void> => {
 	await apiClient.post(
-		`${API_ROUTES.MANAGEMENT.ORGANIZATION.PEOPLE.replace(":organizationId", organizationId)}/invitations/${invitationId}/resend`
+		`${API_ROUTES.MANAGEMENT.ORGANIZATION}/${organizationId}/invitations/${invitationId}/resend`
 	);
 };

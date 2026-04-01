@@ -12,10 +12,7 @@ export const getUserPermissions = async (
 ): Promise<OrganizationPermissions> => {
 	const { organizationId, userId } = params;
 	const response = await apiClient.get(
-		`${API_ROUTES.MANAGEMENT.ORGANIZATION.PEOPLE.replace(
-			":organizationId",
-			organizationId
-		)}/users/${userId}/permissions`
+		`${API_ROUTES.MANAGEMENT.ORGANIZATION}/${organizationId}/users/${userId}/permissions`
 	);
 
 	return response.data;

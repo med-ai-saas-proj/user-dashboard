@@ -11,6 +11,6 @@ export const deleteInvitation = async ({
 	invitationId,
 }: DeleteInvitationParams): Promise<void> => {
 	await apiClient.delete(
-		`${API_ROUTES.MANAGEMENT.ORGANIZATION.PEOPLE.replace(":organizationId", organizationId)}/invitations/${invitationId}`
+		`${API_ROUTES.MANAGEMENT.ORGANIZATION}/${organizationId}/invitations/${invitationId}`
 	);
 };

@@ -11,7 +11,7 @@ export const sendInvitation = async (
 ): Promise<void> => {
 	const { organizationId } = credentials;
 	await apiClient.post(
-		`${API_ROUTES.MANAGEMENT.ORGANIZATION.PEOPLE.replace(":organizationId", organizationId)}/invitations`,
+		`${API_ROUTES.MANAGEMENT.ORGANIZATION}/${organizationId}/invitations`,
 		{ email: credentials.email }
 	);
 };

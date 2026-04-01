@@ -20,8 +20,8 @@ import { Label } from "@/components/shadcn/label";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDeleteUser } from "../../hooks/organization-people/use-delete-user";
-import { useGetUserPermissions } from "../../hooks/organization-people/use-get-permissions";
-import { useUpdateUserPermissions } from "../../hooks/organization-people/use-update-permissions";
+import { useGetUserPermissions } from "../../hooks/organization-people/use-get-user-permissions";
+import { useUpdateUserPermissions } from "../../hooks/organization-people/use-update-user-permissions";
 import { useOrganizationStore } from "../../store/organization";
 import { EditIcon } from "lucide-react";
 

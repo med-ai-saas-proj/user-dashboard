@@ -13,10 +13,7 @@ export const updateUserPermissions = async (
 ) => {
 	const { organizationId, userId, permissions } = params;
 	return apiClient.put(
-		`${API_ROUTES.MANAGEMENT.ORGANIZATION.PEOPLE.replace(
-			":organizationId",
-			organizationId
-		)}/users/${userId}/permissions`,
+		`${API_ROUTES.MANAGEMENT.ORGANIZATION}/${organizationId}/users/${userId}/permissions`,
 		{ permissions }
 	);
 };

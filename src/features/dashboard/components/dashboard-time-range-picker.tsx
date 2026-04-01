@@ -23,7 +23,6 @@ const DashboardTimeRangePicker = () => {
 
 	return (
 		<TimeRangePickerCustom
-			label={t("rangePicker.label")}
 			placeholder={t("rangePicker.placeholder")}
 			onDateChange={handleDateSelect}
 			locale={currentLocale === "vi" ? "vi" : "en-US"}

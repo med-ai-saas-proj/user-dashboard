@@ -27,7 +27,6 @@ const DashboardMonthPicker = () => {
 
 	return (
 		<MonthPickerCustom
-			label={t("monthPicker.label")}
 			placeholder={t("monthPicker.placeholder")}
 			onMonthChange={handleMonthSelect}
 			locale={currentLocale === "vi" ? "vi" : "en-US"}

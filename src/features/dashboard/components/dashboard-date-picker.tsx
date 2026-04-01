@@ -16,7 +16,6 @@ const DashboardDatePicker = () => {
 
 	return (
 		<DatePickerCustom
-			label={t("datePicker.label")}
 			placeholder={t("datePicker.placeholder")}
 			onDateChange={handleDateSelect}
 			locale={currentLocale === "vi" ? "vi" : "en-US"}

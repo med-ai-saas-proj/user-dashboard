@@ -18,7 +18,6 @@ const DashboardYearPicker = () => {
 
 	return (
 		<YearPickerCustom
-			label={t("yearPicker.label")}
 			placeholder={t("yearPicker.placeholder")}
 			onYearChange={handleYearSelect}
 			locale={currentLocale === "vi" ? "vi" : "en-US"}

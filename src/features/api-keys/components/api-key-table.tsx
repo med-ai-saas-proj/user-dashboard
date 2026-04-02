@@ -20,15 +20,15 @@ const APIKeyTable = ({ apiKeys }: { apiKeys: APIKey[] }) => {
 	const deleteAPIKeyMutation = useDeleteApiKey();
 	const [openUpdateAPIKeyDialog, setOpenUpdateAPIKeyDialog] =
 		React.useState(false);
-	const [selectedApiKeyId, setSelectedApiKeyId] = useState<string | null>(null);
+	const [selectedApiKey, setSelectedApiKey] = useState<APIKey | null>(null);
 
 	const onDeleteApiKey = (apikeyId: string) => {
 		deleteAPIKeyMutation.mutate(apikeyId);
 	};
 
-	const onOpenUpdateAPIKeyDialog = (selectedApiKeyId: string) => {
+	const onOpenUpdateAPIKeyDialog = (apiKey: APIKey) => {
 		setOpenUpdateAPIKeyDialog(true);
-		setSelectedApiKeyId(selectedApiKeyId);
+		setSelectedApiKey(apiKey);
 	};
 
 	return (
@@ -36,7 +36,7 @@ const APIKeyTable = ({ apiKeys }: { apiKeys: APIKey[] }) => {
 			<TableHeader>
 				<TableRow>
 					<TableHead className="w-[30%]">{t("table.header.name")}</TableHead>
-					<TableHead>{t("table.header.description")}</TableHead>
+					<TableHead>{t("table.header.projectId")}</TableHead>
 					<TableHead>{t("table.header.secretKey")}</TableHead>
 					<TableHead>{t("table.header.createdAt")}</TableHead>
 					<TableHead>{t("table.header.permissions")}</TableHead>
@@ -48,15 +48,31 @@ const APIKeyTable = ({ apiKeys }: { apiKeys: APIKey[] }) => {
 				{apiKeys.map((apiKey) => (
 					<TableRow key={apiKey.id}>
 						<TableCell className="font-medium">{apiKey.name}</TableCell>
-						<TableCell>{apiKey.description}</TableCell>
+						<TableCell>{apiKey.projectId}</TableCell>
 						<TableCell>{apiKey.hint}</TableCell>
 						<TableCell>{apiKey.createdAt.toLocaleDateString()}</TableCell>
-						<TableCell>{apiKey.permissions.join(", ")}</TableCell>
+						<TableCell>
+							<div className="flex flex-wrap items-center gap-2 max-w-[360px]">
+								{apiKey.permissions.slice(0, 3).map((permission) => (
+									<span
+										key={permission}
+										className="inline-flex items-center bg-primary text-secondary text-xs leading-none px-2 py-1 rounded-md whitespace-nowrap"
+									>
+										{permission}
+									</span>
+								))}
+								{apiKey.permissions.length > 3 && (
+									<span className="inline-flex items-center bg-muted text-muted-foreground text-xs leading-none px-2 py-1 rounded-md whitespace-nowrap">
+										+{apiKey.permissions.length - 3} more
+									</span>
+								)}
+							</div>
+						</TableCell>
 						<TableCell>
 							<SquarePen
 								size={16}
 								className="cursor-pointer"
-								onClick={() => onOpenUpdateAPIKeyDialog(apiKey.id)}
+								onClick={() => onOpenUpdateAPIKeyDialog(apiKey)}
 							/>
 						</TableCell>
 						<TableCell>
@@ -74,9 +90,9 @@ const APIKeyTable = ({ apiKeys }: { apiKeys: APIKey[] }) => {
 					</TableRow>
 				))}
 			</TableBody>
-			{selectedApiKeyId && (
+			{selectedApiKey && (
 				<APIKeyUpdateDialog
-					apikeyId={selectedApiKeyId}
+					apikey={selectedApiKey}
 					open={openUpdateAPIKeyDialog}
 					onOpenChange={() => setOpenUpdateAPIKeyDialog(false)}
 				/>

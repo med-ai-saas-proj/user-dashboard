@@ -150,6 +150,14 @@ function App() {
 									<Route path="roles" element={<ProjectPeopleRole />} />
 								</Route>
 							</Route>
+							<Route
+								path="api-keys"
+								element={
+									<ProtectedRoute>
+										<APIKeysPage />
+									</ProtectedRoute>
+								}
+							/>
 						</Route>
 						<Route path="*" element={<Navigate to="/" replace />} />
 					</Routes>

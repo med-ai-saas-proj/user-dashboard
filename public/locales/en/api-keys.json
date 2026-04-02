@@ -1,73 +1,74 @@
 {
-  "pageTitle": "API Keys",
+    "pageTitle": "API Keys",
 
-  "actions": {
-    "create": "Create API key",
-    "createSecret": "Create new secret key"
-  },
-
-  "emptyState": {
-    "title": "Create an API key to access the OpenAI API"
-  },
-
-  "dialog": {
-    "title": "Create new secret key",
-    "description": "This API key is tied to your user and can make requests against the selected project. If you are removed from the organiation or project, this key will be disabled.",
-    "form": {
-      "nameLabel": "Key name",
-      "namePlaceholder": "My API Key",
-      "action": {
-        "create": "Create secret key",
-        "creating": "Creating..."
-      }
-    }
-  },
-
-  "requiredDialog": {
-    "title": "API Key Required",
-    "description": "You need an API key to use this feature.",
-    "noKeyState": {
-      "title": "No API keys",
-      "description": "Please create an API key to access this feature."
-    }
-  },
-
-  "table": {
-    "header": {
-      "name": "Name",
-      "description": "Description",
-      "secretKey": "Secret Key",
-      "permissions": "Permissions",
-      "createdAt": "Created at",
-      "actions": "Actions"
-    },
     "actions": {
-      "edit": "Edit",
-      "delete": "Delete"
+        "create": "Create API key",
+        "createSecret": "Create new secret key"
     },
-    "successMessages": {
-      "delete": "API key deleted successfully.",
-      "update": "API key updated successfully."
+
+    "emptyState": {
+        "title": "Create an API key to access the OpenAI API"
+    },
+
+    "dialog": {
+        "title": "Create new secret key",
+        "description": "This API key is tied to your user and can make requests against the selected project. If you are removed from the organiation or project, this key will be disabled.",
+        "form": {
+            "nameLabel": "Key name",
+            "namePlaceholder": "My API Key",
+            "action": {
+                "create": "Create secret key",
+                "creating": "Creating..."
+            }
+        }
+    },
+
+    "requiredDialog": {
+        "title": "API Key Required",
+        "description": "You need an API key to use this feature.",
+        "noKeyState": {
+            "title": "No API keys",
+            "description": "Please create an API key to access this feature."
+        }
+    },
+
+    "table": {
+        "header": {
+            "name": "Name",
+            "projectId": "Project ID",
+            "description": "Description",
+            "secretKey": "Secret Key",
+            "permissions": "Permissions",
+            "createdAt": "Created at",
+            "actions": "Actions"
+        },
+        "actions": {
+            "edit": "Edit",
+            "delete": "Delete"
+        },
+        "successMessages": {
+            "delete": "API key deleted successfully.",
+            "update": "API key updated successfully."
+        }
+    },
+
+    "saveDialog": {
+        "title": "Save your key",
+        "description": "Please save this secret key somewhere safe and accessible. For security reasons, you won't be able to view it again through your Venera account. If you lose this secret key, you'll need to generate a new one.",
+        "keySet": "This key has been automatically set for AI services"
+    },
+
+    "editDialog": {
+        "title": "Edit secret key",
+        "description": "Edit your api key information",
+        "form": {
+            "nameLabel": "Name"
+        }
+    },
+
+    "description": {
+        "permissions": "You have permission to view and manage all API keys in this project.",
+        "security": "Do not share your API key with others or expose it in the browser or other client-side code. To protect your account's security, OpenAI may automatically disable any API key that has leaked publicly.",
+        "usage": "View usage per API key on the Usage page."
     }
-  },
-
-  "saveDialog": {
-    "title": "Save your key",
-    "description": "Please save this secret key somewhere safe and accessible. For security reasons, you won't be able to view it again through your Venera account. If you lose this secret key, you'll need to generate a new one.",
-    "keySet": "This key has been automatically set for AI services"
-  },
-
-  "editDialog": {
-    "title": "Edit secret key",
-    "description": "Edit your api key information",
-    "form": {
-      "nameLabel": "Name"
-    }
-  },
-
-  "description": {
-    "permissions": "You have permission to view and manage all API keys in this project.",
-    "security": "Do not share your API key with others or expose it in the browser or other client-side code. To protect your account's security, OpenAI may automatically disable any API key that has leaked publicly.",
-    "usage": "View usage per API key on the Usage page."
-  }
 }

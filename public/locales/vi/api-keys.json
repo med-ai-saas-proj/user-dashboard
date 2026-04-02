@@ -1,73 +1,74 @@
 {
-  "pageTitle": "Khóa API",
+    "pageTitle": "Khóa API",
 
-  "actions": {
-    "create": "Tạo khóa API",
-    "createSecret": "Tạo khóa bí mật mới"
-  },
-
-  "emptyState": {
-    "title": "Tạo một khóa API để truy cập OpenAI API"
-  },
-
-  "dialog": {
-    "title": "Tạo khóa bí mật mới",
-    "description": "Khóa API này được liên kết với người dùng của bạn và có thể thực hiện các yêu cầu đối với dự án đã chọn. Nếu bạn bị xóa khỏi tổ chức hoặc dự án, khóa này sẽ bị vô hiệu hóa.",
-    "form": {
-      "nameLabel": "Tên khóa",
-      "namePlaceholder": "Khóa API của tôi",
-      "action": {
-        "create": "Tạo khóa bí mật",
-        "creating": "Đang tạo..."
-      }
-    }
-  },
-
-  "requiredDialog": {
-    "title": "Yêu cầu khóa API",
-    "description": "Bạn cần một khóa API để sử dụng tính năng này.",
-    "noKeyState": {
-      "title": "Không có khóa API",
-      "description": "Vui lòng tạo một khóa API để truy cập tính năng này."
-    }
-  },
-
-  "table": {
-    "header": {
-      "name": "Tên",
-      "description": "Mô tả",
-      "secretKey": "Khóa bí mật",
-      "permissions": "Quyền",
-      "createdAt": "Ngày tạo",
-      "actions": "Hành động"
-    },
     "actions": {
-      "edit": "Chỉnh sửa",
-      "delete": "Xóa"
+        "create": "Tạo khóa API",
+        "createSecret": "Tạo khóa bí mật mới"
     },
-    "successMessages": {
-      "delete": "Xóa khóa API thành công.",
-      "update": "Cập nhật khóa API thành công."
+
+    "emptyState": {
+        "title": "Tạo một khóa API để truy cập OpenAI API"
+    },
+
+    "dialog": {
+        "title": "Tạo khóa bí mật mới",
+        "description": "Khóa API này được liên kết với người dùng của bạn và có thể thực hiện các yêu cầu đối với dự án đã chọn. Nếu bạn bị xóa khỏi tổ chức hoặc dự án, khóa này sẽ bị vô hiệu hóa.",
+        "form": {
+            "nameLabel": "Tên khóa",
+            "namePlaceholder": "Khóa API của tôi",
+            "action": {
+                "create": "Tạo khóa bí mật",
+                "creating": "Đang tạo..."
+            }
+        }
+    },
+
+    "requiredDialog": {
+        "title": "Yêu cầu khóa API",
+        "description": "Bạn cần một khóa API để sử dụng tính năng này.",
+        "noKeyState": {
+            "title": "Không có khóa API",
+            "description": "Vui lòng tạo một khóa API để truy cập tính năng này."
+        }
+    },
+
+    "table": {
+        "header": {
+            "name": "Tên",
+            "projectId": "ID dự án",
+            "description": "Mô tả",
+            "secretKey": "Khóa bí mật",
+            "permissions": "Quyền",
+            "createdAt": "Ngày tạo",
+            "actions": "Hành động"
+        },
+        "actions": {
+            "edit": "Chỉnh sửa",
+            "delete": "Xóa"
+        },
+        "successMessages": {
+            "delete": "Xóa khóa API thành công.",
+            "update": "Cập nhật khóa API thành công."
+        }
+    },
+
+    "saveDialog": {
+        "title": "Lưu khóa của bạn",
+        "description": "Vui lòng lưu khóa bí mật này ở nơi an toàn và dễ truy cập. Vì lý do bảo mật, bạn sẽ không thể xem lại nó qua tài khoản Venera của mình. Nếu bạn làm mất khóa bí mật này, bạn sẽ cần tạo một khóa mới.",
+        "keySet": "Khóa này đã được tự động thiết lập cho các dịch vụ AI"
+    },
+
+    "editDialog": {
+        "title": "Chỉnh sửa khóa bí mật",
+        "description": "Chỉnh sửa thông tin khóa API của bạn",
+        "form": {
+            "nameLabel": "Tên"
+        }
+    },
+
+    "description": {
+        "permissions": "Bạn có quyền xem và quản lý tất cả các khóa API trong dự án này.",
+        "security": "Không chia sẻ khóa API của bạn với người khác hoặc để lộ nó trong trình duyệt hoặc mã phía client. Để bảo vệ bảo mật tài khoản của bạn, OpenAI có thể tự động vô hiệu hóa bất kỳ khóa API nào bị lộ công khai.",
+        "usage": "Xem mức sử dụng theo từng khóa API trên trang Sử dụng."
     }
-  },
-
-  "saveDialog": {
-    "title": "Lưu khóa của bạn",
-    "description": "Vui lòng lưu khóa bí mật này ở nơi an toàn và dễ truy cập. Vì lý do bảo mật, bạn sẽ không thể xem lại nó qua tài khoản Venera của mình. Nếu bạn làm mất khóa bí mật này, bạn sẽ cần tạo một khóa mới.",
-    "keySet": "Khóa này đã được tự động thiết lập cho các dịch vụ AI"
-  },
-
-  "editDialog": {
-    "title": "Chỉnh sửa khóa bí mật",
-    "description": "Chỉnh sửa thông tin khóa API của bạn",
-    "form": {
-      "nameLabel": "Tên"
-    }
-  },
-
-  "description": {
-    "permissions": "Bạn có quyền xem và quản lý tất cả các khóa API trong dự án này.",
-    "security": "Không chia sẻ khóa API của bạn với người khác hoặc để lộ nó trong trình duyệt hoặc mã phía client. Để bảo vệ bảo mật tài khoản của bạn, OpenAI có thể tự động vô hiệu hóa bất kỳ khóa API nào bị lộ công khai.",
-    "usage": "Xem mức sử dụng theo từng khóa API trên trang Sử dụng."
-  }
 }

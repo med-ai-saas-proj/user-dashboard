@@ -1,9 +1,10 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Label } from "@radix-ui/react-label";
-import { useForm } from "react-hook-form";
+import { useEffect } from "react";
+import { Controller, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import z from "zod";
 import { Button } from "@/components/shadcn/button";
+import { Checkbox } from "@/components/shadcn/checkbox";
 import {
 	Dialog,
 	DialogClose,
@@ -14,48 +15,68 @@ import {
 	DialogTitle,
 } from "@/components/shadcn/dialog";
 import { Input } from "@/components/shadcn/input";
+import { Label } from "@/components/shadcn/label";
 import type { APIKey } from "@/features/api-keys/api-key.type";
 import { useUpdateApiKey } from "@/features/api-keys/hooks/use-update-api-key";
+import { useGetApiKeyPermissions } from "../hooks/use-get-api-permissions";
 
 const apiUpdateSchema = z.object({
 	name: z.string().min(1, "Name must be at least 1 character long"),
+	permissions: z
+		.array(z.string())
+		.min(1, "Please select at least one permission"),
 });
 
 type ApiUpdateFormData = z.infer<typeof apiUpdateSchema>;
 
 const APIKeyUpdateDialog = ({
-	apikeyId,
+	apikey,
 	open,
 	onOpenChange,
 }: {
-	apikeyId: string;
+	apikey: APIKey;
 	open: boolean;
 	onOpenChange: (open: boolean) => void;
 }) => {
 	const { t: tApiKeys } = useTranslation("api-keys");
 	const { t: tCommon } = useTranslation("common");
 
+	const { data: apiPermissions } = useGetApiKeyPermissions();
 	const apiKeyUpdateMutation = useUpdateApiKey();
 
 	const {
+		control,
 		register,
 		handleSubmit,
+		reset,
 		formState: { errors },
 	} = useForm<ApiUpdateFormData>({
 		resolver: zodResolver(apiUpdateSchema),
+		defaultValues: {
+			name: apikey.name,
+			permissions: apikey.permissions,
+		},
 	});
+
+	useEffect(() => {
+		if (!open) {
+			return;
+		}
+
+		reset({
+			name: apikey.name,
+			permissions: apikey.permissions,
+		});
+	}, [apikey, open, reset]);
 
 	const onSubmit = (data: ApiUpdateFormData) => {
 		onOpenChange(false);
 
-		const name = data.name;
-
-		const newKey: Pick<APIKey, "name" | "permissions"> = {
-			name,
-			permissions: ["read", "write"],
-		};
-
-		apiKeyUpdateMutation.mutate({ apikeyId, ...newKey });
+		apiKeyUpdateMutation.mutate({
+			apikeyId: apikey.id,
+			name: data.name,
+			permissions: data.permissions,
+		});
 	};
 
 	return (
@@ -76,13 +97,64 @@ const APIKeyUpdateDialog = ({
 								aria-invalid={!!errors.name}
 								{...register("name")}
 							/>
-							<div className="h-5 mt-1.5 px-4">
-								{errors.name && (
+							{errors.name && (
+								<div className="h-5 mt-1.5 px-4">
 									<p className="text-destructive text-xs">
 										{errors.name.message}
 									</p>
+								</div>
+							)}
+						</div>
+
+						<div className="grid gap-3">
+							<Label>{tApiKeys("table.header.permissions")}</Label>
+							<Controller
+								name="permissions"
+								control={control}
+								render={({ field }) => (
+									<div className="space-y-2">
+										{apiPermissions?.results?.map((permission) => {
+											const isChecked =
+												field.value?.includes(permission) ?? false;
+
+											return (
+												<div
+													key={permission}
+													className="flex items-center gap-2"
+												>
+													<Checkbox
+														id={permission}
+														checked={isChecked}
+														onCheckedChange={(checked) => {
+															if (checked) {
+																field.onChange([
+																	...(field.value ?? []),
+																	permission,
+																]);
+																return;
+															}
+
+															field.onChange(
+																(field.value ?? []).filter(
+																	(value) => value !== permission
+																)
+															);
+														}}
+													/>
+													<Label htmlFor={permission}>{permission}</Label>
+												</div>
+											);
+										})}
+									</div>
 								)}
-							</div>
+							/>
+							{errors.permissions && (
+								<div className="h-5 mt-1.5 px-4">
+									<p className="text-destructive text-xs">
+										{errors.permissions.message}
+									</p>
+								</div>
+							)}
 						</div>
 					</div>
 					<DialogFooter>

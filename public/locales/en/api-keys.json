@@ -35,6 +35,9 @@
     "table": {
         "header": {
             "name": "Name",
+            "status": "Status",
+            "disabled": "Disabled",
+            "enabled": "Enabled",
             "projectId": "Project ID",
             "description": "Description",
             "secretKey": "Secret Key",
@@ -63,6 +66,18 @@
         "description": "Edit your api key information",
         "form": {
             "nameLabel": "Name"
+        }
+    },
+
+    "statusDialog": {
+        "agree": "Agree",
+        "enable": {
+            "title": "Enable API key",
+            "description": "Are you sure you want to enable this API key? The key will be able to access APIs again."
+        },
+        "disable": {
+            "title": "Disable API key",
+            "description": "Are you sure you want to disable this API key? The key will no longer be able to access APIs."
         }
     },
 

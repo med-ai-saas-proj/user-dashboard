@@ -5,13 +5,11 @@ import type {
 	OrganizationPermissions,
 	OrganizationUserResponse,
 } from "../features/organization/organization.type";
-import { useAuthStore } from "@/features/auth/store/auth-store";
 
 type MockUser = OrganizationUserResponse["results"][number];
 type MockInvitation = OrganizationInvitationResponse["results"][number];
 
-const organizationId =
-	useAuthStore.getState().organization?.id ?? "fake-org-id";
+const organizationId = "fake-org-id";
 const defaultPermissions = ["read:organization", "write:organization"];
 
 const escapeRegExp = (value: string) =>

@@ -11,7 +11,7 @@ export const useSendInvitation = () => {
 	const { t: tCommon } = useTranslation("common");
 
 	return useMutation({
-		mutationKey: ["sendInvitation"],
+		mutationKey: ["organization-send-invitation"],
 		mutationFn: (credentials: SendInvitationData) =>
 			sendInvitation(credentials),
 		onSuccess: () => {

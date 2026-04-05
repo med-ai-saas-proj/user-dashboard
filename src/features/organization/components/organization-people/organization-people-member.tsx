@@ -13,18 +13,18 @@ import {
 import { Plus, Search } from "lucide-react";
 import { Button } from "@/components/shadcn/button";
 import { CustomPagination } from "@/components/pagination/pagination";
-import { useOrganizationStore } from "../../store/organization";
 import InvitationDialog from "./invitation-dialog";
 import { useMediaQuery } from "@mantine/hooks";
+import { useAuthStore } from "@/features/auth/store/auth-store";
 
 const OrganizationPeopleMember = () => {
-	const fakeOrgId = useOrganizationStore((state) => state.organizationId);
+	const organizationId = useAuthStore((state) => state.organization?.id) || "";
 	const { t } = useTranslation("organization");
 
 	const limit = 10;
 	const [page, setPage] = useState<number>(1);
 	const { data: users, isPending } = useGetUsers({
-		organizationId: fakeOrgId,
+		organizationId,
 		offset: (page - 1) * limit,
 		limit,
 	});
@@ -70,7 +70,7 @@ const OrganizationPeopleMember = () => {
 				open={openAddMemeberDialog}
 				onOpenChange={setOpenAddMemberDialog}
 			/>
-			<div className="flex gap-8">
+			<div className="flex gap-8 min-h-fit">
 				<div className="flex-7 flex-col border rounded-md">
 					{isPending && (
 						<div className="flex items-center justify-center h-full">

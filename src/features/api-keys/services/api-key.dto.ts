@@ -18,11 +18,21 @@ export type UpdateApiKeyRequest = {
 
 export type ApiKeyOutput = {
 	id: string;
+	project_id: string;
 	name: string;
 	description: string;
 	hint: string;
 	created_at: string;
 	permissions: string[];
+	disabled: boolean;
 };
 
-export type GetApiKeyResponse = ApiKeyOutput[];
+export type ApiPermissions = {
+	total: number;
+	results: string[];
+};
+
+export type GetApiKeyResponse = {
+	total: number;
+	results: ApiKeyOutput[];
+};

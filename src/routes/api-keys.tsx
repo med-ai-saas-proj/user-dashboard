@@ -7,13 +7,18 @@ import APIKeyDialog from "@/features/api-keys/components/api-key-dialog";
 import APIKeyTable from "@/features/api-keys/components/api-key-table";
 import { useGetApiKeys } from "@/features/api-keys/hooks/use-get-api-keys";
 import DashboardLayout from "@/layouts/dashboard-layout";
+import { useParams } from "react-router-dom";
 
 export default function APIKeysPage() {
 	const { t } = useTranslation("api-keys");
 	const { t: tCommon } = useTranslation("common");
 	const [openApiKeyDialog, setOpenApiKeyDialog] = useState(false);
 
-	const { data: apiKeys, isLoading, isError } = useGetApiKeys();
+	const params = useParams();
+	const projectId = params.projectId;
+
+	const { data: apiKeys, isLoading, isError } = useGetApiKeys(projectId || "");
+
 	const hasKeys = apiKeys && apiKeys.length > 0;
 
 	return (

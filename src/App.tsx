@@ -26,6 +26,11 @@ import OrganizationBillingHistory from "./features/organization/components/organ
 import OrganizationBillingCreditGrants from "./features/organization/components/organization-billing/organization-billing-credit-grants";
 import OrganizationBillingPreferences from "./features/organization/components/organization-billing/organization-billing-preferences";
 import OrganizationProjects from "./routes/organization-projects";
+import ProjectGeneral from "./routes/project-general";
+import ProjectPeople from "./routes/project-people";
+import ProjectPeopleMember from "./features/project/components/project-people/project-people-member";
+import ProjectPeopleRole from "./features/project/components/project-people/project-people-role";
+import ProjectRouteGuard from "./routes/project-route-guard";
 
 function App() {
 	return (
@@ -153,6 +158,39 @@ function App() {
 								element={
 									<ProtectedRoute>
 										<OrganizationProjects />
+									</ProtectedRoute>
+								}
+							/>
+						</Route>
+						<Route path="/project/:projectId">
+							<Route element={<ProjectRouteGuard />}>
+								<Route index element={<Navigate to="general" replace />} />
+								<Route
+									path="general"
+									element={
+										<ProtectedRoute>
+											<ProjectGeneral />
+										</ProtectedRoute>
+									}
+								/>
+								<Route
+									path="people"
+									element={
+										<ProtectedRoute>
+											<ProjectPeople />
+										</ProtectedRoute>
+									}
+								>
+									<Route index element={<Navigate to="members" replace />} />
+									<Route path="members" element={<ProjectPeopleMember />} />
+									<Route path="roles" element={<ProjectPeopleRole />} />
+								</Route>
+							</Route>
+							<Route
+								path="api-keys"
+								element={
+									<ProtectedRoute>
+										<APIKeysPage />
 									</ProtectedRoute>
 								}
 							/>

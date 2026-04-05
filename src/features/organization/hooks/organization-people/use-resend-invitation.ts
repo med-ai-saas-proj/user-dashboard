@@ -9,7 +9,7 @@ import { toast } from "sonner";
 export const useResendInvitation = () => {
 	const { t: tCommon } = useTranslation("common");
 	return useMutation({
-		mutationKey: ["resendInvitation"],
+		mutationKey: ["organization-resend-invitation"],
 		mutationFn: (params: ResendInvitationParams) => resendInvitation(params),
 		onError: (error) => {
 			toast.error(tCommon("error"));

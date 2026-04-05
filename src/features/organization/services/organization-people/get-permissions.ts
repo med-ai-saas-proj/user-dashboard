@@ -1,22 +1,10 @@
-import apiClient from "@/query/api-client";
 import { API_ROUTES } from "@/config/api-routes";
+import apiClient from "@/query/api-client";
 import type { OrganizationPermissions } from "../../organization.type";
 
-export type GetPermissionsParams = {
-	organizationId: string;
-	userId: string;
-};
-
-export const getPermissions = async (
-	params: GetPermissionsParams
-): Promise<OrganizationPermissions> => {
-	const { organizationId, userId } = params;
-	const response = await apiClient.get(
-		`${API_ROUTES.MANAGEMENT.ORGANIZATION.PEOPLE.replace(
-			":organizationId",
-			organizationId
-		)}/users/${userId}/permissions`
+export const getOrganizationPermissions = async () => {
+	const response = await apiClient.get<OrganizationPermissions>(
+		`${API_ROUTES.MANAGEMENT.ORGANIZATION}/permissions`
 	);
-
 	return response.data;
 };

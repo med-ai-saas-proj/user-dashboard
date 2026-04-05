@@ -9,7 +9,7 @@ import type {
 type MockUser = OrganizationUserResponse["results"][number];
 type MockInvitation = OrganizationInvitationResponse["results"][number];
 
-const fakeOrgId = "123";
+const organizationId = "fake-org-id";
 const defaultPermissions = ["read:organization", "write:organization"];
 
 const escapeRegExp = (value: string) =>
@@ -52,10 +52,7 @@ for (const user of mockUsers) {
 	permissionsByUser.set(user.id, [...defaultPermissions]);
 }
 
-const peopleBaseRoute = API_ROUTES.MANAGEMENT.ORGANIZATION.PEOPLE.replace(
-	":organizationId",
-	fakeOrgId
-);
+const peopleBaseRoute = `${API_ROUTES.MANAGEMENT.ORGANIZATION}/${organizationId}/people`;
 
 const usersRoute = `${peopleBaseRoute}/users`;
 const invitationsRoute = `${peopleBaseRoute}/invitations`;

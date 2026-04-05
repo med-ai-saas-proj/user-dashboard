@@ -9,7 +9,7 @@ export const useDeleteInvitation = () => {
 	const { t: tCommon } = useTranslation("common");
 
 	return useMutation({
-		mutationKey: ["deleteInvitation"],
+		mutationKey: ["organization-delete-invitation"],
 		mutationFn: (params: DeleteInvitationParams) => deleteInvitation(params),
 		onSuccess: () => {
 			queryClient.invalidateQueries({
@@ -20,7 +20,7 @@ export const useDeleteInvitation = () => {
 		},
 		onError: (error) => {
 			toast.error(tCommon("error"));
-			console.error("Failed to resend invitation:", error);
+			console.error("Failed to delete invitation:", error);
 		},
 	});
 };

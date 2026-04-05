@@ -10,7 +10,7 @@ export const getInvitations = async ({
 	organizationId,
 }: GetInvitationsParams): Promise<OrganizationInvitationResponse> => {
 	const response = await apiClient.get(
-		`${API_ROUTES.MANAGEMENT.ORGANIZATION.PEOPLE.replace(":organizationId", organizationId)}/invitations`
+		`${API_ROUTES.MANAGEMENT.ORGANIZATION}/${organizationId}/invitations`
 	);
 	return response.data;
 };

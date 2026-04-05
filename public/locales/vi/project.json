@@ -7,6 +7,8 @@
             "fields": {
                 "projectName": "Tên dự án",
                 "projectId": "Mã dự án",
+                "projectDescription": "Mô tả",
+                "projectDescriptionPlaceholder": "Nhập mô tả ngắn cho dự án",
                 "disableApiKeys": "Vô hiệu hóa API Keys"
             },
             "actions": {
@@ -14,7 +16,12 @@
             },
             "validation": {
                 "projectNameRequired": "Tên dự án là bắt buộc",
-                "projectIdRequired": "Mã dự án là bắt buộc"
+                "projectIdRequired": "Mã dự án là bắt buộc",
+                "projectDescriptionRequired": "Mô tả là bắt buộc"
+            },
+            "success": {
+                "title": "Thành công",
+                "updated": "Cài đặt dự án đã được cập nhật thành công"
             }
         }
     },

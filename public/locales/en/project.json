@@ -7,6 +7,8 @@
             "fields": {
                 "projectName": "Project Name",
                 "projectId": "Project ID",
+                "projectDescription": "Description",
+                "projectDescriptionPlaceholder": "Enter a short project description",
                 "disableApiKeys": "Disable API Keys"
             },
             "actions": {
@@ -14,7 +16,12 @@
             },
             "validation": {
                 "projectNameRequired": "Project name is required",
-                "projectIdRequired": "Project ID is required"
+                "projectIdRequired": "Project ID is required",
+                "projectDescriptionRequired": "Description is required"
+            },
+            "success": {
+                "title": "Success",
+                "updated": "Project settings were updated successfully"
             }
         }
     },

@@ -1,12 +1,15 @@
 import { Button } from "@/components/shadcn/button";
 import { Field, FieldLabel } from "@/components/shadcn/field";
 import { Input } from "@/components/shadcn/input";
-import { Switch } from "@/components/shadcn/switch";
+import { Textarea } from "@/components/shadcn/textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import z from "zod";
+import { useUpdateProject } from "../../hooks/project-general/use-update-project";
+import { useParams } from "react-router-dom";
+import { toast } from "sonner";
 
 const createProjectGeneralSchema = (messages: {
 	projectNameRequired: string;
@@ -15,7 +18,8 @@ const createProjectGeneralSchema = (messages: {
 	z.object({
 		projectName: z.string().min(1, messages.projectNameRequired),
 		projectId: z.string().min(1, messages.projectIdRequired),
-		disableAPIKeys: z.boolean(),
+		projectDescription: z.string().optional(),
+		// disableAPIKeys: z.boolean(),
 	});
 
 type ProjectGeneralFormData = z.infer<
@@ -24,6 +28,11 @@ type ProjectGeneralFormData = z.infer<
 
 const ProjectGeneralForm = () => {
 	const { t } = useTranslation("project");
+	const { t: tCommon } = useTranslation("common");
+
+	const params = useParams();
+	const projectId = params.projectId || "";
+
 	const validationMessages = useMemo(
 		() => ({
 			projectNameRequired: t("general.form.validation.projectNameRequired"),
@@ -31,22 +40,36 @@ const ProjectGeneralForm = () => {
 		}),
 		[t]
 	);
+
+	const { mutate: updateProject, isPending } = useUpdateProject();
+
 	const projectGeneralSchema = useMemo(
 		() => createProjectGeneralSchema(validationMessages),
 		[validationMessages]
 	);
 
-	const { register, handleSubmit, control } = useForm<ProjectGeneralFormData>({
+	const { register, handleSubmit } = useForm<ProjectGeneralFormData>({
 		resolver: zodResolver(projectGeneralSchema),
 		defaultValues: {
 			projectName: "demo",
-			projectId: "123",
-			disableAPIKeys: false,
+			projectId,
+			projectDescription: "",
 		},
 	});
 
 	const onSubmit = (data: ProjectGeneralFormData) => {
-		console.log("Form data:", data);
+		updateProject(
+			{
+				projectId: data.projectId,
+				projectName: data.projectName,
+				projectDescription: data.projectDescription || undefined,
+			},
+			{
+				onSuccess: () => {
+					toast.success(tCommon("requestDone"));
+				},
+			}
+		);
 	};
 
 	return (
@@ -67,23 +90,19 @@ const ProjectGeneralForm = () => {
 					</FieldLabel>
 					<Input id="projectId" {...register("projectId")} disabled />
 				</Field>
-				<Controller
-					name="disableAPIKeys"
-					control={control}
-					render={({ field }) => (
-						<div className="flex items-center space-x-2">
-							<Switch
-								id="disableAPIKeys"
-								checked={field.value}
-								onCheckedChange={field.onChange}
-							/>
-							<FieldLabel htmlFor="disableAPIKeys">
-								{t("general.form.fields.disableApiKeys")}
-							</FieldLabel>
-						</div>
-					)}
-				/>
-				<Button type="submit">{t("general.form.actions.save")}</Button>
+				<Field>
+					<FieldLabel htmlFor="projectDescription">
+						{t("general.form.fields.projectDescription")}
+					</FieldLabel>
+					<Textarea
+						id="projectDescription"
+						{...register("projectDescription")}
+						placeholder={t("general.form.fields.projectDescriptionPlaceholder")}
+					/>
+				</Field>
+				<Button type="submit" disabled={isPending}>
+					{t("general.form.actions.save")}
+				</Button>
 			</form>
 		</div>
 	);

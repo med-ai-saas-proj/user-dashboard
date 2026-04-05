@@ -361,6 +361,18 @@ export default function APIReferencePage() {
 								theme: "default",
 								darkMode: resolvedTheme === "dark",
 								hideModels: true,
+								authentication: {
+									preferredSecurityScheme: "APIKeyHeader",
+									apiKey: {
+										token: "",
+									},
+								},
+								servers: [
+									{
+										url: BASE_API_URL + "/service/api",
+										description: "Venera API Hub",
+									},
+								],
 							}}
 						/>
 					)}

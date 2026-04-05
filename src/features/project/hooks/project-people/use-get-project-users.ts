@@ -4,7 +4,7 @@ import {
 	type GetProjectUsersParams,
 } from "../../services/project-people/get-users";
 
-export const useGetUsers = (params: GetProjectUsersParams) => {
+export const useGetProjectUsers = (params: GetProjectUsersParams) => {
 	if (!params.limit) params.limit = 10;
 	if (!params.offset) params.offset = 0;
 

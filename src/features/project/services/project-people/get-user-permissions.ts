@@ -7,7 +7,7 @@ export type GetProjectPermissionsParams = {
 	userId: string;
 };
 
-export const getUserProjectPermissions = async (
+export const getProjectUserPermissions = async (
 	params: GetProjectPermissionsParams
 ): Promise<ProjectPermissions> => {
 	const { projectId, userId } = params;

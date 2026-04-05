@@ -4,7 +4,7 @@ import {
 	type DeleteUserParams,
 } from "../../services/project-people/delete-user";
 
-export const useDeleteUser = () => {
+export const useDeleteProjectUser = () => {
 	const queryClient = useQueryClient();
 
 	return useMutation({

@@ -4,7 +4,7 @@ import {
 	type AddProjectUserParams,
 } from "../../services/project-people/add-user";
 
-export const useAddUser = () => {
+export const useAddProjectUser = () => {
 	const queryClient = useQueryClient();
 
 	return useMutation({

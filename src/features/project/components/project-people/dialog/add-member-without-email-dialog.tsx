@@ -22,7 +22,7 @@ import {
 } from "@/components/shadcn/combobox";
 import { useGetUsers } from "@/features/organization/hooks/organization-people/use-get-users";
 import { useTranslation } from "react-i18next";
-import { useAddUser } from "@/features/project/hooks/project-people/use-add-user";
+import { useAddProjectUser } from "@/features/project/hooks/project-people/use-add-project-user";
 import { useProjectStore } from "@/features/project/store/project";
 import { useAuthStore } from "@/features/auth/store/auth-store";
 
@@ -81,7 +81,7 @@ const AddMemberWithoutEmailDialog = ({
 	const { data: users } = useGetUsers({
 		organizationId,
 	});
-	const { mutate: addUser } = useAddUser();
+	const { mutate: addUser } = useAddProjectUser();
 
 	const userLabelById = useMemo(() => {
 		return Object.fromEntries(

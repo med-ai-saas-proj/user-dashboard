@@ -18,14 +18,14 @@ import {
 	DialogClose,
 } from "@/components/shadcn/dialog";
 import { Button } from "@/components/shadcn/button";
-import { useDeleteUser } from "../../hooks/project-people/use-delete-user";
+import { useDeleteProjectUser } from "../../hooks/project-people/use-delete-project-user";
 import { useProjectStore } from "../../store/project";
 import { Field } from "@/components/shadcn/field";
 import { Checkbox } from "@/components/shadcn/checkbox";
-import { useGetUserProjectPermissions } from "../../hooks/project-people/use-get-user-permissions";
-import { useUpdateProjectUserPermissions } from "../../hooks/project-people/use-update-permissions";
+import { useGetProjectUserPermissions } from "../../hooks/project-people/use-get-project-user-permissions";
+import { useUpdateProjectUserPermissions } from "../../hooks/project-people/use-update-project-user-permissions";
 import { Label } from "@/components/shadcn/label";
-import { useGetPermissions } from "../../hooks/project-people/use-get-permissions";
+import { useGetProjectPermissions } from "../../hooks/project-people/use-get-project-permissions";
 
 type ProjectPeopleMemberItemProps = React.HTMLAttributes<HTMLDivElement> & {
 	id: string;
@@ -52,9 +52,9 @@ const ProjectPeopleMemberItem: React.FC<ProjectPeopleMemberItemProps> = ({
 	const [openPermissionDialog, setOpenPermissionDialog] =
 		useState<boolean>(false);
 
-	const { mutate: deleteUser } = useDeleteUser();
-	const { data: projectPermissionsData } = useGetPermissions();
-	const { data: permissionsData } = useGetUserProjectPermissions({
+	const { mutate: deleteUser } = useDeleteProjectUser();
+	const { data: projectPermissionsData } = useGetProjectPermissions();
+	const { data: permissionsData } = useGetProjectUserPermissions({
 		projectId,
 		userId: id,
 	});

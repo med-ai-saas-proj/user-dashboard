@@ -17,7 +17,7 @@ import {
 	DialogTrigger,
 } from "@/components/shadcn/dialog";
 import { Plus, Search } from "lucide-react";
-import { useGetUsers } from "../../hooks/project-people/use-get-users";
+import { useGetProjectUsers } from "../../hooks/project-people/use-get-project-users";
 import type { ProjectUser } from "../../project.type";
 import { CustomPagination } from "@/components/pagination/pagination";
 import ProjectPeopleMemberItem from "./project-people-member-item";
@@ -32,7 +32,7 @@ const ProjectPeopleMember = () => {
 
 	const limit = 10;
 	const [page, setPage] = useState<number>(1);
-	const { data: users, isPending } = useGetUsers({
+	const { data: users, isPending } = useGetProjectUsers({
 		projectId,
 		offset: (page - 1) * limit,
 		limit,

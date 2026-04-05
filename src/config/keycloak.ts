@@ -26,6 +26,7 @@ export const initKeycloak = () => {
 	if (!initPromise) {
 		initPromise = keycloak.init({
 			onLoad: "check-sso",
+			scope: "openid profile email organization",
 			silentCheckSsoRedirectUri:
 				window.location.origin + "/silent-check-sso.html",
 			pkceMethod: "S256",

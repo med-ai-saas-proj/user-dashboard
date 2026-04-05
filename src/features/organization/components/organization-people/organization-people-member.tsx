@@ -4,7 +4,6 @@ import { useGetUsers } from "../../hooks/organization-people/use-get-users";
 import OrganizationPeopleMemberItem from "./organization-people-member-item";
 import type { OrganizationUser } from "../../organization.type";
 import OrganizationPeopleMemberDetails from "./organization-people-member-details";
-import InvitationDialog from "./dialogs/invitation-dialog";
 import { Spinner } from "@/components/shadcn/spinner";
 import {
 	InputGroup,
@@ -15,6 +14,8 @@ import { Plus, Search } from "lucide-react";
 import { Button } from "@/components/shadcn/button";
 import { CustomPagination } from "@/components/pagination/pagination";
 import { useOrganizationStore } from "../../store/organization";
+import InvitationDialog from "./invitation-dialog";
+import { useMediaQuery } from "@mantine/hooks";
 
 const OrganizationPeopleMember = () => {
 	const fakeOrgId = useOrganizationStore((state) => state.organizationId);
@@ -33,10 +34,22 @@ const OrganizationPeopleMember = () => {
 	const [selectedUser, setSelectedUser] = useState<OrganizationUser | null>(
 		null
 	);
+	const [isDetailsDialogOpen, setIsDetailsDialogOpen] = useState(false);
+	const isMobile = useMediaQuery("(max-width: 768px)");
 
 	const handleSelectUser = (user: OrganizationUser) => {
 		if (!user) return;
 		setSelectedUser(user);
+		if (isMobile) {
+			setIsDetailsDialogOpen(true);
+		}
+	};
+
+	const handleDialogClose = (open: boolean) => {
+		setIsDetailsDialogOpen(open);
+		if (!open) {
+			setSelectedUser(null);
+		}
 	};
 
 	return (
@@ -87,19 +100,29 @@ const OrganizationPeopleMember = () => {
 						onPageChange={setPage}
 					/>
 				</div>
-				<div className="flex-3 border-l p-8">
-					{!selectedUser && (
-						<div className="flex items-center justify-center h-full">
-							<p className="text-center text-muted-foreground">
-								{t("people.members.emptySelection")}
-							</p>
-						</div>
-					)}
-					{selectedUser && (
-						<OrganizationPeopleMemberDetails user={selectedUser} />
-					)}
-				</div>
+				{!isMobile && (
+					<div className="flex-3 border-l p-8 hidden md:block">
+						{!selectedUser && (
+							<div className="flex items-center justify-center h-full">
+								<p className="text-center text-muted-foreground">
+									{t("people.members.emptySelection")}
+								</p>
+							</div>
+						)}
+						{selectedUser && (
+							<OrganizationPeopleMemberDetails user={selectedUser} />
+						)}
+					</div>
+				)}
 			</div>
+			{isMobile && selectedUser && (
+				<OrganizationPeopleMemberDetails
+					user={selectedUser}
+					isDialog
+					open={isDetailsDialogOpen}
+					onOpenChange={handleDialogClose}
+				/>
+			)}
 		</>
 	);
 };

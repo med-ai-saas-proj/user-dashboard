@@ -1,5 +1,5 @@
 import { Eye, EyeClosed, SquarePen, Trash } from "lucide-react";
-import React, { useState } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
 	Table,
@@ -10,48 +10,22 @@ import {
 	TableRow,
 } from "@/components/shadcn/table";
 import type { APIKey } from "@/features/api-keys/api-key.type";
-import { useDeleteApiKey } from "@/features/api-keys/hooks/use-delete-api-key";
 import { cn } from "@/lib/utils";
+import ApiKeyDeleteDialog from "./api-key-delete-dialog";
 import APIKeyUpdateDialog from "./api-key-update-dialog";
-import { useEnableApiKey } from "../hooks/use-enable-api-key";
-import { useDisableApiKey } from "../hooks/use-disable-api-key";
 import ApiKeyUpdateStatusDialog from "./api-key-update-status-dialog";
 
 const APIKeyTable = ({ apiKeys }: { apiKeys: APIKey[] }) => {
 	const { t } = useTranslation("api-keys");
 
-	const deleteAPIKeyMutation = useDeleteApiKey();
-	const enableAPIKeyMutation = useEnableApiKey();
-	const disableAPIKeyMutation = useDisableApiKey();
-
-	const [openUpdateAPIKeyDialog, setOpenUpdateAPIKeyDialog] =
-		React.useState(false);
-	const [openUpdateStatusDialog, setOpenUpdateStatusDialog] =
-		React.useState(false);
+	const [openUpdateAPIKeyDialog, setOpenUpdateAPIKeyDialog] = useState(false);
+	const [openUpdateStatusDialog, setOpenUpdateStatusDialog] = useState(false);
+	const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 	const [selectedApiKey, setSelectedApiKey] = useState<APIKey | null>(null);
-
-	const onDeleteApiKey = (apikeyId: string, disabled: boolean) => {
-		if (disabled) return;
-
-		deleteAPIKeyMutation.mutate(apikeyId);
-	};
 
 	const onOpenUpdateStatusDialog = (apiKey: APIKey) => {
 		setSelectedApiKey(apiKey);
 		setOpenUpdateStatusDialog(true);
-	};
-
-	const onAgreeUpdateApiKeyStatus = () => {
-		if (!selectedApiKey) return;
-
-		setOpenUpdateStatusDialog(false);
-
-		if (selectedApiKey.disabled) {
-			enableAPIKeyMutation.mutate(selectedApiKey.id);
-			return;
-		}
-
-		disableAPIKeyMutation.mutate(selectedApiKey.id);
 	};
 
 	const onOpenUpdateAPIKeyDialog = (apiKey: APIKey, disabled: boolean) => {
@@ -59,6 +33,13 @@ const APIKeyTable = ({ apiKeys }: { apiKeys: APIKey[] }) => {
 
 		setOpenUpdateAPIKeyDialog(true);
 		setSelectedApiKey(apiKey);
+	};
+
+	const onOpenDeleteDialog = (apiKey: APIKey, disabled: boolean) => {
+		if (disabled) return;
+
+		setSelectedApiKey(apiKey);
+		setOpenDeleteDialog(true);
 	};
 
 	return (
@@ -89,8 +70,8 @@ const APIKeyTable = ({ apiKeys }: { apiKeys: APIKey[] }) => {
 						<TableCell>{apiKey.hint}</TableCell>
 						<TableCell>{apiKey.createdAt.toLocaleDateString()}</TableCell>
 						<TableCell>
-							<div className="flex flex-wrap items-center gap-2 max-w-[360px]">
-								{apiKey.permissions.slice(0, 3).map((permission) => (
+							<div className="flex flex-wrap items-center gap-2 max-w-[400px]">
+								{apiKey.permissions.map((permission) => (
 									<span
 										key={permission}
 										className="inline-flex items-center bg-primary text-secondary text-xs leading-none px-2 pt-1 pb-1.5 rounded-md whitespace-nowrap"
@@ -98,34 +79,19 @@ const APIKeyTable = ({ apiKeys }: { apiKeys: APIKey[] }) => {
 										{permission}
 									</span>
 								))}
-								{apiKey.permissions.length > 3 && (
-									<span className="inline-flex items-center bg-muted text-muted-foreground text-xs leading-none px-2 pt-1 pb-1.5 rounded-md whitespace-nowrap">
-										+{apiKey.permissions.length - 3} more
-									</span>
-								)}
 							</div>
 						</TableCell>
 						<TableCell>
 							{apiKey.disabled ? (
 								<EyeClosed
 									size={16}
-									className={cn(
-										"cursor-pointer",
-										(enableAPIKeyMutation.isPending ||
-											disableAPIKeyMutation.isPending) &&
-											"opacity-50 pointer-events-none"
-									)}
+									className="cursor-pointer"
 									onClick={() => onOpenUpdateStatusDialog(apiKey)}
 								/>
 							) : (
 								<Eye
 									size={16}
-									className={cn(
-										"cursor-pointer",
-										(enableAPIKeyMutation.isPending ||
-											disableAPIKeyMutation.isPending) &&
-											"opacity-50 pointer-events-none"
-									)}
+									className="cursor-pointer"
 									onClick={() => onOpenUpdateStatusDialog(apiKey)}
 								/>
 							)}
@@ -148,10 +114,9 @@ const APIKeyTable = ({ apiKeys }: { apiKeys: APIKey[] }) => {
 								color="#ce4034"
 								className={cn(
 									"cursor-pointer",
-									(apiKey.disabled || deleteAPIKeyMutation.isPending) &&
-										"opacity-50 pointer-events-none"
+									apiKey.disabled && "opacity-50 pointer-events-none"
 								)}
-								onClick={() => onDeleteApiKey(apiKey.id, apiKey.disabled)}
+								onClick={() => onOpenDeleteDialog(apiKey, apiKey.disabled)}
 							/>
 						</TableCell>
 					</TableRow>
@@ -159,6 +124,11 @@ const APIKeyTable = ({ apiKeys }: { apiKeys: APIKey[] }) => {
 			</TableBody>
 			{selectedApiKey && (
 				<>
+					<ApiKeyDeleteDialog
+						open={openDeleteDialog}
+						selectedApiKey={selectedApiKey}
+						onOpenChange={setOpenDeleteDialog}
+					/>
 					<APIKeyUpdateDialog
 						apikey={selectedApiKey}
 						open={openUpdateAPIKeyDialog}
@@ -167,11 +137,8 @@ const APIKeyTable = ({ apiKeys }: { apiKeys: APIKey[] }) => {
 					<ApiKeyUpdateStatusDialog
 						open={openUpdateStatusDialog}
 						isDisabled={selectedApiKey.disabled}
-						isSubmitting={
-							enableAPIKeyMutation.isPending || disableAPIKeyMutation.isPending
-						}
+						selectedApiKey={selectedApiKey}
 						onOpenChange={setOpenUpdateStatusDialog}
-						onAgree={onAgreeUpdateApiKeyStatus}
 					/>
 				</>
 			)}

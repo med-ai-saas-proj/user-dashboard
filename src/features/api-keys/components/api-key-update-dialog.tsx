@@ -18,7 +18,8 @@ import { Input } from "@/components/shadcn/input";
 import { Label } from "@/components/shadcn/label";
 import type { APIKey } from "@/features/api-keys/api-key.type";
 import { useUpdateApiKey } from "@/features/api-keys/hooks/use-update-api-key";
-import { useGetApiKeyPermissions } from "../hooks/use-get-api-permissions";
+import { useGetApiKeyPermissions } from "../hooks/use-get-api-key-permissions";
+import { toast } from "sonner";
 
 const apiUpdateSchema = z.object({
 	name: z.string().min(1, "Name must be at least 1 character long"),
@@ -72,11 +73,21 @@ const APIKeyUpdateDialog = ({
 	const onSubmit = (data: ApiUpdateFormData) => {
 		onOpenChange(false);
 
-		apiKeyUpdateMutation.mutate({
-			apikeyId: apikey.id,
-			name: data.name,
-			permissions: data.permissions,
-		});
+		apiKeyUpdateMutation.mutate(
+			{
+				apikeyId: apikey.id,
+				name: data.name,
+				permissions: data.permissions,
+			},
+			{
+				onSuccess: () => {
+					toast.success(tCommon("requestDone"));
+				},
+				onError: () => {
+					toast.error(tCommon("error"));
+				},
+			}
+		);
 	};
 
 	return (

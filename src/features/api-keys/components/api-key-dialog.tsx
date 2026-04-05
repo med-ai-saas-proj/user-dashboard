@@ -20,7 +20,7 @@ import { useCreateApiKey } from "@/features/api-keys/hooks/use-create-api-key";
 import { useServiceApiKeyStore } from "@/features/api-keys/store/service-api-key.store";
 import { APIKeySaveDialog } from "./api-key-save-dialog";
 import { useParams } from "react-router-dom";
-import { useGetApiKeyPermissions } from "../hooks/use-get-api-permissions";
+import { useGetApiKeyPermissions } from "../hooks/use-get-api-key-permissions";
 
 const apiCreationSchema = z.object({
 	name: z.string().min(1, "Name must be at least 1 character long"),

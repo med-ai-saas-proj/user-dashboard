@@ -4,7 +4,7 @@ import type { ApiPermissions } from "../services/api-key.dto";
 
 export const useGetApiKeyPermissions = () => {
 	return useQuery<ApiPermissions>({
-		queryKey: ["api-permissions"],
+		queryKey: ["api-keys-permissions"],
 		queryFn: () => getAPIKeyPermissions(),
 	});
 };

@@ -69,6 +69,11 @@
         }
     },
 
+    "deleteDialog": {
+        "title": "Xóa khóa API",
+        "description": "Bạn có chắc chắn muốn xóa khóa API này không? Hành động này không thể hoàn tác."
+    },
+
     "statusDialog": {
         "agree": "Đồng ý",
         "enable": {

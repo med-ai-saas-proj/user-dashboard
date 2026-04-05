@@ -69,6 +69,11 @@
         }
     },
 
+    "deleteDialog": {
+        "title": "Delete API key",
+        "description": "Are you sure you want to delete this API key? This action cannot be undone."
+    },
+
     "statusDialog": {
         "agree": "Agree",
         "enable": {

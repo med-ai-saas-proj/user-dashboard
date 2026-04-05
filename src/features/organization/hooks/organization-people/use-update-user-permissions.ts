@@ -1,21 +1,22 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
-	updatePermissions,
-	type UpdatePermissionsRequest,
-} from "../../services/organization-people/update-permissions";
+	updateUserPermissions,
+	type UpdateUserPermissionsRequest,
+} from "../../services/organization-people/update-user-permissions";
 import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
-export const useUpdatePermissions = () => {
+export const useUpdateUserPermissions = () => {
 	const queryClient = useQueryClient();
 	const { t: tCommon } = useTranslation("common");
 
 	return useMutation({
-		mutationKey: ["updatePermissions"],
-		mutationFn: (params: UpdatePermissionsRequest) => updatePermissions(params),
+		mutationKey: ["organization-update-user-permissions"],
+		mutationFn: (params: UpdateUserPermissionsRequest) =>
+			updateUserPermissions(params),
 		onSuccess: () => {
 			queryClient.invalidateQueries({
-				queryKey: ["organization-permissions"],
+				queryKey: ["organization-user-permissions"],
 				exact: false,
 			});
 			toast.success(tCommon("requestDone"));
@@ -23,7 +24,7 @@ export const useUpdatePermissions = () => {
 
 		onError: (error) => {
 			toast.error(tCommon("error"));
-			console.error("Failed to delete user:", error);
+			console.error("Failed to update user permissions:", error);
 		},
 	});
 };

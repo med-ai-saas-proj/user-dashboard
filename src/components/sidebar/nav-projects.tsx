@@ -23,6 +23,7 @@ interface NavProjectsProps {
 		name: string;
 		url: string;
 		icon?: LucideIcon;
+		disableActive?: boolean;
 	}[];
 }
 
@@ -43,7 +44,10 @@ export function NavProjects({ label, projects }: NavProjectsProps) {
 						<SidebarMenu>
 							{projects.map((item) => (
 								<SidebarMenuItem key={item.name}>
-									<SidebarMenuButton asChild isActive={isActive(item.url)}>
+									<SidebarMenuButton
+										asChild
+										isActive={item.disableActive ? false : isActive(item.url)}
+									>
 										<NavLink to={item.url}>
 											{item.icon && <item.icon />}
 											<span>{item.name}</span>

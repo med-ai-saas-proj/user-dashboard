@@ -15,10 +15,7 @@ export const getUsers = async (
 	const { organizationId, limit, offset, q } = params;
 
 	const response = await apiClient.get(
-		`${API_ROUTES.MANAGEMENT.ORGANIZATION.PEOPLE.replace(
-			":organizationId",
-			organizationId
-		)}/users`,
+		`${API_ROUTES.MANAGEMENT.ORGANIZATION}/${organizationId}/users`,
 		{
 			params: { limit, offset, q },
 		}

@@ -28,12 +28,14 @@ export const API_ROUTES = {
 			BASE_API_URL
 		).toString(),
 		DOCS_OPENAPI: new URL(`service/docs/openapi.json`, BASE_API_URL).toString(),
-		ORGANIZATION: {
-			PEOPLE: new URL(
-				`management/${API_VERSION}/organizations/:organizationId`,
-				BASE_API_URL
-			).toString(),
-		},
+		ORGANIZATION: new URL(
+			`management/${API_VERSION}/organizations`,
+			BASE_API_URL
+		).toString(),
+		PROJECT: new URL(
+			`management/${API_VERSION}/projects`,
+			BASE_API_URL
+		).toString(),
 	},
 	SERVICES: {
 		EHR_SUMMARIZE: new URL(

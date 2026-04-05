@@ -1,9 +1,9 @@
 import { Navigate, Outlet } from "react-router-dom";
 import { useGetOrganizationProjects } from "@/features/organization/hooks/organization-projects/use-get-projects";
-import { useOrganizationStore } from "@/features/organization/store/organization";
+import { useAuthStore } from "@/features/auth/store/auth-store";
 
 const ProjectRouteGuard = () => {
-	const organizationId = useOrganizationStore((state) => state.organizationId);
+	const organizationId = useAuthStore((state) => state.organization?.id) || "";
 	const { data, isLoading } = useGetOrganizationProjects({
 		organizationId,
 		offset: 0,

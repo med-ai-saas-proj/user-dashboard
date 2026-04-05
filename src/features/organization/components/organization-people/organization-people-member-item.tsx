@@ -22,9 +22,9 @@ import { useTranslation } from "react-i18next";
 import { useDeleteUser } from "../../hooks/organization-people/use-delete-user";
 import { useGetUserPermissions } from "../../hooks/organization-people/use-get-user-permissions";
 import { useUpdateUserPermissions } from "../../hooks/organization-people/use-update-user-permissions";
-import { useOrganizationStore } from "../../store/organization";
 import { EditIcon } from "lucide-react";
 import { useGetOrganizationPermissions } from "@/features/organization/hooks/organization-people/use-get-permissions";
+import { useAuthStore } from "@/features/auth/store/auth-store";
 
 type OrganizationPeopleMemberItemProps =
 	React.HTMLAttributes<HTMLDivElement> & {
@@ -38,7 +38,7 @@ const OrganizationPeopleMemberItem: React.FC<
 	OrganizationPeopleMemberItemProps
 > = ({ id, username, email, imageSrc = "", ...props }) => {
 	const { t } = useTranslation("organization");
-	const organizationId = useOrganizationStore((state) => state.organizationId);
+	const organizationId = useAuthStore((state) => state.organization?.id) || "";
 
 	const [currentPermissions, setCurrentPermissions] = useState<
 		Map<string, boolean>

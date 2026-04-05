@@ -20,9 +20,9 @@ import z from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useCreateProject } from "../../hooks/organization-projects/use-create-project";
-import { useOrganizationStore } from "../../store/organization";
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useAuthStore } from "@/features/auth/store/auth-store";
 
 const createProjectSchema = (messages: {
 	projectNameRequired: string;
@@ -37,7 +37,7 @@ type CreateProjectFormData = z.infer<ReturnType<typeof createProjectSchema>>;
 
 const OrganizationProjectCreateDialog = () => {
 	const { t } = useTranslation("organization");
-	const fakeOrgId = useOrganizationStore((state) => state.organizationId);
+	const organizationId = useAuthStore((state) => state.organization?.id) || "";
 	const validationMessages = useMemo(
 		() => ({
 			projectNameRequired: t(
@@ -72,7 +72,7 @@ const OrganizationProjectCreateDialog = () => {
 	const onSubmit = (data: CreateProjectFormData) => {
 		createProject(
 			{
-				organizationId: fakeOrgId,
+				organizationId,
 				projectName: data.name,
 				projectDescription: data.description,
 			},

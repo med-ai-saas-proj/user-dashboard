@@ -5,12 +5,13 @@ import type {
 	OrganizationPermissions,
 	OrganizationUserResponse,
 } from "../features/organization/organization.type";
-import { useOrganizationStore } from "@/features/organization/store/organization";
+import { useAuthStore } from "@/features/auth/store/auth-store";
 
 type MockUser = OrganizationUserResponse["results"][number];
 type MockInvitation = OrganizationInvitationResponse["results"][number];
 
-const fakeOrgId = useOrganizationStore.getState().organizationId;
+const organizationId =
+	useAuthStore.getState().organization?.id ?? "fake-org-id";
 const defaultPermissions = ["read:organization", "write:organization"];
 
 const escapeRegExp = (value: string) =>
@@ -53,10 +54,7 @@ for (const user of mockUsers) {
 	permissionsByUser.set(user.id, [...defaultPermissions]);
 }
 
-const peopleBaseRoute = API_ROUTES.MANAGEMENT.ORGANIZATION.PEOPLE.replace(
-	":organizationId",
-	fakeOrgId
-);
+const peopleBaseRoute = `${API_ROUTES.MANAGEMENT.ORGANIZATION}/${organizationId}/people`;
 
 const usersRoute = `${peopleBaseRoute}/users`;
 const invitationsRoute = `${peopleBaseRoute}/invitations`;

@@ -21,10 +21,10 @@ import {
 	ComboboxList,
 } from "@/components/shadcn/combobox";
 import { useGetUsers } from "@/features/organization/hooks/organization-people/use-get-users";
-import { useOrganizationStore } from "@/features/organization/store/organization";
 import { useTranslation } from "react-i18next";
 import { useAddUser } from "@/features/project/hooks/project-people/use-add-user";
 import { useProjectStore } from "@/features/project/store/project";
+import { useAuthStore } from "@/features/auth/store/auth-store";
 
 const createAddMemberWithoutEmailDialogSchema = (messages: {
 	userInvalid: string;
@@ -52,7 +52,7 @@ const AddMemberWithoutEmailDialog = ({
 }: AddMemberWithoutEmailDialogProps) => {
 	const { t } = useTranslation("project");
 	const portalContainerRef = useRef<HTMLDivElement | null>(null);
-	const organizationId = useOrganizationStore((state) => state.organizationId);
+	const organizationId = useAuthStore((state) => state.organization?.id) || "";
 	const fakeProjectId = useProjectStore((state) => state.projectId);
 	const validationMessages = useMemo(
 		() => ({

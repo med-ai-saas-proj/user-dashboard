@@ -9,7 +9,6 @@ import {
 	TableRow,
 } from "@/components/shadcn/table";
 import { useGetOrganizationProjects } from "../../hooks/organization-projects/use-get-projects";
-import { useOrganizationStore } from "../../store/organization";
 import { Settings } from "lucide-react";
 import OrganizationProjectArchiveDialog from "./organization-project-archive-dialog";
 import OrganizationProjectUnarchiveDialog from "./organization-project-unarchive-dialog";
@@ -17,6 +16,7 @@ import { Button } from "@/components/shadcn/button";
 import { Spinner } from "@/components/shadcn/spinner";
 import { useTranslation } from "react-i18next";
 import { useProjectStore } from "@/features/project/store/project";
+import { useAuthStore } from "@/features/auth/store/auth-store";
 
 type OrganizationProjectContentProps = {
 	isArchived: boolean;
@@ -26,7 +26,7 @@ const OrganizationProjectContent = ({
 	isArchived,
 }: OrganizationProjectContentProps) => {
 	const { t } = useTranslation("organization");
-	const organizationId = useOrganizationStore((state) => state.organizationId);
+	const organizationId = useAuthStore((state) => state.organization?.id) || "";
 	const setProjectId = useProjectStore((state) => state.setProjectId);
 	const navigate = useNavigate();
 

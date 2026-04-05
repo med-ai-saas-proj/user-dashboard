@@ -19,7 +19,7 @@ import {
 	DialogClose,
 	DialogTitle,
 } from "@/components/shadcn/dialog";
-import { useOrganizationStore } from "../../store/organization";
+import { useAuthStore } from "@/features/auth/store/auth-store";
 
 const OrganizationPeopleInvitationItem = ({
 	invitation,
@@ -27,7 +27,7 @@ const OrganizationPeopleInvitationItem = ({
 	invitation: OrganizationInvitation;
 }) => {
 	const { t } = useTranslation("organization");
-	const fakeOrgId = useOrganizationStore((state) => state.organizationId);
+	const organizationId = useAuthStore((state) => state.organization?.id) || "";
 	const [isResendInvitation, setIsResendInvitation] = useState<boolean>(false);
 
 	const { mutate: resendInvitation } = useResendInvitation();
@@ -35,14 +35,14 @@ const OrganizationPeopleInvitationItem = ({
 
 	const handleResendInvitation = (invitationId: string) => {
 		resendInvitation({
-			organizationId: fakeOrgId,
+			organizationId,
 			invitationId,
 		});
 		setIsResendInvitation(true);
 	};
 	const handleDeleteInvitation = (invitationId: string) => {
 		deleteInvitation({
-			organizationId: fakeOrgId,
+			organizationId,
 			invitationId,
 		});
 	};

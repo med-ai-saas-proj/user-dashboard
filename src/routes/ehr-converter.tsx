@@ -1,19 +1,19 @@
 import { useState } from "react";
+import { toast } from "sonner";
+import { ApiTopology, TOPOLOGIES } from "@/components/api-topology";
+import { ViewCodeDialog } from "@/components/view-code-dialog";
 import { API_ROUTES } from "@/config/api-routes";
-import { ConverterForm } from "@/features/pg-ehr-converter/components/converter-form";
-import { ConvertResultPanel } from "@/features/pg-ehr-converter/components/convert-result-panel";
 import { BatchPanel } from "@/features/pg-ehr-converter/components/batch-panel";
+import { ConvertResultPanel } from "@/features/pg-ehr-converter/components/convert-result-panel";
+import { ConverterForm } from "@/features/pg-ehr-converter/components/converter-form";
 import type {
+	BatchConvertResponse,
 	ConvertResponse,
 	ReverseConvertResponse,
 	ValidateResponse,
-	BatchConvertResponse,
 } from "@/features/pg-ehr-converter/services/ehr-converter.dto";
 import DashboardLayout from "@/layouts/dashboard-layout";
-import { ViewCodeDialog } from "@/components/view-code-dialog";
-import { ApiTopology, TOPOLOGIES } from "@/components/api-topology";
 import { getAuthHeaders } from "@/lib/auth-headers";
-import { toast } from "sonner";
 
 const EhrConverterPage = () => {
 	const [isLoading, setIsLoading] = useState(false);
@@ -38,7 +38,6 @@ const EhrConverterPage = () => {
 	};
 
 	const handleConvert = async (data: string, validate: boolean) => {
-		if (!requireApiKey()) return;
 		setIsLoading(true);
 		clearResults();
 
@@ -78,7 +77,6 @@ const EhrConverterPage = () => {
 	};
 
 	const handleReverseConvert = async (data: string) => {
-		if (!requireApiKey()) return;
 		setIsLoading(true);
 		clearResults();
 
@@ -127,7 +125,6 @@ const EhrConverterPage = () => {
 	};
 
 	const handleValidate = async (bundle: Record<string, unknown>) => {
-		if (!requireApiKey()) return;
 		setIsLoading(true);
 		clearResults();
 
@@ -166,7 +163,6 @@ const EhrConverterPage = () => {
 		validate: boolean,
 		workers: number | null
 	) => {
-		if (!requireApiKey()) return;
 		setBatchLoading(true);
 
 		try {

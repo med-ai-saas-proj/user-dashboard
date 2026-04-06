@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { API_ROUTES } from "@/config/api-routes";
-import { ViewCodeDialog } from "@/components/view-code-dialog";
+import { toast } from "sonner";
 import { ApiTopology, TOPOLOGIES } from "@/components/api-topology";
+import { Button } from "@/components/shadcn/button";
+import { ViewCodeDialog } from "@/components/view-code-dialog";
+import { API_ROUTES } from "@/config/api-routes";
 import DashboardLayout from "@/layouts/dashboard-layout";
 import { getAuthHeaders } from "@/lib/auth-headers";
-import { toast } from "sonner";
-import { Button } from "@/components/shadcn/button";
 
 interface ValidationIssue {
 	field?: string;
@@ -62,7 +62,7 @@ const BhxhValidatorPage = () => {
 	const [result, setResult] = useState<ValidateResponse | null>(null);
 
 	const handleValidate = async () => {
-		if (!requireApiKey() || !xmlInput.trim()) return;
+		if (!xmlInput.trim()) return;
 		setIsLoading(true);
 		setResult(null);
 

@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { API_ROUTES } from "@/config/api-routes";
-import { ViewCodeDialog } from "@/components/view-code-dialog";
-import DashboardLayout from "@/layouts/dashboard-layout";
-import { getAuthHeaders } from "@/lib/auth-headers";
 import { toast } from "sonner";
 import { Button } from "@/components/shadcn/button";
+import { ViewCodeDialog } from "@/components/view-code-dialog";
+import { API_ROUTES } from "@/config/api-routes";
+import DashboardLayout from "@/layouts/dashboard-layout";
+import { getAuthHeaders } from "@/lib/auth-headers";
 
 interface FacilityMatch {
 	facility_id: string;
@@ -71,7 +71,9 @@ const CrossSearchPage = () => {
 	const handleSeed = async () => {
 		setIsSeeding(true);
 		try {
-			const resp = await fetch(API_ROUTES.SERVICES.PLAYGROUND_SEED, { method: "POST" });
+			const resp = await fetch(API_ROUTES.SERVICES.PLAYGROUND_SEED, {
+				method: "POST",
+			});
 			if (resp.ok) {
 				toast.success("Playground seeded with demo data");
 				await loadNetworkStats();
@@ -84,15 +86,21 @@ const CrossSearchPage = () => {
 	};
 
 	const handleSearch = async () => {
-		if (!requireApiKey() || !firstName.trim() || !lastName.trim() || !dob.trim()) return;
+		if (!firstName.trim() || !lastName.trim() || !dob.trim()) return;
 		setIsLoading(true);
 		setSearchResult(null);
 		try {
-			const headers = await getAuthHeaders(API_ROUTES.SERVICES.CROSS_SEARCH_SEARCH);
+			const headers = await getAuthHeaders(
+				API_ROUTES.SERVICES.CROSS_SEARCH_SEARCH
+			);
 			const resp = await fetch(API_ROUTES.SERVICES.CROSS_SEARCH_SEARCH, {
 				method: "POST",
 				headers,
-				body: JSON.stringify({ first_name: firstName, last_name: lastName, dob }),
+				body: JSON.stringify({
+					first_name: firstName,
+					last_name: lastName,
+					dob,
+				}),
 			});
 			if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
 			const data: SearchResult = await resp.json();
@@ -116,7 +124,12 @@ const CrossSearchPage = () => {
 			<div className="flex flex-col h-[calc(100vh-4rem)] overflow-hidden">
 				<div className="flex items-center justify-between px-4 py-1.5 border-b">
 					<div className="flex items-center gap-2">
-						<Button variant="outline" size="sm" onClick={handleSeed} disabled={isSeeding}>
+						<Button
+							variant="outline"
+							size="sm"
+							onClick={handleSeed}
+							disabled={isSeeding}
+						>
 							{isSeeding ? "Seeding..." : "Seed Demo Data"}
 						</Button>
 						<Button variant="ghost" size="sm" onClick={loadNetworkStats}>
@@ -136,30 +149,38 @@ const CrossSearchPage = () => {
 					<div className="border-r flex flex-col overflow-hidden">
 						<div className="p-4 border-b space-y-3">
 							<div className="flex items-center justify-between">
-								<span className="text-sm font-medium">Patient Demographics</span>
-								<Button variant="ghost" size="sm" onClick={fillDemo}>Load Demo</Button>
+								<span className="text-sm font-medium">
+									Patient Demographics
+								</span>
+								<Button variant="ghost" size="sm" onClick={fillDemo}>
+									Load Demo
+								</Button>
 							</div>
 							<div className="grid grid-cols-3 gap-2">
 								<input
 									value={firstName}
-									onChange={e => setFirstName(e.target.value)}
+									onChange={(e) => setFirstName(e.target.value)}
 									placeholder="First name"
 									className="rounded-md border px-3 py-1.5 text-sm bg-background"
 								/>
 								<input
 									value={lastName}
-									onChange={e => setLastName(e.target.value)}
+									onChange={(e) => setLastName(e.target.value)}
 									placeholder="Last name"
 									className="rounded-md border px-3 py-1.5 text-sm bg-background"
 								/>
 								<input
 									type="date"
 									value={dob}
-									onChange={e => setDob(e.target.value)}
+									onChange={(e) => setDob(e.target.value)}
 									className="rounded-md border px-3 py-1.5 text-sm bg-background"
 								/>
 							</div>
-							<Button onClick={handleSearch} disabled={isLoading || !firstName || !lastName || !dob} className="w-full">
+							<Button
+								onClick={handleSearch}
+								disabled={isLoading || !firstName || !lastName || !dob}
+								className="w-full"
+							>
 								{isLoading ? "Searching..." : "Search Across Providers"}
 							</Button>
 						</div>
@@ -169,24 +190,47 @@ const CrossSearchPage = () => {
 							{networkStats ? (
 								<>
 									<div className="grid grid-cols-3 gap-2">
-										{[{ label: "Providers", value: networkStats.his_providers.length },
-											{ label: "Facilities", value: networkStats.total_facilities },
-											{ label: "Records", value: networkStats.total_records.toLocaleString() }].map(s => (
-											<div key={s.label} className="rounded-md border p-3 text-center">
-												<div className="text-2xl font-bold text-primary">{s.value}</div>
-												<div className="text-[11px] text-muted-foreground uppercase">{s.label}</div>
+										{[
+											{
+												label: "Providers",
+												value: networkStats.his_providers.length,
+											},
+											{
+												label: "Facilities",
+												value: networkStats.total_facilities,
+											},
+											{
+												label: "Records",
+												value: networkStats.total_records.toLocaleString(),
+											},
+										].map((s) => (
+											<div
+												key={s.label}
+												className="rounded-md border p-3 text-center"
+											>
+												<div className="text-2xl font-bold text-primary">
+													{s.value}
+												</div>
+												<div className="text-[11px] text-muted-foreground uppercase">
+													{s.label}
+												</div>
 											</div>
 										))}
 									</div>
-									{networkStats.his_providers.map(his => (
+									{networkStats.his_providers.map((his) => (
 										<div key={his.his_id} className="rounded-md border">
 											<div className="p-3 border-b bg-muted/50 flex items-center justify-between">
 												<span className="text-sm font-medium">{his.name}</span>
-												<span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded-full">{his.facilities.length} facilities</span>
+												<span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded-full">
+													{his.facilities.length} facilities
+												</span>
 											</div>
 											<div className="divide-y">
-												{his.facilities.map(f => (
-													<div key={f.facility_id} className="p-3 flex items-center justify-between">
+												{his.facilities.map((f) => (
+													<div
+														key={f.facility_id}
+														className="p-3 flex items-center justify-between"
+													>
 														<span className="text-sm">{f.facility_name}</span>
 														<div className="flex items-center gap-3 text-xs text-muted-foreground">
 															<span>{f.patient_count} patients</span>
@@ -200,7 +244,10 @@ const CrossSearchPage = () => {
 								</>
 							) : (
 								<div className="text-center py-8 text-sm text-muted-foreground">
-									<p>Click <strong>Seed Demo Data</strong> to populate the network, then <strong>Refresh Stats</strong>.</p>
+									<p>
+										Click <strong>Seed Demo Data</strong> to populate the
+										network, then <strong>Refresh Stats</strong>.
+									</p>
 								</div>
 							)}
 						</div>
@@ -219,18 +266,28 @@ const CrossSearchPage = () => {
 									</span>
 								</div>
 
-								{searchResult.matches.map(m => (
-									<div key={m.facility_id} className="rounded-lg border p-4 space-y-3">
+								{searchResult.matches.map((m) => (
+									<div
+										key={m.facility_id}
+										className="rounded-lg border p-4 space-y-3"
+									>
 										<div className="flex items-start justify-between">
 											<div>
 												<div className="font-medium">{m.facility_name}</div>
-												<div className="text-xs text-muted-foreground">HIS: {m.his_name} ({m.his_id})</div>
+												<div className="text-xs text-muted-foreground">
+													HIS: {m.his_name} ({m.his_id})
+												</div>
 											</div>
-											<span className="text-lg font-bold text-primary">{m.record_count}</span>
+											<span className="text-lg font-bold text-primary">
+												{m.record_count}
+											</span>
 										</div>
 										<div className="flex flex-wrap gap-1.5">
 											{Object.entries(m.data_formats).map(([fmt, count]) => (
-												<span key={fmt} className={`text-xs px-2 py-0.5 rounded-full font-medium ${formatBadgeColor(fmt)}`}>
+												<span
+													key={fmt}
+													className={`text-xs px-2 py-0.5 rounded-full font-medium ${formatBadgeColor(fmt)}`}
+												>
 													{fmt} ({count})
 												</span>
 											))}
@@ -240,7 +297,8 @@ const CrossSearchPage = () => {
 
 								{searchResult.total_matches === 0 && (
 									<div className="text-center py-8 text-sm text-muted-foreground">
-										No records found across any facility. Try seeding demo data first.
+										No records found across any facility. Try seeding demo data
+										first.
 									</div>
 								)}
 							</div>
@@ -248,13 +306,22 @@ const CrossSearchPage = () => {
 							<div className="flex-1 flex items-center justify-center p-8">
 								<div className="text-center space-y-3 max-w-sm">
 									<div className="w-12 h-12 mx-auto rounded-full bg-muted flex items-center justify-center">
-										<svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="1.5" className="text-muted-foreground">
+										<svg
+											width="24"
+											height="24"
+											fill="none"
+											stroke="currentColor"
+											strokeWidth="1.5"
+											className="text-muted-foreground"
+										>
 											<title>Search</title>
-											<circle cx="11" cy="11" r="8" /><path d="m21 21-4.35-4.35" />
+											<circle cx="11" cy="11" r="8" />
+											<path d="m21 21-4.35-4.35" />
 										</svg>
 									</div>
 									<p className="text-sm text-muted-foreground">
-										Search for a patient by demographics to find their records across all connected HIS providers and facilities.
+										Search for a patient by demographics to find their records
+										across all connected HIS providers and facilities.
 									</p>
 								</div>
 							</div>

@@ -1,11 +1,11 @@
-import { useState, useRef } from "react";
-import { API_ROUTES } from "@/config/api-routes";
+import { useRef, useState } from "react";
+import { toast } from "sonner";
+import { ApiTopology, TOPOLOGIES } from "@/components/api-topology";
+import { Button } from "@/components/shadcn/button";
 import { ViewCodeDialog } from "@/components/view-code-dialog";
+import { API_ROUTES } from "@/config/api-routes";
 import DashboardLayout from "@/layouts/dashboard-layout";
 import { getAuthHeaders } from "@/lib/auth-headers";
-import { ApiTopology, TOPOLOGIES } from "@/components/api-topology";
-import { toast } from "sonner";
-import { Button } from "@/components/shadcn/button";
 
 interface Finding {
 	description: string;
@@ -42,7 +42,7 @@ const MedicalImagePage = () => {
 	};
 
 	const handleDescribe = async () => {
-		if (!requireApiKey() || !file) return;
+		if (!file) return;
 		setIsLoading(true);
 		setResult(null);
 

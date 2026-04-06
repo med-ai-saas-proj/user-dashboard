@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { API_ROUTES } from "@/config/api-routes";
-import { ViewCodeDialog } from "@/components/view-code-dialog";
+import { toast } from "sonner";
 import { ApiTopology, TOPOLOGIES } from "@/components/api-topology";
+import { Button } from "@/components/shadcn/button";
+import { ViewCodeDialog } from "@/components/view-code-dialog";
+import { API_ROUTES } from "@/config/api-routes";
 import DashboardLayout from "@/layouts/dashboard-layout";
 import { getAuthHeaders } from "@/lib/auth-headers";
-import { toast } from "sonner";
-import { Button } from "@/components/shadcn/button";
 
 interface KnowledgeBase {
 	id: string;
@@ -38,7 +38,6 @@ const KnowledgeBasePage = () => {
 	const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
 
 	const fetchBases = async () => {
-		if (!requireApiKey()) return;
 		setIsLoading(true);
 		try {
 			const headers = await getAuthHeaders(API_ROUTES.SERVICES.KNOWLEDGE_BASE);
@@ -57,7 +56,7 @@ const KnowledgeBasePage = () => {
 	};
 
 	const handleCreate = async () => {
-		if (!requireApiKey() || !newName.trim()) return;
+		if (!newName.trim()) return;
 		setIsLoading(true);
 		try {
 			const headers = await getAuthHeaders(API_ROUTES.SERVICES.KNOWLEDGE_BASE);
@@ -85,7 +84,6 @@ const KnowledgeBasePage = () => {
 	};
 
 	const handleDelete = async (id: string) => {
-		if (!requireApiKey()) return;
 		setIsLoading(true);
 		try {
 			const headers = await getAuthHeaders(API_ROUTES.SERVICES.KNOWLEDGE_BASE);
@@ -106,7 +104,7 @@ const KnowledgeBasePage = () => {
 	};
 
 	const handleIngest = async () => {
-		if (!requireApiKey() || !selected) return;
+		if (!selected) return;
 		setIsLoading(true);
 		try {
 			let records: unknown;
@@ -139,7 +137,7 @@ const KnowledgeBasePage = () => {
 	};
 
 	const handleSearch = async () => {
-		if (!requireApiKey() || !selected || !searchQuery.trim()) return;
+		if (!selected || !searchQuery.trim()) return;
 		setIsLoading(true);
 		try {
 			const headers = await getAuthHeaders(API_ROUTES.SERVICES.KNOWLEDGE_BASE);

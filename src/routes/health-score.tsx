@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { API_ROUTES } from "@/config/api-routes";
+import { toast } from "sonner";
+import { ApiTopology, TOPOLOGIES } from "@/components/api-topology";
+import { Button } from "@/components/shadcn/button";
 import { ViewCodeDialog } from "@/components/view-code-dialog";
+import { API_ROUTES } from "@/config/api-routes";
 import DashboardLayout from "@/layouts/dashboard-layout";
 import { getAuthHeaders } from "@/lib/auth-headers";
-import { ApiTopology, TOPOLOGIES } from "@/components/api-topology";
-import { toast } from "sonner";
-import { Button } from "@/components/shadcn/button";
 
 interface Factor {
 	name: string;
@@ -226,7 +226,7 @@ const HealthScorePage = () => {
 	const [result, setResult] = useState<HealthScoreResponse | null>(null);
 
 	const handleEvaluate = async () => {
-		if (!requireApiKey() || !input.trim()) return;
+		if (!input.trim()) return;
 		setIsLoading(true);
 		setResult(null);
 

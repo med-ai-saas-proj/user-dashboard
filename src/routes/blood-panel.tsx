@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { API_ROUTES } from "@/config/api-routes";
-import { ViewCodeDialog } from "@/components/view-code-dialog";
+import { toast } from "sonner";
 import { ApiTopology, TOPOLOGIES } from "@/components/api-topology";
+import { Button } from "@/components/shadcn/button";
+import { ViewCodeDialog } from "@/components/view-code-dialog";
+import { API_ROUTES } from "@/config/api-routes";
 import DashboardLayout from "@/layouts/dashboard-layout";
 import { getAuthHeaders } from "@/lib/auth-headers";
-import { toast } from "sonner";
-import { Button } from "@/components/shadcn/button";
 
 interface MarkerInput {
 	id: string;
@@ -102,7 +102,6 @@ const BloodPanelPage = () => {
 	};
 
 	const handleAnalyze = async () => {
-		if (!requireApiKey()) return;
 		const valid = markers.filter((m) => m.name && m.value);
 		if (valid.length === 0) {
 			toast.error("Add at least one marker");

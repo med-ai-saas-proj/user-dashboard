@@ -72,7 +72,7 @@ const DashboardPage = () => {
 			<div className="px-6 flex flex-col gap-6 w-full">
 				{/* Time Select Bar */}
 				<div className="flex md:flex-row flex-col gap-2 items-center justify-between">
-					<h2 className="text-lg font-semibold">Analytics</h2>
+					<h2 className="text-lg font-semibold">{t("title")}</h2>
 					<div className="flex items-center gap-4">
 						<DropdownMenu>
 							<DropdownMenuTrigger asChild>
@@ -108,22 +108,16 @@ const DashboardPage = () => {
 				</div>
 
 				{/* KPI Cards Section with Hero Text */}
-				<div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+				<div className="flex md:flex-row flex-col justify-between gap-6">
 					{/* Hero/Description Text */}
-					<div className="flex flex-col justify-center">
-						<h3 className="text-2xl font-bold mb-2">
-							Key Performance Indicators
-						</h3>
+					<div className="flex flex-col justify-center max-w-xl">
+						<h3 className="text-2xl font-bold mb-2">{t("kpiSection.title")}</h3>
 						<p className="text-muted-foreground">
-							Track your system's performance with real-time metrics. Monitor
-							total requests and costs to optimize your usage and budget
-							allocation.
+							{t("kpiSection.description")}
 						</p>
 					</div>
 					{/* KPI Cards */}
-					<div className="xl:col-span-2 w-full">
-						<KPICard />
-					</div>
+					<KPICard />
 				</div>
 
 				{/* Charts Section */}

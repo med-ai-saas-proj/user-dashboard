@@ -1,7 +1,5 @@
 import { useState } from "react";
 import { API_ROUTES } from "@/config/api-routes";
-import { ApiKeyRequiredDialog } from "@/features/api-keys/components/api-key-required-dialog";
-import { useServiceApiKeyStore } from "@/features/api-keys/store/service-api-key.store";
 import { ViewCodeDialog } from "@/components/view-code-dialog";
 import DashboardLayout from "@/layouts/dashboard-layout";
 import { getAuthHeaders } from "@/lib/auth-headers";
@@ -55,16 +53,6 @@ const GeneDecoderPage = () => {
 	const [isLoading, setIsLoading] = useState(false);
 	const [decodeResult, setDecodeResult] = useState<DecodeResponse | null>(null);
 	const [analyzeResult, setAnalyzeResult] = useState<AnalyzeResponse | null>(null);
-	const [showApiKeyDialog, setShowApiKeyDialog] = useState(false);
-	const { selectedApiKey } = useServiceApiKeyStore();
-
-	const requireApiKey = (): boolean => {
-		if (!selectedApiKey) {
-			setShowApiKeyDialog(true);
-			return false;
-		}
-		return true;
-	};
 
 	const handleSubmit = async () => {
 		if (!requireApiKey() || !input.trim()) return;
@@ -235,8 +223,6 @@ const GeneDecoderPage = () => {
 					</div>
 				</div>
 			</div>
-
-			<ApiKeyRequiredDialog open={showApiKeyDialog} onOpenChange={setShowApiKeyDialog} />
 		</DashboardLayout>
 	);
 };

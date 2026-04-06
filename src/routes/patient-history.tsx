@@ -1,7 +1,5 @@
 import { useState } from "react";
 import { API_ROUTES, BASE_API_URL } from "@/config/api-routes";
-import { ApiKeyRequiredDialog } from "@/features/api-keys/components/api-key-required-dialog";
-import { useServiceApiKeyStore } from "@/features/api-keys/store/service-api-key.store";
 import { Button } from "@/components/shadcn/button";
 import { ViewCodeDialog } from "@/components/view-code-dialog";
 import { ApiTopology, TOPOLOGIES } from "@/components/api-topology";
@@ -197,17 +195,11 @@ const PatientHistoryPage = () => {
 	const [result, setResult] = useState<Record<string, unknown> | null>(null);
 	const [history, setHistory] = useState<Record<string, unknown> | null>(null);
 	const [activeTab, setActiveTab] = useState<"result" | "history">("result");
-	const [showApiKeyDialog, setShowApiKeyDialog] = useState(false);
-	const { selectedApiKey } = useServiceApiKeyStore();
 
 	const baseHistoryUrl = (pid: string) =>
 		`${BASE_API_URL}service/api/v1/patient/${pid}/history`;
 
 	const handleLoadMultiVisitDemo = async () => {
-		if (!selectedApiKey) {
-			setShowApiKeyDialog(true);
-			return;
-		}
 		setIsLoading(true);
 		setResult(null);
 		setHistory(null);
@@ -256,10 +248,6 @@ const PatientHistoryPage = () => {
 	};
 
 	const handleSubmit = async () => {
-		if (!selectedApiKey) {
-			setShowApiKeyDialog(true);
-			return;
-		}
 		if (!patientId || !fhirInput.trim()) return;
 		setIsLoading(true);
 		setResult(null);
@@ -309,10 +297,6 @@ const PatientHistoryPage = () => {
 	};
 
 	const handleGetHistory = async () => {
-		if (!selectedApiKey) {
-			setShowApiKeyDialog(true);
-			return;
-		}
 		if (!patientId) return;
 		setIsLoading(true);
 		try {
@@ -508,10 +492,6 @@ const PatientHistoryPage = () => {
 			<div className="px-4 py-2 border-t">
 				<ApiTopology {...TOPOLOGIES.patient_history} />
 			</div>
-			<ApiKeyRequiredDialog
-				open={showApiKeyDialog}
-				onOpenChange={setShowApiKeyDialog}
-			/>
 		</DashboardLayout>
 	);
 };

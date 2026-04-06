@@ -1,7 +1,5 @@
 import { useState } from "react";
 import { API_ROUTES } from "@/config/api-routes";
-import { ApiKeyRequiredDialog } from "@/features/api-keys/components/api-key-required-dialog";
-import { useServiceApiKeyStore } from "@/features/api-keys/store/service-api-key.store";
 import {
 	DocumentPanel,
 	type DocumentConvertResult,
@@ -17,14 +15,8 @@ const DocumentToFhirPage = () => {
 	const [docResult, setDocResult] = useState<DocumentConvertResult | null>(
 		null
 	);
-	const [showApiKeyDialog, setShowApiKeyDialog] = useState(false);
-	const { selectedApiKey } = useServiceApiKeyStore();
 
 	const handleDocumentConvert = async (files: File[]) => {
-		if (!selectedApiKey) {
-			setShowApiKeyDialog(true);
-			return;
-		}
 		setDocLoading(true);
 
 		try {
@@ -99,10 +91,6 @@ const DocumentToFhirPage = () => {
 			<div className="px-4 py-2 border-t">
 				<ApiTopology {...TOPOLOGIES.document_to_fhir} />
 			</div>
-			<ApiKeyRequiredDialog
-				open={showApiKeyDialog}
-				onOpenChange={setShowApiKeyDialog}
-			/>
 		</DashboardLayout>
 	);
 };

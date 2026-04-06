@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
 import { BASE_API_URL } from "@/config/api-routes";
-import { ApiKeyRequiredDialog } from "@/features/api-keys/components/api-key-required-dialog";
-import { useServiceApiKeyStore } from "@/features/api-keys/store/service-api-key.store";
 import { Button } from "@/components/shadcn/button";
 import { ViewCodeDialog } from "@/components/view-code-dialog";
 import DashboardLayout from "@/layouts/dashboard-layout";
@@ -69,8 +67,6 @@ export default function ClinicSearchPage() {
 	const [searchResult, setSearchResult] = useState<SearchResult | null>(null);
 	const [recommendResult, setRecommendResult] =
 		useState<RecommendResult | null>(null);
-	const [showApiKeyDialog, setShowApiKeyDialog] = useState(false);
-	const { selectedApiKey } = useServiceApiKeyStore();
 
 	useEffect(() => {
 		(async () => {
@@ -94,10 +90,6 @@ export default function ClinicSearchPage() {
 		}
 		if (mode === "recommend" && !symptoms.trim()) {
 			toast.error("Enter symptoms to get recommendations");
-			return;
-		}
-		if (!selectedApiKey) {
-			setShowApiKeyDialog(true);
 			return;
 		}
 
@@ -443,11 +435,6 @@ export default function ClinicSearchPage() {
 			<div className="px-4 py-2 border-t">
 				<ApiTopology {...TOPOLOGIES.clinic_search} />
 			</div>
-
-			<ApiKeyRequiredDialog
-				open={showApiKeyDialog}
-				onOpenChange={setShowApiKeyDialog}
-			/>
 		</DashboardLayout>
 	);
 }

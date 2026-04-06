@@ -1,7 +1,5 @@
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { BASE_API_URL } from "@/config/api-routes";
-import { ApiKeyRequiredDialog } from "@/features/api-keys/components/api-key-required-dialog";
-import { useServiceApiKeyStore } from "@/features/api-keys/store/service-api-key.store";
 import { Button } from "@/components/shadcn/button";
 import { ViewCodeDialog } from "@/components/view-code-dialog";
 import DashboardLayout from "@/layouts/dashboard-layout";
@@ -472,17 +470,11 @@ export default function DigitalTwinPage() {
 	const [twin, setTwin] = useState<DigitalTwinFull | null>(null);
 	const [prediction, setPrediction] = useState<PredictionResult | null>(null);
 	const [isPredicting, setIsPredicting] = useState(false);
-	const [showApiKeyDialog, setShowApiKeyDialog] = useState(false);
 	const [activeTab, setActiveTab] = useState<"overview" | "labs" | "timeline">(
 		"overview"
 	);
-	const { selectedApiKey } = useServiceApiKeyStore();
 
 	const requireApiKey = useCallback((): boolean => {
-		if (!selectedApiKey) {
-			setShowApiKeyDialog(true);
-			return false;
-		}
 		return true;
 	}, [selectedApiKey]);
 
@@ -1324,11 +1316,6 @@ export default function DigitalTwinPage() {
 					</div>
 				</details>
 			</div>
-
-			<ApiKeyRequiredDialog
-				open={showApiKeyDialog}
-				onOpenChange={setShowApiKeyDialog}
-			/>
 		</DashboardLayout>
 	);
 }

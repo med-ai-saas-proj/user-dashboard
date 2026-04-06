@@ -1,7 +1,5 @@
 import { useState } from "react";
 import { BASE_API_URL } from "@/config/api-routes";
-import { ApiKeyRequiredDialog } from "@/features/api-keys/components/api-key-required-dialog";
-import { useServiceApiKeyStore } from "@/features/api-keys/store/service-api-key.store";
 import { Button } from "@/components/shadcn/button";
 import { ViewCodeDialog } from "@/components/view-code-dialog";
 import DashboardLayout from "@/layouts/dashboard-layout";
@@ -67,8 +65,6 @@ export default function FederatedLearningPage() {
 	const [selectedProject, setSelectedProject] = useState<Project | null>(null);
 	const [metrics, setMetrics] = useState<RoundMetric[]>([]);
 	const [isLoading, setIsLoading] = useState(false);
-	const [showApiKeyDialog, setShowApiKeyDialog] = useState(false);
-	const { selectedApiKey } = useServiceApiKeyStore();
 
 	const [newName, setNewName] = useState("Diabetes Risk Prediction");
 	const [newDesc, setNewDesc] = useState(
@@ -87,10 +83,6 @@ export default function FederatedLearningPage() {
 	const [joinSamples, setJoinSamples] = useState("1000");
 
 	const guardApiKey = () => {
-		if (!selectedApiKey) {
-			setShowApiKeyDialog(true);
-			return false;
-		}
 		return true;
 	};
 
@@ -754,11 +746,6 @@ export default function FederatedLearningPage() {
 			<div className="px-4 py-2 border-t">
 				<ApiTopology {...TOPOLOGIES.federated_learning} />
 			</div>
-
-			<ApiKeyRequiredDialog
-				open={showApiKeyDialog}
-				onOpenChange={setShowApiKeyDialog}
-			/>
 		</DashboardLayout>
 	);
 }

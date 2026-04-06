@@ -1,7 +1,5 @@
 import { useState } from "react";
 import { API_ROUTES } from "@/config/api-routes";
-import { ApiKeyRequiredDialog } from "@/features/api-keys/components/api-key-required-dialog";
-import { useServiceApiKeyStore } from "@/features/api-keys/store/service-api-key.store";
 import { ViewCodeDialog } from "@/components/view-code-dialog";
 import { ApiTopology, TOPOLOGIES } from "@/components/api-topology";
 import DashboardLayout from "@/layouts/dashboard-layout";
@@ -49,19 +47,9 @@ const DataMaskingPage = () => {
 	const [input, setInput] = useState("");
 	const [isLoading, setIsLoading] = useState(false);
 	const [result, setResult] = useState<MaskResponse | null>(null);
-	const [showApiKeyDialog, setShowApiKeyDialog] = useState(false);
 	const [activeTab, setActiveTab] = useState<"masked" | "mapping" | "removed">(
 		"masked"
 	);
-	const { selectedApiKey } = useServiceApiKeyStore();
-
-	const requireApiKey = (): boolean => {
-		if (!selectedApiKey) {
-			setShowApiKeyDialog(true);
-			return false;
-		}
-		return true;
-	};
 
 	const handleMask = async () => {
 		if (!requireApiKey() || !input.trim()) return;
@@ -295,10 +283,6 @@ const DataMaskingPage = () => {
 			<div className="px-4 py-2 border-t">
 				<ApiTopology {...TOPOLOGIES.data_masking} />
 			</div>
-			<ApiKeyRequiredDialog
-				open={showApiKeyDialog}
-				onOpenChange={setShowApiKeyDialog}
-			/>
 		</DashboardLayout>
 	);
 };

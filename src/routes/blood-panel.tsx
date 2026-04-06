@@ -1,7 +1,5 @@
 import { useState } from "react";
 import { API_ROUTES } from "@/config/api-routes";
-import { ApiKeyRequiredDialog } from "@/features/api-keys/components/api-key-required-dialog";
-import { useServiceApiKeyStore } from "@/features/api-keys/store/service-api-key.store";
 import { ViewCodeDialog } from "@/components/view-code-dialog";
 import { ApiTopology, TOPOLOGIES } from "@/components/api-topology";
 import DashboardLayout from "@/layouts/dashboard-layout";
@@ -79,16 +77,6 @@ const BloodPanelPage = () => {
 	const [gender, setGender] = useState("male");
 	const [isLoading, setIsLoading] = useState(false);
 	const [result, setResult] = useState<AnalysisResult | null>(null);
-	const [showApiKeyDialog, setShowApiKeyDialog] = useState(false);
-	const { selectedApiKey } = useServiceApiKeyStore();
-
-	const requireApiKey = (): boolean => {
-		if (!selectedApiKey) {
-			setShowApiKeyDialog(true);
-			return false;
-		}
-		return true;
-	};
 
 	const loadPreset = (preset: MarkerInput[], type: string) => {
 		setMarkers([...preset]);
@@ -383,11 +371,6 @@ const BloodPanelPage = () => {
 			<div className="px-4 py-2 border-t">
 				<ApiTopology {...TOPOLOGIES.blood_panel} />
 			</div>
-
-			<ApiKeyRequiredDialog
-				open={showApiKeyDialog}
-				onOpenChange={setShowApiKeyDialog}
-			/>
 		</DashboardLayout>
 	);
 };

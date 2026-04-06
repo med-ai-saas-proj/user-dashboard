@@ -1,7 +1,5 @@
 import { useState, useRef } from "react";
 import { API_ROUTES } from "@/config/api-routes";
-import { ApiKeyRequiredDialog } from "@/features/api-keys/components/api-key-required-dialog";
-import { useServiceApiKeyStore } from "@/features/api-keys/store/service-api-key.store";
 import { Button } from "@/components/shadcn/button";
 import { MarkdownCustom } from "@/features/pg-chat/components/MarkdownCustom";
 import { ViewCodeDialog } from "@/components/view-code-dialog";
@@ -110,8 +108,6 @@ const RxAdvisorPage = () => {
 	const [isLoading, setIsLoading] = useState(false);
 	const [analysis, setAnalysis] = useState("");
 	const [conversionTime, setConversionTime] = useState<number | null>(null);
-	const [showApiKeyDialog, setShowApiKeyDialog] = useState(false);
-	const { selectedApiKey } = useServiceApiKeyStore();
 	const fileInputRef = useRef<HTMLInputElement>(null);
 
 	const loadExample = (ex: (typeof RX_EXAMPLES)[0]) => {
@@ -122,10 +118,6 @@ const RxAdvisorPage = () => {
 
 	const handleAnalyze = async () => {
 		if (!ehrData.trim() || !prescriptionData.trim()) return;
-		if (!selectedApiKey) {
-			setShowApiKeyDialog(true);
-			return;
-		}
 
 		setIsLoading(true);
 		setAnalysis("");
@@ -405,11 +397,6 @@ const RxAdvisorPage = () => {
 			<div className="px-4 py-2 border-t">
 				<ApiTopology {...TOPOLOGIES.rx_advisor} />
 			</div>
-
-			<ApiKeyRequiredDialog
-				open={showApiKeyDialog}
-				onOpenChange={setShowApiKeyDialog}
-			/>
 		</DashboardLayout>
 	);
 };

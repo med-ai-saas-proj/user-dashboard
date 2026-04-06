@@ -1,7 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
 import { BASE_API_URL } from "@/config/api-routes";
-import { ApiKeyRequiredDialog } from "@/features/api-keys/components/api-key-required-dialog";
-import { useServiceApiKeyStore } from "@/features/api-keys/store/service-api-key.store";
 import { Button } from "@/components/shadcn/button";
 import DashboardLayout from "@/layouts/dashboard-layout";
 import { getAuthHeaders } from "@/lib/auth-headers";
@@ -430,18 +428,12 @@ export default function HealthcareDashboardPage() {
 	const [patientId, setPatientId] = useState("1");
 	const [data, setData] = useState<TwinData | null>(null);
 	const [isLoading, setIsLoading] = useState(false);
-	const [showApiKeyDialog, setShowApiKeyDialog] = useState(false);
 	const [activeTab, setActiveTab] = useState<TabId>("overview");
 	const [topologyOpen, setTopologyOpen] = useState(false);
-	const { selectedApiKey } = useServiceApiKeyStore();
 
 	const loadPatient = useCallback(
 		async (pid?: string) => {
 			const id = pid || patientId;
-			if (!selectedApiKey) {
-				setShowApiKeyDialog(true);
-				return;
-			}
 			setIsLoading(true);
 			try {
 				const url = `${TWIN_BASE}/${id}`;
@@ -1414,11 +1406,6 @@ export default function HealthcareDashboardPage() {
 					</div>
 				)}
 			</div>
-
-			<ApiKeyRequiredDialog
-				open={showApiKeyDialog}
-				onOpenChange={setShowApiKeyDialog}
-			/>
 		</DashboardLayout>
 	);
 }

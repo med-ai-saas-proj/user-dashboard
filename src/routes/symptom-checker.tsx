@@ -1,7 +1,5 @@
 import { useState } from "react";
 import { BASE_API_URL } from "@/config/api-routes";
-import { ApiKeyRequiredDialog } from "@/features/api-keys/components/api-key-required-dialog";
-import { useServiceApiKeyStore } from "@/features/api-keys/store/service-api-key.store";
 import { Button } from "@/components/shadcn/button";
 import { ViewCodeDialog } from "@/components/view-code-dialog";
 import DashboardLayout from "@/layouts/dashboard-layout";
@@ -80,8 +78,6 @@ export default function SymptomCheckerPage() {
 	const [duration, setDuration] = useState("");
 	const [isLoading, setIsLoading] = useState(false);
 	const [result, setResult] = useState<CheckResult | null>(null);
-	const [showApiKeyDialog, setShowApiKeyDialog] = useState(false);
-	const { selectedApiKey } = useServiceApiKeyStore();
 
 	const addSymptom = (s: string) => {
 		const trimmed = s.trim().toLowerCase();
@@ -104,10 +100,6 @@ export default function SymptomCheckerPage() {
 	const handleCheck = async () => {
 		if (symptoms.length === 0) {
 			toast.error("Add at least one symptom");
-			return;
-		}
-		if (!selectedApiKey) {
-			setShowApiKeyDialog(true);
 			return;
 		}
 
@@ -463,11 +455,6 @@ export default function SymptomCheckerPage() {
 			<div className="px-4 py-2 border-t">
 				<ApiTopology {...TOPOLOGIES.symptom_checker} />
 			</div>
-
-			<ApiKeyRequiredDialog
-				open={showApiKeyDialog}
-				onOpenChange={setShowApiKeyDialog}
-			/>
 		</DashboardLayout>
 	);
 }

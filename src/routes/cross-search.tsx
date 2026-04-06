@@ -1,7 +1,5 @@
 import { useState } from "react";
 import { API_ROUTES } from "@/config/api-routes";
-import { ApiKeyRequiredDialog } from "@/features/api-keys/components/api-key-required-dialog";
-import { useServiceApiKeyStore } from "@/features/api-keys/store/service-api-key.store";
 import { ViewCodeDialog } from "@/components/view-code-dialog";
 import DashboardLayout from "@/layouts/dashboard-layout";
 import { getAuthHeaders } from "@/lib/auth-headers";
@@ -62,16 +60,6 @@ const CrossSearchPage = () => {
 	const [isSeeding, setIsSeeding] = useState(false);
 	const [searchResult, setSearchResult] = useState<SearchResult | null>(null);
 	const [networkStats, setNetworkStats] = useState<NetworkStats | null>(null);
-	const [showApiKeyDialog, setShowApiKeyDialog] = useState(false);
-	const { selectedApiKey } = useServiceApiKeyStore();
-
-	const requireApiKey = (): boolean => {
-		if (!selectedApiKey) {
-			setShowApiKeyDialog(true);
-			return false;
-		}
-		return true;
-	};
 
 	const loadNetworkStats = async () => {
 		try {
@@ -88,7 +76,7 @@ const CrossSearchPage = () => {
 				toast.success("Playground seeded with demo data");
 				await loadNetworkStats();
 			}
-		} catch (err) {
+		} catch (_err) {
 			toast.error("Failed to seed playground");
 		} finally {
 			setIsSeeding(false);
@@ -110,7 +98,7 @@ const CrossSearchPage = () => {
 			const data: SearchResult = await resp.json();
 			setSearchResult(data);
 			toast.success(`Found ${data.total_matches} facility matches`);
-		} catch (err) {
+		} catch (_err) {
 			toast.error(err instanceof Error ? err.message : "Search failed");
 		} finally {
 			setIsLoading(false);
@@ -274,8 +262,6 @@ const CrossSearchPage = () => {
 					</div>
 				</div>
 			</div>
-
-			<ApiKeyRequiredDialog open={showApiKeyDialog} onOpenChange={setShowApiKeyDialog} />
 		</DashboardLayout>
 	);
 };

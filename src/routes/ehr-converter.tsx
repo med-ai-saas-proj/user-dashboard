@@ -1,7 +1,5 @@
 import { useState } from "react";
 import { API_ROUTES } from "@/config/api-routes";
-import { ApiKeyRequiredDialog } from "@/features/api-keys/components/api-key-required-dialog";
-import { useServiceApiKeyStore } from "@/features/api-keys/store/service-api-key.store";
 import { ConverterForm } from "@/features/pg-ehr-converter/components/converter-form";
 import { ConvertResultPanel } from "@/features/pg-ehr-converter/components/convert-result-panel";
 import { BatchPanel } from "@/features/pg-ehr-converter/components/batch-panel";
@@ -26,21 +24,11 @@ const EhrConverterPage = () => {
 		null
 	);
 	const [conversionTime, setConversionTime] = useState<number | null>(null);
-	const [showApiKeyDialog, setShowApiKeyDialog] = useState(false);
 	const [batchLoading, setBatchLoading] = useState(false);
 	const [batchResult, setBatchResult] = useState<BatchConvertResponse | null>(
 		null
 	);
 	const [showBatch, setShowBatch] = useState(false);
-	const { selectedApiKey } = useServiceApiKeyStore();
-
-	const requireApiKey = (): boolean => {
-		if (!selectedApiKey) {
-			setShowApiKeyDialog(true);
-			return false;
-		}
-		return true;
-	};
 
 	const clearResults = () => {
 		setResult(null);
@@ -314,10 +302,6 @@ const EhrConverterPage = () => {
 			<div className="px-4 py-2 border-t">
 				<ApiTopology {...TOPOLOGIES.ehr_converter} />
 			</div>
-			<ApiKeyRequiredDialog
-				open={showApiKeyDialog}
-				onOpenChange={setShowApiKeyDialog}
-			/>
 		</DashboardLayout>
 	);
 };

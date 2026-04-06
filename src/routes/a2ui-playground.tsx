@@ -1,7 +1,5 @@
 import { useState, useEffect } from "react";
 import { BASE_API_URL } from "@/config/api-routes";
-import { ApiKeyRequiredDialog } from "@/features/api-keys/components/api-key-required-dialog";
-import { useServiceApiKeyStore } from "@/features/api-keys/store/service-api-key.store";
 import { Button } from "@/components/shadcn/button";
 import { ViewCodeDialog } from "@/components/view-code-dialog";
 import DashboardLayout from "@/layouts/dashboard-layout";
@@ -35,8 +33,6 @@ export default function A2UIPlaygroundPage() {
 	const [viewTab, setViewTab] = useState<"preview" | "json" | "embed" | "his">(
 		"preview"
 	);
-	const [showApiKeyDialog, setShowApiKeyDialog] = useState(false);
-	const { selectedApiKey } = useServiceApiKeyStore();
 
 	useEffect(() => {
 		(async () => {
@@ -50,10 +46,6 @@ export default function A2UIPlaygroundPage() {
 	}, []);
 
 	const handleGenerate = async (demoId: string) => {
-		if (!selectedApiKey) {
-			setShowApiKeyDialog(true);
-			return;
-		}
 		setIsLoading(true);
 		setResult(null);
 		try {
@@ -316,11 +308,6 @@ export default function A2UIPlaygroundPage() {
 					<ApiTopology {...TOPOLOGIES.a2ui} />
 				</div>
 			</div>
-
-			<ApiKeyRequiredDialog
-				open={showApiKeyDialog}
-				onOpenChange={setShowApiKeyDialog}
-			/>
 		</DashboardLayout>
 	);
 }

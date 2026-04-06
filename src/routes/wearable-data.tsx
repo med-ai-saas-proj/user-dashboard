@@ -1,7 +1,5 @@
 import { useState, useMemo } from "react";
 import { BASE_API_URL } from "@/config/api-routes";
-import { ApiKeyRequiredDialog } from "@/features/api-keys/components/api-key-required-dialog";
-import { useServiceApiKeyStore } from "@/features/api-keys/store/service-api-key.store";
 import { Button } from "@/components/shadcn/button";
 import { ViewCodeDialog } from "@/components/view-code-dialog";
 import { ApiTopology, TOPOLOGIES } from "@/components/api-topology";
@@ -404,8 +402,6 @@ const WearableDataPage = () => {
 	const [result, setResult] = useState<Record<string, unknown> | null>(null);
 	const [ingestedData, setIngestedData] = useState<DayRecord[]>([]);
 	const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
-	const [showApiKeyDialog, setShowApiKeyDialog] = useState(false);
-	const { selectedApiKey } = useServiceApiKeyStore();
 
 	const wearableUrl = (pid: string) =>
 		`${BASE_API_URL}service/api/v1/patient/${pid}/wearable`;
@@ -437,10 +433,6 @@ const WearableDataPage = () => {
 	};
 
 	const handleIngest = async () => {
-		if (!selectedApiKey) {
-			setShowApiKeyDialog(true);
-			return;
-		}
 		if (!patientId || !dataInput.trim()) return;
 		setIsLoading(true);
 		setResult(null);
@@ -1130,11 +1122,6 @@ const WearableDataPage = () => {
 					</div>
 				</div>
 			</div>
-
-			<ApiKeyRequiredDialog
-				open={showApiKeyDialog}
-				onOpenChange={setShowApiKeyDialog}
-			/>
 		</DashboardLayout>
 	);
 };

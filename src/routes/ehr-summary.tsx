@@ -1,7 +1,5 @@
 import { useState, useRef } from "react";
 import { API_ROUTES } from "@/config/api-routes";
-import { ApiKeyRequiredDialog } from "@/features/api-keys/components/api-key-required-dialog";
-import { useServiceApiKeyStore } from "@/features/api-keys/store/service-api-key.store";
 import { EXAMPLES } from "@/features/pg-ehr-converter/services/examples";
 import {
 	detectFormat,
@@ -111,9 +109,7 @@ const EhrSummaryPage = () => {
 	const [activeTab, setActiveTab] = useState<"summary" | "fhir" | "timeline">(
 		"summary"
 	);
-	const [showApiKeyDialog, setShowApiKeyDialog] = useState(false);
 	const [conversionTime, setConversionTime] = useState<number | null>(null);
-	const { selectedApiKey } = useServiceApiKeyStore();
 	const fileInputRef = useRef<HTMLInputElement>(null);
 
 	const addEntry = (label?: string, data?: string, facility?: string) => {
@@ -386,10 +382,6 @@ const EhrSummaryPage = () => {
 
 	const handleSummarize = async () => {
 		if (entries.length === 0) return;
-		if (!selectedApiKey) {
-			setShowApiKeyDialog(true);
-			return;
-		}
 
 		setIsLoading(true);
 		setSummary("");
@@ -848,11 +840,6 @@ const EhrSummaryPage = () => {
 			<div className="px-4 py-2 border-t">
 				<ApiTopology {...TOPOLOGIES.ehr_summary} />
 			</div>
-
-			<ApiKeyRequiredDialog
-				open={showApiKeyDialog}
-				onOpenChange={setShowApiKeyDialog}
-			/>
 		</DashboardLayout>
 	);
 };

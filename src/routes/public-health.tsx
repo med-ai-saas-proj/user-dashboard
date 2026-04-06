@@ -1,7 +1,5 @@
 import { useState } from "react";
 import { BASE_API_URL } from "@/config/api-routes";
-import { ApiKeyRequiredDialog } from "@/features/api-keys/components/api-key-required-dialog";
-import { useServiceApiKeyStore } from "@/features/api-keys/store/service-api-key.store";
 import { Button } from "@/components/shadcn/button";
 import { ViewCodeDialog } from "@/components/view-code-dialog";
 import { ApiTopology, TOPOLOGIES } from "@/components/api-topology";
@@ -271,15 +269,9 @@ const PublicHealthPage = () => {
 	const [topN, setTopN] = useState(10);
 	const [isLoading, setIsLoading] = useState(false);
 	const [result, setResult] = useState<Record<string, unknown> | null>(null);
-	const [showApiKeyDialog, setShowApiKeyDialog] = useState(false);
 	const [showFilters, setShowFilters] = useState(false);
-	const { selectedApiKey } = useServiceApiKeyStore();
 
 	const handleCompute = async () => {
-		if (!selectedApiKey) {
-			setShowApiKeyDialog(true);
-			return;
-		}
 		setIsLoading(true);
 		setResult(null);
 		try {
@@ -733,11 +725,6 @@ const PublicHealthPage = () => {
 					</div>
 				</details>
 			</div>
-
-			<ApiKeyRequiredDialog
-				open={showApiKeyDialog}
-				onOpenChange={setShowApiKeyDialog}
-			/>
 		</DashboardLayout>
 	);
 };

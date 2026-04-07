@@ -153,7 +153,7 @@
             "payment-methods": "Phương thức thanh toán",
             "billing-history": "Lịch sử thanh toán",
             "credit-grants": "Cấp tín dụng",
-            "preferences": "Tùy chọn"
+            "sources": "Nguồn thanh toán"
         }
     }
 }

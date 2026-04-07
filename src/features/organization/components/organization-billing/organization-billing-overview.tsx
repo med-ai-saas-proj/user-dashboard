@@ -2,10 +2,16 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/shadcn/button";
 import { CreditCard } from "lucide-react";
-import StripePayment from "./stripe/stripe-payment";
+import AddPaymentDetailsDialog from "./dialogs/add-payment-details-dialog";
+import UpdatePaymentDetailsDialog from "./dialogs/update-payment-details-dialog";
+import { useBillingStore } from "../../store/billing";
+import OrganizationBillingSources from "./organization-billing-sources";
 
 const OrganizationBillingOverview = () => {
 	const [addPaymentDetailsOpen, setAddPaymentDetailsOpen] = useState(false);
+	const [updatePaymentDetailsOpen, setUpdatePaymentDetailsOpen] =
+		useState(false);
+	const billingSourceId = useBillingStore((state) => state.billingSourceId);
 
 	return (
 		<div className="w-full py-10">
@@ -17,18 +23,40 @@ const OrganizationBillingOverview = () => {
 							<p className="text-4xl font-semibold">$0.00</p>
 						</div>
 						<div className="flex items-center gap-2">
-							<Button
-								variant="default"
-								onClick={() => setAddPaymentDetailsOpen(true)}
-							>
-								Add payment details
-							</Button>
+							{billingSourceId && (
+								<Button
+									variant="default"
+									onClick={() => setUpdatePaymentDetailsOpen(true)}
+								>
+									Update payment details
+								</Button>
+							)}
+							{!billingSourceId && (
+								<Button
+									variant="default"
+									onClick={() => setAddPaymentDetailsOpen(true)}
+								>
+									Add payment details
+								</Button>
+							)}
 							<Button variant="outline">
 								<Link to="/dashboard">View usage</Link>
 							</Button>
 						</div>
-						{addPaymentDetailsOpen && <StripePayment />}
+						{billingSourceId && (
+							<UpdatePaymentDetailsDialog
+								open={updatePaymentDetailsOpen}
+								onOpenChange={setUpdatePaymentDetailsOpen}
+							/>
+						)}
+						{!billingSourceId && (
+							<AddPaymentDetailsDialog
+								open={addPaymentDetailsOpen}
+								onOpenChange={setAddPaymentDetailsOpen}
+							/>
+						)}
 					</div>
+					<OrganizationBillingSources />
 					<div className="grid grid-cols-2 gap-x-36 gap-y-10 w-fit">
 						<Link
 							className="flex items-center gap-4 hover:cursor-pointer"

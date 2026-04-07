@@ -155,7 +155,7 @@
             "payment-methods": "Payment Methods",
             "billing-history": "Billing History",
             "credit-grants": "Credit Grants",
-            "preferences": "Preferences"
+            "sources": "Billing Sources"
         }
     }
 }

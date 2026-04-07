@@ -28,9 +28,9 @@ const OrganizationBilling = () => {
 						<TabsTrigger value="credit-grants">
 							{t("billing.tabs.credit-grants")}
 						</TabsTrigger>
-						<TabsTrigger value="preferences">
-							{t("billing.tabs.preferences")}
-						</TabsTrigger>
+						{/* <TabsTrigger value="sources">
+                            {t("billing.tabs.sources")}
+                        </TabsTrigger> */}
 					</TabsList>
 				</div>
 

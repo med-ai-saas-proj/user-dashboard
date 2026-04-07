@@ -24,7 +24,6 @@ import OrganizationBillingOverview from "./features/organization/components/orga
 import OrganizationBillingPaymentMethods from "./features/organization/components/organization-billing/organization-billing-payment-methods";
 import OrganizationBillingHistory from "./features/organization/components/organization-billing/organization-billing-history";
 import OrganizationBillingCreditGrants from "./features/organization/components/organization-billing/organization-billing-credit-grants";
-import OrganizationBillingPreferences from "./features/organization/components/organization-billing/organization-billing-preferences";
 import OrganizationProjects from "./routes/organization-projects";
 import ProjectGeneral from "./routes/project-general";
 import ProjectPeople from "./routes/project-people";
@@ -147,10 +146,6 @@ function App() {
 								<Route
 									path="credit-grants"
 									element={<OrganizationBillingCreditGrants />}
-								/>
-								<Route
-									path="preferences"
-									element={<OrganizationBillingPreferences />}
 								/>
 							</Route>
 							<Route

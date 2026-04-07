@@ -493,6 +493,26 @@ export const TOPOLOGIES: Record<string, TopologyDef> = {
 			},
 		],
 	},
+	ehr_overview: {
+		title: "EHR Health Overview Pipeline",
+		description:
+			"Aggregates patient data from multiple sources into a comprehensive health overview with AI narrative generation.",
+		flowId: "ehr_overview",
+		nodes: [
+			{
+				id: "ehr_overview",
+				label: "EHR Overview",
+				endpoint: "/ehr_overview/{id}",
+				method: "GET",
+			},
+			{
+				id: "narrative",
+				label: "Clinical Narrative",
+				endpoint: "/ehr_overview/{id}/narrative",
+				method: "POST",
+			},
+		],
+	},
 	a2ui: {
 		title: "A2UI: API → UI Generation",
 		description:

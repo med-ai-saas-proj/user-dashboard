@@ -98,6 +98,7 @@ function getSDKMethodInfo(endpoint: string): {
 		},
 		"clinic_search/search": { property: "clinic_search", method: "search" },
 		"ehr_converter/convert": { property: "ehr_converter", method: "convert" },
+		ehr_overview: { property: "ehr_overview", method: "get_overview" },
 		"ehr_converter/convert/document": {
 			property: "ehr_converter",
 			method: "convert",

@@ -173,6 +173,14 @@ export const API_ROUTES = {
 			`service/api/${API_VERSION}/blood_panel/analyze`,
 			BASE_API_URL
 		).toString(),
+		EHR_OVERVIEW: new URL(
+			`service/api/${API_VERSION}/ehr_overview`,
+			BASE_API_URL
+		).toString(),
+		EHR_OVERVIEW_NARRATIVE: new URL(
+			`service/api/${API_VERSION}/ehr_overview`,
+			BASE_API_URL
+		).toString(),
 	},
 } as const;
 

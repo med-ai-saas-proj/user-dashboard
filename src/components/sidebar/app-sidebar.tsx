@@ -32,6 +32,7 @@ import {
 	MapPinIcon,
 	ActivityIcon,
 	BrainIcon,
+	FileHeartIcon,
 } from "lucide-react";
 import type * as React from "react";
 import { useTranslation } from "react-i18next";
@@ -165,6 +166,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 				name: t("operation.ehrSummary.title"),
 				url: "/ehr-summary",
 				icon: ClipboardPlusIcon,
+			},
+			{
+				name: "EHR Overview",
+				url: "/ehr-overview",
+				icon: FileHeartIcon,
 			},
 			{
 				name: t("operation.rxAdvisor.title"),

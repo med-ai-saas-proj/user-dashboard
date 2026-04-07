@@ -6,11 +6,13 @@ import AddPaymentDetailsDialog from "./dialogs/add-payment-details-dialog";
 import UpdatePaymentDetailsDialog from "./dialogs/update-payment-details-dialog";
 import { useBillingStore } from "../../store/billing";
 import OrganizationBillingSources from "./organization-billing-sources";
+import StripePayment from "./stripe/stripe-payment";
 
 const OrganizationBillingOverview = () => {
 	const [addPaymentDetailsOpen, setAddPaymentDetailsOpen] = useState(false);
 	const [updatePaymentDetailsOpen, setUpdatePaymentDetailsOpen] =
 		useState(false);
+	const [stripePay, setStripePay] = useState(false);
 	const billingSourceId = useBillingStore((state) => state.billingSourceId);
 
 	return (
@@ -23,6 +25,13 @@ const OrganizationBillingOverview = () => {
 							<p className="text-4xl font-semibold">$0.00</p>
 						</div>
 						<div className="flex items-center gap-2">
+							<Button
+								variant="default"
+								onClick={() => setStripePay(true)}
+								disabled={stripePay}
+							>
+								Pay with Stripe
+							</Button>
 							{billingSourceId && (
 								<Button
 									variant="default"
@@ -43,6 +52,11 @@ const OrganizationBillingOverview = () => {
 								<Link to="/dashboard">View usage</Link>
 							</Button>
 						</div>
+						{stripePay && (
+							<div className="border-b pb-4">
+								<StripePayment />
+							</div>
+						)}
 						{billingSourceId && (
 							<UpdatePaymentDetailsDialog
 								open={updatePaymentDetailsOpen}

@@ -1,7 +1,8 @@
-import { CheckoutProvider } from "@stripe/react-stripe-js/checkout";
-import { loadStripe } from "@stripe/stripe-js";
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe, type StripeElementsOptions } from "@stripe/stripe-js";
 import { useState, useEffect, type ReactNode } from "react";
-import { useCreateCheckoutSession } from "../hooks/organization-billing/use-create-checkout-sesstion";
+import { useCreateSetupIntent } from "../hooks/organization-billing/use-create-setup-intent";
+import { Skeleton } from "@/components/shadcn/skeleton";
 
 const stripePublishableKey = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY;
 
@@ -16,37 +17,74 @@ interface Props {
 }
 
 export function StripeProvider({ children }: Props) {
-	const { mutateAsync: getClientSecret } = useCreateCheckoutSession();
-
-	// Need a real client secret from the Backend, cannot mock
+	const { mutateAsync: getClientSecret } = useCreateSetupIntent();
 	const [clientSecret, setClientSecret] = useState<string | null>(null);
+	const [isLoading, setIsLoading] = useState(true);
+	const [error, setError] = useState<string | null>(null);
 
 	useEffect(() => {
 		const fetchClientSecret = async () => {
 			try {
-				const secret = await getClientSecret();
-
+				setIsLoading(true);
+				setError(null);
+				const response = await getClientSecret();
+				const secret = response?.client_secret || response?.clientSecret;
+				if (!secret) {
+					throw new Error("No client secret received from server");
+				}
 				setClientSecret(secret);
-			} catch (error) {
-				console.error(error);
+			} catch (err) {
+				const errorMessage =
+					err instanceof Error ? err.message : "Failed to initialize payment";
+				setError(errorMessage);
+				console.error("Setup intent error:", err);
+			} finally {
+				setIsLoading(false);
 			}
 		};
 
 		fetchClientSecret();
 	}, [getClientSecret]);
 
-	if (!clientSecret) {
-		return <div>Loading payment...</div>;
+	if (isLoading) {
+		return (
+			<div className="w-full space-y-4 p-6">
+				<Skeleton className="h-12 w-full" />
+				<Skeleton className="h-12 w-full" />
+			</div>
+		);
 	}
 
+	if (error) {
+		return (
+			<div className="rounded-lg border border-alert p-4 bg-card-gradient text-alert">
+				<p className="text-sm font-medium">
+					Failed to initialize payment: {error}
+				</p>
+			</div>
+		);
+	}
+
+	if (!clientSecret) {
+		return (
+			<div className="rounded-lg border border-alert p-4 bg-card-gradient text-alert">
+				<p className="text-sm font-medium">
+					Unable to create payment session. Please try again.
+				</p>
+			</div>
+		);
+	}
+
+	const options: StripeElementsOptions = {
+		clientSecret,
+		appearance: {
+			theme: "stripe",
+		},
+	};
+
 	return (
-		<CheckoutProvider
-			stripe={stripePromise}
-			options={{
-				clientSecret,
-			}}
-		>
+		<Elements stripe={stripePromise} options={options}>
 			{children}
-		</CheckoutProvider>
+		</Elements>
 	);
 }

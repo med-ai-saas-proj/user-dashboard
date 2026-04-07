@@ -1,5 +1,6 @@
-import { useCheckout } from "@stripe/react-stripe-js/checkout";
+import { useStripe, useElements } from "@stripe/react-stripe-js";
 import { useCallback, useState, type FormEvent } from "react";
+import { toast } from "sonner";
 
 interface UseStripeCheckoutResult {
 	errorMessage: string | null;
@@ -9,7 +10,8 @@ interface UseStripeCheckoutResult {
 }
 
 export const useStripeCheckout = (): UseStripeCheckoutResult => {
-	const checkoutState = useCheckout();
+	const stripe = useStripe();
+	const elements = useElements();
 	const [errorMessage, setErrorMessage] = useState<string | null>(null);
 	const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -17,28 +19,47 @@ export const useStripeCheckout = (): UseStripeCheckoutResult => {
 		async (event: FormEvent<HTMLFormElement>) => {
 			event.preventDefault();
 
-			if (checkoutState.type !== "success" || isSubmitting) {
+			if (!stripe || !elements || isSubmitting) {
+				setErrorMessage("Payment system is not ready. Please try again.");
 				return;
 			}
 
 			setIsSubmitting(true);
 			setErrorMessage(null);
 
-			const result = await checkoutState.checkout.confirm();
+			try {
+				const { error, setupIntent } = await stripe.confirmSetup({
+					elements,
+					redirect: "if_required",
+				});
 
-			if (result.type === "error") {
-				setErrorMessage(result.error.message);
+				if (error) {
+					setErrorMessage(error.message || "Payment failed");
+					toast.error(error.message || "Payment failed");
+				} else if (setupIntent?.status === "succeeded") {
+					toast.success("Setup Intent confirmed successfully");
+				} else if (setupIntent?.status === "processing") {
+					toast.info("Payment processing...");
+				} else if (setupIntent?.status === "requires_action") {
+					// Handle 3D Secure or other required actions
+					toast.info("Additional action required. Please check your bank.");
+				}
+			} catch (err) {
+				const message =
+					err instanceof Error ? err.message : "An error occurred";
+				setErrorMessage(message);
+				toast.error(message);
+			} finally {
+				setIsSubmitting(false);
 			}
-
-			setIsSubmitting(false);
 		},
-		[checkoutState, isSubmitting]
+		[stripe, elements, isSubmitting]
 	);
 
 	return {
 		errorMessage,
 		handleSubmit,
-		isReady: checkoutState.type === "success",
+		isReady: !!stripe && !!elements,
 		isSubmitting,
 	};
 };

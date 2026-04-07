@@ -1,4 +1,4 @@
-import { PaymentElement } from "@stripe/react-stripe-js/checkout";
+import { PaymentElement } from "@stripe/react-stripe-js";
 import { useState } from "react";
 
 const StripeElement = () => {
@@ -7,7 +7,9 @@ const StripeElement = () => {
 	if (errorStripeLoad) {
 		return (
 			<div className="rounded-lg border border-alert p-4 bg-card-gradient">
-				<p className="text-alert">Failed to load Stripe. Please try again.</p>
+				<p className="text-alert">
+					Failed to load payment form. Please try again.
+				</p>
 			</div>
 		);
 	}
@@ -15,7 +17,13 @@ const StripeElement = () => {
 	return (
 		<div className="rounded-lg border p-4 bg-card-gradient">
 			<PaymentElement
-				options={{ layout: "tabs" }}
+				options={{
+					layout: "tabs",
+					wallets: {
+						googlePay: "auto",
+						applePay: "auto",
+					},
+				}}
 				onLoadError={() => setErrorStripeLoad(true)}
 			/>
 		</div>

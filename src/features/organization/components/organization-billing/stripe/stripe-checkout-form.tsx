@@ -12,9 +12,11 @@ const StripeCheckoutForm = () => {
 			{errorMessage ? (
 				<p className="text-sm text-alert">{errorMessage}</p>
 			) : null}
-			<Button type="submit" disabled={!isReady || isSubmitting}>
-				{isSubmitting ? "Processing..." : "Confirm payment"}
-			</Button>
+			<div className="flex justify-end">
+				<Button type="submit" disabled={!isReady || isSubmitting}>
+					{isSubmitting ? "Processing..." : "Confirm payment"}
+				</Button>
+			</div>
 		</form>
 	);
 };

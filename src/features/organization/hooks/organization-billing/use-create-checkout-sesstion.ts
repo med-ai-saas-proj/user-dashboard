@@ -3,7 +3,7 @@ import { createCheckoutSession } from "../../services/organization-billing/creat
 
 export const useCreateCheckoutSession = () => {
 	return useMutation({
-		mutationKey: ["createCheckoutSession"],
+		mutationKey: ["create-checkout-session"],
 		mutationFn: createCheckoutSession,
 	});
 };

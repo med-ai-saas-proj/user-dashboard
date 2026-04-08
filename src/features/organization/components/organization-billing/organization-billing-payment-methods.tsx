@@ -5,7 +5,9 @@ import {
 	Mail,
 	Phone,
 	TriangleAlert,
+	Trash,
 } from "lucide-react";
+import { useState } from "react";
 import {
 	Card,
 	CardContent,
@@ -14,11 +16,21 @@ import {
 } from "@/components/shadcn/card";
 import { useGetPaymentMethods } from "../../hooks/organization-billing/use-get-payment-methods";
 import OrganizationBillingIntentActions from "./organization-billing-intent-actions";
+import DeleteBillingMethodDialog from "./dialogs/delete-billing-method-dialog";
 
 const OrganizationBillingPaymentMethods = () => {
 	const { data: paymentMethods, isLoading } = useGetPaymentMethods();
+	const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+	const [selectedPaymentMethodId, setSelectedPaymentMethodId] = useState<
+		string | null
+	>(null);
 
 	const hasPaymentMethods = (paymentMethods?.length ?? 0) > 0;
+
+	const openDeleteDialog = (paymentMethodId: string) => {
+		setSelectedPaymentMethodId(paymentMethodId);
+		setIsDeleteDialogOpen(true);
+	};
 
 	return (
 		<div className="w-full py-10">
@@ -65,10 +77,14 @@ const OrganizationBillingPaymentMethods = () => {
 								).toLocaleDateString();
 
 								return (
-									<Card
-										key={paymentMethod.id}
-										className="overflow-hidden w-full"
-									>
+									<Card key={paymentMethod.id} className="w-full relative">
+										<div className="absolute -top-2 -right-2 p-2 rounded-full border bg-background">
+											<Trash
+												size={16}
+												className="text-destructive cursor-pointer"
+												onClick={() => openDeleteDialog(paymentMethod.id)}
+											/>
+										</div>
 										<CardHeader className="border-b bg-muted/20">
 											<CardTitle>
 												<div className="flex items-start justify-between gap-4">
@@ -186,6 +202,16 @@ const OrganizationBillingPaymentMethods = () => {
 				</div>
 			</div>
 			<OrganizationBillingIntentActions />
+			<DeleteBillingMethodDialog
+				open={isDeleteDialogOpen}
+				paymentMethodId={selectedPaymentMethodId}
+				onOpenChange={(open) => {
+					setIsDeleteDialogOpen(open);
+					if (!open) {
+						setSelectedPaymentMethodId(null);
+					}
+				}}
+			/>
 		</div>
 	);
 };

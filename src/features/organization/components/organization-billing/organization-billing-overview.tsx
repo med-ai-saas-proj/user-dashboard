@@ -25,13 +25,15 @@ const OrganizationBillingOverview = () => {
 							<p className="text-4xl font-semibold">$0.00</p>
 						</div>
 						<div className="flex items-center gap-2">
-							<Button
-								variant="default"
-								onClick={() => setStripePay(true)}
-								disabled={stripePay}
-							>
-								Pay with Stripe
-							</Button>
+							{billingSourceId && (
+								<Button
+									variant="default"
+									onClick={() => setStripePay(true)}
+									disabled={stripePay}
+								>
+									Pay with Stripe
+								</Button>
+							)}
 							{billingSourceId && (
 								<Button
 									variant="default"

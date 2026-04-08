@@ -31,8 +31,8 @@ const OrganizationProjectHeader = ({
 	}, [filterTerm, setIsArchived]);
 
 	return (
-		<div className="flex items-center justify-between mb-4 mt-2">
-			<div className="flex items-center gap-x-2 w-full">
+		<div className="flex items-center justify-between mb-4 mt-2 gap-2">
+			<div className="flex items-center gap-x-2">
 				<InputGroup className="max-w-xs">
 					<InputGroupInput
 						placeholder={t("project.header.searchPlaceholder")}
@@ -47,7 +47,7 @@ const OrganizationProjectHeader = ({
 						setFilterTerm(value as "active" | "archived")
 					}
 				>
-					<SelectTrigger className="max-w-sm">
+					<SelectTrigger className="w-30">
 						<SelectValue placeholder={t("project.header.filterPlaceholder")} />
 					</SelectTrigger>
 					<SelectContent>

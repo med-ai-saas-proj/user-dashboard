@@ -24,7 +24,7 @@ const KPICard = () => {
 					stat.format || "compact"
 				);
 				return (
-					<Card key={stat.title} className="w-full">
+					<Card key={stat.title}>
 						<CardHeader>
 							<CardTitle>
 								<p className="font-medium text-muted-foreground">

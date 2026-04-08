@@ -11,7 +11,7 @@ const LazyAreaChart = lazy(() => import("./area-chart"));
 type DashboardChartProps = {
 	title: string;
 	chartConfig: Omit<ChartConfiguration, "datasets">;
-	isTotalOnly?: boolean; // if true, only show total line and hide requests and cost lines
+	isTotalOnly?: boolean;
 };
 
 const DashboardChart = ({
@@ -36,30 +36,32 @@ const DashboardChart = ({
 	};
 
 	return (
-		<Card className="w-100%">
+		<Card className="w-full">
 			<CardHeader>
 				<h3 className="text-xl font-bold">{title}</h3>
 			</CardHeader>
-			<CardContent>
+			<CardContent className="w-full overflow-hidden p-0 sm:p-6">
 				<Suspense fallback={<div>Loading chart...</div>}>
-					{chartConfiguration.chartType === "line" && (
-						<LazyLineChart
-							configuration={chartConfiguration.config}
-							datasets={chartConfiguration.datasets}
-							xKey={chartConfiguration.xKey}
-							series={chartConfiguration.series}
-							isTotalOnly={isTotalOnly}
-						/>
-					)}
-					{chartConfiguration.chartType === "area" && (
-						<LazyAreaChart
-							configuration={chartConfiguration.config}
-							datasets={chartConfiguration.datasets}
-							xKey={chartConfiguration.xKey}
-							series={chartConfiguration.series}
-							isTotalOnly={isTotalOnly}
-						/>
-					)}
+					<div className="w-full min-w-0">
+						{chartConfiguration.chartType === "line" && (
+							<LazyLineChart
+								configuration={chartConfiguration.config}
+								datasets={chartConfiguration.datasets}
+								xKey={chartConfiguration.xKey}
+								series={chartConfiguration.series}
+								isTotalOnly={isTotalOnly}
+							/>
+						)}
+						{chartConfiguration.chartType === "area" && (
+							<LazyAreaChart
+								configuration={chartConfiguration.config}
+								datasets={chartConfiguration.datasets}
+								xKey={chartConfiguration.xKey}
+								series={chartConfiguration.series}
+								isTotalOnly={isTotalOnly}
+							/>
+						)}
+					</div>
 				</Suspense>
 			</CardContent>
 		</Card>

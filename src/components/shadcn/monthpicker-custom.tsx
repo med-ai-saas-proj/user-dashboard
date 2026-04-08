@@ -66,7 +66,7 @@ const MonthPickerCustom: React.FC<MonthPickerCustomProps> = ({
 					<Button
 						variant="outline"
 						className={cn(
-							"w-[280px] justify-start text-left font-normal",
+							"w-[280px] justify-center font-normal",
 							!month && "text-muted-foreground"
 						)}
 					>

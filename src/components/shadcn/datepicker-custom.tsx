@@ -1,17 +1,17 @@
-import { format } from "date-fns";
-import { vi as dfVi, enUS as dfEnUS } from "date-fns/locale";
-import { useState } from "react";
 import { Button } from "@/components/shadcn/button";
-import { Field, FieldLabel } from "@/components/shadcn/field";
 import { Calendar } from "@/components/shadcn/calendar";
+import { Field } from "@/components/shadcn/field";
 import {
 	Popover,
 	PopoverContent,
 	PopoverTrigger,
 } from "@/components/shadcn/popover";
 import { cn } from "@/lib/utils";
-import { vi as rdVi } from "react-day-picker/locale/vi";
+import { format } from "date-fns";
+import { enUS as dfEnUS, vi as dfVi } from "date-fns/locale";
+import { useState } from "react";
 import { enUS as rdEnUS } from "react-day-picker/locale/en-US";
+import { vi as rdVi } from "react-day-picker/locale/vi";
 
 /**
  * Props for `DatePickerCustom`.
@@ -38,7 +38,6 @@ type DatePickerCustomProps = {
 
 const DatePickerCustom: React.FC<DatePickerCustomProps> = ({
 	id,
-	label,
 	placeholder = "Select date",
 	date: controlledDate,
 	defaultDate,
@@ -61,13 +60,12 @@ const DatePickerCustom: React.FC<DatePickerCustomProps> = ({
 
 	return (
 		<Field className={cn("mx-auto w-fit", className)}>
-			{label && <FieldLabel htmlFor={id}>{label}</FieldLabel>}
 			<Popover>
 				<PopoverTrigger asChild>
 					<Button
 						variant="outline"
 						id={id}
-						className="justify-start font-normal"
+						className="justify-center font-normal"
 					>
 						{date ? (
 							format(date, "PPP", { locale: dfLocale })

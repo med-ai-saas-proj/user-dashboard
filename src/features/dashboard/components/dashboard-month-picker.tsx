@@ -2,7 +2,13 @@ import { useTranslation } from "react-i18next";
 import { useChartTimePickerStore } from "../store/chart-time-picker";
 import MonthPickerCustom from "@/components/shadcn/monthpicker-custom";
 
-const DashboardMonthPicker = () => {
+interface DashboardMonthPickerProps {
+	defaultDate?: Date;
+}
+
+const DashboardMonthPicker: React.FC<DashboardMonthPickerProps> = ({
+	defaultDate,
+}) => {
 	const { t } = useTranslation("dashboard");
 	const { i18n } = useTranslation();
 	const currentLocale = i18n.language || "en-US";
@@ -27,10 +33,11 @@ const DashboardMonthPicker = () => {
 
 	return (
 		<MonthPickerCustom
-			label={t("monthPicker.label")}
 			placeholder={t("monthPicker.placeholder")}
 			onMonthChange={handleMonthSelect}
+			className="min-w-36"
 			locale={currentLocale === "vi" ? "vi" : "en-US"}
+			defaultMonth={defaultDate}
 		/>
 	);
 };

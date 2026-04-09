@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from "react";
 import { Mic as MicIcon, StopCircle as StopCircleIcon } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { ApiTopology, TOPOLOGIES } from "@/components/api-topology";
 import { Button } from "@/components/shadcn/button";
@@ -27,8 +27,7 @@ const VoiceTranscribePage = () => {
 	const [result, setResult] = useState<TranscribeResponse | null>(null);
 	const fileInputRef = useRef<HTMLInputElement>(null);
 
-	// Mode & real-time state
-	const [mode, setMode] = useState<"upload" | "realtime">("upload");
+	// Real-time state
 	const [isRecording, setIsRecording] = useState(false);
 	const [liveText, setLiveText] = useState("");
 	const [recordingDuration, setRecordingDuration] = useState(0);
@@ -257,129 +256,119 @@ const VoiceTranscribePage = () => {
 				</div>
 				<div className="flex-1 grid grid-cols-1 lg:grid-cols-2 overflow-hidden border-b">
 					{/* Left: Input */}
-					<div className="border-r flex flex-col overflow-hidden p-4 space-y-4">
-						{/* Mode tabs */}
-						<div className="flex gap-1 p-1 bg-muted rounded-lg">
-							<button
-								type="button"
-								onClick={() => setMode("upload")}
-								className={`px-3 py-1 text-xs rounded-md transition-colors ${
-									mode === "upload"
-										? "bg-background shadow-sm font-medium"
-										: "text-muted-foreground"
-								}`}
+					<div className="border-r flex flex-col overflow-hidden p-4 space-y-4 overflow-y-auto">
+						{/* File Upload Section */}
+						<span className="text-sm font-medium">Upload Audio File</span>
+						<button
+							type="button"
+							className="w-full border-2 border-dashed rounded-lg p-6 text-center cursor-pointer hover:border-primary/50 transition-colors"
+							onClick={() => fileInputRef.current?.click()}
+						>
+							<input
+								ref={fileInputRef}
+								type="file"
+								accept="audio/*"
+								onChange={handleFileChange}
+								className="hidden"
+							/>
+							<svg
+								width="32"
+								height="32"
+								fill="none"
+								stroke="currentColor"
+								strokeWidth="1.5"
+								className="mx-auto text-muted-foreground mb-2"
+								aria-hidden="true"
 							>
-								File Upload
-							</button>
-							<button
-								type="button"
-								onClick={() => setMode("realtime")}
-								className={`px-3 py-1 text-xs rounded-md transition-colors ${
-									mode === "realtime"
-										? "bg-background shadow-sm font-medium"
-										: "text-muted-foreground"
-								}`}
-							>
-								Real-Time
-							</button>
+								<title>Upload audio</title>
+								<path d="M16 4v16M10 12l6-6 6 6" />
+								<path d="M4 24h24" />
+							</svg>
+							{file ? (
+								<p className="text-sm font-medium">{file.name}</p>
+							) : (
+								<p className="text-sm text-muted-foreground">
+									Click to select an audio file
+								</p>
+							)}
+							<p className="text-xs text-muted-foreground mt-1">
+								WAV, MP3, M4A, FLAC, OGG
+							</p>
+						</button>
+						{file && (
+							<div className="text-xs text-muted-foreground">
+								Size: {(file.size / 1024 / 1024).toFixed(2)} MB
+							</div>
+						)}
+						<Button
+							type="button"
+							onClick={handleTranscribe}
+							disabled={isLoading || !file}
+						>
+							{isLoading ? "Transcribing..." : "Transcribe"}
+						</Button>
+
+						{/* OR Divider */}
+						<div className="flex items-center gap-3 py-1">
+							<div className="flex-1 h-px bg-border" />
+							<span className="text-xs text-muted-foreground font-medium">
+								OR
+							</span>
+							<div className="flex-1 h-px bg-border" />
 						</div>
 
-						{mode === "upload" && (
-							<>
-								<span className="text-sm font-medium">Upload Audio File</span>
-								<button
-									type="button"
-									className="w-full border-2 border-dashed rounded-lg p-8 text-center cursor-pointer hover:border-primary/50 transition-colors"
-									onClick={() => fileInputRef.current?.click()}
-								>
-									<input
-										ref={fileInputRef}
-										type="file"
-										accept="audio/*"
-										onChange={handleFileChange}
-										className="hidden"
-									/>
-									<svg
-										width="40"
-										height="40"
-										fill="none"
-										stroke="currentColor"
-										strokeWidth="1.5"
-										className="mx-auto text-muted-foreground mb-3"
-										aria-hidden="true"
-									>
-										<title>Upload audio</title>
-										<path d="M20 6v20M12 14l8-8 8 8" />
-										<path d="M6 30h28" />
-									</svg>
-									{file ? (
-										<p className="text-sm font-medium">{file.name}</p>
-									) : (
-										<p className="text-sm text-muted-foreground">
-											Click to select an audio file
+						{/* Real-time Recording Section */}
+						<span className="text-sm font-medium">Real-Time Transcribe</span>
+						<div className="flex items-center gap-4 p-4 rounded-lg border bg-muted/20">
+							<button
+								type="button"
+								onClick={isRecording ? stopRecording : startRecording}
+								disabled={isLoading}
+								className={`w-14 h-14 shrink-0 rounded-full flex items-center justify-center transition-all ${
+									isRecording
+										? "bg-red-500 hover:bg-red-600 text-white animate-pulse"
+										: "bg-primary hover:bg-primary/90 text-primary-foreground"
+								}`}
+							>
+								{isRecording ? (
+									<StopCircleIcon className="w-6 h-6" />
+								) : (
+									<MicIcon className="w-6 h-6" />
+								)}
+							</button>
+							<div className="flex-1 min-w-0">
+								{isRecording ? (
+									<>
+										<div className="flex items-center gap-2 text-sm text-red-500 font-medium">
+											<span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+											Recording — {formatDuration(recordingDuration)}
+										</div>
+										<p className="text-xs text-muted-foreground mt-1">
+											Click the stop button when done
 										</p>
-									)}
-									<p className="text-xs text-muted-foreground mt-1">
-										Supports WAV, MP3, M4A, FLAC, OGG
-									</p>
-								</button>
-								{file && (
-									<div className="text-xs text-muted-foreground">
-										Size: {(file.size / 1024 / 1024).toFixed(2)} MB
-									</div>
+									</>
+								) : (
+									<>
+										<p className="text-sm text-foreground">
+											Click to start recording
+										</p>
+										<p className="text-xs text-muted-foreground mt-0.5">
+											Transcribes speech in real-time via microphone
+										</p>
+									</>
 								)}
-								<Button
-									type="button"
-									onClick={handleTranscribe}
-									disabled={isLoading || !file}
-								>
-									{isLoading ? "Transcribing..." : "Transcribe"}
-								</Button>
-							</>
-						)}
+							</div>
+						</div>
 
-						{mode === "realtime" && (
-							<div className="flex flex-col items-center justify-center flex-1 space-y-6 p-8">
-								{/* Recording indicator */}
-								{isRecording && (
-									<div className="flex items-center gap-2 text-sm text-red-500">
-										<span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
-										Recording — {formatDuration(recordingDuration)}
-									</div>
-								)}
-
-								{/* Big mic button */}
-								<button
-									type="button"
-									onClick={isRecording ? stopRecording : startRecording}
-									className={`w-24 h-24 rounded-full flex items-center justify-center transition-all ${
-										isRecording
-											? "bg-red-500 hover:bg-red-600 text-white scale-110 animate-pulse"
-											: "bg-primary hover:bg-primary/90 text-primary-foreground"
-									}`}
-								>
-									{isRecording ? (
-										<StopCircleIcon className="w-10 h-10" />
-									) : (
-										<MicIcon className="w-10 h-10" />
-									)}
-								</button>
-
-								<p className="text-sm text-muted-foreground">
-									{isRecording ? "Click to stop" : "Click to start recording"}
+						{/* Live transcript (shown inline when recording) */}
+						{liveText && (
+							<div className="p-3 rounded-lg border bg-muted/30">
+								<span className="text-xs font-medium text-muted-foreground block mb-1">
+									{isRecording ? "Live Transcript" : "Final Transcript"}
+								</span>
+								<p className="text-sm whitespace-pre-wrap leading-relaxed">
+									{liveText}
 								</p>
-
-								{/* Live transcript */}
-								{liveText && (
-									<div className="w-full p-4 rounded-lg border bg-muted/30">
-										<span className="text-xs font-medium text-muted-foreground block mb-2">
-											{isRecording ? "Live Transcript" : "Final Transcript"}
-										</span>
-										<p className="text-sm whitespace-pre-wrap leading-relaxed">
-											{liveText}
-										</p>
-									</div>
-								)}
 							</div>
 						)}
 					</div>
@@ -452,13 +441,8 @@ const VoiceTranscribePage = () => {
 										</svg>
 									</div>
 									<p className="text-sm text-muted-foreground">
-										{mode === "upload"
-											? "Upload an audio file on the left and click "
-											: "Click the microphone button to start recording, or switch to File Upload to "}
-										<strong>
-											{mode === "upload" ? "Transcribe" : "upload a file"}
-										</strong>{" "}
-										to see the text here.
+										Upload an audio file or use the microphone on the left, then
+										click <strong>Transcribe</strong> to see the text here.
 									</p>
 								</div>
 							</div>

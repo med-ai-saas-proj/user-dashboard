@@ -113,18 +113,16 @@ export type GetPaymentMethod = {
 
 export type GetBillingHistoryResponse = {
 	success: boolean;
-	data: [
-		{
-			invoice_uid: string;
-			billing_period: string;
-			total_amount: string;
-			paid_at: string;
-			details: {
-				additionalProperty: string;
-			};
-			used_credits: string;
-		},
-	];
+	data: {
+		invoice_uid: string;
+		billing_period: string;
+		total_amount: string;
+		paid_at: string;
+		details: {
+			additionalProperty: string;
+		};
+		used_credits: string;
+	}[];
 	total: number;
 	offset: number;
 	limit: number;
@@ -145,4 +143,56 @@ export type BillingHistory = {
 	total: number;
 	offset: number;
 	limit: number;
+};
+
+export type PayInvoiceResponse = {
+	success: boolean;
+	data: {
+		hosted_invoice_url: "string";
+	};
+};
+
+export type PayInvoice = {
+	success: boolean;
+	data: {
+		hostedInvoiceUrl: string;
+	};
+};
+
+export type InvoiceDetailsResponse = {
+	success: boolean;
+	data: {
+		invoice_uid: string;
+		billing_period: string;
+		total_amount: string;
+		paid_at: string;
+		details: {
+			additionalProperty: string;
+		};
+		used_credits: string;
+		line_items: {
+			description: string;
+			amount: string;
+			project_uid: string;
+		}[];
+	};
+};
+
+export type InvoiceDetails = {
+	success: boolean;
+	data: {
+		invoiceUID: string;
+		billingPeriod: string;
+		totalAmount: string;
+		paidAt: string;
+		details: {
+			additionalProperty: string;
+		};
+		usedCredits: string;
+		lineItems: {
+			description: string;
+			amount: string;
+			projectUID: string;
+		}[];
+	};
 };

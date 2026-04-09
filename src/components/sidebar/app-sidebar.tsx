@@ -35,6 +35,7 @@ import {
 	WatchIcon,
 } from "lucide-react";
 import type * as React from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { NavLink, useLocation } from "react-router-dom";
 import veneraLogo from "@/assets/venera.png";
@@ -65,6 +66,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 	const { t } = useTranslation("sidebar");
 	const { userInfo } = useAuthStore();
 	const { pathname } = useLocation();
+	const [playgroundSearch, setPlaygroundSearch] = useState("");
 
 	const data = {
 		teams: [
@@ -277,14 +279,47 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 					<SidebarGroupLabel className="text-[11px] font-bold uppercase tracking-widest text-sidebar-foreground/70">
 						Playground
 					</SidebarGroupLabel>
+					<div className="px-2 pb-1">
+						<div className="relative">
+							<SearchIcon className="absolute left-2 top-1/2 -translate-y-1/2 size-3 text-muted-foreground" />
+							<input
+								type="text"
+								placeholder="Search features..."
+								value={playgroundSearch}
+								onChange={(e) => setPlaygroundSearch(e.target.value)}
+								className="w-full h-7 pl-7 pr-2 text-xs rounded-md border bg-background placeholder:text-muted-foreground/60 focus:outline-none focus:ring-1 focus:ring-ring"
+							/>
+						</div>
+					</div>
 				</SidebarGroup>
 				<NavProjects
-					projects={data.dataProcessing}
+					projects={
+						playgroundSearch
+							? data.dataProcessing.filter((p) =>
+									p.name.toLowerCase().includes(playgroundSearch.toLowerCase())
+								)
+							: data.dataProcessing
+					}
 					label={t("dataProcessing.title")}
 				/>
-				<NavProjects projects={data.operation} label={t("operation.title")} />
 				<NavProjects
-					projects={data.dataManagement}
+					projects={
+						playgroundSearch
+							? data.operation.filter((p) =>
+									p.name.toLowerCase().includes(playgroundSearch.toLowerCase())
+								)
+							: data.operation
+					}
+					label={t("operation.title")}
+				/>
+				<NavProjects
+					projects={
+						playgroundSearch
+							? data.dataManagement.filter((p) =>
+									p.name.toLowerCase().includes(playgroundSearch.toLowerCase())
+								)
+							: data.dataManagement
+					}
 					label={t("dataManagement.title")}
 				/>
 				<NavProjects

@@ -907,6 +907,7 @@ export default function ApiFlowBuilderPage() {
 		{ name: string; steps: PipelineStep[] }[]
 	>([]);
 	const [activeStepIdx, setActiveStepIdx] = useState<number | null>(null);
+	const [apiSearch, setApiSearch] = useState("");
 	const [showTopology, setShowTopology] = useState(true);
 
 	const CODE_TABS = ["python", "javascript", "go", "curl"] as const;
@@ -1059,9 +1060,23 @@ export default function ApiFlowBuilderPage() {
 						<h3 className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground mb-2">
 							Available APIs
 						</h3>
+						<div className="relative mb-2">
+							<SearchIcon className="absolute left-2 top-1/2 -translate-y-1/2 size-3 text-muted-foreground" />
+							<input
+								type="text"
+								placeholder="Search APIs..."
+								value={apiSearch}
+								onChange={(e) => setApiSearch(e.target.value)}
+								className="w-full h-7 pl-7 pr-2 text-xs rounded-md border bg-background placeholder:text-muted-foreground/60 focus:outline-none focus:ring-1 focus:ring-ring"
+							/>
+						</div>
 						{Object.entries(LAYER_META).map(([layerKey, meta]) => {
 							const layerApis = AVAILABLE_APIS.filter(
-								(a) => a.layer === layerKey
+								(a) =>
+									a.layer === layerKey &&
+									(!apiSearch ||
+										a.label.toLowerCase().includes(apiSearch.toLowerCase()) ||
+										a.id.toLowerCase().includes(apiSearch.toLowerCase()))
 							);
 							if (!layerApis.length) return null;
 							return (

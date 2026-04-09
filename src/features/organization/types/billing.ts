@@ -110,3 +110,39 @@ export type GetPaymentMethod = {
 	metadata: Record<string, unknown>;
 	type: "card";
 };
+
+export type GetBillingHistoryResponse = {
+	success: boolean;
+	data: [
+		{
+			invoice_uid: string;
+			billing_period: string;
+			total_amount: string;
+			paid_at: string;
+			details: {
+				additionalProperty: string;
+			};
+			used_credits: string;
+		},
+	];
+	total: number;
+	offset: number;
+	limit: number;
+};
+
+export type BillingHistory = {
+	success: boolean;
+	data: {
+		invoiceUID: string;
+		billingPeriod: string;
+		totalAmount: string;
+		paidAt: string;
+		details: {
+			additionalProperty: string;
+		};
+		usedCredits: string;
+	}[];
+	total: number;
+	offset: number;
+	limit: number;
+};

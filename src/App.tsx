@@ -1,16 +1,8 @@
 import "./config/i18n";
 
-import { ThemeProvider } from "next-themes";
-import { KeycloakProvider } from "@/features/auth/providers/keycloak-provider";
-import { query_client } from "@/query/query-client";
-import APIKeysPage from "@/routes/api-keys";
-import APIReferencePage from "@/routes/api-reference";
-import EHRSummaryPage from "@/routes/ehr-summary";
-import LoginPage from "@/routes/login";
-import { ProtectedRoute } from "@/routes/protected-route";
-import { PublicRoute } from "@/routes/public-route";
-import RxAdvisorPage from "@/routes/rx-advisor";
 import { QueryClientProvider } from "@tanstack/react-query";
+import { ThemeProvider } from "next-themes";
+import { useEffect, useRef } from "react";
 import {
 	BrowserRouter,
 	Navigate,
@@ -19,37 +11,45 @@ import {
 	useLocation,
 } from "react-router-dom";
 import { Toaster } from "sonner";
-import { useEffect, useRef } from "react";
-import PlaygroundChatPage from "./routes/playground-chat";
-import PlaygroundAISearchPage from "@/routes/playground-ai-search";
-import EhrConverterPage from "@/routes/ehr-converter";
-import DocumentToFhirPage from "@/routes/document-to-fhir";
-import KnowledgeBasePage from "@/routes/knowledge-base";
-import BhxhValidatorPage from "@/routes/bhxh-validator";
-import VoiceTranscribePage from "@/routes/voice-transcribe";
-import MedicalImagePage from "@/routes/medical-image";
-import HealthScorePage from "@/routes/health-score";
-import DataMaskingPage from "@/routes/data-masking";
-import PatientHistoryPage from "@/routes/patient-history";
-import WearableDataPage from "@/routes/wearable-data";
-import ArchitecturePage from "@/routes/architecture";
-import IntegrationDashboardPage from "@/routes/integration-dashboard";
-import PublicHealthPage from "@/routes/public-health";
-import ApiFlowBuilderPage from "@/routes/api-flow-builder";
-import SettingsPage from "@/routes/settings";
-import BillingPage from "@/routes/billing";
-import UpgradePage from "@/routes/upgrade";
-import DashboardBuilderPage from "@/routes/dashboard-builder";
-import SymptomCheckerPage from "@/routes/symptom-checker";
-import ClinicSearchPage from "@/routes/clinic-search";
-import DigitalTwinPage from "@/routes/digital-twin";
-import FederatedLearningPage from "@/routes/federated-learning";
-import HealthcareDashboardPage from "@/routes/healthcare-dashboard";
+import { KeycloakProvider } from "@/features/auth/providers/keycloak-provider";
+import { query_client } from "@/query/query-client";
 import A2UIPlaygroundPage from "@/routes/a2ui-playground";
-import GeneDecoderPage from "@/routes/gene-decoder";
-import CrossSearchPage from "@/routes/cross-search";
+import ApiFlowBuilderPage from "@/routes/api-flow-builder";
+import APIKeysPage from "@/routes/api-keys";
+import APIReferencePage from "@/routes/api-reference";
+import ArchitecturePage from "@/routes/architecture";
+import BhxhValidatorPage from "@/routes/bhxh-validator";
+import BillingPage from "@/routes/billing";
 import BloodPanelPage from "@/routes/blood-panel";
+import ClinicSearchPage from "@/routes/clinic-search";
+import CrossSearchPage from "@/routes/cross-search";
+import DashboardBuilderPage from "@/routes/dashboard-builder";
+import DataMaskingPage from "@/routes/data-masking";
+import DigitalTwinPage from "@/routes/digital-twin";
+import DocumentToFhirPage from "@/routes/document-to-fhir";
+import EhrConverterPage from "@/routes/ehr-converter";
 import EHROverviewPage from "@/routes/ehr-overview";
+import EHRSummaryPage from "@/routes/ehr-summary";
+import FederatedLearningPage from "@/routes/federated-learning";
+import GeneDecoderPage from "@/routes/gene-decoder";
+import HealthScorePage from "@/routes/health-score";
+import HealthcareDashboardPage from "@/routes/healthcare-dashboard";
+import IntegrationDashboardPage from "@/routes/integration-dashboard";
+import KnowledgeBasePage from "@/routes/knowledge-base";
+import LoginPage from "@/routes/login";
+import MedicalImagePage from "@/routes/medical-image";
+import PatientHistoryPage from "@/routes/patient-history";
+import PlaygroundAISearchPage from "@/routes/playground-ai-search";
+import { ProtectedRoute } from "@/routes/protected-route";
+import PublicHealthPage from "@/routes/public-health";
+import { PublicRoute } from "@/routes/public-route";
+import RxAdvisorPage from "@/routes/rx-advisor";
+import SettingsPage from "@/routes/settings";
+import SymptomCheckerPage from "@/routes/symptom-checker";
+import UpgradePage from "@/routes/upgrade";
+import VoiceTranscribePage from "@/routes/voice-transcribe";
+import WearableDataPage from "@/routes/wearable-data";
+import PlaygroundChatPage from "./routes/playground-chat";
 
 function PreventScrollReset() {
 	const location = useLocation();

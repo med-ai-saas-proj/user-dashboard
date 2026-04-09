@@ -1,15 +1,19 @@
 "use client";
 
 import {
+	ActivityIcon,
 	BarChart3Icon,
 	Book,
 	BotIcon,
+	BrainIcon,
 	ClipboardPlusIcon,
 	CreditCardIcon,
 	DatabaseIcon,
 	DnaIcon,
 	DropletIcon,
 	EyeOffIcon,
+	FileHeartIcon,
+	FileJson2Icon,
 	FileTextIcon,
 	GitBranchPlusIcon,
 	GlobeIcon,
@@ -17,6 +21,8 @@ import {
 	ImageIcon,
 	KeyRound,
 	LayoutDashboardIcon,
+	LayoutGridIcon,
+	MapPinIcon,
 	MicIcon,
 	NetworkIcon,
 	PillIcon,
@@ -24,18 +30,14 @@ import {
 	Settings2Icon,
 	ShieldCheckIcon,
 	SparklesIcon,
-	FileJson2Icon,
+	StethoscopeIcon,
 	UserRoundIcon,
 	WatchIcon,
-	LayoutGridIcon,
-	StethoscopeIcon,
-	MapPinIcon,
-	ActivityIcon,
-	BrainIcon,
-	FileHeartIcon,
 } from "lucide-react";
 import type * as React from "react";
 import { useTranslation } from "react-i18next";
+import { NavLink, useLocation } from "react-router-dom";
+import veneraLogo from "@/assets/venera.png";
 import {
 	Sidebar,
 	SidebarContent,
@@ -49,13 +51,11 @@ import {
 	SidebarMenuItem,
 	SidebarRail,
 } from "@/components/shadcn/sidebar";
-import { NavLink, useLocation } from "react-router-dom";
 import { LocaleSwitcher } from "@/components/sidebar/locale-switcher";
 import { NavProjects } from "@/components/sidebar/nav-projects";
 import { NavUser } from "@/components/sidebar/nav-user";
 import { TeamSwitcher } from "@/components/sidebar/team-switcher";
 import { useAuthStore } from "@/features/auth/store/auth-store";
-import veneraLogo from "@/assets/venera.png";
 
 function VeneraLogo({ className }: { className?: string }) {
 	return <img src={veneraLogo} alt="Venera" className={className} />;

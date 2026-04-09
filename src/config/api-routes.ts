@@ -77,6 +77,10 @@ export const API_ROUTES = {
 			`service/api/${API_VERSION}/voice_transcribe`,
 			BASE_API_URL
 		).toString(),
+		VOICE_TRANSCRIBE_WS: new URL(
+			`service/api/${API_VERSION}/voice_transcribe/ws`,
+			BASE_API_URL.replace("https://", "wss://").replace("http://", "ws://")
+		).toString(),
 		MEDICAL_IMAGE: new URL(
 			`service/api/${API_VERSION}/medical_image/describe`,
 			BASE_API_URL

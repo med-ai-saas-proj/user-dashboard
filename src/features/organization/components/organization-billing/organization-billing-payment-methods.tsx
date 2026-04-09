@@ -171,7 +171,7 @@ const OrganizationBillingPaymentMethods = () => {
 														<p className="text-sm text-muted-foreground">
 															Card details
 														</p>
-														<p className="font-medium capitalize">
+														<p className="font-medium capitalize text-nowrap">
 															{paymentMethod.card.brand} •{" "}
 															{paymentMethod.card.funding} • Exp{" "}
 															{paymentMethod.card.exp_month}/

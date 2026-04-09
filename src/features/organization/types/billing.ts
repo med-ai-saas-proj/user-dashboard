@@ -196,3 +196,51 @@ export type InvoiceDetails = {
 		}[];
 	};
 };
+
+export type GetCreditsResponse = {
+	success: boolean;
+	data: {
+		credit_uid: string;
+		amount: {
+			value: number;
+			scale: number;
+		};
+		name: string;
+		current_spent: {
+			value: number;
+			scale: number;
+		};
+		start_month: number;
+		start_year: number;
+		exp_month: number;
+		exp_year: number;
+		note: string;
+	}[];
+	total: number;
+	offset: number;
+	limit: number;
+};
+
+export type Credits = {
+	success: boolean;
+	data: {
+		creditUID: string;
+		amount: {
+			value: number;
+			scale: number;
+		};
+		name: string;
+		currentSpent: {
+			value: number;
+			scale: number;
+		};
+		startMonth: number;
+		startYear: number;
+		expMonth: number;
+		expYear: number;
+		note: string;
+	}[];
+	total: number;
+	offset: number;
+	limit: number;
+};

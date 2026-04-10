@@ -1,7 +1,7 @@
 ---
 name: user-dashboard
 description: Venera user-dashboard (React 19 + Vite) — routes, API integration, streaming, WebGPU inference, deployment
-version: 1.0.0
+version: 1.1.0
 source: local-git-analysis
 last_verified: 2026-04-10
 ---
@@ -9,6 +9,21 @@ last_verified: 2026-04-10
 # Venera User Dashboard — Development Guide
 
 React 19 frontend for the Venera API Hub. Served at `https://hub.venerian.space/`.
+
+## ⚠️ CRITICAL: Deploy via Git Only
+
+**Production is deployed by `Venera-AI/api-hub-deployment.deploy.yaml`.** Pushing to `main` fires a `repository_dispatch` → SSH → `git reset --hard origin/main` on the VM → `npx vite build` with VITE_ env vars → rebuild nginx image → restart containers.
+
+### DO NOT:
+- ❌ Manually SCP `dist/` to the VM — wiped on next auto-deploy (minutes later)
+- ❌ SSH in and edit files in `/home/minh/deployment/user-dashboard/` — `git reset --hard` throws them away
+- ❌ Push to any branch other than `main` expecting production to update — only `main` triggers the deploy dispatch
+- ❌ Run `pnpm build` — it runs `tsc` first, which fails with pre-existing type errors. Use `npx vite build`
+
+### DO:
+- ✅ Commit + push to `Venera-AI/user-dashboard` `main` branch. The CI does the rest.
+- ✅ Verify with `gh run list -R Venera-AI/api-hub-deployment --workflow=deploy.yaml --limit 5`
+- ✅ Check served bundle hash changes: `curl -s https://hub.venerian.space/ | grep -oE 'assets/index-[a-zA-Z0-9_-]+\.js'`
 
 ## 1. Tech Stack
 
@@ -160,9 +175,21 @@ pnpm install
 pnpm dev  # http://localhost:5173
 ```
 
-### Production Build
+### Standard Production Deploy (CI/CD — always use this)
 
-**CRITICAL: ALL 4 VITE_ env vars are REQUIRED.** Missing any causes login/API failures.
+1. Commit locally on `main`: `git commit -am "feat: ..."`
+2. `git push origin main`
+3. `trigger-deploy.yaml` fires a `repository_dispatch` to `Venera-AI/api-hub-deployment`
+4. Watch the deploy: `gh run watch -R Venera-AI/api-hub-deployment` (or `gh run list --limit 5`)
+5. Verify after completion (typically 3-5 min):
+   ```bash
+   curl -s https://hub.venerian.space/ | grep -oE 'assets/index-[a-zA-Z0-9_-]+\.js'
+   # Should be a NEW hash compared to before your push
+   ```
+
+The CI runs `npx vite build` with all required VITE_ env vars (`VITE_BASE_API_URL`, `VITE_KEYCLOAK_URL`, `VITE_KEYCLOAK_REALM`, `VITE_KEYCLOAK_CLIENT_ID`) automatically — you do not need to set them locally for deploys.
+
+### Local Production Build (for testing only)
 
 ```bash
 VITE_BASE_API_URL=https://hub.venerian.space/backend \
@@ -172,36 +199,66 @@ VITE_KEYCLOAK_CLIENT_ID=venera-app \
 npx vite build
 ```
 
-Use `npx vite build` NOT `pnpm build` — the latter runs `tsc` which fails with pre-existing type errors.
+- **Use `npx vite build`** NOT `pnpm build` — the latter runs `tsc` which fails with pre-existing type errors.
+- **ALL 4 VITE_ vars required.** Missing any causes login redirect to localhost or API calls to wrong origin.
+- This output is for **local verification only**. Do NOT SCP it to the VM (auto-deploy will wipe it).
 
-### Manual Deploy to hub.venerian.space
+### Emergency Manual Deploy (CI/CD broken)
+
+Only use if `Venera-AI/api-hub-deployment.deploy.yaml` is broken and you cannot fix the workflow quickly. Always follow up with a git commit, or the next auto-deploy regresses your fix.
 
 ```bash
-# 1. Build
-tar czf /tmp/ud.tar.gz dist/
-gcloud compute scp /tmp/ud.tar.gz venera-hub-demo:/tmp/ud.tar.gz --zone=us-central1-a
+# 1. Build locally with VITE_ vars (see above)
+# 2. Upload
+tar czf /tmp/ud.tar.gz -C dist . && \
+  gcloud compute scp /tmp/ud.tar.gz venera-hub-demo:/tmp/ud.tar.gz --zone=us-central1-a
 
-# 2. Deploy to build-output/ (NOT dist/) and rebuild nginx
-gcloud compute ssh venera-hub-demo --zone=us-central1-a --command="
+# 3. Deploy to build-output/ (NOT dist/) and rebuild nginx
+gcloud compute ssh venera-hub-demo --zone=us-central1-a --command='
   cd /home/minh/deployment/user-dashboard
-  rm -rf build-output && tar xzf /tmp/ud.tar.gz && mv dist build-output
-  cd /home/minh/deployment && docker compose up -d --build nginx
-"
+  rm -rf build-output && mkdir build-output && tar xzf /tmp/ud.tar.gz -C build-output
+  cd /home/minh/deployment && docker compose up -d --force-recreate --build nginx
+'
 ```
 
-**DO NOT use `restart`** — nginx bakes files into image at build time, need `--build nginx`.
+### Why the frontend "disappears" after backend deploys
 
-### Deployment Gotchas
-- Frontend is baked into nginx image — deploy to `build-output/`, then `--build nginx`
-- Missing any `VITE_*` env var → runtime config is wrong (login redirects to localhost)
-- nginx can disappear after `docker compose up -d --build backend` — always re-run `docker compose up -d nginx` after backend deploy
+The frontend is **baked into the nginx Docker image** via `nginx.Dockerfile` (COPY build-output into /usr/share/nginx/html). This creates 3 failure modes:
+
+1. `docker compose restart nginx` → serves OLD frontend (image unchanged)
+2. `docker compose up -d nginx` (no `--build`) → serves OLD frontend (cached image)
+3. `docker compose up -d --build nginx` without `--force-recreate` → Docker layer cache may reuse the COPY layer if `build-output/` content didn't change from its perspective
+
+The CI fix uses `docker compose up -d --force-recreate nginx` which always recreates the container.
+
+Additionally, nginx has `depends_on: backend: condition: service_healthy` — so when backend is rebuilt, Compose **stops nginx** during the transition. `restart: always` does NOT cover this (it's for crash recovery, not dependency transitions). A cron watchdog at `/home/minh/deployment/nginx-watchdog.sh` on the VM restarts nginx within 60 seconds if it's ever down.
 
 ## 6. Known Issues (2026-04-10)
 
 - **AI Search broken in production** — backend needs real `GOOGLE_PROGRAMMABLE_SEARCH_API_KEY` (currently `placeholder` → 500 on agent tool call)
 - **No automated tests** — no test files exist yet in `src/`. Adding Playwright E2E would benefit critical user flows.
 - **`pnpm build` fails** due to pre-existing TypeScript errors — use `npx vite build` instead
+- **VM has no pnpm on interactive PATH** — `pnpm` lives at `$HOME/.local/share/pnpm/pnpm`. Scripts must export `PATH` explicitly if invoking pnpm from SSH
 
-## 7. Feature Requests Pending
-- Real-time speech-to-text merged with "Upload Audio File" card (DONE — see `src/routes/voice-transcribe.tsx`)
-- Search boxes in Playground and API Flow Builder (DONE — see `src/routes/api-flow-builder.tsx`)
+## 7. Troubleshooting
+
+### "My push to main didn't update production"
+
+```bash
+# Check if the trigger fired
+gh run list -R Venera-AI/user-dashboard --workflow=trigger-deploy.yaml --limit 3
+
+# Check if the downstream deploy ran
+gh run list -R Venera-AI/api-hub-deployment --workflow=deploy.yaml --limit 5
+
+# Check the live bundle hash
+curl -s https://hub.venerian.space/ | grep -oE 'assets/index-[a-zA-Z0-9_-]+\.js'
+```
+
+If the `api-hub-deployment` deploy did NOT run, check `secrets.DEPLOY_PAT` permissions — it needs access to both repos.
+
+### "Feature I just merged isn't showing up"
+
+1. Confirm bundle hash changed (see above)
+2. If hash changed but feature missing: hard refresh browser (CDN/service worker cache)
+3. If hash unchanged: the deploy failed silently. Check logs with `gh run view <run-id> -R Venera-AI/api-hub-deployment --log`

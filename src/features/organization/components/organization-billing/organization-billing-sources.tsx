@@ -9,8 +9,10 @@ import {
 import { Skeleton } from "@/components/shadcn/skeleton";
 import { useGetBillingSource } from "../../hooks/organization-billing/use-get-billing-source";
 import { useBillingStore } from "../../store/billing";
+import { useTranslation } from "react-i18next";
 
 const OrganizationBillingSources = () => {
+	const { t, i18n } = useTranslation("billing" as any);
 	const { data: billingSource, isLoading, isError } = useGetBillingSource();
 	const setBillingSourceId = useBillingStore(
 		(state) => state.setBillingSourceId
@@ -37,9 +39,7 @@ const OrganizationBillingSources = () => {
 				<div className="max-w-4xl mx-auto">
 					<div className="flex items-center gap-4 border border-alert rounded-lg p-4 text-alert">
 						<TriangleAlert size={20} />
-						<p className="text-sm font-medium">
-							Unable to load billing source information.
-						</p>
+						<p className="text-sm font-medium">{t("sources.errorLoad")}</p>
 					</div>
 				</div>
 			</div>
@@ -59,10 +59,10 @@ const OrganizationBillingSources = () => {
 					<div className="flex items-center gap-4 border border-alert rounded-lg p-4 text-alert">
 						<TriangleAlert size={20} />
 						<div className="flex flex-col gap-1">
-							<p className="font-semibold text-sm">No billing source found</p>
-							<p className="text-sm">
-								Add payment details from Billing overview to create one.
+							<p className="font-semibold text-sm">
+								{t("sources.empty.title")}
 							</p>
+							<p className="text-sm">{t("sources.empty.description")}</p>
 						</div>
 					</div>
 				</div>
@@ -81,7 +81,9 @@ const OrganizationBillingSources = () => {
 		.filter(Boolean)
 		.join(", ");
 
-	const createdAt = new Date(source.created_at).toLocaleDateString();
+	const createdAt = new Date(source.created_at).toLocaleDateString(
+		i18n.language
+	);
 
 	return (
 		<div className="w-full">
@@ -92,20 +94,24 @@ const OrganizationBillingSources = () => {
 							<CreditCard size={18} />
 						</div>
 						<div>
-							<p className="font-semibold text-md">Billing source</p>
+							<p className="font-semibold text-md">{t("sources.title")}</p>
 							<p className="text-sm text-muted-foreground">
-								Provider: {source.source_type}
+								{t("sources.provider")}: {source.source_type}
 							</p>
 						</div>
 					</div>
-					<p className="text-sm text-muted-foreground">Created: {createdAt}</p>
+					<p className="text-sm text-muted-foreground">
+						{t("sources.created")}: {createdAt}
+					</p>
 				</div>
 
 				<div className="mt-6 grid gap-4 sm:grid-cols-2">
 					<div className="flex items-start gap-3">
 						<Building2 size={16} className="mt-0.5 text-muted-foreground" />
 						<div>
-							<p className="text-sm text-muted-foreground">Name</p>
+							<p className="text-sm text-muted-foreground">
+								{t("common.name")}
+							</p>
 							<p className="font-medium">{source.name}</p>
 						</div>
 					</div>
@@ -113,7 +119,9 @@ const OrganizationBillingSources = () => {
 					<div className="flex items-start gap-3">
 						<Mail size={16} className="mt-0.5 text-muted-foreground" />
 						<div>
-							<p className="text-sm text-muted-foreground">Email</p>
+							<p className="text-sm text-muted-foreground">
+								{t("common.email")}
+							</p>
 							<p className="font-medium">{source.email}</p>
 						</div>
 					</div>
@@ -121,7 +129,9 @@ const OrganizationBillingSources = () => {
 					<div className="flex items-start gap-3">
 						<Phone size={16} className="mt-0.5 text-muted-foreground" />
 						<div>
-							<p className="text-sm text-muted-foreground">Phone</p>
+							<p className="text-sm text-muted-foreground">
+								{t("common.phone")}
+							</p>
 							<p className="font-medium">{source.phone}</p>
 						</div>
 					</div>
@@ -129,7 +139,9 @@ const OrganizationBillingSources = () => {
 					<div className="flex items-start gap-3">
 						<MapPin size={16} className="mt-0.5 text-muted-foreground" />
 						<div>
-							<p className="text-sm text-muted-foreground">Billing address</p>
+							<p className="text-sm text-muted-foreground">
+								{t("common.billingAddress")}
+							</p>
 							<p className="font-medium">{billingAddress}</p>
 						</div>
 					</div>

@@ -7,8 +7,10 @@ import UpdatePaymentDetailsDialog from "./dialogs/update-payment-details-dialog"
 import { useBillingStore } from "../../store/billing";
 import OrganizationBillingSources from "./organization-billing-sources";
 import StripePayment from "./stripe/stripe-payment";
+import { useTranslation } from "react-i18next";
 
 const OrganizationBillingOverview = () => {
+	const { t } = useTranslation("billing" as any);
 	const [addPaymentDetailsOpen, setAddPaymentDetailsOpen] = useState(false);
 	const [updatePaymentDetailsOpen, setUpdatePaymentDetailsOpen] =
 		useState(false);
@@ -21,7 +23,7 @@ const OrganizationBillingOverview = () => {
 				<div className="flex flex-col gap-12">
 					<div className="flex flex-col gap-6">
 						<div className="flex flex-col gap-2">
-							<p className="font-semibold">Credit remaining</p>
+							<p className="font-semibold">{t("overview.creditRemaining")}</p>
 							<p className="text-4xl font-semibold">$0.00</p>
 						</div>
 						<div className="flex items-center gap-2">
@@ -31,7 +33,7 @@ const OrganizationBillingOverview = () => {
 									onClick={() => setStripePay(true)}
 									disabled={stripePay}
 								>
-									Pay with Stripe
+									{t("overview.actions.payWithStripe")}
 								</Button>
 							)}
 							{billingSourceId && (
@@ -39,7 +41,7 @@ const OrganizationBillingOverview = () => {
 									variant="default"
 									onClick={() => setUpdatePaymentDetailsOpen(true)}
 								>
-									Update payment details
+									{t("overview.actions.updatePaymentDetails")}
 								</Button>
 							)}
 							{!billingSourceId && (
@@ -47,11 +49,11 @@ const OrganizationBillingOverview = () => {
 									variant="default"
 									onClick={() => setAddPaymentDetailsOpen(true)}
 								>
-									Add payment details
+									{t("overview.actions.addPaymentDetails")}
 								</Button>
 							)}
 							<Button variant="outline">
-								<Link to="/dashboard">View usage</Link>
+								<Link to="/dashboard">{t("overview.actions.viewUsage")}</Link>
 							</Button>
 						</div>
 						{stripePay && (
@@ -82,9 +84,11 @@ const OrganizationBillingOverview = () => {
 								<CreditCard size={20} />
 							</div>
 							<div>
-								<p className="font-medium">Payment method</p>
+								<p className="font-medium">
+									{t("overview.cards.paymentMethod.title")}
+								</p>
 								<p className="text-sm text-gray-500">
-									Add or change payment method
+									{t("overview.cards.paymentMethod.description")}
 								</p>
 							</div>
 						</Link>
@@ -96,9 +100,11 @@ const OrganizationBillingOverview = () => {
 								<CreditCard size={20} />
 							</div>
 							<div>
-								<p className="font-medium">Billing history</p>
+								<p className="font-medium">
+									{t("overview.cards.billingHistory.title")}
+								</p>
 								<p className="text-sm text-gray-500">
-									View your past invoices and payment records
+									{t("overview.cards.billingHistory.description")}
 								</p>
 							</div>
 						</Link>
@@ -110,9 +116,11 @@ const OrganizationBillingOverview = () => {
 								<CreditCard size={20} />
 							</div>
 							<div>
-								<p className="font-medium">Preferences</p>
+								<p className="font-medium">
+									{t("overview.cards.preferences.title")}
+								</p>
 								<p className="text-sm text-gray-500">
-									Manage billing information
+									{t("overview.cards.preferences.description")}
 								</p>
 							</div>
 						</Link>
@@ -124,9 +132,11 @@ const OrganizationBillingOverview = () => {
 								<CreditCard size={20} />
 							</div>
 							<div>
-								<p className="font-medium">Usage limits</p>
+								<p className="font-medium">
+									{t("overview.cards.usageLimits.title")}
+								</p>
 								<p className="text-sm text-gray-500">
-									Set limits on your usage to manage costs
+									{t("overview.cards.usageLimits.description")}
 								</p>
 							</div>
 						</Link>

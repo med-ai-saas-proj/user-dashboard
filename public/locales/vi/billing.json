@@ -1,0 +1,172 @@
+{
+    "creditGrants": {
+        "empty": {
+            "title": "Bạn chưa nạp Credit nào",
+            "description": "Nạp credit cho tổ chức để thanh toán hóa đơn của tổ chức",
+            "addCredit": "Thêm Credit"
+        },
+        "currentCredits": "Credit hiện tại:",
+        "table": {
+            "received": "NGÀY NHẬN",
+            "amount": "SỐ TIỀN",
+            "description": "MÔ TẢ"
+        },
+        "loading": "Đang tải...",
+        "loadMore": "Tải thêm",
+        "noTransactions": "Không tìm thấy giao dịch credit."
+    },
+    "overview": {
+        "creditRemaining": "Credit còn lại",
+        "actions": {
+            "payWithStripe": "Thanh toán bằng Stripe",
+            "updatePaymentDetails": "Cập nhật thông tin thanh toán",
+            "addPaymentDetails": "Thêm thông tin thanh toán",
+            "viewUsage": "Xem mức sử dụng"
+        },
+        "cards": {
+            "paymentMethod": {
+                "title": "Phương thức thanh toán",
+                "description": "Thêm hoặc thay đổi phương thức thanh toán"
+            },
+            "billingHistory": {
+                "title": "Lịch sử thanh toán",
+                "description": "Xem các hóa đơn và lịch sử thanh toán"
+            },
+            "preferences": {
+                "title": "Tùy chọn",
+                "description": "Quản lý thông tin thanh toán"
+            },
+            "usageLimits": {
+                "title": "Giới hạn sử dụng",
+                "description": "Đặt giới hạn sử dụng để quản lý chi phí"
+            }
+        }
+    },
+    "history": {
+        "period": "Hiển thị hóa đơn trong 12 tháng qua",
+        "noInvoices": "Không tìm thấy hóa đơn"
+    },
+    "historyItem": {
+        "invoiceId": "Mã hóa đơn",
+        "billingPeriod": "Kỳ thanh toán",
+        "paid": "Đã thanh toán",
+        "totalAmount": "Tổng số tiền",
+        "usedCredits": "Credit đã dùng"
+    },
+    "paymentMethods": {
+        "title": "Phương thức thanh toán",
+        "description": "Xem các thẻ đã liên kết với tài khoản thanh toán của tổ chức.",
+        "added": "Đã thêm",
+        "cardDetails": "Thông tin thẻ",
+        "empty": {
+            "title": "Bạn chưa thêm phương thức thanh toán nào",
+            "description": "Vào trang Tổng quan thanh toán và chọn \"Thêm thông tin thanh toán\" để tiếp tục."
+        }
+    },
+    "sources": {
+        "errorLoad": "Không thể tải thông tin nguồn thanh toán.",
+        "empty": {
+            "title": "Không tìm thấy nguồn thanh toán",
+            "description": "Thêm thông tin thanh toán từ trang Tổng quan để tạo mới."
+        },
+        "title": "Nguồn thanh toán",
+        "provider": "Nhà cung cấp",
+        "created": "Ngày tạo"
+    },
+    "intentActions": {
+        "noPending": "Không có hành động chờ xử lý nào cho phương thức thanh toán"
+    },
+    "stripe": {
+        "processing": "Đang xử lý...",
+        "confirmPayment": "Xác nhận thanh toán",
+        "loadError": "Không thể tải form thanh toán. Vui lòng thử lại."
+    },
+    "dialogs": {
+        "addCredit": {
+            "title": "Thêm Credit",
+            "description": "Nhập số credit cần thêm và mô tả.",
+            "fields": {
+                "amount": "Số tiền (USD)",
+                "amountPlaceholder": "0.00",
+                "scale": "Scale",
+                "finalScaledValue": "Giá trị scaled cuối cùng"
+            },
+            "actions": {
+                "submit": "Thêm Credit"
+            }
+        },
+        "addPaymentDetails": {
+            "title": "Thêm thông tin thanh toán",
+            "description": "Nhập thông tin liên hệ và địa chỉ thanh toán.",
+            "providerPlaceholder": "Chọn nhà cung cấp",
+            "actions": {
+                "submit": "Lưu thông tin thanh toán"
+            }
+        },
+        "updatePaymentDetails": {
+            "title": "Cập nhật thông tin thanh toán",
+            "description": "Cập nhật thông tin liên hệ thanh toán đang gắn với tổ chức.",
+            "actions": {
+                "submit": "Lưu thay đổi"
+            }
+        },
+        "deletePaymentMethod": {
+            "title": "Xóa phương thức thanh toán",
+            "description": "Hành động này sẽ xóa phương thức thanh toán khỏi tài khoản của bạn. Bạn có chắc chắn muốn tiếp tục?",
+            "actions": {
+                "delete": "Xóa"
+            }
+        }
+    },
+    "validation": {
+        "amount": {
+            "min": "Giá trị phải là số dương"
+        },
+        "description": {
+            "max": "Mô tả tối đa 255 ký tự"
+        },
+        "name": {
+            "required": "Tên là bắt buộc"
+        },
+        "email": {
+            "invalid": "Địa chỉ email không hợp lệ"
+        },
+        "phone": {
+            "required": "Số điện thoại là bắt buộc"
+        },
+        "address": {
+            "line1": {
+                "required": "Địa chỉ dòng 1 là bắt buộc"
+            },
+            "city": {
+                "required": "Thành phố là bắt buộc"
+            },
+            "state": {
+                "required": "Tỉnh/Thành là bắt buộc"
+            },
+            "postalCode": {
+                "required": "Mã bưu chính là bắt buộc"
+            },
+            "country": {
+                "required": "Quốc gia là bắt buộc"
+            }
+        }
+    },
+    "common": {
+        "name": "Tên",
+        "email": "Email",
+        "phone": "Số điện thoại",
+        "provider": "Nhà cung cấp",
+        "addressLine1": "Địa chỉ dòng 1",
+        "addressLine2": "Địa chỉ dòng 2",
+        "city": "Thành phố",
+        "state": "Tỉnh/Thành",
+        "postalCode": "Mã bưu chính",
+        "country": "Quốc gia",
+        "billingAddress": "Địa chỉ thanh toán",
+        "description": "Mô tả",
+        "notProvided": "Chưa cung cấp",
+        "method": "phương thức",
+        "cancel": "Hủy"
+    }
+}

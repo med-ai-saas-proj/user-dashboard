@@ -25,28 +25,43 @@ import { useAddCredit } from "@/features/organization/hooks/organization-billing
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
 
-const AmountSchema = z.number().min(0, "Value must be a positive number");
+const createAmountSchema = (messages: { minValue: string }) =>
+	z.number().min(0, messages.minValue);
 
-const AddCreditSchema = z.object({
-	description: z
-		.string()
-		.max(255, "Description must be at most 255 characters")
-		.optional(),
-});
+const createAddCreditSchema = (messages: { descriptionMax: string }) =>
+	z.object({
+		description: z.string().max(255, messages.descriptionMax).optional(),
+	});
 
-type AddCreditFormData = z.infer<typeof AddCreditSchema>;
+type AddCreditFormData = z.infer<ReturnType<typeof createAddCreditSchema>>;
 type AddCreditDialogProps = {
 	triggerElement: React.ReactNode;
 };
 
 const AddCreditDialog = ({ triggerElement }: AddCreditDialogProps) => {
+	const { t } = useTranslation("billing" as any);
 	const { t: tCommon } = useTranslation("common");
+	const validationMessages = useMemo(
+		() => ({
+			minValue: t("validation.amount.min"),
+			descriptionMax: t("validation.description.max"),
+		}),
+		[t]
+	);
+	const amountSchema = useMemo(
+		() => createAmountSchema(validationMessages),
+		[validationMessages]
+	);
+	const addCreditSchema = useMemo(
+		() => createAddCreditSchema(validationMessages),
+		[validationMessages]
+	);
 	const {
 		register,
 		handleSubmit,
 		formState: { errors },
 	} = useForm<AddCreditFormData>({
-		resolver: zodResolver(AddCreditSchema),
+		resolver: zodResolver(addCreditSchema),
 		defaultValues: {
 			description: "",
 		},
@@ -58,8 +73,8 @@ const AddCreditDialog = ({ triggerElement }: AddCreditDialogProps) => {
 
 	const parsedAmount = useMemo(() => Number(amountInput), [amountInput]);
 	const amountValidation = useMemo(
-		() => AmountSchema.safeParse(parsedAmount),
-		[parsedAmount]
+		() => amountSchema.safeParse(parsedAmount),
+		[amountSchema, parsedAmount]
 	);
 	const scaledAmount = useMemo(
 		() => toScaledAmount(amountInput),
@@ -93,19 +108,19 @@ const AddCreditDialog = ({ triggerElement }: AddCreditDialogProps) => {
 			<DialogTrigger asChild>{triggerElement}</DialogTrigger>
 			<DialogContent>
 				<DialogHeader>
-					<DialogTitle>Add Credit</DialogTitle>
+					<DialogTitle>{t("dialogs.addCredit.title")}</DialogTitle>
 					<DialogDescription>
-						Enter the amount of credit to add and a description.
+						{t("dialogs.addCredit.description")}
 					</DialogDescription>
 				</DialogHeader>
 				<form onSubmit={handleSubmit(onSubmit)}>
 					<FieldGroup>
 						<Field>
-							<FieldLabel>Amount (USD)</FieldLabel>
+							<FieldLabel>{t("dialogs.addCredit.fields.amount")}</FieldLabel>
 							<Input
 								type="text"
 								inputMode="decimal"
-								placeholder="0.00"
+								placeholder={t("dialogs.addCredit.fields.amountPlaceholder")}
 								value={amountInput}
 								onChange={(event) => setAmountInput(event.target.value)}
 							/>
@@ -122,12 +137,12 @@ const AddCreditDialog = ({ triggerElement }: AddCreditDialogProps) => {
 							/>
 						</Field>
 						<Field>
-							<FieldLabel>Description</FieldLabel>
+							<FieldLabel>{t("common.description")}</FieldLabel>
 							<Input {...register("description")} />
 							<FieldError errors={[errors.description]} />
 						</Field>
 						<Field>
-							<FieldLabel>Scale</FieldLabel>
+							<FieldLabel>{t("dialogs.addCredit.fields.scale")}</FieldLabel>
 							<Input
 								value={scaledAmount.scale}
 								readOnly
@@ -136,7 +151,9 @@ const AddCreditDialog = ({ triggerElement }: AddCreditDialogProps) => {
 							/>
 						</Field>
 						<Field>
-							<FieldLabel>Final Scaled Value</FieldLabel>
+							<FieldLabel>
+								{t("dialogs.addCredit.fields.finalScaledValue")}
+							</FieldLabel>
 							<Input
 								value={scaledAmount.value}
 								readOnly
@@ -152,10 +169,10 @@ const AddCreditDialog = ({ triggerElement }: AddCreditDialogProps) => {
 								className="bg-primary hover:bg-primary/80"
 								disabled={!amountValidation.success}
 							>
-								Add Credit
+								{t("dialogs.addCredit.actions.submit")}
 							</Button>
 							<DialogClose asChild>
-								<Button variant="outline">Cancel</Button>
+								<Button variant="outline">{tCommon("action.cancel")}</Button>
 							</DialogClose>
 						</DialogFooter>
 					</Field>

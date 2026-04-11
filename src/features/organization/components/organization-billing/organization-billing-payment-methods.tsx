@@ -17,8 +17,10 @@ import {
 import { useGetPaymentMethods } from "../../hooks/organization-billing/use-get-payment-methods";
 import OrganizationBillingIntentActions from "./organization-billing-intent-actions";
 import DeleteBillingMethodDialog from "./dialogs/delete-billing-method-dialog";
+import { useTranslation } from "react-i18next";
 
 const OrganizationBillingPaymentMethods = () => {
+	const { t, i18n } = useTranslation("billing" as any);
 	const { data: paymentMethods, isLoading } = useGetPaymentMethods();
 	const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 	const [selectedPaymentMethodId, setSelectedPaymentMethodId] = useState<
@@ -37,9 +39,11 @@ const OrganizationBillingPaymentMethods = () => {
 			<div className="max-w-6xl mx-auto">
 				<div className="flex flex-col gap-6">
 					<div className="flex flex-col gap-2">
-						<p className="text-2xl font-semibold">Payment methods</p>
+						<p className="text-2xl font-semibold">
+							{t("paymentMethods.title")}
+						</p>
 						<p className="text-sm text-muted-foreground">
-							Review the cards linked to your organization billing account.
+							{t("paymentMethods.description")}
 						</p>
 					</div>
 
@@ -74,7 +78,7 @@ const OrganizationBillingPaymentMethods = () => {
 
 								const createdAt = new Date(
 									paymentMethod.created * 1000
-								).toLocaleDateString();
+								).toLocaleDateString(i18n.language);
 
 								return (
 									<Card key={paymentMethod.id} className="w-full relative">
@@ -98,7 +102,8 @@ const OrganizationBillingPaymentMethods = () => {
 																{paymentMethod.card.last4}
 															</p>
 															<p className="text-sm text-muted-foreground">
-																{paymentMethod.type.toUpperCase()} method
+																{paymentMethod.type.toUpperCase()}{" "}
+																{t("common.method")}
 															</p>
 														</div>
 													</div>
@@ -107,7 +112,7 @@ const OrganizationBillingPaymentMethods = () => {
 															ID: {paymentMethod.id}
 														</p>
 														<p className="text-sm text-muted-foreground">
-															Added: {createdAt}
+															{t("paymentMethods.added")}: {createdAt}
 														</p>
 													</div>
 												</div>
@@ -122,11 +127,11 @@ const OrganizationBillingPaymentMethods = () => {
 													/>
 													<div>
 														<p className="text-sm text-muted-foreground">
-															Email
+															{t("common.email")}
 														</p>
 														<p className="font-medium">
 															{paymentMethod.billing_details.email ??
-																"Not provided"}
+																t("common.notProvided")}
 														</p>
 													</div>
 												</div>
@@ -138,11 +143,11 @@ const OrganizationBillingPaymentMethods = () => {
 													/>
 													<div>
 														<p className="text-sm text-muted-foreground">
-															Phone
+															{t("common.phone")}
 														</p>
 														<p className="font-medium">
 															{paymentMethod.billing_details.phone ??
-																"Not provided"}
+																t("common.notProvided")}
 														</p>
 													</div>
 												</div>
@@ -154,10 +159,10 @@ const OrganizationBillingPaymentMethods = () => {
 													/>
 													<div>
 														<p className="text-sm text-muted-foreground">
-															Billing address
+															{t("common.billingAddress")}
 														</p>
 														<p className="font-medium">
-															{billingAddress || "Not provided"}
+															{billingAddress || t("common.notProvided")}
 														</p>
 													</div>
 												</div>
@@ -169,7 +174,7 @@ const OrganizationBillingPaymentMethods = () => {
 													/>
 													<div>
 														<p className="text-sm text-muted-foreground">
-															Card details
+															{t("paymentMethods.cardDetails")}
 														</p>
 														<p className="font-medium capitalize text-nowrap">
 															{paymentMethod.card.brand} •{" "}
@@ -190,11 +195,10 @@ const OrganizationBillingPaymentMethods = () => {
 							<TriangleAlert size={20} className="text-alert" />
 							<div className="flex flex-col gap-1 text-alert">
 								<p className="font-semibold text-sm">
-									You have not added any payment methods yet
+									{t("paymentMethods.empty.title")}
 								</p>
 								<p className="font-normal text-sm">
-									Go to the Billing overview page and select "Add payment
-									details" to continue.
+									{t("paymentMethods.empty.description")}
 								</p>
 							</div>
 						</div>

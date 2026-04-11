@@ -1,8 +1,10 @@
 import OrganizationBillingHistoryItem from "./organization-billing-history-item";
 
 import { useGetInvoices } from "../../hooks/organization-billing/use-get-invoices";
+import { useTranslation } from "react-i18next";
 
 const OrganizationBillingHistory = () => {
+	const { t } = useTranslation("billing" as any);
 	const { data: invoices } = useGetInvoices({
 		paid: true,
 	});
@@ -12,11 +14,9 @@ const OrganizationBillingHistory = () => {
 			<div className="max-w-4xl mx-auto">
 				{(!invoices?.data || !invoices?.data.length) && (
 					<div className="flex flex-col gap-4">
-						<p className="text-sm">
-							Showing invoices within the past 12 months
-						</p>
+						<p className="text-sm">{t("history.period")}</p>
 						<p className="font-medium text-muted-foreground text-md">
-							No invoices found
+							{t("history.noInvoices")}
 						</p>
 					</div>
 				)}

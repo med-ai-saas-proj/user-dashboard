@@ -15,6 +15,7 @@ import type dashboardEN from "../public/locales/en/dashboard.json";
 import type settingEN from "../public.locales/en/setting.json";
 import type organizationEN from "../public/locales/en/organization.json";
 import type projectEN from "../public/locales/en/project.json";
+import type billingEN from "../public/locales/en/billing.json";
 
 declare module "i18next" {
 	interface CustomTypeOptions {
@@ -36,6 +37,7 @@ declare module "i18next" {
 			setting: typeof settingEN;
 			organization: typeof organizationEN;
 			project: typeof projectEN;
+			billing: typeof billingEN;
 		};
 	}
 }

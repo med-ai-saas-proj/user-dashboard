@@ -18,7 +18,7 @@ import { Button } from "@/components/shadcn/button";
 import { Spinner } from "@/components/shadcn/spinner";
 
 const OrganizationBillingCreditGrants = () => {
-	const { i18n } = useTranslation();
+	const { t, i18n } = useTranslation("billing" as any);
 	const lang = i18n.language;
 
 	const limit = 1;
@@ -59,17 +59,14 @@ const OrganizationBillingCreditGrants = () => {
 							<TriangleAlert size={20} className="text-alert" />
 							<div className="flex flex-col gap-1 text-alert">
 								<p className="font-semibold text-sm">
-									You have not added any Credit yet
+									{t("creditGrants.empty.title")}
 								</p>
-								<p className="text-sm">
-									Add credits to your organization to pay invoices on your
-									organization
-								</p>
+								<p className="text-sm">{t("creditGrants.empty.description")}</p>
 							</div>
 							<AddCreditDialog
 								triggerElement={
 									<Button className="w-32 bg-alert hover:bg-alert/80 ml-auto">
-										Add Credit
+										{t("creditGrants.empty.addCredit")}
 									</Button>
 								}
 							/>
@@ -101,7 +98,9 @@ const OrganizationBillingCreditGrants = () => {
                                 </div>
                             </div> */}
 							<div className="flex items-center gap-x-4">
-								<p className="uppercase font-semibold">Current Credits:</p>
+								<p className="uppercase font-semibold">
+									{t("creditGrants.currentCredits")}
+								</p>
 								<p className="font-semibold px-2 py-1 bg-successful-status text-successful rounded-sm">
 									${Number(currentCreditsInOrganization.data.amount).toFixed(2)}
 								</p>
@@ -109,9 +108,9 @@ const OrganizationBillingCreditGrants = () => {
 							<Table>
 								<TableHeader>
 									<TableRow>
-										<TableHead>RECEIVED</TableHead>
-										<TableHead>AMOUNT</TableHead>
-										<TableHead>DESCRIPTION</TableHead>
+										<TableHead>{t("creditGrants.table.received")}</TableHead>
+										<TableHead>{t("creditGrants.table.amount")}</TableHead>
+										<TableHead>{t("creditGrants.table.description")}</TableHead>
 									</TableRow>
 								</TableHeader>
 								<TableBody>
@@ -147,12 +146,14 @@ const OrganizationBillingCreditGrants = () => {
 										disabled={isLoadingMore}
 									>
 										{isLoadingMore && <Spinner className="mr-2" />}
-										{isLoadingMore ? "Loading..." : "Load More"}
+										{isLoadingMore
+											? t("creditGrants.loading")
+											: t("creditGrants.loadMore")}
 									</Button>
 								)}
 								{!isInitialLoading && !isLoadingMore && page >= totalPages && (
 									<p className="text-sm text-muted-foreground">
-										No credit transactions found.
+										{t("creditGrants.noTransactions")}
 									</p>
 								)}
 							</div>

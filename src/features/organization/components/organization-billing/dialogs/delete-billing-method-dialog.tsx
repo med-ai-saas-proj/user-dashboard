@@ -23,6 +23,7 @@ const DeleteBillingMethodDialog = ({
 	paymentMethodId,
 	onOpenChange,
 }: DeleteBillingMethodDialogProps) => {
+	const { t } = useTranslation("billing" as any);
 	const { t: tCommon } = useTranslation("common");
 	const queryClient = useQueryClient();
 
@@ -51,10 +52,9 @@ const DeleteBillingMethodDialog = ({
 		<Dialog open={open} onOpenChange={onOpenChange}>
 			<DialogContent className="sm:max-w-[500px]">
 				<DialogHeader>
-					<DialogTitle>Delete payment method</DialogTitle>
+					<DialogTitle>{t("dialogs.deletePaymentMethod.title")}</DialogTitle>
 					<DialogDescription>
-						This action will remove this payment method from your billing
-						account. Are you sure you want to continue?
+						{t("dialogs.deletePaymentMethod.description")}
 					</DialogDescription>
 				</DialogHeader>
 				<DialogFooter className="flex-col sm:flex-row gap-2">
@@ -70,7 +70,7 @@ const DeleteBillingMethodDialog = ({
 						onClick={onDeletePaymentMethod}
 						disabled={deletePaymentMethodMutation.isPending}
 					>
-						Delete
+						{t("dialogs.deletePaymentMethod.actions.delete")}
 					</Button>
 				</DialogFooter>
 			</DialogContent>

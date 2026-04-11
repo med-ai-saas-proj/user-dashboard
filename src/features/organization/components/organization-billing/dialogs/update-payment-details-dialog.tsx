@@ -17,19 +17,30 @@ import { Label } from "@/components/shadcn/label";
 import { Skeleton } from "@/components/shadcn/skeleton";
 import { useGetBillingSource } from "@/features/organization/hooks/organization-billing/use-get-billing-source";
 import { useUpdateBillingSource } from "@/features/organization/hooks/organization-billing/use-update-billing-source";
+import { useMemo } from "react";
+import { useTranslation } from "react-i18next";
 
-const updatePaymentDetailsSchema = z.object({
-	new_address: z.object({
-		line1: z.string().min(1, "Address line 1 is required"),
-		line2: z.string(),
-		city: z.string().min(1, "City is required"),
-		state: z.string().min(1, "State is required"),
-		postal_code: z.string().min(1, "Postal code is required"),
-		country: z.string().min(1, "Country is required"),
-	}),
-	new_email: z.email("Invalid email address"),
-	new_phone: z.string().min(1, "Phone is required"),
-});
+const createUpdatePaymentDetailsSchema = (messages: {
+	addressLine1Required: string;
+	cityRequired: string;
+	stateRequired: string;
+	postalCodeRequired: string;
+	countryRequired: string;
+	emailInvalid: string;
+	phoneRequired: string;
+}) =>
+	z.object({
+		new_address: z.object({
+			line1: z.string().min(1, messages.addressLine1Required),
+			line2: z.string(),
+			city: z.string().min(1, messages.cityRequired),
+			state: z.string().min(1, messages.stateRequired),
+			postal_code: z.string().min(1, messages.postalCodeRequired),
+			country: z.string().min(1, messages.countryRequired),
+		}),
+		new_email: z.email(messages.emailInvalid),
+		new_phone: z.string().min(1, messages.phoneRequired),
+	});
 
 type UpdatePaymentDetailsFormData = z.infer<typeof updatePaymentDetailsSchema>;
 
@@ -42,6 +53,23 @@ const UpdatePaymentDetailsDialog = ({
 	open,
 	onOpenChange,
 }: UpdatePaymentDetailsDialogProps) => {
+	const { t } = useTranslation("billing" as any);
+	const validationMessages = useMemo(
+		() => ({
+			addressLine1Required: t("validation.address.line1.required"),
+			cityRequired: t("validation.address.city.required"),
+			stateRequired: t("validation.address.state.required"),
+			postalCodeRequired: t("validation.address.postalCode.required"),
+			countryRequired: t("validation.address.country.required"),
+			emailInvalid: t("validation.email.invalid"),
+			phoneRequired: t("validation.phone.required"),
+		}),
+		[t]
+	);
+	const updatePaymentDetailsSchema = useMemo(
+		() => createUpdatePaymentDetailsSchema(validationMessages),
+		[validationMessages]
+	);
 	const { data: billingSource, isLoading } = useGetBillingSource();
 	const updateBillingSourceMutation = useUpdateBillingSource();
 
@@ -105,10 +133,9 @@ const UpdatePaymentDetailsDialog = ({
 		<Dialog open={open} onOpenChange={onOpenChange}>
 			<DialogContent className="sm:max-w-2xl">
 				<DialogHeader>
-					<DialogTitle>Update Payment Details</DialogTitle>
+					<DialogTitle>{t("dialogs.updatePaymentDetails.title")}</DialogTitle>
 					<DialogDescription>
-						Update the billing contact details currently associated with your
-						organization.
+						{t("dialogs.updatePaymentDetails.description")}
 					</DialogDescription>
 				</DialogHeader>
 
@@ -122,7 +149,7 @@ const UpdatePaymentDetailsDialog = ({
 					<form onSubmit={handleSubmit(onSubmit)} className="grid gap-4">
 						<div className="grid gap-3 sm:grid-cols-2">
 							<div className="grid gap-2">
-								<Label htmlFor="new_email">Email</Label>
+								<Label htmlFor="new_email">{t("common.email")}</Label>
 								<Input
 									id="new_email"
 									type="email"
@@ -137,7 +164,7 @@ const UpdatePaymentDetailsDialog = ({
 							</div>
 
 							<div className="grid gap-2">
-								<Label htmlFor="new_phone">Phone</Label>
+								<Label htmlFor="new_phone">{t("common.phone")}</Label>
 								<Input
 									id="new_phone"
 									{...register("new_phone")}
@@ -153,7 +180,9 @@ const UpdatePaymentDetailsDialog = ({
 
 						<div className="grid gap-3 sm:grid-cols-2">
 							<div className="grid gap-2 sm:col-span-2">
-								<Label htmlFor="new_address.line1">Address line 1</Label>
+								<Label htmlFor="new_address.line1">
+									{t("common.addressLine1")}
+								</Label>
 								<Input
 									id="new_address.line1"
 									{...register("new_address.line1")}
@@ -167,7 +196,9 @@ const UpdatePaymentDetailsDialog = ({
 							</div>
 
 							<div className="grid gap-2 sm:col-span-2">
-								<Label htmlFor="new_address.line2">Address line 2</Label>
+								<Label htmlFor="new_address.line2">
+									{t("common.addressLine2")}
+								</Label>
 								<Input
 									id="new_address.line2"
 									{...register("new_address.line2")}
@@ -175,7 +206,7 @@ const UpdatePaymentDetailsDialog = ({
 							</div>
 
 							<div className="grid gap-2">
-								<Label htmlFor="new_address.city">City</Label>
+								<Label htmlFor="new_address.city">{t("common.city")}</Label>
 								<Input
 									id="new_address.city"
 									{...register("new_address.city")}
@@ -189,7 +220,7 @@ const UpdatePaymentDetailsDialog = ({
 							</div>
 
 							<div className="grid gap-2">
-								<Label htmlFor="new_address.state">State</Label>
+								<Label htmlFor="new_address.state">{t("common.state")}</Label>
 								<Input
 									id="new_address.state"
 									{...register("new_address.state")}
@@ -203,7 +234,9 @@ const UpdatePaymentDetailsDialog = ({
 							</div>
 
 							<div className="grid gap-2">
-								<Label htmlFor="new_address.postal_code">Postal code</Label>
+								<Label htmlFor="new_address.postal_code">
+									{t("common.postalCode")}
+								</Label>
 								<Input
 									id="new_address.postal_code"
 									{...register("new_address.postal_code")}
@@ -217,7 +250,9 @@ const UpdatePaymentDetailsDialog = ({
 							</div>
 
 							<div className="grid gap-2">
-								<Label htmlFor="new_address.country">Country</Label>
+								<Label htmlFor="new_address.country">
+									{t("common.country")}
+								</Label>
 								<Input
 									id="new_address.country"
 									{...register("new_address.country")}
@@ -234,14 +269,14 @@ const UpdatePaymentDetailsDialog = ({
 						<DialogFooter>
 							<DialogClose asChild>
 								<Button type="button" variant="outline" onClick={onCancel}>
-									Cancel
+									{t("common.cancel")}
 								</Button>
 							</DialogClose>
 							<Button
 								type="submit"
 								disabled={updateBillingSourceMutation.isPending}
 							>
-								Save changes
+								{t("dialogs.updatePaymentDetails.actions.submit")}
 							</Button>
 						</DialogFooter>
 					</form>

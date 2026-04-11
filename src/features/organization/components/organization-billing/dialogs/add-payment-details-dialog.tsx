@@ -24,20 +24,30 @@ import {
 import { useCreateBillingSource } from "@/features/organization/hooks/organization-billing/use-create-billing-source";
 import { toast } from "sonner";
 
-const addPaymentDetailsSchema = z.object({
-	name: z.string().min(1, "Name is required"),
-	email: z.email("Invalid email address"),
-	phone: z.string().min(1, "Phone is required"),
-	address: z.object({
-		line1: z.string().min(1, "Address line 1 is required"),
-		line2: z.string(),
-		city: z.string().min(1, "City is required"),
-		state: z.string().min(1, "State is required"),
-		postal_code: z.string().min(1, "Postal code is required"),
-		country: z.string().min(1, "Country is required"),
-	}),
-	provider: z.enum(["stripe"]),
-});
+const createAddPaymentDetailsSchema = (messages: {
+	nameRequired: string;
+	emailInvalid: string;
+	phoneRequired: string;
+	addressLine1Required: string;
+	cityRequired: string;
+	stateRequired: string;
+	postalCodeRequired: string;
+	countryRequired: string;
+}) =>
+	z.object({
+		name: z.string().min(1, messages.nameRequired),
+		email: z.email(messages.emailInvalid),
+		phone: z.string().min(1, messages.phoneRequired),
+		address: z.object({
+			line1: z.string().min(1, messages.addressLine1Required),
+			line2: z.string(),
+			city: z.string().min(1, messages.cityRequired),
+			state: z.string().min(1, messages.stateRequired),
+			postal_code: z.string().min(1, messages.postalCodeRequired),
+			country: z.string().min(1, messages.countryRequired),
+		}),
+		provider: z.enum(["stripe"]),
+	});
 
 type AddPaymentDetailsFormData = z.infer<typeof addPaymentDetailsSchema>;
 
@@ -50,7 +60,20 @@ const AddPaymentDetailsDialog = ({
 	open,
 	onOpenChange,
 }: AddPaymentDetailsDialogProps) => {
+	const { t } = useTranslation("billing" as any);
 	const { t: tCommon } = useTranslation("common");
+	const validationMessages = {
+		nameRequired: t("validation.name.required"),
+		emailInvalid: t("validation.email.invalid"),
+		phoneRequired: t("validation.phone.required"),
+		addressLine1Required: t("validation.address.line1.required"),
+		cityRequired: t("validation.address.city.required"),
+		stateRequired: t("validation.address.state.required"),
+		postalCodeRequired: t("validation.address.postalCode.required"),
+		countryRequired: t("validation.address.country.required"),
+	};
+	const addPaymentDetailsSchema =
+		createAddPaymentDetailsSchema(validationMessages);
 
 	const {
 		control,
@@ -97,15 +120,15 @@ const AddPaymentDetailsDialog = ({
 		<Dialog open={open} onOpenChange={onOpenChange}>
 			<DialogContent className="sm:max-w-2xl">
 				<DialogHeader>
-					<DialogTitle>Add Payment Details</DialogTitle>
+					<DialogTitle>{t("dialogs.addPaymentDetails.title")}</DialogTitle>
 					<DialogDescription>
-						Enter billing contact and address information.
+						{t("dialogs.addPaymentDetails.description")}
 					</DialogDescription>
 				</DialogHeader>
 				<form onSubmit={handleSubmit(onSubmit)} className="grid gap-4">
 					<div className="grid gap-3 sm:grid-cols-2">
 						<div className="grid gap-2">
-							<Label htmlFor="name">Name</Label>
+							<Label htmlFor="name">{t("common.name")}</Label>
 							<Input
 								id="name"
 								{...register("name")}
@@ -118,7 +141,7 @@ const AddPaymentDetailsDialog = ({
 							)}
 						</div>
 						<div className="grid gap-2">
-							<Label htmlFor="email">Email</Label>
+							<Label htmlFor="email">{t("common.email")}</Label>
 							<Input
 								id="email"
 								type="email"
@@ -135,7 +158,7 @@ const AddPaymentDetailsDialog = ({
 
 					<div className="grid gap-3 sm:grid-cols-2">
 						<div className="grid gap-2">
-							<Label htmlFor="phone">Phone</Label>
+							<Label htmlFor="phone">{t("common.phone")}</Label>
 							<Input
 								id="phone"
 								{...register("phone")}
@@ -148,14 +171,18 @@ const AddPaymentDetailsDialog = ({
 							)}
 						</div>
 						<div className="grid gap-2">
-							<Label htmlFor="provider">Provider</Label>
+							<Label htmlFor="provider">{t("common.provider")}</Label>
 							<Controller
 								name="provider"
 								control={control}
 								render={({ field }) => (
 									<Select value={field.value} onValueChange={field.onChange}>
 										<SelectTrigger id="provider" className="w-full">
-											<SelectValue placeholder="Select provider" />
+											<SelectValue
+												placeholder={t(
+													"dialogs.addPaymentDetails.providerPlaceholder"
+												)}
+											/>
 										</SelectTrigger>
 										<SelectContent>
 											<SelectItem value="stripe">Stripe</SelectItem>
@@ -173,7 +200,7 @@ const AddPaymentDetailsDialog = ({
 
 					<div className="grid gap-3 sm:grid-cols-2">
 						<div className="grid gap-2 sm:col-span-2">
-							<Label htmlFor="line1">Address line 1</Label>
+							<Label htmlFor="line1">{t("common.addressLine1")}</Label>
 							<Input
 								id="line1"
 								{...register("address.line1")}
@@ -187,12 +214,12 @@ const AddPaymentDetailsDialog = ({
 						</div>
 
 						<div className="grid gap-2 sm:col-span-2">
-							<Label htmlFor="line2">Address line 2</Label>
+							<Label htmlFor="line2">{t("common.addressLine2")}</Label>
 							<Input id="line2" {...register("address.line2")} />
 						</div>
 
 						<div className="grid gap-2">
-							<Label htmlFor="city">City</Label>
+							<Label htmlFor="city">{t("common.city")}</Label>
 							<Input
 								id="city"
 								{...register("address.city")}
@@ -206,7 +233,7 @@ const AddPaymentDetailsDialog = ({
 						</div>
 
 						<div className="grid gap-2">
-							<Label htmlFor="state">State</Label>
+							<Label htmlFor="state">{t("common.state")}</Label>
 							<Input
 								id="state"
 								{...register("address.state")}
@@ -220,7 +247,7 @@ const AddPaymentDetailsDialog = ({
 						</div>
 
 						<div className="grid gap-2">
-							<Label htmlFor="postal_code">Postal code</Label>
+							<Label htmlFor="postal_code">{t("common.postalCode")}</Label>
 							<Input
 								id="postal_code"
 								{...register("address.postal_code")}
@@ -234,7 +261,7 @@ const AddPaymentDetailsDialog = ({
 						</div>
 
 						<div className="grid gap-2">
-							<Label htmlFor="country">Country</Label>
+							<Label htmlFor="country">{t("common.country")}</Label>
 							<Input
 								id="country"
 								{...register("address.country")}
@@ -251,14 +278,14 @@ const AddPaymentDetailsDialog = ({
 					<DialogFooter>
 						<DialogClose asChild>
 							<Button type="button" variant="outline" onClick={onCancel}>
-								Cancel
+								{tCommon("action.cancel")}
 							</Button>
 						</DialogClose>
 						<Button
 							type="submit"
 							disabled={createBillingSourceMutation.isPending}
 						>
-							Save payment details
+							{t("dialogs.addPaymentDetails.actions.submit")}
 						</Button>
 					</DialogFooter>
 				</form>

@@ -1,13 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
-import {
-	getCredits,
-	type GetCreditParams,
-} from "../../services/organization-billing/get-credit";
+import { getCredits } from "../../services/organization-billing/get-credit";
 
-export const useGetCredits = (params: GetCreditParams) => {
+export const useGetCredits = () => {
 	return useQuery({
-		queryKey: ["credits", params],
-		queryFn: () => getCredits(params),
-		enabled: !!params,
+		queryKey: ["credits"],
+		queryFn: () => getCredits(),
 	});
 };

@@ -20,7 +20,7 @@ import { useUpdateBillingSource } from "@/features/organization/hooks/organizati
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
-const createUpdatePaymentDetailsSchema = (messages: {
+const buildUpdatePaymentDetailsSchema = (messages: {
 	addressLine1Required: string;
 	cityRequired: string;
 	stateRequired: string;
@@ -42,7 +42,9 @@ const createUpdatePaymentDetailsSchema = (messages: {
 		new_phone: z.string().min(1, messages.phoneRequired),
 	});
 
-type UpdatePaymentDetailsFormData = z.infer<typeof updatePaymentDetailsSchema>;
+type UpdatePaymentDetailsFormData = z.infer<
+	ReturnType<typeof buildUpdatePaymentDetailsSchema>
+>;
 
 type UpdatePaymentDetailsDialogProps = {
 	open: boolean;
@@ -53,7 +55,7 @@ const UpdatePaymentDetailsDialog = ({
 	open,
 	onOpenChange,
 }: UpdatePaymentDetailsDialogProps) => {
-	const { t } = useTranslation("billing" as any);
+	const { t } = useTranslation("billing");
 	const validationMessages = useMemo(
 		() => ({
 			addressLine1Required: t("validation.address.line1.required"),
@@ -67,7 +69,7 @@ const UpdatePaymentDetailsDialog = ({
 		[t]
 	);
 	const updatePaymentDetailsSchema = useMemo(
-		() => createUpdatePaymentDetailsSchema(validationMessages),
+		() => buildUpdatePaymentDetailsSchema(validationMessages),
 		[validationMessages]
 	);
 	const { data: billingSource, isLoading } = useGetBillingSource();

@@ -24,7 +24,7 @@ import {
 import { useCreateBillingSource } from "@/features/organization/hooks/organization-billing/use-create-billing-source";
 import { toast } from "sonner";
 
-const createAddPaymentDetailsSchema = (messages: {
+const buildAddPaymentDetailsSchema = (messages: {
 	nameRequired: string;
 	emailInvalid: string;
 	phoneRequired: string;
@@ -49,7 +49,9 @@ const createAddPaymentDetailsSchema = (messages: {
 		provider: z.enum(["stripe"]),
 	});
 
-type AddPaymentDetailsFormData = z.infer<typeof addPaymentDetailsSchema>;
+type AddPaymentDetailsFormData = z.infer<
+	ReturnType<typeof buildAddPaymentDetailsSchema>
+>;
 
 type AddPaymentDetailsDialogProps = {
 	open: boolean;
@@ -60,7 +62,7 @@ const AddPaymentDetailsDialog = ({
 	open,
 	onOpenChange,
 }: AddPaymentDetailsDialogProps) => {
-	const { t } = useTranslation("billing" as any);
+	const { t } = useTranslation("billing");
 	const { t: tCommon } = useTranslation("common");
 	const validationMessages = {
 		nameRequired: t("validation.name.required"),
@@ -72,8 +74,8 @@ const AddPaymentDetailsDialog = ({
 		postalCodeRequired: t("validation.address.postalCode.required"),
 		countryRequired: t("validation.address.country.required"),
 	};
-	const addPaymentDetailsSchema =
-		createAddPaymentDetailsSchema(validationMessages);
+	const createPaymentDetailsSchema =
+		buildAddPaymentDetailsSchema(validationMessages);
 
 	const {
 		control,
@@ -82,7 +84,7 @@ const AddPaymentDetailsDialog = ({
 		reset,
 		formState: { errors },
 	} = useForm<AddPaymentDetailsFormData>({
-		resolver: zodResolver(addPaymentDetailsSchema),
+		resolver: zodResolver(createPaymentDetailsSchema),
 		defaultValues: {
 			name: "",
 			email: "",

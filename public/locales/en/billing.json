@@ -15,6 +15,33 @@
         "loadMore": "Load More",
         "noTransactions": "No credit transactions found."
     },
+    "activityLog": {
+        "empty": "No transactions found.",
+        "loading": "Loading...",
+        "loadMore": "Load More",
+        "noMore": "No more transactions.",
+        "loadingDetails": "Loading transaction details...",
+        "errorDetails": "Unable to load transaction details.",
+        "dateRange": {
+            "label": "Transaction Date Range",
+            "placeholder": "Select start and end date"
+        },
+        "item": {
+            "transactionId": "Transaction ID",
+            "projectId": "Project ID",
+            "capturedAt": "Captured at",
+            "viewDetails": "View details",
+            "hideDetails": "Hide details",
+            "noDescription": "No description"
+        },
+        "details": {
+            "transactionDate": "Transaction date",
+            "capturedAt": "Captured at",
+            "projectId": "Project ID",
+            "status": "Status",
+            "description": "Description"
+        }
+    },
     "overview": {
         "creditRemaining": "Credit remaining",
         "actions": {

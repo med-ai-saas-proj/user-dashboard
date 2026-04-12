@@ -154,7 +154,8 @@
             "billing-history": "Lịch sử thanh toán",
             "credit-grants": "Cấp tín dụng",
             "invoices": "Hóa đơn",
-            "sources": "Nguồn thanh toán"
+            "sources": "Nguồn thanh toán",
+            "activity-log": "Nhật ký hoạt động"
         }
     }
 }

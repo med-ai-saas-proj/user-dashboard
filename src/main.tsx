@@ -8,6 +8,7 @@ if (import.meta.env.DEV) {
 	// import("@/mocks/organization-project.mock");
 	// import("@/mocks/project-people.mock");
 	import("@/mocks/project-roles.mock");
+	import("@/mocks/organization-billing.mock");
 }
 
 createRoot(document.getElementById("root")!).render(

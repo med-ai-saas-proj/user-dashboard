@@ -15,6 +15,33 @@
         "loadMore": "Tải thêm",
         "noTransactions": "Không tìm thấy giao dịch credit."
     },
+    "activityLog": {
+        "empty": "Không tìm thấy giao dịch.",
+        "loading": "Đang tải...",
+        "loadMore": "Tải thêm",
+        "noMore": "Không còn giao dịch nào.",
+        "loadingDetails": "Đang tải chi tiết giao dịch...",
+        "errorDetails": "Không thể tải chi tiết giao dịch.",
+        "dateRange": {
+            "label": "Khoảng thời gian giao dịch",
+            "placeholder": "Chọn ngày bắt đầu và ngày kết thúc"
+        },
+        "item": {
+            "transactionId": "Mã giao dịch",
+            "projectId": "Mã dự án",
+            "capturedAt": "Thời gian ghi nhận",
+            "viewDetails": "Xem chi tiết",
+            "hideDetails": "Ẩn chi tiết",
+            "noDescription": "Không có mô tả"
+        },
+        "details": {
+            "transactionDate": "Ngày giao dịch",
+            "capturedAt": "Thời gian ghi nhận",
+            "projectId": "Mã dự án",
+            "status": "Trạng thái",
+            "description": "Mô tả"
+        }
+    },
     "overview": {
         "creditRemaining": "Credit còn lại",
         "actions": {

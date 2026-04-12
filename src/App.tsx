@@ -30,6 +30,7 @@ import ProjectPeople from "./routes/project-people";
 import ProjectPeopleMember from "./features/project/components/project-people/project-people-member";
 import ProjectPeopleRole from "./features/project/components/project-people/project-people-role";
 import ProjectRouteGuard from "./routes/project-route-guard";
+import OrganizationBillingActivityLog from "./features/organization/components/organization-billing/organization-billing-activity-log";
 
 function App() {
 	return (
@@ -146,6 +147,10 @@ function App() {
 								<Route
 									path="credit-grants"
 									element={<OrganizationBillingCreditGrants />}
+								/>
+								<Route
+									path="activity-log"
+									element={<OrganizationBillingActivityLog />}
 								/>
 							</Route>
 							<Route

@@ -156,7 +156,8 @@
             "billing-history": "Billing History",
             "credit-grants": "Credit Grants",
             "invoices": "Invoices",
-            "sources": "Billing Sources"
+            "sources": "Billing Sources",
+            "activity-log": "Activity Log"
         }
     }
 }

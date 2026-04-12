@@ -11,14 +11,14 @@ import {
 import { TriangleAlert } from "lucide-react";
 import { useGetCredits } from "../../hooks/organization-billing/use-get-credit";
 import { useGetCreditTransactions } from "../../hooks/organization-billing/use-get-credit-transactions";
-import AddCreditDialog from "./dialogs/add-credit-dialog";
+// import AddCreditDialog from "./dialogs/add-credit-dialog";
 import { formatIsoToLocaleDateTime } from "@/lib/utils";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/shadcn/button";
 import { Spinner } from "@/components/shadcn/spinner";
 
 const OrganizationBillingCreditGrants = () => {
-	const { t, i18n } = useTranslation("billing" as any);
+	const { t, i18n } = useTranslation("billing");
 	const lang = i18n.language;
 
 	const limit = 1;
@@ -34,8 +34,7 @@ const OrganizationBillingCreditGrants = () => {
 		limit: page * limit,
 	});
 	const haveCredits =
-		currentCreditsInOrganization &&
-		currentCreditsInOrganization.data &&
+		currentCreditsInOrganization?.data &&
 		Number(currentCreditsInOrganization.data.amount) > 0;
 	const totalPages = creditTransactions
 		? Math.ceil(creditTransactions.total / limit)
@@ -63,13 +62,13 @@ const OrganizationBillingCreditGrants = () => {
 								</p>
 								<p className="text-sm">{t("creditGrants.empty.description")}</p>
 							</div>
-							<AddCreditDialog
+							{/* <AddCreditDialog
 								triggerElement={
 									<Button className="w-32 bg-alert hover:bg-alert/80 ml-auto">
 										{t("creditGrants.empty.addCredit")}
 									</Button>
 								}
-							/>
+							/> */}
 						</div>
 					)}
 					{haveCredits && (

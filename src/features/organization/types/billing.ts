@@ -215,3 +215,36 @@ export type CreditTransactions = {
 	offset: number;
 	limit: number;
 };
+
+export type BillingTransactions = {
+	success: boolean;
+	data: {
+		transaction_uid: string;
+		amount: string;
+		date: string;
+		project_uid: string;
+		details: {
+			additionalProperty: string;
+		};
+		captured_at: string;
+		status: string;
+	}[];
+	total: number;
+	offset: number;
+	limit: number;
+};
+
+export type BillingTransactionDetails = {
+	success: boolean;
+	data: {
+		transaction_uid: string;
+		amount: string;
+		date: string;
+		project_uid: string;
+		details: {
+			additionalProperty: string;
+		};
+		captured_at: string;
+		status: string;
+	};
+};

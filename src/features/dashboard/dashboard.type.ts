@@ -32,18 +32,34 @@ export type Series = {
 	strokeWidth?: number;
 };
 
-export type ChartConfigurationTitleKey =
-	| "tokenUsageOverTime"
-	| "requestVolumeAndCost";
+// export type ChartConfigurationTitleKey =
+//     | "tokenUsageOverTime"
+//     | "requestVolumeAndCost";
 
 export type ChartType = "line" | "area";
 
 export type ChartConfiguration = {
-	title: ChartConfigurationTitleKey;
+	title: string;
 	config: ChartConfig;
 	datasets: ChartDataset[];
 	// Which key to use for X axis and the series to render
 	xKey: string;
 	series: Series[];
 	chartType: ChartType;
+};
+
+export type AggregateParams = {
+	periodStart: string; // ISO date string
+	periodEnd: string; // ISO date string
+	period: "daily" | "weekly" | "monthly" | "yearly";
+	periodScale: number;
+};
+
+export type Aggregate = {
+	success: boolean;
+	data: {
+		period_bucket: string;
+		transaction_count: number;
+		total_amount: string;
+	}[];
 };

@@ -21,11 +21,9 @@ export type ChartDataset = {
 	[key: string]: number | string;
 };
 
-export type SeriesNameKey = "requests" | "cost" | "total";
-
 export type Series = {
 	dataKey: string;
-	name: SeriesNameKey;
+	name?: string;
 	yAxisId: "left" | "right";
 	stroke?: string;
 	dot?: boolean;

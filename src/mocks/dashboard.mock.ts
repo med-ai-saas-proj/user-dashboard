@@ -30,7 +30,7 @@ const parseDateParam = (value: string | null, fallback: Date) => {
 		return fallback;
 	}
 
-	return toUtcDateOnly(parsed);
+	return parsed;
 };
 
 const parsePeriod = (value: string | null): AggregatePeriod => {
@@ -138,8 +138,11 @@ const addPeriods = (date: Date, period: AggregatePeriod, amount: number) => {
 	return new Date(Date.UTC(base.getUTCFullYear() + amount, 0, 1));
 };
 
+// from 2023-01-01 to 2025-12-31, 3 projects, 4 api keys, total 1096 * 3 * 4 = 13152 entries
 const usageEntries: UsageEntry[] = (() => {
-	const startDate = new Date(Date.UTC(2025, 0, 1));
+	const startDate = new Date(Date.UTC(2023, 0, 1));
+	const endDate = new Date(Date.UTC(2025, 11, 31));
+	const totalDays = diffDays(startDate, endDate) + 1;
 	const projectUids = ["project-alpha", "project-beta", "project-gamma"];
 	const apiKeys = [
 		"key-live-001",
@@ -149,7 +152,7 @@ const usageEntries: UsageEntry[] = (() => {
 	];
 	const entries: UsageEntry[] = [];
 
-	for (let index = 0; index < 180; index += 1) {
+	for (let index = 0; index < totalDays; index += 1) {
 		const currentDate = new Date(startDate.getTime());
 		currentDate.setUTCDate(startDate.getUTCDate() + index);
 
@@ -163,11 +166,13 @@ const usageEntries: UsageEntry[] = (() => {
 				apiKeyIndex < apiKeys.length;
 				apiKeyIndex += 1
 			) {
+				const occurredAt = new Date(currentDate.getTime());
+				occurredAt.setUTCHours(8 + projectIndex * 3, apiKeyIndex * 10, 0, 0);
 				const count = 5 + ((index + projectIndex * 3 + apiKeyIndex * 5) % 17);
 				const amount = count * (0.25 + projectIndex * 0.1 + apiKeyIndex * 0.05);
 
 				entries.push({
-					date: toUtcDateOnly(currentDate),
+					date: occurredAt,
 					apiKey: apiKeys[apiKeyIndex],
 					projectUid: projectUids[projectIndex],
 					transactionCount: count,
@@ -201,19 +206,21 @@ const aggregateUsage = (
 	>();
 
 	for (const entry of entries) {
-		if (entry.date < periodStart || entry.date > periodEnd) {
+		if (entry.date < periodStart || entry.date >= periodEnd) {
 			continue;
 		}
 
+		const entryPeriodDate = toUtcDateOnly(entry.date);
+
 		let unitDiff = 0;
 		if (period === "daily") {
-			unitDiff = diffDays(normalizedStart, entry.date);
+			unitDiff = diffDays(normalizedStart, entryPeriodDate);
 		} else if (period === "weekly") {
-			unitDiff = diffWeeks(normalizedStart, entry.date);
+			unitDiff = diffWeeks(normalizedStart, entryPeriodDate);
 		} else if (period === "monthly") {
-			unitDiff = diffMonths(normalizedStart, entry.date);
+			unitDiff = diffMonths(normalizedStart, entryPeriodDate);
 		} else {
-			unitDiff = diffYears(normalizedStart, entry.date);
+			unitDiff = diffYears(normalizedStart, entryPeriodDate);
 		}
 
 		if (unitDiff < 0) {
@@ -260,20 +267,28 @@ const projectsRoute = `${billingBaseRoute}/projects`;
 const apiKeysRoute = `${billingBaseRoute}/api-keys`;
 
 const readAggregateParams = (url: URL) => {
-	const today = toUtcDateOnly(new Date());
-	const prior = toUtcDateOnly(new Date(today.getTime()));
-	prior.setUTCDate(prior.getUTCDate() - 30);
+	const periodEndDefault = new Date(Date.UTC(2026, 0, 1));
+	const periodStartDefault = new Date(periodEndDefault.getTime());
+	periodStartDefault.setUTCDate(periodStartDefault.getUTCDate() - 30);
 
 	return {
-		periodStart: parseDateParam(url.searchParams.get("period_start"), prior),
-		periodEnd: parseDateParam(url.searchParams.get("period_end"), today),
+		periodStart: parseDateParam(
+			url.searchParams.get("period_start"),
+			periodStartDefault
+		),
+		periodEnd: parseDateParam(
+			url.searchParams.get("period_end"),
+			periodEndDefault
+		),
 		period: parsePeriod(url.searchParams.get("period")),
 		periodScale: parsePeriodScale(url.searchParams.get("period_scale")),
 	};
 };
 
 Mock.mock(
-	new RegExp(`^${escapeRegExp(organizationsRoute)}(?:\\?.*)?$`),
+	new RegExp(
+		`^(?:https?:\\/\\/[^/]+)?${escapeRegExp(organizationsRoute)}(?:\\?.*)?$`
+	),
 	"get",
 	(options) => {
 		const url = new URL(options.url, "http://dummy");
@@ -283,7 +298,9 @@ Mock.mock(
 );
 
 Mock.mock(
-	new RegExp(`^${escapeRegExp(projectsRoute)}(?:\\?.*)?$`),
+	new RegExp(
+		`^(?:https?:\\/\\/[^/]+)?${escapeRegExp(projectsRoute)}(?:\\?.*)?$`
+	),
 	"get",
 	(options) => {
 		const url = new URL(options.url, "http://dummy");
@@ -300,7 +317,9 @@ Mock.mock(
 );
 
 Mock.mock(
-	new RegExp(`^${escapeRegExp(apiKeysRoute)}(?:\\?.*)?$`),
+	new RegExp(
+		`^(?:https?:\\/\\/[^/]+)?${escapeRegExp(apiKeysRoute)}(?:\\?.*)?$`
+	),
 	"get",
 	(options) => {
 		const url = new URL(options.url, "http://dummy");

@@ -16,16 +16,18 @@ import {
 import { Button } from "@/components/shadcn/button";
 import { ChevronDown } from "lucide-react";
 
-import {
-	chartConfigurationVolumeAndCost,
-	chartConfigurationTokenUsage,
-} from "@/features/dashboard/services/charts.config";
+import { useGetAggregateByOrganization } from "../hooks/use-get-aggregate-by-organization";
+import type { ChartConfig } from "@/components/shadcn/chart";
+import type { ChartConfiguration } from "../dashboard.type";
+import { useChartTimePickerStore } from "../store/chart-time-picker";
 
 type TimePickerType = "date" | "month" | "date-range" | "year";
 
 const DashboardAggregateOrganization = () => {
 	const { t } = useTranslation("dashboard");
 	const [selectedPicker, setSelectedPicker] = useState<TimePickerType>("date");
+	const startDate = useChartTimePickerStore((state) => state.startDate);
+	const endDate = useChartTimePickerStore((state) => state.endDate);
 
 	// Generate default values for each picker
 	const defaultValues = useMemo(() => {
@@ -42,6 +44,80 @@ const DashboardAggregateOrganization = () => {
 		};
 	}, []);
 
+	// Fetching Aggregate Organization Data
+	const aggregateParams = useMemo(() => {
+		const periodStart = new Date(startDate);
+		periodStart.setHours(0, 0, 0, 0);
+
+		const periodEndExclusive = new Date(endDate);
+		periodEndExclusive.setHours(0, 0, 0, 0);
+		periodEndExclusive.setDate(periodEndExclusive.getDate() + 1);
+
+		return {
+			periodStart: periodStart.toISOString(),
+			periodEnd: periodEndExclusive.toISOString(),
+			period: "daily" as const,
+			periodScale: 1,
+		};
+	}, [startDate, endDate]);
+
+	const { data: aggregateOrganizationData } =
+		useGetAggregateByOrganization(aggregateParams);
+
+	const normalizedAggregateData = useMemo(
+		() =>
+			(aggregateOrganizationData?.data ?? []).map((item) => ({
+				...item,
+				total_amount: Number(item.total_amount),
+			})),
+		[aggregateOrganizationData?.data]
+	);
+
+	const totalExpenditureTrendChartConfig = {
+		total_amount: { label: "Total Amount" },
+	} satisfies ChartConfig;
+
+	const transactionVolumeTrendChartConfig = {
+		transaction_count: { label: "Transaction Count" },
+	} satisfies ChartConfig;
+
+	const totalExpenditureTrendChart: ChartConfiguration = {
+		title: "totalExpenditureTrend",
+		config: totalExpenditureTrendChartConfig,
+		xKey: "period_bucket",
+		series: [
+			{
+				dataKey: "total_amount",
+				name: "total_amount",
+				yAxisId: "left",
+				stroke: "var(--chart-1)",
+				dot: false,
+				strokeWidth: 2,
+			},
+		],
+		datasets: normalizedAggregateData,
+		chartType: "line",
+	};
+
+	const transactionVolumeChart: ChartConfiguration = {
+		title: "transactionVolumeTrend",
+		config: transactionVolumeTrendChartConfig,
+		xKey: "period_bucket",
+		series: [
+			{
+				dataKey: "transaction_count",
+				name: "transaction_count",
+				yAxisId: "left",
+				stroke: "var(--chart-2)",
+				dot: false,
+				strokeWidth: 2,
+			},
+		],
+		datasets: normalizedAggregateData,
+		chartType: "area",
+	};
+
+	// Time Filter
 	const pickerLabels: Record<TimePickerType, string> = {
 		date: t("datePicker.label"),
 		month: t("monthPicker.label"),
@@ -119,12 +195,12 @@ const DashboardAggregateOrganization = () => {
 			{/* Charts Section */}
 			<div className="flex flex-col gap-4 w-full">
 				<DashboardChart
-					title={t("chart.requestVolumeAndCost")}
-					chartConfig={chartConfigurationVolumeAndCost}
+					title={t("chart.totalExpenditureTrend")}
+					chartConfig={totalExpenditureTrendChart}
 				/>
 				<DashboardChart
-					title={t("chart.tokenUsageOverTime")}
-					chartConfig={chartConfigurationTokenUsage}
+					title={t("chart.transactionVolumeTrend")}
+					chartConfig={transactionVolumeChart}
 					isTotalOnly={true}
 				/>
 			</div>

@@ -3,6 +3,8 @@ import { getAggregateByOrganization } from "../services/get-aggregate-by-organiz
 import type { AggregateParams } from "../dashboard.type";
 
 export const useGetAggregateByOrganization = (params: AggregateParams) => {
+	console.log(params);
+
 	return useQuery({
 		queryKey: [
 			"aggregate-by-organization",

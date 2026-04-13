@@ -1,16 +1,16 @@
 import { Suspense, lazy } from "react";
 import { Card, CardContent, CardHeader } from "@/components/shadcn/card";
 import type { ChartConfiguration } from "../dashboard.type";
-import { useGetChartMetric } from "../hooks/use-get-chart-metric";
-import { useChartTimePickerStore } from "../store/chart-time-picker";
-import { useTranslation } from "react-i18next";
+// import { useGetChartMetric } from "../hooks/use-get-chart-metric";
+// import { useChartTimePickerStore } from "../store/chart-time-picker";
+// import { useTranslation } from "react-i18next";
 
 const LazyLineChart = lazy(() => import("./line-chart"));
 const LazyAreaChart = lazy(() => import("./area-chart"));
 
 type DashboardChartProps = {
 	title: string;
-	chartConfig: Omit<ChartConfiguration, "datasets">;
+	chartConfig: ChartConfiguration;
 	isTotalOnly?: boolean;
 };
 
@@ -19,20 +19,20 @@ const DashboardChart = ({
 	chartConfig,
 	isTotalOnly,
 }: DashboardChartProps) => {
-	const { i18n } = useTranslation();
-	const currentLocale = i18n.language || "en-US";
+	// const { i18n } = useTranslation();
+	// const currentLocale = i18n.language || "en-US";
 
-	const startDate = useChartTimePickerStore((state) => state.startDate);
-	const endDate = useChartTimePickerStore((state) => state.endDate);
+	// const startDate = useChartTimePickerStore((state) => state.startDate);
+	// const endDate = useChartTimePickerStore((state) => state.endDate);
 
-	const { data: datasets } = useGetChartMetric({
-		from: startDate?.toLocaleDateString(currentLocale),
-		to: endDate?.toLocaleDateString(currentLocale),
-	});
+	// const { data: datasets } = useGetChartMetric({
+	// 	from: startDate?.toLocaleDateString(currentLocale),
+	// 	to: endDate?.toLocaleDateString(currentLocale),
+	// });
 
 	const chartConfiguration: ChartConfiguration = {
 		...chartConfig,
-		datasets: datasets ?? [],
+		datasets: chartConfig.datasets ?? [],
 	};
 
 	return (

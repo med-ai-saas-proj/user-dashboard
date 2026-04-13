@@ -11,6 +11,11 @@ import {
 import type { ChartDataset, Series } from "../dashboard.type";
 import { useTranslation } from "react-i18next";
 
+const toNumber = (value: unknown) => {
+	const parsed = Number(value);
+	return Number.isFinite(parsed) ? parsed : 0;
+};
+
 type LineChartProps = {
 	configuration: ChartConfig;
 	datasets: ChartDataset[];
@@ -32,18 +37,50 @@ const LineChartDashboard = ({
 	const { i18n } = useTranslation();
 	const currentLocale = i18n.language || "en-US";
 
+	const formatXAxisValue = (value: unknown) => {
+		const date = new Date(String(value));
+
+		if (!Number.isNaN(date.getTime())) {
+			return date.toLocaleDateString(currentLocale, {
+				month: "short",
+				day: "numeric",
+			});
+		}
+
+		return String(value);
+	};
+
+	const getSeriesLabel = (item: Series) => {
+		console.log(item);
+
+		const fallback = item.name ?? item.dataKey;
+		const configLabel = configuration[item.dataKey]?.label;
+
+		if (typeof configLabel === "string") {
+			return configLabel;
+		}
+
+		return t(`chart.series.${fallback}`, { defaultValue: fallback });
+	};
+
 	const formattedDatasets = useMemo(
 		() =>
 			datasets.map((data) => ({
 				...data,
-				total: Number(data.requests) + Number(data.cost),
+				total: series.reduce(
+					(sum, item) => sum + toNumber(data[item.dataKey]),
+					0
+				),
 			})),
-		[datasets]
+		[datasets, series]
 	);
 
-	// compute unique axes (left/right) used by series
-	const axisIds = useMemo(
-		() => Array.from(new Set(series.map((s) => s.yAxisId ?? "left"))),
+	const axisSeries = useMemo(
+		() =>
+			Array.from(new Set(series.map((s) => s.yAxisId))).map((axisId) => ({
+				axisId,
+				series: series.find((s) => s.yAxisId === axisId),
+			})),
 		[series]
 	);
 
@@ -65,13 +102,7 @@ const LineChartDashboard = ({
 					axisLine={false}
 					tickMargin={8}
 					minTickGap={32}
-					tickFormatter={(value) => {
-						const date = new Date(value);
-						return date.toLocaleDateString(currentLocale, {
-							month: "short",
-							day: "numeric",
-						});
-					}}
+					tickFormatter={formatXAxisValue}
 				/>
 				{isTotalOnly && (
 					<YAxis
@@ -86,17 +117,17 @@ const LineChartDashboard = ({
 					/>
 				)}
 				{!isTotalOnly &&
-					axisIds.map((id, index) => (
+					axisSeries.map((axisItem) => (
 						<YAxis
-							key={id}
-							dataKey={series[index].dataKey}
-							name={t(`chart.series.${series[index].name}`)}
-							yAxisId={id}
+							key={axisItem.axisId}
+							dataKey={axisItem.series?.dataKey}
+							name={axisItem.series ? getSeriesLabel(axisItem.series) : ""}
+							yAxisId={axisItem.axisId}
 							tickLine={false}
 							axisLine={false}
 							tickMargin={8}
 							minTickGap={32}
-							orientation={id as "left" | "right"}
+							orientation={axisItem.axisId}
 						/>
 					))}
 
@@ -104,13 +135,7 @@ const LineChartDashboard = ({
 					content={
 						<ChartTooltipContent
 							className="w-[150px]"
-							labelFormatter={(value) => {
-								const date = new Date(value);
-								return date.toLocaleDateString(currentLocale, {
-									month: "short",
-									day: "numeric",
-								});
-							}}
+							labelFormatter={formatXAxisValue}
 						/>
 					}
 				/>
@@ -123,7 +148,7 @@ const LineChartDashboard = ({
 						strokeWidth={s.strokeWidth ?? 2}
 						dot={s.dot ?? false}
 						yAxisId={isTotalOnly ? "left" : (s.yAxisId ?? "left")}
-						name={t(`chart.series.${s.name}`)}
+						name={getSeriesLabel(s)}
 					/>
 				))}
 

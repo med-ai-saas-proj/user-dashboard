@@ -25,6 +25,7 @@ import ProjectPeopleMember from "./features/project/components/project-people/pr
 import ProjectPeopleRole from "./features/project/components/project-people/project-people-role";
 import OrganizationProjects from "./routes/organization-projects";
 import ProjectRouteGuard from "./routes/project-route-guard";
+import DashboardAggregateOrganization from "./features/dashboard/components/dashboard-aggregate-organization";
 
 function App() {
 	return (
@@ -43,7 +44,20 @@ function App() {
 						/>
 						{/* TODO: Replace with main home page later, temporarily redirecting to /chat for now */}
 						<Route path="/" element={<Navigate to="/chat" replace />} />
-						<Route path="/dashboard" element={<DashboardPage />} />
+						<Route
+							path="/dashboard"
+							element={
+								<ProtectedRoute>
+									<DashboardPage />
+								</ProtectedRoute>
+							}
+						>
+							<Route index element={<Navigate to="organization" replace />} />
+							<Route
+								path="organization"
+								element={<DashboardAggregateOrganization />}
+							/>
+						</Route>
 						<Route
 							path="/api-keys"
 							element={

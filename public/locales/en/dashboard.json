@@ -3,6 +3,8 @@
     "kpiCard": {
         "totalRequest": "Total Requests",
         "totalCost": "Total Cost",
+        "totalSpent": "Total Spent",
+        "totalTransactions": "Total Transactions",
         "change": {
             "compare": "{{value}}% {{compareLabel}}",
             "vsLastMonth": "vs last month",
@@ -25,6 +27,14 @@
     "rangePicker": {
         "label": "Select Date Range",
         "placeholder": "Select date range"
+    },
+    "periodPicker": {
+        "label": "Period",
+        "placeholder": "Select period"
+    },
+    "timescalePicker": {
+        "label": "Timescale",
+        "placeholder": "Select timescale"
     },
     "chart": {
         "requestVolumeAndCost": "Request Volume & Cost Chart",

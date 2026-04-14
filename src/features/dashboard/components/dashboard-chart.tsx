@@ -7,6 +7,7 @@ import type { ChartConfiguration } from "../dashboard.type";
 
 const LazyLineChart = lazy(() => import("./line-chart"));
 const LazyAreaChart = lazy(() => import("./area-chart"));
+const LazyBarChart = lazy(() => import("./bar-chart"));
 
 type DashboardChartProps = {
 	title: string;
@@ -54,6 +55,15 @@ const DashboardChart = ({
 						)}
 						{chartConfiguration.chartType === "area" && (
 							<LazyAreaChart
+								configuration={chartConfiguration.config}
+								datasets={chartConfiguration.datasets}
+								xKey={chartConfiguration.xKey}
+								series={chartConfiguration.series}
+								isTotalOnly={isTotalOnly}
+							/>
+						)}
+						{chartConfiguration.chartType === "bar" && (
+							<LazyBarChart
 								configuration={chartConfiguration.config}
 								datasets={chartConfiguration.datasets}
 								xKey={chartConfiguration.xKey}

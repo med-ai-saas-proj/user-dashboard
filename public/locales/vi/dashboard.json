@@ -3,6 +3,8 @@
     "kpiCard": {
         "totalRequest": "Tổng số yêu cầu",
         "totalCost": "Tổng chi phí",
+        "totalSpent": "Tổng chi tiêu",
+        "totalTransactions": "Tổng giao dịch",
         "change": {
             "compare": "{{value}}% {{compareLabel}}",
             "vsLastMonth": "so với tháng trước",
@@ -25,6 +27,14 @@
     "rangePicker": {
         "label": "Chọn khoảng thời gian",
         "placeholder": "Chọn khoảng thời gian"
+    },
+    "periodPicker": {
+        "label": "Kỳ",
+        "placeholder": "Chọn kỳ"
+    },
+    "timescalePicker": {
+        "label": "Tỷ lệ thời gian",
+        "placeholder": "Chọn tỷ lệ thời gian"
     },
     "chart": {
         "requestVolumeAndCost": "Biểu đồ khối lượng yêu cầu & chi phí",

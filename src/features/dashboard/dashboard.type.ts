@@ -1,6 +1,10 @@
 import type { ChartConfig } from "@/components/shadcn/chart";
 
-export type KPIKey = "totalRequest" | "totalCost";
+export type KPIKey =
+	| "totalRequest"
+	| "totalCost"
+	| "totalSpent"
+	| "totalTransactions";
 
 export type CompareLabelKey = "vsLastWeek" | "vsLastMonth" | "vsLastYear";
 
@@ -10,7 +14,7 @@ export type StatCardData = {
 	value: number; // 403
 	format?: "compact" | "currency"; // optional formatting for value
 
-	change: {
+	change?: {
 		value: number; // 12.5
 		type: "increase" | "decrease";
 		compareLabel: CompareLabelKey; // "vs last week"
@@ -34,7 +38,7 @@ export type Series = {
 //     | "tokenUsageOverTime"
 //     | "requestVolumeAndCost";
 
-export type ChartType = "line" | "area";
+export type ChartType = "line" | "area" | "bar";
 
 export type ChartConfiguration = {
 	title: string;
@@ -46,10 +50,12 @@ export type ChartConfiguration = {
 	chartType: ChartType;
 };
 
+export type AggregatePeriod = "daily" | "weekly" | "monthly" | "yearly";
+
 export type AggregateParams = {
 	periodStart: string; // ISO date string
 	periodEnd: string; // ISO date string
-	period: "daily" | "weekly" | "monthly" | "yearly";
+	period: AggregatePeriod;
 	periodScale: number;
 };
 

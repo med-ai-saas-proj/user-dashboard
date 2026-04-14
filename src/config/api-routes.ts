@@ -27,7 +27,14 @@ export const API_ROUTES = {
 			`management/${API_VERSION}/api-keys`,
 			BASE_API_URL
 		).toString(),
-		DOCS_OPENAPI: new URL(`service/docs/openapi.json`, BASE_API_URL).toString(),
+		DOCS_MANAGEMENT_OPENAPI: new URL(
+			`management/docs/openapi.json`,
+			BASE_API_URL
+		).toString(),
+		DOCS_SERVICES_OPENAPI: new URL(
+			`service/docs/openapi.json`,
+			BASE_API_URL
+		).toString(),
 		ORGANIZATION: new URL(
 			`management/${API_VERSION}/organizations`,
 			BASE_API_URL

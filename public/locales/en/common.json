@@ -6,5 +6,9 @@
     "cancel": "Cancel",
     "done": "Done",
     "save": "Save"
+  },
+  "apiDocs": {
+    "management": "Management",
+    "service": "Service"
   }
 }

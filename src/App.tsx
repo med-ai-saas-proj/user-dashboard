@@ -26,6 +26,7 @@ import ProjectPeopleRole from "./features/project/components/project-people/proj
 import OrganizationProjects from "./routes/organization-projects";
 import ProjectRouteGuard from "./routes/project-route-guard";
 import DashboardAggregateOrganization from "./features/dashboard/components/dashboard-aggregate-organization";
+import DashboardAggregateProjects from "./features/dashboard/components/dashboard-aggregate-projects";
 
 function App() {
 	return (
@@ -57,6 +58,7 @@ function App() {
 								path="organization"
 								element={<DashboardAggregateOrganization />}
 							/>
+							<Route path="project" element={<DashboardAggregateProjects />} />
 						</Route>
 						<Route
 							path="/api-keys"

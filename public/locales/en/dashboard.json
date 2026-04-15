@@ -1,5 +1,9 @@
 {
     "title": "Analyics Dashboard",
+    "tabs": {
+        "organization": "Organization",
+        "project": "Project"
+    },
     "kpiCard": {
         "totalRequest": "Total Requests",
         "totalCost": "Total Cost",

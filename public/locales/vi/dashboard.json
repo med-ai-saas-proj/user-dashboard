@@ -1,5 +1,9 @@
 {
     "title": "Bảng thống kê",
+    "tabs": {
+        "organization": "Tổ chức",
+        "project": "Dự án"
+    },
     "kpiCard": {
         "totalRequest": "Tổng số yêu cầu",
         "totalCost": "Tổng chi phí",

@@ -104,9 +104,14 @@
         "noPending": "You have no pending actions for your payment methods"
     },
     "stripe": {
+        "notReady": "Payment system is not ready. Please try again.",
         "processing": "Processing...",
         "confirmPayment": "Confirm payment",
-        "loadError": "Failed to load payment form. Please try again."
+        "loadError": "Failed to load payment form. Please try again.",
+        "paymentFailed": "Payment failed",
+        "setupSuccess": "Setup Intent confirmed successfully",
+        "requiresAction": "Additional action required. Please check your bank.",
+        "genericError": "An error occurred"
     },
     "dialogs": {
         "addCredit": {

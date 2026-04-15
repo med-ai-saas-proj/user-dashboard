@@ -104,9 +104,14 @@
         "noPending": "Không có hành động chờ xử lý nào cho phương thức thanh toán"
     },
     "stripe": {
+        "notReady": "Hệ thống thanh toán chưa sẵn sàng. Vui lòng thử lại.",
         "processing": "Đang xử lý...",
         "confirmPayment": "Xác nhận thanh toán",
-        "loadError": "Không thể tải form thanh toán. Vui lòng thử lại."
+        "loadError": "Không thể tải form thanh toán. Vui lòng thử lại.",
+        "paymentFailed": "Thanh toán thất bại",
+        "setupSuccess": "Xác nhận Setup Intent thành công",
+        "requiresAction": "Cần thực hiện thêm bước xác thực. Vui lòng kiểm tra với ngân hàng.",
+        "genericError": "Đã xảy ra lỗi"
     },
     "dialogs": {
         "addCredit": {

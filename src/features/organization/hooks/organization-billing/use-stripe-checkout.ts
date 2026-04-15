@@ -1,5 +1,6 @@
 import { useStripe, useElements } from "@stripe/react-stripe-js";
 import { useCallback, useState, type FormEvent } from "react";
+import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 
 interface UseStripeCheckoutResult {
@@ -12,6 +13,7 @@ interface UseStripeCheckoutResult {
 export const useStripeCheckout = (): UseStripeCheckoutResult => {
 	const stripe = useStripe();
 	const elements = useElements();
+	const { t } = useTranslation("billing");
 	const [errorMessage, setErrorMessage] = useState<string | null>(null);
 	const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -20,7 +22,7 @@ export const useStripeCheckout = (): UseStripeCheckoutResult => {
 			event.preventDefault();
 
 			if (!stripe || !elements || isSubmitting) {
-				setErrorMessage("Payment system is not ready. Please try again.");
+				setErrorMessage(t("stripe.notReady"));
 				return;
 			}
 
@@ -34,26 +36,26 @@ export const useStripeCheckout = (): UseStripeCheckoutResult => {
 				});
 
 				if (error) {
-					setErrorMessage(error.message || "Payment failed");
-					toast.error(error.message || "Payment failed");
+					setErrorMessage(error.message || t("stripe.paymentFailed"));
+					toast.error(error.message || t("stripe.paymentFailed"));
 				} else if (setupIntent?.status === "succeeded") {
-					toast.success("Setup Intent confirmed successfully");
+					toast.success(t("stripe.setupSuccess"));
 				} else if (setupIntent?.status === "processing") {
-					toast.info("Payment processing...");
+					toast.info(t("stripe.processing"));
 				} else if (setupIntent?.status === "requires_action") {
 					// Handle 3D Secure or other required actions
-					toast.info("Additional action required. Please check your bank.");
+					toast.info(t("stripe.requiresAction"));
 				}
 			} catch (err) {
 				const message =
-					err instanceof Error ? err.message : "An error occurred";
+					err instanceof Error ? err.message : t("stripe.genericError");
 				setErrorMessage(message);
 				toast.error(message);
 			} finally {
 				setIsSubmitting(false);
 			}
 		},
-		[stripe, elements, isSubmitting]
+		[stripe, elements, isSubmitting, t]
 	);
 
 	return {

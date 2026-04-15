@@ -8,14 +8,17 @@ import { useBillingStore } from "../../store/billing";
 import OrganizationBillingSources from "./organization-billing-sources";
 import StripePayment from "./stripe/stripe-payment";
 import { useTranslation } from "react-i18next";
+import { useGetCredits } from "../../hooks/organization-billing/use-get-credit";
 
 const OrganizationBillingOverview = () => {
-	const { t } = useTranslation("billing" as any);
+	const { t } = useTranslation("billing");
 	const [addPaymentDetailsOpen, setAddPaymentDetailsOpen] = useState(false);
 	const [updatePaymentDetailsOpen, setUpdatePaymentDetailsOpen] =
 		useState(false);
 	const [stripePay, setStripePay] = useState(false);
 	const billingSourceId = useBillingStore((state) => state.billingSourceId);
+
+	const { data: currentCreditsInOrganization } = useGetCredits();
 
 	return (
 		<div className="w-full py-10">
@@ -24,7 +27,9 @@ const OrganizationBillingOverview = () => {
 					<div className="flex flex-col gap-6">
 						<div className="flex flex-col gap-2">
 							<p className="font-semibold">{t("overview.creditRemaining")}</p>
-							<p className="text-4xl font-semibold">$0.00</p>
+							<p className="text-4xl font-semibold">
+								${currentCreditsInOrganization?.data?.amount ?? "0.00"}
+							</p>
 						</div>
 						<div className="flex items-center gap-2">
 							{billingSourceId && (

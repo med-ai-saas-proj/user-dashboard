@@ -15,8 +15,5 @@ export const useCreateBillingSource = () => {
 				exact: false,
 			});
 		},
-		onError: (error) => {
-			console.error("Failed to create billing source:", error);
-		},
 	});
 };

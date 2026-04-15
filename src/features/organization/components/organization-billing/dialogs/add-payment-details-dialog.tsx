@@ -110,6 +110,9 @@ const AddPaymentDetailsDialog = ({
 				toast.success(tCommon("requestDone"));
 				reset();
 			},
+			onError: () => {
+				toast.error(tCommon("error"));
+			},
 		});
 	};
 

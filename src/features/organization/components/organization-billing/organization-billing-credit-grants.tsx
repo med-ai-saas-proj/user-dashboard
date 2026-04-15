@@ -73,29 +73,6 @@ const OrganizationBillingCreditGrants = () => {
 					)}
 					{haveCredits && (
 						<>
-							{/* <div className="flex items-center justify-between text-sm">
-                                <p className="font-semibold">Credit Grants</p>
-                                <p className="text-muted-foreground font-semibold">
-                                    USD
-                                </p>
-                            </div>
-                            <div className="flex items-center gap-x-4 mb-6">
-                                <Progress
-                                    value={0}
-                                    className="w-full h-4 rounded-none bg-muted"
-                                />
-                                <div className="flex items-center gap-x-0.5 font-semibold">
-                                    <p>$0.00</p>
-                                    <p>/</p>
-                                    <p>
-                                        $
-                                        {Number(
-                                            currentCreditsInOrganization.data
-                                                .amount,
-                                        ).toFixed(2)}
-                                    </p>
-                                </div>
-                            </div> */}
 							<div className="flex items-center gap-x-4">
 								<p className="uppercase font-semibold">
 									{t("creditGrants.currentCredits")}

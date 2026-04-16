@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import DashboardLayout from "@/layouts/dashboard-layout";
 import { Tabs, TabsList, TabsTrigger } from "@/components/shadcn/tabs";
 
-const SettingOrganizationPeoplePage = () => {
+const OrganizationPeoplePage = () => {
 	const { t } = useTranslation("organization");
 	const location = useLocation();
 	const navigate = useNavigate();
@@ -33,4 +33,4 @@ const SettingOrganizationPeoplePage = () => {
 	);
 };
 
-export default SettingOrganizationPeoplePage;
+export default OrganizationPeoplePage;

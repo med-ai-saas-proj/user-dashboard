@@ -144,5 +144,18 @@
                 "unarchive": "Bỏ lưu trữ"
             }
         }
+    },
+    "billing": {
+        "pageTitle": "Thanh toán",
+        "heading": "Quản lý thanh toán",
+        "tabs": {
+            "overview": "Tổng quan",
+            "payment-methods": "Phương thức thanh toán",
+            "billing-history": "Lịch sử thanh toán",
+            "credit-grants": "Cấp tín dụng",
+            "invoices": "Hóa đơn",
+            "sources": "Nguồn thanh toán",
+            "activity-log": "Nhật ký hoạt động"
+        }
     }
 }

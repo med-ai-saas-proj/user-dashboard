@@ -16,15 +16,21 @@ import PlaygroundChatPage from "./routes/playground-chat";
 import PlaygroundAISearchPage from "@/routes/playground-ai-search";
 import DashboardPage from "@/routes/dashboard";
 import SettingPage from "@/routes/setting";
-import SettingOrganizationPeoplePage from "@/routes/setting-organization-people";
+import OrganizationPeoplePage from "@/routes/organization-people";
 import OrganizationPeopleInvitation from "./features/organization/components/organization-people/organization-people-invitation";
 import OrganizationPeopleMember from "./features/organization/components/organization-people/organization-people-member";
+import OrganizationBilling from "./routes/organization-billing";
+import OrganizationBillingOverview from "./features/organization/components/organization-billing/organization-billing-overview";
+import OrganizationBillingPaymentMethods from "./features/organization/components/organization-billing/organization-billing-payment-methods";
+import OrganizationBillingHistory from "./features/organization/components/organization-billing/organization-billing-history";
+import OrganizationBillingCreditGrants from "./features/organization/components/organization-billing/organization-billing-credit-grants";
+import OrganizationProjects from "./routes/organization-projects";
 import ProjectGeneral from "./routes/project-general";
 import ProjectPeople from "./routes/project-people";
 import ProjectPeopleMember from "./features/project/components/project-people/project-people-member";
 import ProjectPeopleRole from "./features/project/components/project-people/project-people-role";
-import OrganizationProjects from "./routes/organization-projects";
 import ProjectRouteGuard from "./routes/project-route-guard";
+import OrganizationBillingActivityLog from "./features/organization/components/organization-billing/organization-billing-activity-log";
 
 function App() {
 	return (
@@ -106,7 +112,7 @@ function App() {
 								path="people"
 								element={
 									<ProtectedRoute>
-										<SettingOrganizationPeoplePage />
+										<OrganizationPeoplePage />
 									</ProtectedRoute>
 								}
 							>
@@ -115,6 +121,36 @@ function App() {
 								<Route
 									path="invitations"
 									element={<OrganizationPeopleInvitation />}
+								/>
+							</Route>
+							<Route
+								path="billing"
+								element={
+									<ProtectedRoute>
+										<OrganizationBilling />
+									</ProtectedRoute>
+								}
+							>
+								<Route index element={<Navigate to="overview" replace />} />
+								<Route
+									path="overview"
+									element={<OrganizationBillingOverview />}
+								/>
+								<Route
+									path="payment-methods"
+									element={<OrganizationBillingPaymentMethods />}
+								/>
+								<Route
+									path="billing-history"
+									element={<OrganizationBillingHistory />}
+								/>
+								<Route
+									path="credit-grants"
+									element={<OrganizationBillingCreditGrants />}
+								/>
+								<Route
+									path="activity-log"
+									element={<OrganizationBillingActivityLog />}
 								/>
 							</Route>
 							<Route

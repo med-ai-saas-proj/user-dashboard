@@ -6,7 +6,6 @@ import {
 	ChartColumnBig,
 	ClipboardPlusIcon,
 	GalleryVerticalEnd,
-	KeyRound,
 	PillIcon,
 	SearchIcon,
 	Settings,
@@ -48,11 +47,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 				name: t("management.dashboard.title"),
 				url: "/dashboard",
 				icon: ChartColumnBig,
-			},
-			{
-				name: t("management.apiKeys.title"),
-				url: "/api-keys",
-				icon: KeyRound,
 			},
 			{
 				name: t("management.apiReference.title"),
@@ -138,7 +132,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 					projects={data.organization}
 					label={t("organization.title")}
 				/>
-				<NavProjects projects={data.project} label={t("project.title")} />
+				{/* Only show projects nav if there's a project selected, to avoid confusion since you can't really do anything here if there's no projects */}
+				{projectId && (
+					<NavProjects projects={data.project} label={t("project.title")} />
+				)}
 			</SidebarContent>
 
 			<SidebarFooter>

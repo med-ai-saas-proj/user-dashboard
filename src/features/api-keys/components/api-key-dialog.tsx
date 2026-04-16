@@ -16,6 +16,7 @@ import {
 } from "@/components/shadcn/dialog";
 import { Input } from "@/components/shadcn/input";
 import { Label } from "@/components/shadcn/label";
+import { Textarea } from "@/components/shadcn/textarea";
 import { useCreateApiKey } from "@/features/api-keys/hooks/use-create-api-key";
 import { useServiceApiKeyStore } from "@/features/api-keys/store/service-api-key.store";
 import { APIKeySaveDialog } from "./api-key-save-dialog";
@@ -24,6 +25,7 @@ import { useGetApiKeyPermissions } from "../hooks/use-get-api-key-permissions";
 
 const apiCreationSchema = z.object({
 	name: z.string().min(1, "Name must be at least 1 character long"),
+	description: z.string().optional(),
 	permissions: z
 		.array(z.string())
 		.min(1, "Please select at least one permission"),
@@ -62,6 +64,7 @@ const APIKeyDialog = ({
 		resolver: zodResolver(apiCreationSchema),
 		defaultValues: {
 			name: "",
+			description: "",
 			permissions: [],
 		},
 	});
@@ -69,7 +72,7 @@ const APIKeyDialog = ({
 	const onSubmit = async (data: ApiCreationFormData) => {
 		const response = await createApiKeyMutation.mutateAsync({
 			name: data.name,
-			description: "",
+			description: data.description,
 			project_id: projectId || "",
 			permissions: data.permissions,
 		});
@@ -109,6 +112,16 @@ const APIKeyDialog = ({
 										</p>
 									</div>
 								)}
+							</div>
+
+							<div className="grid gap-3">
+								<Label>{tApiKeys("dialog.form.descriptionLabel")}</Label>
+								<Textarea
+									id="description"
+									placeholder={tApiKeys("dialog.form.descriptionPlaceholder")}
+									aria-invalid={!!errors.description}
+									{...register("description")}
+								/>
 							</div>
 
 							<div className="grid gap-3">

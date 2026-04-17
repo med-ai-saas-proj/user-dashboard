@@ -48,7 +48,7 @@ const APIKeyTable = ({ apiKeys }: { apiKeys: APIKey[] }) => {
 				<TableRow>
 					<TableHead>{t("table.header.status")}</TableHead>
 					<TableHead className="w-[20%]">{t("table.header.name")}</TableHead>
-					<TableHead>{t("table.header.projectId")}</TableHead>
+					<TableHead>{t("table.header.description")}</TableHead>
 					<TableHead>{t("table.header.secretKey")}</TableHead>
 					<TableHead>{t("table.header.createdAt")}</TableHead>
 					<TableHead>{t("table.header.permissions")}</TableHead>
@@ -66,7 +66,7 @@ const APIKeyTable = ({ apiKeys }: { apiKeys: APIKey[] }) => {
 								: t("table.header.enabled")}
 						</TableCell>
 						<TableCell className="font-medium">{apiKey.name}</TableCell>
-						<TableCell>{apiKey.projectId}</TableCell>
+						<TableCell>{apiKey.description}</TableCell>
 						<TableCell>{apiKey.hint}</TableCell>
 						<TableCell>{apiKey.createdAt.toLocaleDateString()}</TableCell>
 						<TableCell>

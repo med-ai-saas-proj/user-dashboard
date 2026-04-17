@@ -54,7 +54,7 @@ const OrganizationPeopleMember = () => {
 
 	return (
 		<>
-			<div className="flex items-center justify-between mb-4 mt-2">
+			<div className="flex items-center justify-between mb-4 mt-2 gap-2">
 				<InputGroup className="max-w-xs">
 					<InputGroupInput placeholder={t("people.layout.searchPlaceholder")} />
 					<InputGroupAddon>

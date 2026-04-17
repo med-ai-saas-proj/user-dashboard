@@ -10,11 +10,13 @@ export const useUpdateApiKey = () => {
 		mutationFn: async (credentials: {
 			apikeyId: string;
 			name?: string;
+			description?: string;
 			permissions?: string[];
 		}) => {
 			const data = await updateApiKey({
 				apikeyId: credentials.apikeyId,
 				name: credentials.name,
+				description: credentials.description,
 				permissions: credentials.permissions,
 			});
 			return data;
@@ -41,6 +43,7 @@ export const useUpdateApiKey = () => {
 						return {
 							...apiKey,
 							name: credentials.name ?? apiKey.name,
+							description: credentials.description ?? apiKey.description,
 							permissions: credentials.permissions ?? apiKey.permissions,
 						};
 					});

@@ -16,17 +16,24 @@ import PlaygroundChatPage from "./routes/playground-chat";
 import PlaygroundAISearchPage from "@/routes/playground-ai-search";
 import DashboardPage from "@/routes/dashboard";
 import SettingPage from "@/routes/setting";
-import SettingOrganizationPeoplePage from "@/routes/setting-organization-people";
+import OrganizationPeoplePage from "@/routes/organization-people";
 import OrganizationPeopleInvitation from "./features/organization/components/organization-people/organization-people-invitation";
 import OrganizationPeopleMember from "./features/organization/components/organization-people/organization-people-member";
+import OrganizationBilling from "./routes/organization-billing";
+import OrganizationBillingOverview from "./features/organization/components/organization-billing/organization-billing-overview";
+import OrganizationBillingPaymentMethods from "./features/organization/components/organization-billing/organization-billing-payment-methods";
+import OrganizationBillingHistory from "./features/organization/components/organization-billing/organization-billing-history";
+import OrganizationBillingCreditGrants from "./features/organization/components/organization-billing/organization-billing-credit-grants";
+import OrganizationProjects from "./routes/organization-projects";
 import ProjectGeneral from "./routes/project-general";
 import ProjectPeople from "./routes/project-people";
 import ProjectPeopleMember from "./features/project/components/project-people/project-people-member";
 import ProjectPeopleRole from "./features/project/components/project-people/project-people-role";
-import OrganizationProjects from "./routes/organization-projects";
 import ProjectRouteGuard from "./routes/project-route-guard";
 import DashboardAggregateOrganization from "./features/dashboard/components/dashboard-aggregate-organization";
 import DashboardAggregateProjects from "./features/dashboard/components/dashboard-aggregate-projects";
+import OrganizationBillingActivityLog from "./features/organization/components/organization-billing/organization-billing-activity-log";
+import { AppLayout } from "@/layouts/app-layout";
 
 function App() {
 	return (
@@ -45,136 +52,87 @@ function App() {
 						/>
 						{/* TODO: Replace with main home page later, temporarily redirecting to /chat for now */}
 						<Route path="/" element={<Navigate to="/chat" replace />} />
+
+						{/* App layout wraps all protected routes and provides persistent sidebar */}
 						<Route
-							path="/dashboard"
 							element={
 								<ProtectedRoute>
-									<DashboardPage />
+									<AppLayout />
 								</ProtectedRoute>
 							}
 						>
-							<Route index element={<Navigate to="organization" replace />} />
-							<Route
-								path="organization"
-								element={<DashboardAggregateOrganization />}
-							/>
-							<Route path="project" element={<DashboardAggregateProjects />} />
-						</Route>
-						<Route
-							path="/api-keys"
-							element={
-								<ProtectedRoute>
-									<APIKeysPage />
-								</ProtectedRoute>
-							}
-						/>
-						<Route
-							path="/api-reference"
-							element={
-								<ProtectedRoute>
-									<APIReferencePage />
-								</ProtectedRoute>
-							}
-						/>
-						<Route
-							path="/chat"
-							element={
-								<ProtectedRoute>
-									<PlaygroundChatPage />
-								</ProtectedRoute>
-							}
-						/>
-						<Route
-							path="/ai-search"
-							element={
-								<ProtectedRoute>
-									<PlaygroundAISearchPage />
-								</ProtectedRoute>
-							}
-						/>
-						<Route
-							path="/ehr-summary"
-							element={
-								<ProtectedRoute>
-									<EHRSummaryPage />
-								</ProtectedRoute>
-							}
-						/>
-
-						<Route
-							path="/rx-advisor"
-							element={
-								<ProtectedRoute>
-									<RxAdvisorPage />
-								</ProtectedRoute>
-							}
-						/>
-						<Route
-							path="/settings"
-							element={
-								<ProtectedRoute>
-									<SettingPage />
-								</ProtectedRoute>
-							}
-						/>
-						<Route path="/organization">
-							<Route
-								path="people"
-								element={
-									<ProtectedRoute>
-										<SettingOrganizationPeoplePage />
-									</ProtectedRoute>
-								}
-							>
-								<Route index element={<Navigate to="members" replace />} />
-								<Route path="members" element={<OrganizationPeopleMember />} />
+							<Route path="/dashboard" element={<DashboardPage />}>
+								<Route index element={<Navigate to="organization" replace />} />
 								<Route
-									path="invitations"
-									element={<OrganizationPeopleInvitation />}
+									path="organization"
+									element={<DashboardAggregateOrganization />}
+								/>
+								<Route
+									path="project"
+									element={<DashboardAggregateProjects />}
 								/>
 							</Route>
-							<Route
-								path="projects"
-								element={
-									<ProtectedRoute>
-										<OrganizationProjects />
-									</ProtectedRoute>
-								}
-							/>
-						</Route>
-						<Route path="/project/:projectId">
-							<Route element={<ProjectRouteGuard />}>
-								<Route index element={<Navigate to="general" replace />} />
+							<Route path="/api-keys" element={<APIKeysPage />} />
+							<Route path="/api-reference" element={<APIReferencePage />} />
+							<Route path="/chat" element={<PlaygroundChatPage />} />
+							<Route path="/ai-search" element={<PlaygroundAISearchPage />} />
+							<Route path="/ehr-summary" element={<EHRSummaryPage />} />
+							<Route path="/rx-advisor" element={<RxAdvisorPage />} />
+							<Route path="/settings" element={<SettingPage />} />
+
+							<Route path="billing" element={<OrganizationBilling />}>
+								<Route index element={<Navigate to="overview" replace />} />
 								<Route
-									path="general"
-									element={
-										<ProtectedRoute>
-											<ProjectGeneral />
-										</ProtectedRoute>
-									}
+									path="overview"
+									element={<OrganizationBillingOverview />}
 								/>
 								<Route
-									path="people"
-									element={
-										<ProtectedRoute>
-											<ProjectPeople />
-										</ProtectedRoute>
-									}
-								>
+									path="payment-methods"
+									element={<OrganizationBillingPaymentMethods />}
+								/>
+								<Route
+									path="billing-history"
+									element={<OrganizationBillingHistory />}
+								/>
+								<Route
+									path="credit-grants"
+									element={<OrganizationBillingCreditGrants />}
+								/>
+								<Route
+									path="activity-log"
+									element={<OrganizationBillingActivityLog />}
+								/>
+							</Route>
+
+							<Route path="/organization">
+								<Route path="people" element={<OrganizationPeoplePage />}>
 									<Route index element={<Navigate to="members" replace />} />
-									<Route path="members" element={<ProjectPeopleMember />} />
-									<Route path="roles" element={<ProjectPeopleRole />} />
+									<Route
+										path="members"
+										element={<OrganizationPeopleMember />}
+									/>
+									<Route
+										path="invitations"
+										element={<OrganizationPeopleInvitation />}
+									/>
+								</Route>
+								<Route path="projects" element={<OrganizationProjects />} />
+							</Route>
+
+							<Route path="/project/:projectId">
+								<Route element={<ProjectRouteGuard />}>
+									<Route index element={<Navigate to="general" replace />} />
+									<Route path="general" element={<ProjectGeneral />} />
+									<Route path="people" element={<ProjectPeople />}>
+										<Route index element={<Navigate to="members" replace />} />
+										<Route path="members" element={<ProjectPeopleMember />} />
+										<Route path="roles" element={<ProjectPeopleRole />} />
+									</Route>
+									<Route path="api-keys" element={<APIKeysPage />} />
 								</Route>
 							</Route>
-							<Route
-								path="api-keys"
-								element={
-									<ProtectedRoute>
-										<APIKeysPage />
-									</ProtectedRoute>
-								}
-							/>
 						</Route>
+
 						<Route path="*" element={<Navigate to="/" replace />} />
 					</Routes>
 				</BrowserRouter>

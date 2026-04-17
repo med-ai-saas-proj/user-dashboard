@@ -23,6 +23,7 @@ import { useCreateProject } from "../../hooks/organization-projects/use-create-p
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useAuthStore } from "@/features/auth/store/auth-store";
+import { PlusIcon } from "lucide-react";
 
 const createProjectSchema = (messages: {
 	projectNameRequired: string;
@@ -89,6 +90,7 @@ const OrganizationProjectCreateDialog = () => {
 		<Dialog open={openDialog} onOpenChange={setOpenDialog}>
 			<DialogTrigger asChild>
 				<Button variant="default">
+					<PlusIcon />
 					{t("project.createDialog.actions.trigger")}
 				</Button>
 			</DialogTrigger>

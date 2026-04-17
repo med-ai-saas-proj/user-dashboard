@@ -13,6 +13,7 @@ export type CreateApiKeyResponse = {
 export type UpdateApiKeyRequest = {
 	apikeyId: string;
 	name?: string;
+	description?: string;
 	permissions?: string[];
 };
 

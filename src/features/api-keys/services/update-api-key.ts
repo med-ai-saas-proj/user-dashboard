@@ -7,6 +7,7 @@ export const updateApiKey = async (params: UpdateApiKeyRequest) => {
 		`${API_ROUTES.MANAGEMENT.API_KEYS}/${params.apikeyId}`,
 		{
 			name: params.name,
+			description: params.description,
 			permissions: params.permissions,
 		}
 	);

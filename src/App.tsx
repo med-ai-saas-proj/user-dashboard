@@ -30,6 +30,8 @@ import ProjectPeople from "./routes/project-people";
 import ProjectPeopleMember from "./features/project/components/project-people/project-people-member";
 import ProjectPeopleRole from "./features/project/components/project-people/project-people-role";
 import ProjectRouteGuard from "./routes/project-route-guard";
+import DashboardAggregateOrganization from "./features/dashboard/components/dashboard-aggregate-organization";
+import DashboardAggregateProjects from "./features/dashboard/components/dashboard-aggregate-projects";
 import OrganizationBillingActivityLog from "./features/organization/components/organization-billing/organization-billing-activity-log";
 import { AppLayout } from "@/layouts/app-layout";
 
@@ -59,7 +61,17 @@ function App() {
 								</ProtectedRoute>
 							}
 						>
-							<Route path="/dashboard" element={<DashboardPage />} />
+							<Route path="/dashboard" element={<DashboardPage />}>
+								<Route index element={<Navigate to="organization" replace />} />
+								<Route
+									path="organization"
+									element={<DashboardAggregateOrganization />}
+								/>
+								<Route
+									path="project"
+									element={<DashboardAggregateProjects />}
+								/>
+							</Route>
 							<Route path="/api-keys" element={<APIKeysPage />} />
 							<Route path="/api-reference" element={<APIReferencePage />} />
 							<Route path="/chat" element={<PlaygroundChatPage />} />

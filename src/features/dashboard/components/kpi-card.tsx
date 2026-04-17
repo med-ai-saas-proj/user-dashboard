@@ -9,12 +9,9 @@ import {
 import type { StatCardData } from "../dashboard.type";
 import { FormatValue } from "../utils/format-stat.utils";
 import { useTranslation } from "react-i18next";
-import { useGetKPICard } from "../hooks/use-get-kpi-card";
 
-const KPICard = () => {
+const KPICard = ({ data }: { data: StatCardData[] }) => {
 	const { t } = useTranslation("dashboard");
-
-	const { data } = useGetKPICard();
 
 	return (
 		<div className="flex gap-4 flex-col md:flex-row">
@@ -24,10 +21,10 @@ const KPICard = () => {
 					stat.format || "compact"
 				);
 				return (
-					<Card key={stat.title}>
+					<Card key={stat.title} className="min-w-xs">
 						<CardHeader>
 							<CardTitle>
-								<p className="font-medium text-muted-foreground">
+								<p className="font-medium text-muted-foreground text-nowrap">
 									{t(`kpiCard.${stat.title}`)}
 								</p>
 							</CardTitle>
@@ -35,19 +32,24 @@ const KPICard = () => {
 						<CardContent>
 							<p className="font-bold text-4xl">{formattedValue}</p>
 						</CardContent>
-						<CardFooter>
-							<div className="flex items-center">
-								{stat.change?.type === "increase" ? (
-									<ArrowUp className="mr-1 text-muted-foreground" size={16} />
-								) : (
-									<ArrowDown className="mr-1 text-muted-foreground" size={16} />
-								)}
-								<p className="text-muted-foreground">
-									{stat.change?.value}%{" "}
-									{t(`kpiCard.change.${stat.change?.compareLabel}`)}
-								</p>
-							</div>
-						</CardFooter>
+						{stat.change && (
+							<CardFooter>
+								<div className="flex items-center">
+									{stat.change.type === "increase" ? (
+										<ArrowUp className="mr-1 text-muted-foreground" size={16} />
+									) : (
+										<ArrowDown
+											className="mr-1 text-muted-foreground"
+											size={16}
+										/>
+									)}
+									<p className="text-muted-foreground">
+										{stat.change?.value}%{" "}
+										{t(`kpiCard.change.${stat.change?.compareLabel}`)}
+									</p>
+								</div>
+							</CardFooter>
+						)}
 					</Card>
 				);
 			})}

@@ -27,6 +27,8 @@ const parseBody = (body?: string) => {
 };
 
 const buildMockProjects = (organizationId: string) => {
+	const defaultProjectIds = ["project-alpha", "project-beta", "project-gamma"];
+
 	const seed = Mock.mock({
 		"results|40": [
 			{
@@ -39,6 +41,12 @@ const buildMockProjects = (organizationId: string) => {
 	}).results as Array<
 		Pick<MockProject, "id" | "name" | "description" | "archived">
 	>;
+
+	defaultProjectIds.forEach((projectId, index) => {
+		if (seed[index]) {
+			seed[index].id = projectId;
+		}
+	});
 
 	return seed.map((project) => ({
 		...project,

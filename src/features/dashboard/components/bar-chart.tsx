@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
 import {
 	type ChartConfig,
 	ChartContainer,
@@ -16,23 +16,23 @@ const toNumber = (value: unknown) => {
 	return Number.isFinite(parsed) ? parsed : 0;
 };
 
-type LineChartProps = {
+type BarChartProps = {
 	configuration: ChartConfig;
 	datasets: ChartDataset[];
 	xKey?: string; // default 'date'
-	series: Series[]; // dynamic series configuration
+	series?: Series[]; // dynamic series configuration
 	height?: number;
 	isTotalOnly?: boolean; // indicate total only mode in one y-axis
 };
 
-const LineChartDashboard = ({
+const BarChartDashboard = ({
 	configuration,
 	datasets,
 	xKey = "date",
-	series,
+	series = [],
 	height = 250,
 	isTotalOnly = false,
-}: LineChartProps) => {
+}: BarChartProps) => {
 	const { t } = useTranslation("dashboard");
 	const { i18n } = useTranslation();
 	const currentLocale = i18n.language || "en-US";
@@ -51,8 +51,6 @@ const LineChartDashboard = ({
 	};
 
 	const getSeriesLabel = (item: Series) => {
-		console.log(item);
-
 		const fallback = item.name ?? item.dataKey;
 		const configLabel = configuration[item.dataKey]?.label;
 
@@ -90,10 +88,13 @@ const LineChartDashboard = ({
 			className={`aspect-auto w-full`}
 			style={{ height: `${height}px` }}
 		>
-			<LineChart
+			<BarChart
 				accessibilityLayer={true}
 				data={formattedDatasets}
-				margin={{ left: 12, right: 12 }}
+				margin={{
+					left: 12,
+					right: 12,
+				}}
 			>
 				<CartesianGrid vertical={false} />
 				<XAxis
@@ -136,26 +137,26 @@ const LineChartDashboard = ({
 						<ChartTooltipContent
 							className="w-[150px]"
 							labelFormatter={formatXAxisValue}
+							indicator="dot"
 						/>
 					}
 				/>
 
 				{series.map((s, idx) => (
-					<Line
+					<Bar
 						key={s.dataKey + idx}
 						dataKey={s.dataKey}
-						stroke={s.stroke ?? `var(--chart-${(idx % 6) + 1})`}
-						strokeWidth={s.strokeWidth ?? 2}
-						dot={s.dot ?? false}
+						fill={s.stroke ?? `var(--chart-${(idx % 6) + 1})`}
+						radius={[4, 4, 0, 0]}
 						yAxisId={isTotalOnly ? "left" : (s.yAxisId ?? "left")}
 						name={getSeriesLabel(s)}
 					/>
 				))}
 
 				<ChartLegend content={<ChartLegendContent />} />
-			</LineChart>
+			</BarChart>
 		</ChartContainer>
 	);
 };
 
-export default LineChartDashboard;
+export default BarChartDashboard;

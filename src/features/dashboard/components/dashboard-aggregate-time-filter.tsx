@@ -54,11 +54,11 @@ const TimescaleSelect = () => {
 			<p className="text-base font-medium">{t("timescalePicker.label")}</p>
 			<Select value={scale.toString()} onValueChange={handleScaleChange}>
 				<SelectTrigger className="w-[180px]">
-					<SelectValue placeholder="Select timescale" />
+					<SelectValue placeholder={t("timescalePicker.placeholder")} />
 				</SelectTrigger>
 				<SelectContent>
 					<SelectGroup>
-						<SelectLabel>Timescale</SelectLabel>
+						<SelectLabel>{t("timescalePicker.label")}</SelectLabel>
 						{options.map((option) => (
 							<SelectItem key={option.value} value={option.value.toString()}>
 								{option.label}
@@ -106,15 +106,23 @@ const DashboardAggregateTimeFilter = () => {
 				<p className="text-base font-medium">{t("periodPicker.label")}</p>
 				<Select value={period} onValueChange={handlePeriodChange}>
 					<SelectTrigger className="w-[180px]">
-						<SelectValue placeholder="Select period" />
+						<SelectValue placeholder={t("periodPicker.placeholder")} />
 					</SelectTrigger>
 					<SelectContent>
 						<SelectGroup>
-							<SelectLabel>Period</SelectLabel>
-							<SelectItem value="daily">Daily</SelectItem>
-							<SelectItem value="weekly">Weekly</SelectItem>
-							<SelectItem value="monthly">Monthly</SelectItem>
-							<SelectItem value="yearly">Yearly</SelectItem>
+							<SelectLabel>{t("periodPicker.label")}</SelectLabel>
+							<SelectItem value="daily">
+								{t("periodPicker.options.daily")}
+							</SelectItem>
+							<SelectItem value="weekly">
+								{t("periodPicker.options.weekly")}
+							</SelectItem>
+							<SelectItem value="monthly">
+								{t("periodPicker.options.monthly")}
+							</SelectItem>
+							<SelectItem value="yearly">
+								{t("periodPicker.options.yearly")}
+							</SelectItem>
 						</SelectGroup>
 					</SelectContent>
 				</Select>

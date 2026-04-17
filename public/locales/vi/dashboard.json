@@ -34,7 +34,13 @@
     },
     "periodPicker": {
         "label": "Kỳ",
-        "placeholder": "Chọn kỳ"
+        "placeholder": "Chọn kỳ",
+        "options": {
+            "daily": "Hàng ngày",
+            "weekly": "Hàng tuần",
+            "monthly": "Hàng tháng",
+            "yearly": "Hàng năm"
+        }
     },
     "timescalePicker": {
         "label": "Tỷ lệ thời gian",

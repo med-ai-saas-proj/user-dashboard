@@ -20,17 +20,6 @@ const DashboardChart = ({
 	chartConfig,
 	isTotalOnly,
 }: DashboardChartProps) => {
-	// const { i18n } = useTranslation();
-	// const currentLocale = i18n.language || "en-US";
-
-	// const startDate = useChartTimePickerStore((state) => state.startDate);
-	// const endDate = useChartTimePickerStore((state) => state.endDate);
-
-	// const { data: datasets } = useGetChartMetric({
-	// 	from: startDate?.toLocaleDateString(currentLocale),
-	// 	to: endDate?.toLocaleDateString(currentLocale),
-	// });
-
 	const chartConfiguration: ChartConfiguration = {
 		...chartConfig,
 		datasets: chartConfig.datasets ?? [],

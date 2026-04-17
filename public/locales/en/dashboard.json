@@ -34,7 +34,13 @@
     },
     "periodPicker": {
         "label": "Period",
-        "placeholder": "Select period"
+        "placeholder": "Select period",
+        "options": {
+            "daily": "Daily",
+            "weekly": "Weekly",
+            "monthly": "Monthly",
+            "yearly": "Yearly"
+        }
     },
     "timescalePicker": {
         "label": "Timescale",

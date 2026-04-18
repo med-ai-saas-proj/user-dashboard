@@ -10,6 +10,7 @@ import z from "zod";
 import { useUpdateProject } from "../../hooks/project-general/use-update-project";
 import { useParams } from "react-router-dom";
 import { toast } from "sonner";
+import { useProjectStore } from "../../store/project";
 
 const createProjectGeneralSchema = (messages: {
 	projectNameRequired: string;
@@ -41,6 +42,7 @@ const ProjectGeneralForm = () => {
 		[t]
 	);
 
+	const { projectInfo } = useProjectStore();
 	const { mutate: updateProject, isPending } = useUpdateProject();
 
 	const projectGeneralSchema = useMemo(
@@ -51,9 +53,10 @@ const ProjectGeneralForm = () => {
 	const { register, handleSubmit } = useForm<ProjectGeneralFormData>({
 		resolver: zodResolver(projectGeneralSchema),
 		defaultValues: {
-			projectName: "demo",
+			projectName: projectInfo.name || "Default Project",
 			projectId,
-			projectDescription: "",
+			projectDescription:
+				projectInfo.description || "Default project description",
 		},
 	});
 

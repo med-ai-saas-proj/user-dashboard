@@ -1,5 +1,5 @@
-"use client";
-
+import type * as React from "react";
+import { useEffect } from "react";
 import {
 	Book,
 	BotIcon,
@@ -10,7 +10,6 @@ import {
 	SearchIcon,
 	Settings,
 } from "lucide-react";
-import type * as React from "react";
 import { useTranslation } from "react-i18next";
 import {
 	Sidebar,
@@ -27,6 +26,7 @@ import { TeamSwitcher } from "@/components/sidebar/team-switcher";
 import { useAuthStore } from "@/features/auth/store/auth-store";
 import { useParams } from "react-router-dom";
 import { useGetOrganizationProjects } from "@/features/organization/hooks/organization-projects/use-get-projects";
+import { useProjectStore } from "@/features/project/store/project";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 	const { t } = useTranslation("sidebar");
@@ -34,13 +34,23 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 	const { state } = useSidebar();
 
 	// temporary fetch projects
+	const { setProjectInfo } = useProjectStore();
 	const { data: projectList } = useGetOrganizationProjects({
 		organizationId: organization?.id || "",
 	});
-	const defaultProject =
-		projectList && projectList.results.length > 0
-			? projectList.results[0]
-			: null;
+
+	const defaultProject = projectList?.results?.[0] ?? null;
+
+	useEffect(() => {
+		if (defaultProject) {
+			setProjectInfo({
+				name: defaultProject.name,
+				description: defaultProject.description || undefined,
+			});
+		}
+	}, [defaultProject, setProjectInfo]);
+
+	// Tabs
 
 	const params = useParams();
 	const projectId =

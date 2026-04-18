@@ -26,21 +26,32 @@ import { NavUser } from "@/components/sidebar/nav-user";
 import { TeamSwitcher } from "@/components/sidebar/team-switcher";
 import { useAuthStore } from "@/features/auth/store/auth-store";
 import { useParams } from "react-router-dom";
+import { useGetOrganizationProjects } from "@/features/organization/hooks/organization-projects/use-get-projects";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 	const { t } = useTranslation("sidebar");
-	const { userInfo } = useAuthStore();
+	const { userInfo, organization } = useAuthStore();
 	const { state } = useSidebar();
 
+	// temporary fetch projects
+	const { data: projectList } = useGetOrganizationProjects({
+		organizationId: organization?.id || "",
+	});
+	const defaultProject =
+		projectList && projectList.results.length > 0
+			? projectList.results[0]
+			: null;
+
 	const params = useParams();
-	const projectId = params.projectId;
+	const projectId =
+		params.projectId || (defaultProject ? defaultProject.id : null);
 
 	const data = {
 		teams: [
 			{
-				name: "Acme Inc",
+				name: organization?.name || "Acme Inc",
 				logo: GalleryVerticalEnd,
-				plan: "Enterprise",
+				plan: defaultProject?.name || "Default Project",
 			},
 		],
 		user: userInfo,

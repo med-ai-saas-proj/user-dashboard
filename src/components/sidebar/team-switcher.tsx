@@ -1,7 +1,6 @@
-"use client";
-
-import { ChevronsUpDown, Plus } from "lucide-react";
 import * as React from "react";
+import { useEffect } from "react";
+import { ChevronsUpDown, Plus } from "lucide-react";
 
 import {
 	DropdownMenu,
@@ -29,7 +28,28 @@ export function TeamSwitcher({
 	}[];
 }) {
 	const { isMobile } = useSidebar();
-	const [activeTeam, setActiveTeam] = React.useState(teams[0]);
+	const [activeTeam, setActiveTeam] = React.useState<
+		| {
+				name: string;
+				logo: React.ElementType;
+				plan: string;
+		  }
+		| undefined
+	>(teams[0]);
+
+	useEffect(() => {
+		if (!teams.length) {
+			setActiveTeam(undefined);
+			return;
+		}
+
+		setActiveTeam((current) => {
+			if (!current) return teams[0];
+
+			const matchingTeam = teams.find((team) => team.name === current.name);
+			return matchingTeam ?? teams[0];
+		});
+	}, [teams]);
 
 	if (!activeTeam) {
 		return null;

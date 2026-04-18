@@ -56,15 +56,18 @@ function OrganizationBillingActivityLog() {
 	return (
 		<div className="w-full py-10">
 			<div className="max-w-4xl mx-auto">
-				<div className="flex items-center justify-end">
-					<TimeRangePickerCustom
-						label={t("activityLog.dateRange.label")}
-						placeholder={t("activityLog.dateRange.placeholder")}
-						onDateChange={handleDateSelect}
-						locale={currentLocale === "vi" ? "vi" : "en-US"}
-						className="w-fit flex flex-row justify-end text-nowrap mx-0"
-					/>
-				</div>
+				{billingTransactions?.data.length !== undefined &&
+					billingTransactions.data.length > 0 && (
+						<div className="flex items-center justify-end">
+							<TimeRangePickerCustom
+								label={t("activityLog.dateRange.label")}
+								placeholder={t("activityLog.dateRange.placeholder")}
+								onDateChange={handleDateSelect}
+								locale={currentLocale === "vi" ? "vi" : "en-US"}
+								className="w-fit flex flex-row justify-end text-nowrap mx-0"
+							/>
+						</div>
+					)}
 				<div className="flex flex-col gap-6 mt-6">
 					{isInitialLoading && (
 						<div className="w-full flex items-center justify-center py-8">

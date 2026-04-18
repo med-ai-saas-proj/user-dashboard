@@ -79,31 +79,6 @@ function App() {
 							<Route path="/ehr-summary" element={<EHRSummaryPage />} />
 							<Route path="/rx-advisor" element={<RxAdvisorPage />} />
 							<Route path="/settings" element={<SettingPage />} />
-
-							<Route path="billing" element={<OrganizationBilling />}>
-								<Route index element={<Navigate to="overview" replace />} />
-								<Route
-									path="overview"
-									element={<OrganizationBillingOverview />}
-								/>
-								<Route
-									path="payment-methods"
-									element={<OrganizationBillingPaymentMethods />}
-								/>
-								<Route
-									path="billing-history"
-									element={<OrganizationBillingHistory />}
-								/>
-								<Route
-									path="credit-grants"
-									element={<OrganizationBillingCreditGrants />}
-								/>
-								<Route
-									path="activity-log"
-									element={<OrganizationBillingActivityLog />}
-								/>
-							</Route>
-
 							<Route path="/organization">
 								<Route path="people" element={<OrganizationPeoplePage />}>
 									<Route index element={<Navigate to="members" replace />} />
@@ -117,6 +92,29 @@ function App() {
 									/>
 								</Route>
 								<Route path="projects" element={<OrganizationProjects />} />
+								<Route path="billing" element={<OrganizationBilling />}>
+									<Route index element={<Navigate to="overview" replace />} />
+									<Route
+										path="overview"
+										element={<OrganizationBillingOverview />}
+									/>
+									<Route
+										path="payment-methods"
+										element={<OrganizationBillingPaymentMethods />}
+									/>
+									<Route
+										path="billing-history"
+										element={<OrganizationBillingHistory />}
+									/>
+									<Route
+										path="credit-grants"
+										element={<OrganizationBillingCreditGrants />}
+									/>
+									<Route
+										path="activity-log"
+										element={<OrganizationBillingActivityLog />}
+									/>
+								</Route>
 							</Route>
 
 							<Route path="/project/:projectId">

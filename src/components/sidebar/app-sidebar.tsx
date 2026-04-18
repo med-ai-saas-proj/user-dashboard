@@ -18,6 +18,7 @@ import {
 	SidebarFooter,
 	SidebarHeader,
 	SidebarRail,
+	useSidebar,
 } from "@/components/shadcn/sidebar";
 import { LocaleSwitcher } from "@/components/sidebar/locale-switcher";
 import { NavProjects } from "@/components/sidebar/nav-projects";
@@ -29,6 +30,7 @@ import { useParams } from "react-router-dom";
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 	const { t } = useTranslation("sidebar");
 	const { userInfo } = useAuthStore();
+	const { state } = useSidebar();
 
 	const params = useParams();
 	const projectId = params.projectId;
@@ -139,7 +141,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 			</SidebarContent>
 
 			<SidebarFooter>
-				<LocaleSwitcher className="mx-auto" />
+				{state === "expanded" && (
+					<LocaleSwitcher className="mx-auto invisible sm:visible" />
+				)}
 				{data.user && <NavUser user={data.user} />}
 			</SidebarFooter>
 			<SidebarRail />

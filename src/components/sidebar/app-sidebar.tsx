@@ -46,10 +46,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 	const projectId = params.projectId ?? storedProjectId ?? "";
 	const { data: projectDetails } = useGetProjectDetails(projectId);
 
-	const selectedProjectName =
-		storedProjectInfo.name ?? projectDetails?.project_name;
+	const selectedProjectName = storedProjectInfo.name ?? projectDetails?.name;
 	const selectedProjectDescription =
-		storedProjectInfo.description ?? projectDetails?.project_description;
+		storedProjectInfo.description ?? projectDetails?.description;
 
 	useEffect(() => {
 		if (projectId && projectId !== storedProjectId) {
@@ -84,7 +83,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 				name: organization?.name || "Acme Inc",
 				logo: GalleryVerticalEnd,
 				defaultProject: {
-					name: selectedProjectName || "Default Project",
+					name: selectedProjectName || "Choose a Project",
 					id: projectId,
 				},
 			},

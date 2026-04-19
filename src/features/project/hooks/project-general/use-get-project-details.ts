@@ -3,7 +3,7 @@ import { getProjectDetails } from "../../services/project-general/get-project-de
 
 export const useGetProjectDetails = (projectId: string) => {
 	return useQuery({
-		queryKey: ["projectDetails", projectId],
+		queryKey: ["project-details", projectId],
 		queryFn: () => getProjectDetails(projectId),
 		enabled: !!projectId,
 	});

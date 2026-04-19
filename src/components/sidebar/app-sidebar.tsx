@@ -51,6 +51,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 		storedProjectInfo.description ?? projectDetails?.description;
 
 	useEffect(() => {
+		if (!organization?.id) {
+			return;
+		}
+
 		if (projectId && projectId !== storedProjectId) {
 			setProjectId(projectId);
 		}
@@ -66,6 +70,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 			});
 		}
 	}, [
+		organization?.id,
 		projectId,
 		selectedProjectName,
 		selectedProjectDescription,

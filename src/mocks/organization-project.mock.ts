@@ -89,6 +89,40 @@ const buildArchiveResponse = (
 const projectsRoute = API_ROUTES.MANAGEMENT.PROJECT;
 
 Mock.mock(
+	new RegExp(`^${escapeRegExp(projectsRoute)}/([^/]+)(?:\\?.*)?$`),
+	"get",
+	(options) => {
+		const url = new URL(options.url, "http://dummy");
+		const [, projectId = ""] =
+			url.pathname.match(
+				new RegExp(`${new URL(projectsRoute).pathname}/([^/]+)$`)
+			) ?? [];
+
+		const project =
+			findProjectById(projectId) ||
+			getProjects(fallbackOrganizationId).find(
+				(item) => item.id === projectId
+			) ||
+			null;
+
+		if (!project) {
+			return null;
+		}
+
+		// Keep both snake_case and camelCase keys for compatibility across callers.
+		return {
+			id: project.id,
+			organization_id: project.organization_id,
+			archived: project.archived,
+			name: project.name,
+			description: project.description,
+			project_name: project.name,
+			project_description: project.description,
+		};
+	}
+);
+
+Mock.mock(
 	new RegExp(`^${escapeRegExp(projectsRoute)}(?:\\?.*)?$`),
 	"get",
 	(options) => {

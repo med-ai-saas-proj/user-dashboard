@@ -24,46 +24,75 @@ import { NavProjects } from "@/components/sidebar/nav-projects";
 import { NavUser } from "@/components/sidebar/nav-user";
 import { TeamSwitcher } from "@/components/sidebar/team-switcher";
 import { useAuthStore } from "@/features/auth/store/auth-store";
+import { useGetProjectDetails } from "@/features/project/hooks/project-general/use-get-project-details";
 import { useParams } from "react-router-dom";
-import { useGetOrganizationProjects } from "@/features/organization/hooks/organization-projects/use-get-projects";
 import { useProjectStore } from "@/features/project/store/project";
+import { useGetOrganizationProjects } from "@/features/organization/hooks/organization-projects/use-get-projects";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 	const { t } = useTranslation("sidebar");
 	const { userInfo, organization } = useAuthStore();
 	const { state } = useSidebar();
 
-	// temporary fetch projects
-	const { setProjectInfo } = useProjectStore();
+	const params = useParams();
 	const { data: projectList } = useGetOrganizationProjects({
 		organizationId: organization?.id || "",
 	});
+	const storedProjectId = useProjectStore((state) => state.projectId);
+	const storedProjectInfo = useProjectStore((state) => state.projectInfo);
+	const setProjectId = useProjectStore((state) => state.setProjectId);
+	const setProjectInfo = useProjectStore((state) => state.setProjectInfo);
 
-	const defaultProject = projectList?.results?.[0] ?? null;
+	const projectId = params.projectId ?? storedProjectId ?? "";
+	const { data: projectDetails } = useGetProjectDetails(projectId);
+
+	const selectedProjectName =
+		storedProjectInfo.name ?? projectDetails?.project_name;
+	const selectedProjectDescription =
+		storedProjectInfo.description ?? projectDetails?.project_description;
 
 	useEffect(() => {
-		if (defaultProject) {
+		if (projectId && projectId !== storedProjectId) {
+			setProjectId(projectId);
+		}
+
+		if (
+			selectedProjectName &&
+			(selectedProjectName !== storedProjectInfo.name ||
+				selectedProjectDescription !== storedProjectInfo.description)
+		) {
 			setProjectInfo({
-				name: defaultProject.name,
-				description: defaultProject.description || undefined,
+				name: selectedProjectName,
+				description: selectedProjectDescription || undefined,
 			});
 		}
-	}, [defaultProject, setProjectInfo]);
+	}, [
+		projectId,
+		selectedProjectName,
+		selectedProjectDescription,
+		storedProjectId,
+		storedProjectInfo,
+		setProjectId,
+		setProjectInfo,
+	]);
 
 	// Tabs
 
-	const params = useParams();
-	const projectId =
-		params.projectId || (defaultProject ? defaultProject.id : null);
-
 	const data = {
-		teams: [
-			{
+		info: {
+			organization: {
 				name: organization?.name || "Acme Inc",
 				logo: GalleryVerticalEnd,
-				plan: defaultProject?.name || "Default Project",
+				defaultProject: {
+					name: selectedProjectName || "Default Project",
+					id: projectId,
+				},
 			},
-		],
+			projects: projectList?.results.map((project) => ({
+				name: project.name,
+				id: project.id,
+			})),
+		},
 		user: userInfo,
 		management: [
 			{
@@ -146,7 +175,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 	return (
 		<Sidebar collapsible="icon" {...props}>
 			<SidebarHeader>
-				<TeamSwitcher teams={data.teams} />
+				<TeamSwitcher info={data.info} />
 			</SidebarHeader>
 			<SidebarContent>
 				<NavProjects projects={data.management} label={t("management.title")} />

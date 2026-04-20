@@ -1,5 +1,5 @@
-"use client";
-
+import type * as React from "react";
+import { useEffect } from "react";
 import {
 	Book,
 	BotIcon,
@@ -10,7 +10,6 @@ import {
 	SearchIcon,
 	Settings,
 } from "lucide-react";
-import type * as React from "react";
 import { useTranslation } from "react-i18next";
 import {
 	Sidebar,
@@ -18,29 +17,86 @@ import {
 	SidebarFooter,
 	SidebarHeader,
 	SidebarRail,
+	useSidebar,
 } from "@/components/shadcn/sidebar";
 import { LocaleSwitcher } from "@/components/sidebar/locale-switcher";
 import { NavProjects } from "@/components/sidebar/nav-projects";
 import { NavUser } from "@/components/sidebar/nav-user";
 import { TeamSwitcher } from "@/components/sidebar/team-switcher";
 import { useAuthStore } from "@/features/auth/store/auth-store";
+import { useGetProjectDetails } from "@/features/project/hooks/project-general/use-get-project-details";
 import { useParams } from "react-router-dom";
+import { useProjectStore } from "@/features/project/store/project";
+import { useGetOrganizationProjects } from "@/features/organization/hooks/organization-projects/use-get-projects";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 	const { t } = useTranslation("sidebar");
-	const { userInfo } = useAuthStore();
+	const { userInfo, organization } = useAuthStore();
+	const { state } = useSidebar();
 
 	const params = useParams();
-	const projectId = params.projectId;
+	const { data: projectList } = useGetOrganizationProjects({
+		organizationId: organization?.id || "",
+	});
+	const storedProjectId = useProjectStore((state) => state.projectId);
+	const storedProjectInfo = useProjectStore((state) => state.projectInfo);
+	const setProjectId = useProjectStore((state) => state.setProjectId);
+	const setProjectInfo = useProjectStore((state) => state.setProjectInfo);
+
+	const projectId = params.projectId ?? storedProjectId ?? "";
+	const { data: projectDetails } = useGetProjectDetails(projectId);
+
+	const selectedProjectName = storedProjectInfo.name ?? projectDetails?.name;
+	const selectedProjectDescription =
+		storedProjectInfo.description ?? projectDetails?.description;
+
+	useEffect(() => {
+		if (!organization?.id) {
+			return;
+		}
+
+		if (projectId && projectId !== storedProjectId) {
+			setProjectId(projectId);
+		}
+
+		if (
+			selectedProjectName &&
+			(selectedProjectName !== storedProjectInfo.name ||
+				selectedProjectDescription !== storedProjectInfo.description)
+		) {
+			setProjectInfo({
+				name: selectedProjectName,
+				description: selectedProjectDescription || undefined,
+			});
+		}
+	}, [
+		organization?.id,
+		projectId,
+		selectedProjectName,
+		selectedProjectDescription,
+		storedProjectId,
+		storedProjectInfo,
+		setProjectId,
+		setProjectInfo,
+	]);
+
+	// Tabs
 
 	const data = {
-		teams: [
-			{
-				name: "Acme Inc",
+		info: {
+			organization: {
+				name: organization?.name || "Acme Inc",
 				logo: GalleryVerticalEnd,
-				plan: "Enterprise",
+				defaultProject: {
+					name: selectedProjectName || "Choose a Project",
+					id: projectId,
+				},
 			},
-		],
+			projects: projectList?.results.map((project) => ({
+				name: project.name,
+				id: project.id,
+			})),
+		},
 		user: userInfo,
 		management: [
 			{
@@ -123,7 +179,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 	return (
 		<Sidebar collapsible="icon" {...props}>
 			<SidebarHeader>
-				<TeamSwitcher teams={data.teams} />
+				<TeamSwitcher info={data.info} />
 			</SidebarHeader>
 			<SidebarContent>
 				<NavProjects projects={data.management} label={t("management.title")} />
@@ -139,7 +195,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 			</SidebarContent>
 
 			<SidebarFooter>
-				<LocaleSwitcher className="mx-auto" />
+				{state === "expanded" && (
+					<LocaleSwitcher className="mx-auto invisible sm:visible" />
+				)}
 				{data.user && <NavUser user={data.user} />}
 			</SidebarFooter>
 			<SidebarRail />

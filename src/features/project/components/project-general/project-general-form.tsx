@@ -3,13 +3,14 @@ import { Field, FieldLabel } from "@/components/shadcn/field";
 import { Input } from "@/components/shadcn/input";
 import { Textarea } from "@/components/shadcn/textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form";
 import z from "zod";
 import { useUpdateProject } from "../../hooks/project-general/use-update-project";
 import { useParams } from "react-router-dom";
 import { toast } from "sonner";
+import { useGetProjectDetails } from "../../hooks/project-general/use-get-project-details";
 
 const createProjectGeneralSchema = (messages: {
 	projectNameRequired: string;
@@ -41,6 +42,7 @@ const ProjectGeneralForm = () => {
 		[t]
 	);
 
+	const { data: projectInfo } = useGetProjectDetails(projectId);
 	const { mutate: updateProject, isPending } = useUpdateProject();
 
 	const projectGeneralSchema = useMemo(
@@ -48,12 +50,13 @@ const ProjectGeneralForm = () => {
 		[validationMessages]
 	);
 
-	const { register, handleSubmit } = useForm<ProjectGeneralFormData>({
+	const { register, handleSubmit, reset } = useForm<ProjectGeneralFormData>({
 		resolver: zodResolver(projectGeneralSchema),
 		defaultValues: {
-			projectName: "demo",
+			projectName: projectInfo?.name || "Default Project",
 			projectId,
-			projectDescription: "",
+			projectDescription:
+				projectInfo?.description || "Default project description",
 		},
 	});
 
@@ -71,6 +74,15 @@ const ProjectGeneralForm = () => {
 			}
 		);
 	};
+
+	useEffect(() => {
+		reset({
+			projectName: projectInfo?.name || "Default Project",
+			projectId,
+			projectDescription:
+				projectInfo?.description || "Default project description",
+		});
+	}, [projectInfo, projectId, reset]);
 
 	return (
 		<div className="w-full">

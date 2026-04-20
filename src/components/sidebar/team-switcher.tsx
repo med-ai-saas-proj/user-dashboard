@@ -1,7 +1,6 @@
-"use client";
-
-import { ChevronsUpDown, Plus } from "lucide-react";
-import * as React from "react";
+import type * as React from "react";
+import { ChevronsUpDown } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 import {
 	DropdownMenu,
@@ -18,22 +17,44 @@ import {
 	SidebarMenuItem,
 	useSidebar,
 } from "@/components/shadcn/sidebar";
+import { useProjectStore } from "@/features/project/store/project";
+import { cn } from "@/lib/utils";
 
 export function TeamSwitcher({
-	teams,
+	info,
 }: {
-	teams: {
-		name: string;
-		logo: React.ElementType;
-		plan: string;
-	}[];
+	info: {
+		organization: {
+			name: string;
+			logo: React.ElementType;
+			defaultProject?: {
+				name: string;
+				id: string;
+			};
+		};
+		projects?: {
+			name: string;
+			id: string;
+		}[];
+	};
 }) {
 	const { isMobile } = useSidebar();
-	const [activeTeam, setActiveTeam] = React.useState(teams[0]);
+	const navigate = useNavigate();
 
-	if (!activeTeam) {
-		return null;
-	}
+	const setProjectId = useProjectStore((state) => state.setProjectId);
+	const setProjectInfo = useProjectStore((state) => state.setProjectInfo);
+
+	const projects = info.projects ?? [];
+	const OrganizationLogo = info.organization.logo;
+
+	const handleProjectSelect = (project: { id: string; name: string }) => {
+		setProjectId(project.id);
+		setProjectInfo({
+			name: project.name,
+			description: undefined,
+		});
+		navigate(`/project/${project.id}/general`);
+	};
 
 	return (
 		<SidebarMenu>
@@ -45,11 +66,15 @@ export function TeamSwitcher({
 							className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
 						>
 							<div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-8 items-center justify-center rounded-lg">
-								<activeTeam.logo className="size-4" />
+								<OrganizationLogo className="size-4" />
 							</div>
 							<div className="grid flex-1 text-left text-sm leading-tight">
-								<span className="truncate font-medium">{activeTeam.name}</span>
-								<span className="truncate text-xs">{activeTeam.plan}</span>
+								<span className="truncate font-medium">
+									{info.organization.name}
+								</span>
+								<span className="truncate text-xs">
+									{info.organization.defaultProject?.name}
+								</span>
 							</div>
 							<ChevronsUpDown className="ml-auto" />
 						</SidebarMenuButton>
@@ -61,28 +86,40 @@ export function TeamSwitcher({
 						sideOffset={4}
 					>
 						<DropdownMenuLabel className="text-muted-foreground text-xs">
-							Teams
+							Projects
 						</DropdownMenuLabel>
-						{teams.map((team, index) => (
-							<DropdownMenuItem
-								key={team.name}
-								onClick={() => setActiveTeam(team)}
-								className="gap-2 p-2"
-							>
-								<div className="flex size-6 items-center justify-center rounded-md border">
-									<team.logo className="size-3.5 shrink-0" />
-								</div>
-								{team.name}
-								<DropdownMenuShortcut>⌘{index + 1}</DropdownMenuShortcut>
-							</DropdownMenuItem>
-						))}
-						<DropdownMenuSeparator />
-						<DropdownMenuItem className="gap-2 p-2">
-							<div className="flex size-6 items-center justify-center rounded-md border bg-transparent">
-								<Plus className="size-4" />
-							</div>
-							<div className="text-muted-foreground font-medium">Add team</div>
-						</DropdownMenuItem>
+						{projects.length > 0 ? (
+							projects.map((project, index) => (
+								<DropdownMenuItem
+									key={project.id}
+									onClick={() => handleProjectSelect(project)}
+									className={cn(
+										"gap-2 p-2 flex items-start justify-between",
+										project.id === info.organization.defaultProject?.id &&
+											"bg-sidebar-accent text-sidebar-accent-foreground"
+									)}
+								>
+									<div className="min-w-0 flex-1 flex flex-col items-start justify-start">
+										<p className="w-full truncate font-medium">
+											{project.name}
+										</p>
+										<p className="w-full truncate text-xs text-muted-foreground/80">
+											{project.id}
+										</p>
+									</div>
+									<DropdownMenuShortcut className="ml-2 shrink-0">
+										⌘{index + 1}
+									</DropdownMenuShortcut>
+								</DropdownMenuItem>
+							))
+						) : (
+							<>
+								<DropdownMenuSeparator />
+								<DropdownMenuItem disabled className="gap-2 p-2">
+									No projects
+								</DropdownMenuItem>
+							</>
+						)}
 					</DropdownMenuContent>
 				</DropdownMenu>
 			</SidebarMenuItem>

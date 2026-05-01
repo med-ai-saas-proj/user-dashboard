@@ -197,6 +197,13 @@ const EhrConverterPage = () => {
 	return (
 		<DashboardLayout pageTitle="EHR Converter">
 			<div className="flex flex-col h-[calc(100vh-4rem)] overflow-hidden">
+				<div className="px-4 py-2 border-b bg-muted/10">
+					<p className="text-xs text-muted-foreground">
+						Auto-detect & convert HL7v2/v3, CDA/C-CDA, BHXH 4210, HSYT, EMRBYT
+						to FHIR R4. Bidirectional conversion (FHIR ↔ HL7v2) via Azure FHIR
+						Converter Worker.
+					</p>
+				</div>
 				{/* Two-panel layout */}
 				<div className="flex-1 grid grid-cols-1 lg:grid-cols-2 overflow-hidden border-b">
 					{/* Left: Input */}

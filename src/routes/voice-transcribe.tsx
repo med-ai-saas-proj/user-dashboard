@@ -5,13 +5,18 @@ import { ApiTopology, TOPOLOGIES } from "@/components/api-topology";
 import { Button } from "@/components/shadcn/button";
 import { ViewCodeDialog } from "@/components/view-code-dialog";
 import { API_ROUTES } from "@/config/api-routes";
+import { useServiceApiKeyStore } from "@/features/api-keys/store/service-api-key.store";
 import DashboardLayout from "@/layouts/dashboard-layout";
 import { getAuthHeaders } from "@/lib/auth-headers";
 
 interface TranscribeResponse {
 	text: string;
+	transcript?: string;
 	language?: string;
+	duration_seconds?: number;
 	duration?: number;
+	enhanced?: boolean;
+	translation?: string | null;
 	segments?: { start: number; end: number; text: string }[];
 }
 
@@ -24,6 +29,11 @@ const formatDuration = (seconds: number) => {
 const VoiceTranscribePage = () => {
 	const [isLoading, setIsLoading] = useState(false);
 	const [file, setFile] = useState<File | null>(null);
+	const [language, setLanguage] = useState<"auto" | "vi" | "en">("auto");
+	const [denoise, setDenoise] = useState(false);
+	const [enhance, setEnhance] = useState(true);
+	const [translateToEnglish, setTranslateToEnglish] = useState(false);
+	const [showSegments, setShowSegments] = useState(false);
 	const [result, setResult] = useState<TranscribeResponse | null>(null);
 	const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -68,6 +78,14 @@ const VoiceTranscribePage = () => {
 		try {
 			const formData = new FormData();
 			formData.append("file", file);
+			if (language !== "auto") {
+				formData.append("language", language);
+			}
+			formData.append("denoise", denoise ? "true" : "false");
+			formData.append("enhance", enhance ? "true" : "false");
+			if (translateToEnglish) {
+				formData.append("translate_to", "en");
+			}
 
 			const headers = await getAuthHeaders(
 				API_ROUTES.SERVICES.VOICE_TRANSCRIBE
@@ -130,8 +148,15 @@ const VoiceTranscribePage = () => {
 			const mediaRecorder = new MediaRecorder(stream, { mimeType });
 			mediaRecorderRef.current = mediaRecorder;
 
-			// Open WebSocket
-			const wsUrl = API_ROUTES.SERVICES.VOICE_TRANSCRIBE_WS;
+			// Open WebSocket — browsers cannot set headers on `new WebSocket(...)`,
+			// so we pass the API key and language as query parameters.
+			const apiKey = useServiceApiKeyStore.getState().selectedApiKey;
+			const params = new URLSearchParams();
+			if (apiKey) params.set("api_key", apiKey);
+			if (language !== "auto") params.set("language", language);
+			const wsUrl =
+				API_ROUTES.SERVICES.VOICE_TRANSCRIBE_WS +
+				(params.toString() ? `?${params.toString()}` : "");
 			const ws = new WebSocket(wsUrl);
 			wsRef.current = ws;
 
@@ -246,7 +271,72 @@ const VoiceTranscribePage = () => {
 	return (
 		<DashboardLayout pageTitle="Voice Transcribe">
 			<div className="flex flex-col h-[calc(100vh-4rem)] overflow-hidden">
-				<div className="flex items-center justify-end px-4 py-1.5 border-b">
+				<div className="px-4 py-2 border-b bg-muted/10">
+					<p className="text-xs text-muted-foreground">
+						VAD-based speech-to-text with automatic punctuation/case enhancement
+						via local Qwen LLM. Upload audio files or record live from
+						microphone. Supports Vietnamese & English.
+					</p>
+				</div>
+				<div className="flex items-center justify-between px-4 py-1.5 border-b gap-3 flex-wrap">
+					<div className="flex items-center gap-4 flex-wrap">
+						<div className="flex items-center gap-2">
+							<label
+								htmlFor="vt-lang"
+								className="text-xs text-muted-foreground"
+							>
+								Language
+							</label>
+							<select
+								id="vt-lang"
+								value={language}
+								onChange={(e) =>
+									setLanguage(e.target.value as "auto" | "vi" | "en")
+								}
+								className="rounded-md border px-2 py-1 text-xs bg-background"
+							>
+								<option value="auto">Auto-detect</option>
+								<option value="vi">Vietnamese</option>
+								<option value="en">English</option>
+							</select>
+						</div>
+						<label
+							htmlFor="vt-denoise"
+							className="flex items-center gap-1.5 text-xs text-muted-foreground cursor-pointer"
+						>
+							<input
+								id="vt-denoise"
+								type="checkbox"
+								checked={denoise}
+								onChange={(e) => setDenoise(e.target.checked)}
+							/>
+							Denoise
+						</label>
+						<label
+							htmlFor="vt-enhance"
+							className="flex items-center gap-1.5 text-xs text-muted-foreground cursor-pointer"
+						>
+							<input
+								id="vt-enhance"
+								type="checkbox"
+								checked={enhance}
+								onChange={(e) => setEnhance(e.target.checked)}
+							/>
+							Enhance with LLM
+						</label>
+						<label
+							htmlFor="vt-translate"
+							className="flex items-center gap-1.5 text-xs text-muted-foreground cursor-pointer"
+						>
+							<input
+								id="vt-translate"
+								type="checkbox"
+								checked={translateToEnglish}
+								onChange={(e) => setTranslateToEnglish(e.target.checked)}
+							/>
+							Translate to English
+						</label>
+					</div>
 					<ViewCodeDialog
 						endpoint={API_ROUTES.SERVICES.VOICE_TRANSCRIBE}
 						method="POST"
@@ -377,10 +467,24 @@ const VoiceTranscribePage = () => {
 					<div className="flex flex-col overflow-hidden">
 						{result ? (
 							<div className="flex-1 overflow-y-auto p-4 space-y-4">
-								<div className="flex items-center gap-3 text-sm text-muted-foreground">
+								<div className="flex items-center gap-3 text-sm text-muted-foreground flex-wrap">
 									{result.language && <span>Language: {result.language}</span>}
-									{result.duration != null && (
-										<span>Duration: {result.duration.toFixed(1)}s</span>
+									{(() => {
+										const dur = result.duration_seconds ?? result.duration;
+										return dur != null ? (
+											<span>Duration: {dur.toFixed(1)}s</span>
+										) : null;
+									})()}
+									{result.enhanced && (
+										<span className="text-xs px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30">
+											LLM-enhanced
+										</span>
+									)}
+									{result.segments && result.segments.length > 0 && (
+										<span className="text-xs">
+											{result.segments.length} segment
+											{result.segments.length === 1 ? "" : "s"}
+										</span>
 									)}
 								</div>
 								<div className="p-4 rounded-md border bg-muted/30">
@@ -388,26 +492,42 @@ const VoiceTranscribePage = () => {
 										Transcription
 									</span>
 									<p className="text-sm whitespace-pre-wrap leading-relaxed">
-										{result.text}
+										{result.transcript || result.text}
 									</p>
 								</div>
+								{result.translation && (
+									<div className="p-4 rounded-md border bg-muted/20">
+										<span className="text-xs font-medium text-muted-foreground block mb-2">
+											Translation (English)
+										</span>
+										<p className="text-sm whitespace-pre-wrap leading-relaxed">
+											{result.translation}
+										</p>
+									</div>
+								)}
 								{result.segments && result.segments.length > 0 && (
 									<div className="space-y-1">
-										<span className="text-xs font-medium text-muted-foreground">
-											Segments
-										</span>
-										{result.segments.map((seg, i) => (
-											<div
-												key={`${seg.start}-${i}`}
-												className="flex gap-3 text-xs p-2 rounded border"
-											>
-												<span className="text-muted-foreground font-mono shrink-0">
-													{seg.start.toFixed(1)}s{" – "}
-													{seg.end.toFixed(1)}s
-												</span>
-												<span>{seg.text}</span>
-											</div>
-										))}
+										<button
+											type="button"
+											onClick={() => setShowSegments((s) => !s)}
+											className="text-xs font-medium text-muted-foreground hover:text-foreground"
+										>
+											{showSegments ? "▼" : "▶"} Segments (
+											{result.segments.length})
+										</button>
+										{showSegments &&
+											result.segments.map((seg, i) => (
+												<div
+													key={`${seg.start}-${i}`}
+													className="flex gap-3 text-xs p-2 rounded border"
+												>
+													<span className="text-muted-foreground font-mono shrink-0">
+														{seg.start.toFixed(1)}s{" – "}
+														{seg.end.toFixed(1)}s
+													</span>
+													<span>{seg.text}</span>
+												</div>
+											))}
 									</div>
 								)}
 								<Button
@@ -415,7 +535,9 @@ const VoiceTranscribePage = () => {
 									variant="outline"
 									size="sm"
 									onClick={() => {
-										navigator.clipboard.writeText(result.text);
+										navigator.clipboard.writeText(
+											result.transcript || result.text
+										);
 										toast.success("Copied to clipboard");
 									}}
 								>
@@ -451,6 +573,9 @@ const VoiceTranscribePage = () => {
 				</div>
 			</div>
 
+			<div className="px-4 py-1.5 border-t bg-muted/10 text-[10px] text-muted-foreground text-center">
+				Powered by Cohere Aya / Whisper-Large
+			</div>
 			<div className="px-4 py-2 border-t">
 				<ApiTopology {...TOPOLOGIES.voice_transcribe} />
 			</div>

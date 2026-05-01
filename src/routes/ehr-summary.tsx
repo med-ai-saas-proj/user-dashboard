@@ -1,17 +1,17 @@
-import { useState, useRef } from "react";
-import { API_ROUTES } from "@/config/api-routes";
-import { EXAMPLES } from "@/features/pg-ehr-converter/services/examples";
-import {
-	detectFormat,
-	type DetectedFormat,
-} from "@/features/pg-ehr-converter/components/converter-form";
+import { useRef, useState } from "react";
+import { toast } from "sonner";
+import { ApiTopology, TOPOLOGIES } from "@/components/api-topology";
 import { Button } from "@/components/shadcn/button";
-import { MarkdownCustom } from "@/features/pg-chat/components/MarkdownCustom";
 import { ViewCodeDialog } from "@/components/view-code-dialog";
+import { API_ROUTES } from "@/config/api-routes";
+import { MarkdownCustom } from "@/features/pg-chat/components/MarkdownCustom";
+import {
+	type DetectedFormat,
+	detectFormat,
+} from "@/features/pg-ehr-converter/components/converter-form";
+import { EXAMPLES } from "@/features/pg-ehr-converter/services/examples";
 import DashboardLayout from "@/layouts/dashboard-layout";
 import { getAuthHeaders } from "@/lib/auth-headers";
-import { ApiTopology, TOPOLOGIES } from "@/components/api-topology";
-import { toast } from "sonner";
 
 const FORMAT_COLORS: Record<DetectedFormat, string> = {
 	HL7v2: "bg-blue-100 text-blue-800 dark:bg-blue-900/50 dark:text-blue-300",
@@ -422,7 +422,7 @@ const EhrSummaryPage = () => {
 						type: "custom_json",
 						custom_json: { sources: sourceLabels, merged_fhir_bundle: merged },
 					},
-					model: "gpt-4o-2",
+					model: "qwen-cluster",
 					stream: false,
 				}),
 			});
@@ -456,6 +456,13 @@ const EhrSummaryPage = () => {
 	return (
 		<DashboardLayout pageTitle="EHR Summary">
 			<div className="flex flex-col h-[calc(100vh-4rem)] overflow-hidden">
+				<div className="px-4 py-2 border-b bg-muted/10">
+					<p className="text-xs text-muted-foreground">
+						Multi-source EHR consolidation with streaming narrative generation
+						via local Qwen LLM. Upload from multiple facilities, auto-convert to
+						FHIR R4, merge, and summarize in clinical prose.
+					</p>
+				</div>
 				<div className="flex-1 flex flex-col lg:grid lg:grid-cols-2 overflow-hidden">
 					{/* Left: Multi-source input */}
 					<div className="border-b lg:border-b-0 lg:border-r flex flex-col overflow-hidden min-h-0 lg:min-h-full">
@@ -740,7 +747,7 @@ const EhrSummaryPage = () => {
 											},
 										},
 									},
-									model: "gpt-4o-2",
+									model: "qwen-cluster",
 									stream: false,
 								}}
 								description="Generate clinical summary from merged FHIR data"
@@ -827,8 +834,8 @@ const EhrSummaryPage = () => {
 										summary.
 									</p>
 									<p className="text-[11px] text-muted-foreground/60">
-										Pipeline: Standardize each source → FHIR R4 → Merge → GPT-4o
-										Summary
+										Pipeline: Standardize each source → FHIR R4 → Merge → Qwen
+										Cluster Summary
 									</p>
 								</div>
 							</div>

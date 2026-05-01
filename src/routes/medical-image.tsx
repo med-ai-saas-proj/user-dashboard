@@ -21,6 +21,24 @@ interface ImageDescribeResponse {
 	body_part?: string;
 }
 
+const SAMPLE_IMAGES: { label: string; modality: string; src: string }[] = [
+	{
+		label: "Chest X-ray",
+		modality: "X-Ray",
+		src: "/sample-images/chest-xray.jpg",
+	},
+	{
+		label: "Skin lesion",
+		modality: "Dermatology",
+		src: "/sample-images/skin-lesion.jpg",
+	},
+	{
+		label: "Retinal scan",
+		modality: "Fundus",
+		src: "/sample-images/retinal-scan.jpg",
+	},
+];
+
 const MedicalImagePage = () => {
 	const [isLoading, setIsLoading] = useState(false);
 	const [file, setFile] = useState<File | null>(null);
@@ -38,6 +56,25 @@ const MedicalImagePage = () => {
 			reader.readAsDataURL(f);
 		} else {
 			setPreview(null);
+		}
+	};
+
+	const loadSample = async (sample: (typeof SAMPLE_IMAGES)[number]) => {
+		try {
+			const resp = await fetch(sample.src);
+			if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+			const blob = await resp.blob();
+			const filename = sample.src.split("/").pop() || "sample.jpg";
+			const sampleFile = new File([blob], filename, {
+				type: blob.type || "image/jpeg",
+			});
+			setFile(sampleFile);
+			setResult(null);
+			const reader = new FileReader();
+			reader.onload = (ev) => setPreview(ev.target?.result as string);
+			reader.readAsDataURL(sampleFile);
+		} catch {
+			toast.error(`Could not load sample: ${sample.label}`);
 		}
 	};
 
@@ -72,6 +109,13 @@ const MedicalImagePage = () => {
 	return (
 		<DashboardLayout pageTitle="Medical Image">
 			<div className="flex flex-col h-[calc(100vh-4rem)] overflow-hidden">
+				<div className="px-4 py-2 border-b bg-muted/10">
+					<p className="text-xs text-muted-foreground">
+						AI-powered image analysis using Qwen3.5-4B (self-hosted GGUF on
+						Cloud Run L4 GPU). Extract findings, body parts, and differential
+						diagnoses from radiology, dermatology, and ophthalmology images.
+					</p>
+				</div>
 				<div className="flex items-center justify-end px-4 py-1.5 border-b">
 					<ViewCodeDialog
 						endpoint={API_ROUTES.SERVICES.MEDICAL_IMAGE}
@@ -139,6 +183,40 @@ const MedicalImagePage = () => {
 						>
 							{isLoading ? "Analyzing..." : "Analyze Image"}
 						</Button>
+						<div>
+							<div className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground mb-2">
+								Or try a sample
+							</div>
+							<div className="grid grid-cols-3 gap-2">
+								{SAMPLE_IMAGES.map((s) => (
+									<button
+										key={s.label}
+										type="button"
+										onClick={() => loadSample(s)}
+										className="group relative aspect-square rounded-md border overflow-hidden hover:border-primary transition-colors bg-muted"
+										title={`Load ${s.label}`}
+									>
+										<img
+											src={s.src}
+											alt={s.label}
+											className="w-full h-full object-cover"
+											onError={(e) => {
+												(e.currentTarget as HTMLImageElement).style.display =
+													"none";
+											}}
+										/>
+										<div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent p-1.5">
+											<div className="text-[10px] font-medium text-white leading-tight">
+												{s.label}
+											</div>
+											<div className="text-[9px] text-white/70 leading-tight">
+												{s.modality}
+											</div>
+										</div>
+									</button>
+								))}
+							</div>
+						</div>
 					</div>
 
 					{/* Right: Results */}
@@ -243,6 +321,9 @@ const MedicalImagePage = () => {
 				</div>
 			</div>
 
+			<div className="px-4 py-1.5 border-t bg-muted/10 text-[10px] text-muted-foreground text-center">
+				Powered by Qwen3.5-4B Vision (Cloud Run L4 GPU)
+			</div>
 			<div className="px-4 py-2 border-t">
 				<ApiTopology {...TOPOLOGIES.medical_image} />
 			</div>

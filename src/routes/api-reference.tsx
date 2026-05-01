@@ -7,14 +7,52 @@ import { useState } from "react";
 
 const API_CATEGORIES = [
 	{
-		label: "Data Processing",
-		color: "#10b981",
+		label: "Demo Features (Featured)",
+		color: "#f59e0b",
+		desc: "Primary clinical APIs currently in production",
 		apis: [
 			{
 				method: "POST",
 				path: "/ehr_converter/convert",
-				desc: "Auto-detect → FHIR R4",
+				desc: "Auto-detect & convert HL7v2/v3/CDA/BHXH → FHIR R4 (Azure proxy)",
+				featured: true,
 			},
+			{
+				method: "POST",
+				path: "/bhxh_validator/validate",
+				desc: "Validate BHXH 4210 XML with ~100+ error codes (TT 4210 rule catalog)",
+				featured: true,
+			},
+			{
+				method: "POST",
+				path: "/voice_transcribe",
+				desc: "Audio → text with VAD chunking & LLM enhancement (local Qwen)",
+				featured: true,
+			},
+			{
+				method: "POST",
+				path: "/medical_image/describe",
+				desc: "Medical image analysis (Qwen3.5-4B GGUF on Cloud Run L4 GPU)",
+				featured: true,
+			},
+			{
+				method: "POST",
+				path: "/blood_panel/analyze",
+				desc: "CBC/BMP/CMP analysis with critical-value flagging",
+				featured: true,
+			},
+			{
+				method: "POST",
+				path: "/ehr_summarize",
+				desc: "FHIR Bundle → clinical summary (local Qwen LLM, SSE streaming)",
+				featured: true,
+			},
+		],
+	},
+	{
+		label: "Data Processing",
+		color: "#10b981",
+		apis: [
 			{
 				method: "POST",
 				path: "/ehr_converter/convert/fhir-to-hl7v2",
@@ -34,11 +72,6 @@ const API_CATEGORIES = [
 				method: "POST",
 				path: "/ehr_converter/convert/batch",
 				desc: "Batch conversion",
-			},
-			{
-				method: "POST",
-				path: "/bhxh_validator/validate",
-				desc: "BHXH 4210 validate",
 			},
 			{ method: "POST", path: "/data_masking/mask", desc: "De-identify FHIR" },
 			{
@@ -122,10 +155,9 @@ const API_CATEGORIES = [
 		],
 	},
 	{
-		label: "Operation",
+		label: "Operation (AI & Clinical)",
 		color: "#8b5cf6",
 		apis: [
-			{ method: "POST", path: "/ehr_summarize", desc: "EHR clinical summary" },
 			{
 				method: "POST",
 				path: "/rx_advisor",
@@ -136,16 +168,6 @@ const API_CATEGORIES = [
 				method: "POST",
 				path: "/ai_search",
 				desc: "AI search + deep research (SSE)",
-			},
-			{
-				method: "POST",
-				path: "/voice_transcribe",
-				desc: "Audio transcription",
-			},
-			{
-				method: "POST",
-				path: "/medical_image/describe",
-				desc: "Medical image analysis",
 			},
 			{
 				method: "POST",
@@ -176,11 +198,6 @@ const API_CATEGORIES = [
 				method: "GET",
 				path: "/clinic_search/doctors",
 				desc: "List all doctors",
-			},
-			{
-				method: "POST",
-				path: "/blood_panel/analyze",
-				desc: "Blood test analysis",
 			},
 		],
 	},

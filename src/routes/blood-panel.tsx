@@ -35,10 +35,52 @@ interface AnalysisResult {
 }
 
 const statusColor = (s: string) => {
-	if (s === "HIGH") return "text-red-500 bg-red-500/10";
-	if (s === "LOW") return "text-blue-500 bg-blue-500/10";
-	if (s === "NORMAL") return "text-green-500 bg-green-500/10";
-	return "text-muted-foreground bg-muted";
+	const upper = s.toUpperCase();
+	// Severe / critical
+	if (
+		upper === "CRITICAL_HIGH" ||
+		upper === "CRITICAL_LOW" ||
+		upper === "CRITICAL" ||
+		upper === "SEVERE_HIGH" ||
+		upper === "SEVERE_LOW"
+	) {
+		return "text-white bg-red-600 border border-red-700 font-bold";
+	}
+	// Standard high/low — strong red
+	if (upper === "HIGH" || upper === "LOW") {
+		return "text-red-700 bg-red-100 border border-red-300 dark:text-red-300 dark:bg-red-900/40 dark:border-red-800";
+	}
+	// Borderline — amber
+	if (
+		upper === "BORDERLINE" ||
+		upper === "BORDERLINE_HIGH" ||
+		upper === "BORDERLINE_LOW" ||
+		upper === "ELEVATED"
+	) {
+		return "text-amber-800 bg-amber-100 border border-amber-300 dark:text-amber-300 dark:bg-amber-900/30 dark:border-amber-800";
+	}
+	// Normal — green
+	if (upper === "NORMAL" || upper === "OPTIMAL") {
+		return "text-green-700 bg-green-100 border border-green-300 dark:text-green-300 dark:bg-green-900/30 dark:border-green-800";
+	}
+	return "text-muted-foreground bg-muted border";
+};
+
+const rowAccent = (s: string) => {
+	const upper = s.toUpperCase();
+	if (upper.startsWith("CRITICAL") || upper.startsWith("SEVERE")) {
+		return "border-l-4 border-l-red-600 bg-red-50/50 dark:bg-red-950/20";
+	}
+	if (upper === "HIGH" || upper === "LOW") {
+		return "border-l-4 border-l-red-400";
+	}
+	if (upper.startsWith("BORDERLINE") || upper === "ELEVATED") {
+		return "border-l-4 border-l-amber-400";
+	}
+	if (upper === "NORMAL" || upper === "OPTIMAL") {
+		return "border-l-4 border-l-green-400";
+	}
+	return "";
 };
 
 const CBC_PRESET: MarkerInput[] = [
@@ -141,6 +183,13 @@ const BloodPanelPage = () => {
 	return (
 		<DashboardLayout pageTitle="Blood Panel Analyzer">
 			<div className="flex flex-col h-[calc(100vh-4rem)] overflow-hidden">
+				<div className="px-4 py-2 border-b bg-muted/10">
+					<p className="text-xs text-muted-foreground">
+						CBC/BMP/CMP/Lipid panel analysis with critical-value flagging,
+						age/sex-adjusted reference ranges, and clinical interpretation
+						guidelines.
+					</p>
+				</div>
 				<div className="flex items-center justify-between px-4 py-1.5 border-b">
 					<div className="flex items-center gap-1.5">
 						{[
@@ -299,7 +348,10 @@ const BloodPanelPage = () => {
 								<div className="space-y-2">
 									<span className="text-sm font-medium">Marker Details</span>
 									{result.results.map((r, i) => (
-										<div key={i} className="rounded-md border p-3">
+										<div
+											key={i}
+											className={`rounded-md border p-3 ${rowAccent(r.status)}`}
+										>
 											<div className="flex items-center justify-between">
 												<span className="text-sm font-medium">{r.name}</span>
 												<div className="flex items-center gap-2">
@@ -367,6 +419,9 @@ const BloodPanelPage = () => {
 				</div>
 			</div>
 
+			<div className="px-4 py-1.5 border-t bg-muted/10 text-[10px] text-muted-foreground text-center">
+				Reference ranges from Tietz / Quest Diagnostics standards
+			</div>
 			<div className="px-4 py-2 border-t">
 				<ApiTopology {...TOPOLOGIES.blood_panel} />
 			</div>

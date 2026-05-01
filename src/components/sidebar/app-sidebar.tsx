@@ -57,6 +57,7 @@ import { NavProjects } from "@/components/sidebar/nav-projects";
 import { NavUser } from "@/components/sidebar/nav-user";
 import { TeamSwitcher } from "@/components/sidebar/team-switcher";
 import { useAuthStore } from "@/features/auth/store/auth-store";
+import { usePinnedFeatures } from "@/hooks/use-pinned-features";
 
 function VeneraLogo({ className }: { className?: string }) {
 	return <img src={veneraLogo} alt="Venera" className={className} />;
@@ -67,6 +68,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 	const { userInfo } = useAuthStore();
 	const { pathname } = useLocation();
 	const [playgroundSearch, setPlaygroundSearch] = useState("");
+	const { isPinned, togglePin, pinned } = usePinnedFeatures();
 
 	const data = {
 		teams: [
@@ -256,6 +258,19 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 		],
 	};
 
+	// All Playground items (the four groups under the Playground header) are
+	// pinnable. Order pinned items by the user's pin order, not the source order.
+	const playgroundItems = [
+		...data.dataProcessing,
+		...data.operation,
+		...data.dataManagement,
+		...data.development,
+	];
+	const itemByUrl = new Map(playgroundItems.map((i) => [i.url, i]));
+	const quickAccessItems = pinned
+		.map((url) => itemByUrl.get(url))
+		.filter((item): item is (typeof playgroundItems)[number] => Boolean(item));
+
 	return (
 		<Sidebar collapsible="icon" {...props}>
 			<SidebarHeader>
@@ -273,6 +288,17 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 					label={t("management.title")}
 					hideLabel
 				/>
+
+				{/* QUICK ACCESS — only renders when something is pinned */}
+				{quickAccessItems.length > 0 && (
+					<NavProjects
+						projects={quickAccessItems}
+						label="Quick Access"
+						pinnable
+						isPinned={isPinned}
+						onTogglePin={togglePin}
+					/>
+				)}
 
 				{/* PLAYGROUND */}
 				<SidebarGroup className="group-data-[collapsible=icon]:hidden pb-0">
@@ -301,6 +327,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 							: data.dataProcessing
 					}
 					label={t("dataProcessing.title")}
+					pinnable
+					isPinned={isPinned}
+					onTogglePin={togglePin}
 				/>
 				<NavProjects
 					projects={
@@ -311,6 +340,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 							: data.operation
 					}
 					label={t("operation.title")}
+					pinnable
+					isPinned={isPinned}
+					onTogglePin={togglePin}
 				/>
 				<NavProjects
 					projects={
@@ -321,10 +353,22 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 							: data.dataManagement
 					}
 					label={t("dataManagement.title")}
+					pinnable
+					isPinned={isPinned}
+					onTogglePin={togglePin}
 				/>
 				<NavProjects
-					projects={data.development}
+					projects={
+						playgroundSearch
+							? data.development.filter((p) =>
+									p.name.toLowerCase().includes(playgroundSearch.toLowerCase())
+								)
+							: data.development
+					}
 					label={t("development.title")}
+					pinnable
+					isPinned={isPinned}
+					onTogglePin={togglePin}
 				/>
 
 				{/* SETTINGS */}

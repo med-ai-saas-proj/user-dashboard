@@ -1,29 +1,30 @@
-import { Navigate, useLocation } from 'react-router-dom';
-import { useKeycloak } from '@/features/auth/providers/keycloak-provider';
+import { Navigate, useLocation } from "react-router-dom";
+import { useIam } from "@/features/auth/providers/iam-provider";
 
 interface PublicRouteProps {
-  children: React.ReactNode;
+	children: React.ReactNode;
 }
 
 export const PublicRoute = ({ children }: PublicRouteProps) => {
-  const { authenticated, initialized } = useKeycloak();
-  const location = useLocation();
+	const { authenticated, initialized } = useIam();
+	const location = useLocation();
 
-  if (!initialized) {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto" />
-          <p className="mt-4 text-muted-foreground">Loading...</p>
-        </div>
-      </div>
-    );
-  }
+	if (!initialized) {
+		return (
+			<div className="flex min-h-screen items-center justify-center">
+				<div className="text-center">
+					<div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto" />
+					<p className="mt-4 text-muted-foreground">Loading...</p>
+				</div>
+			</div>
+		);
+	}
 
-  if (authenticated) {
-    const from = location.state?.from?.pathname || '/';
-    return <Navigate to={from} replace />;
-  }
+	if (authenticated) {
+		const fromState = location.state as { from?: { pathname?: string } } | null;
+		const from = fromState?.from?.pathname || "/";
+		return <Navigate to={from} replace />;
+	}
 
-  return <>{children}</>;
+	return <>{children}</>;
 };

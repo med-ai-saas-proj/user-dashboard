@@ -1,5 +1,5 @@
 import axios, { isAxiosError } from "axios";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/shadcn/button";
@@ -9,30 +9,32 @@ import { LocaleSwitcher } from "@/components/sidebar/locale-switcher";
 import { IAM_ROUTES } from "@/config/iam";
 import { useIam } from "@/features/auth/providers/iam-provider";
 
-const LoginPage = () => {
+const RegisterPage = () => {
 	const { t } = useTranslation("sign-in");
 	const navigate = useNavigate();
-	const { authenticated, refresh } = useIam();
+	const { refresh } = useIam();
 
+	const [fullName, setFullName] = useState("");
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
+	const [confirmPassword, setConfirmPassword] = useState("");
 	const [submitting, setSubmitting] = useState(false);
 	const [error, setError] = useState<string | null>(null);
-
-	useEffect(() => {
-		if (authenticated) {
-			navigate("/");
-		}
-	}, [authenticated, navigate]);
 
 	const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
 		setError(null);
+
+		if (password !== confirmPassword) {
+			setError(t("error.passwordMismatch"));
+			return;
+		}
+
 		setSubmitting(true);
 		try {
 			await axios.post(
-				IAM_ROUTES.LOGIN,
-				{ email, password },
+				IAM_ROUTES.REGISTER,
+				{ email, password, fullName: fullName || undefined },
 				{ withCredentials: true }
 			);
 			await refresh();
@@ -40,8 +42,10 @@ const LoginPage = () => {
 		} catch (err) {
 			if (isAxiosError(err)) {
 				const status = err.response?.status;
-				if (status === 401 || status === 400) {
-					setError(t("error.invalidCredentials"));
+				if (status === 409) {
+					setError(t("error.emailExists"));
+				} else if (status === 400) {
+					setError(t("error.invalidInput"));
 				} else {
 					setError(t("error.serverError"));
 				}
@@ -53,25 +57,33 @@ const LoginPage = () => {
 		}
 	};
 
-	const handleGoogleLogin = () => {
-		window.location.href = IAM_ROUTES.GOOGLE_LOGIN;
-	};
-
 	return (
 		<div className="flex min-h-screen items-center justify-center bg-background px-4">
 			<LocaleSwitcher className="absolute top-4 right-4" />
 			<div className="w-full max-w-md space-y-8">
 				<div className="text-center space-y-2">
 					<h1 className="text-4xl font-bold tracking-tight">
-						{t("greetings.welcome")}
+						{t("greetings.createAccount")}
 					</h1>
-					<p className="text-muted-foreground">{t("greetings.hero")}</p>
+					<p className="text-muted-foreground">
+						{t("greetings.createAccountHero")}
+					</p>
 				</div>
 				<form className="space-y-4" onSubmit={handleSubmit}>
 					<div className="space-y-2">
-						<Label htmlFor="login-email">{t("field.email")}</Label>
+						<Label htmlFor="register-fullname">{t("field.fullName")}</Label>
 						<Input
-							id="login-email"
+							id="register-fullname"
+							type="text"
+							autoComplete="name"
+							value={fullName}
+							onChange={(e) => setFullName(e.target.value)}
+						/>
+					</div>
+					<div className="space-y-2">
+						<Label htmlFor="register-email">{t("field.email")}</Label>
+						<Input
+							id="register-email"
 							type="email"
 							autoComplete="email"
 							required
@@ -80,14 +92,29 @@ const LoginPage = () => {
 						/>
 					</div>
 					<div className="space-y-2">
-						<Label htmlFor="login-password">{t("field.password")}</Label>
+						<Label htmlFor="register-password">{t("field.password")}</Label>
 						<Input
-							id="login-password"
+							id="register-password"
 							type="password"
-							autoComplete="current-password"
+							autoComplete="new-password"
 							required
+							minLength={8}
 							value={password}
 							onChange={(e) => setPassword(e.target.value)}
+						/>
+					</div>
+					<div className="space-y-2">
+						<Label htmlFor="register-confirm">
+							{t("field.confirmPassword")}
+						</Label>
+						<Input
+							id="register-confirm"
+							type="password"
+							autoComplete="new-password"
+							required
+							minLength={8}
+							value={confirmPassword}
+							onChange={(e) => setConfirmPassword(e.target.value)}
 						/>
 					</div>
 					{error ? (
@@ -96,31 +123,16 @@ const LoginPage = () => {
 						</p>
 					) : null}
 					<Button type="submit" className="w-full" disabled={submitting}>
-						{submitting ? t("action.signingIn") : t("action.signIn")}
+						{submitting ? t("action.creatingAccount") : t("action.signUp")}
 					</Button>
 				</form>
-				<div className="flex items-center gap-2">
-					<div className="h-px flex-1 bg-border" />
-					<span className="text-xs uppercase tracking-wide text-muted-foreground">
-						{t("action.or")}
-					</span>
-					<div className="h-px flex-1 bg-border" />
-				</div>
-				<Button
-					type="button"
-					variant="outline"
-					className="w-full"
-					onClick={handleGoogleLogin}
-				>
-					{t("action.continueWithGoogle")}
-				</Button>
 				<p className="text-center text-sm text-muted-foreground">
-					{t("action.noAccount")}{" "}
+					{t("action.haveAccount")}{" "}
 					<Link
-						to="/register"
+						to="/login"
 						className="font-medium text-primary hover:underline"
 					>
-						{t("action.signUp")}
+						{t("action.signIn")}
 					</Link>
 				</p>
 			</div>
@@ -128,4 +140,4 @@ const LoginPage = () => {
 	);
 };
 
-export default LoginPage;
+export default RegisterPage;

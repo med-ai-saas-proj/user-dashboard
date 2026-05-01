@@ -1,6 +1,6 @@
-import { useKeycloak } from '@/features/auth/providers/keycloak-provider';
+import { useIam } from "@/features/auth/providers/iam-provider";
 
 export const useAuthStatus = () => {
-  const { authenticated } = useKeycloak();
-  return authenticated;
+	const { authenticated } = useIam();
+	return authenticated;
 };

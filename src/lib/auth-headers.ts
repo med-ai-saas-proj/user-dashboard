@@ -1,11 +1,12 @@
 import { isServiceEndpoint } from "@/config/api-routes";
-import keycloak from "@/config/keycloak";
 import { useServiceApiKeyStore } from "@/features/api-keys/store/service-api-key.store";
-import { useAuthStore } from "@/features/auth/store/auth-store";
 
 /**
- * Get authentication headers for API requests
- * This is shared between axios api-client and SSE requests
+ * Build headers for API requests.
+ *
+ * Auth itself rides on HTTP-only cookies issued by the IAM service — callers
+ * must pass `credentials: 'include'` (fetch) or `withCredentials: true`
+ * (axios). This helper only adds content-type + the per-service API key.
  */
 export async function getAuthHeaders(
 	url: string
@@ -14,22 +15,6 @@ export async function getAuthHeaders(
 		"Content-Type": "application/json",
 	};
 
-	// Handle authentication token
-	if (keycloak.authenticated && keycloak.token) {
-		try {
-			await keycloak.updateToken(30);
-		} catch (error) {
-			console.error("Failed to refresh token", error);
-		}
-		headers.Authorization = `Bearer ${keycloak.token}`;
-	} else {
-		const token = useAuthStore.getState().token;
-		if (token) {
-			headers.Authorization = `Bearer ${token}`;
-		}
-	}
-
-	// Add API key for service endpoints
 	if (isServiceEndpoint(url)) {
 		const selectedApiKey = useServiceApiKeyStore.getState().selectedApiKey;
 		if (selectedApiKey) {
@@ -41,12 +26,17 @@ export async function getAuthHeaders(
 }
 
 /**
- * Handle 401 unauthorized errors
- * This is shared between axios api-client and SSE requests
+ * Handle 401 unauthorized errors after the IAM refresh-token flow has already
+ * been tried. Clears local auth state and redirects to /login.
  */
 export function handleUnauthorized(): void {
-	useAuthStore.getState().logout();
-	if (keycloak.authenticated) {
-		keycloak.logout();
+	// Lazy import to avoid a circular module-load between this file, the IAM
+	// provider, and the api-client.
+	import("@/features/auth/store/auth-store").then(({ useAuthStore }) => {
+		useAuthStore.getState().logout();
+	});
+
+	if (typeof window !== "undefined" && window.location.pathname !== "/login") {
+		window.location.assign("/login");
 	}
 }

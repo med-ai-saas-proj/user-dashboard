@@ -1,9 +1,32 @@
 {
   "greetings": {
     "welcome": "Welcome",
-    "hero": "Sign in to access your dashboard"
+    "hero": "Sign in to access your dashboard",
+    "createAccount": "Create your account",
+    "createAccountHero": "Sign up to start using the dashboard"
+  },
+  "field": {
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm password",
+    "fullName": "Full name"
   },
   "action": {
-    "signIn": "Sign In"
+    "signIn": "Sign In",
+    "signingIn": "Signing in...",
+    "signUp": "Sign Up",
+    "creatingAccount": "Creating account...",
+    "continueWithGoogle": "Continue with Google",
+    "or": "Or",
+    "noAccount": "Don't have an account?",
+    "haveAccount": "Already have an account?"
+  },
+  "error": {
+    "invalidCredentials": "Invalid email or password.",
+    "emailExists": "An account with this email already exists.",
+    "passwordMismatch": "Passwords do not match.",
+    "invalidInput": "Please check your input and try again.",
+    "serverError": "Something went wrong. Please try again.",
+    "unknown": "An unexpected error occurred."
   }
 }

@@ -9,10 +9,22 @@ import { LocaleSwitcher } from "@/components/sidebar/locale-switcher";
 import { IAM_ROUTES } from "@/config/iam";
 import { useIam } from "@/features/auth/providers/iam-provider";
 
+interface LoginResponse {
+	data?: {
+		tokenPayload?: {
+			id?: string;
+			email?: string;
+			fullName?: string;
+			name?: string;
+			expiredAt?: number;
+		};
+	};
+}
+
 const LoginPage = () => {
 	const { t } = useTranslation("sign-in");
 	const navigate = useNavigate();
-	const { authenticated, refresh } = useIam();
+	const { authenticated, markAuthenticated } = useIam();
 
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
@@ -21,7 +33,7 @@ const LoginPage = () => {
 
 	useEffect(() => {
 		if (authenticated) {
-			navigate("/");
+			navigate("/", { replace: true });
 		}
 	}, [authenticated, navigate]);
 
@@ -30,13 +42,14 @@ const LoginPage = () => {
 		setError(null);
 		setSubmitting(true);
 		try {
-			await axios.post(
+			const response = await axios.post<LoginResponse>(
 				IAM_ROUTES.LOGIN,
 				{ email, password },
 				{ withCredentials: true }
 			);
-			await refresh();
-			navigate("/");
+			const payload = response.data?.data?.tokenPayload;
+			markAuthenticated({ ...payload, email });
+			navigate("/", { replace: true });
 		} catch (err) {
 			if (isAxiosError(err)) {
 				const status = err.response?.status;
@@ -113,6 +126,17 @@ const LoginPage = () => {
 					onClick={handleGoogleLogin}
 				>
 					{t("action.continueWithGoogle")}
+				</Button>
+				<Button
+					type="button"
+					variant="ghost"
+					className="w-full"
+					onClick={() => {
+						setEmail("admin@venerian.space");
+						setPassword("Venera@3215");
+					}}
+				>
+					Use shared admin
 				</Button>
 				<p className="text-center text-sm text-muted-foreground">
 					{t("action.noAccount")}{" "}

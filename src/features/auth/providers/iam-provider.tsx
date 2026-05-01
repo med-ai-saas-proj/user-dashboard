@@ -35,6 +35,10 @@ interface IamContextType {
 	user: UserInfo | null;
 	signOut: () => Promise<void>;
 	refresh: () => Promise<boolean>;
+	// Mark the session authenticated based on a payload returned by login/register.
+	// Use after a successful POST /iam/auth/login or /iam/auth/register so the
+	// dashboard does not need to immediately follow up with /refresh-token.
+	markAuthenticated: (payload?: IamTokenPayload | null) => void;
 }
 
 const IamContext = createContext<IamContextType | undefined>(undefined);
@@ -65,6 +69,16 @@ export const IamProvider = ({ children }: { children: ReactNode }) => {
 	const setUserInfo = useAuthStore((state) => state.setUserInfo);
 	const clearAuth = useAuthStore((state) => state.logout);
 	const user = useAuthStore((state) => state.userInfo);
+
+	const markAuthenticated = useCallback(
+		(payload?: IamTokenPayload | null) => {
+			if (payload) {
+				setUserInfo(tokenPayloadToUserInfo(payload));
+			}
+			setAuthenticated(true);
+		},
+		[setUserInfo]
+	);
 
 	const refresh = useCallback(async (): Promise<boolean> => {
 		try {
@@ -110,7 +124,14 @@ export const IamProvider = ({ children }: { children: ReactNode }) => {
 
 	return (
 		<IamContext.Provider
-			value={{ initialized, authenticated, user, signOut, refresh }}
+			value={{
+				initialized,
+				authenticated,
+				user,
+				signOut,
+				refresh,
+				markAuthenticated,
+			}}
 		>
 			{initialized ? children : <div>Loading...</div>}
 		</IamContext.Provider>

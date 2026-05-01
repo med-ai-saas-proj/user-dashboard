@@ -12,7 +12,7 @@ import { useIam } from "@/features/auth/providers/iam-provider";
 const RegisterPage = () => {
 	const { t } = useTranslation("sign-in");
 	const navigate = useNavigate();
-	const { refresh } = useIam();
+	const { markAuthenticated } = useIam();
 
 	const [fullName, setFullName] = useState("");
 	const [email, setEmail] = useState("");
@@ -32,13 +32,18 @@ const RegisterPage = () => {
 
 		setSubmitting(true);
 		try {
-			await axios.post(
+			const response = await axios.post<{
+				data?: {
+					tokenPayload?: { id?: string; email?: string; fullName?: string };
+				};
+			}>(
 				IAM_ROUTES.REGISTER,
 				{ email, password, fullName: fullName || undefined },
 				{ withCredentials: true }
 			);
-			await refresh();
-			navigate("/");
+			const payload = response.data?.data?.tokenPayload;
+			markAuthenticated({ ...payload, email, fullName });
+			navigate("/", { replace: true });
 		} catch (err) {
 			if (isAxiosError(err)) {
 				const status = err.response?.status;

@@ -36,14 +36,15 @@ import HealthScorePage from "@/routes/health-score";
 import HealthcareDashboardPage from "@/routes/healthcare-dashboard";
 import IntegrationDashboardPage from "@/routes/integration-dashboard";
 import KnowledgeBasePage from "@/routes/knowledge-base";
+import AuthCallbackPage from "@/routes/auth-callback";
 import LoginPage from "@/routes/login";
-import RegisterPage from "@/routes/register";
 import MedicalImagePage from "@/routes/medical-image";
 import PatientHistoryPage from "@/routes/patient-history";
 import PlaygroundAISearchPage from "@/routes/playground-ai-search";
 import { ProtectedRoute } from "@/routes/protected-route";
 import PublicHealthPage from "@/routes/public-health";
 import { PublicRoute } from "@/routes/public-route";
+import RegisterPage from "@/routes/register";
 import RxAdvisorPage from "@/routes/rx-advisor";
 import SettingsPage from "@/routes/settings";
 import SymptomCheckerPage from "@/routes/symptom-checker";
@@ -110,6 +111,7 @@ function AppRoutes() {
 						</PublicRoute>
 					}
 				/>
+				<Route path="/auth/callback" element={<AuthCallbackPage />} />
 				<Route path="/" element={<Navigate to="/chat" replace />} />
 				<Route
 					path="/api-keys"

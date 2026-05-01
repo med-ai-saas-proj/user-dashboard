@@ -127,17 +127,6 @@ const LoginPage = () => {
 				>
 					{t("action.continueWithGoogle")}
 				</Button>
-				<Button
-					type="button"
-					variant="ghost"
-					className="w-full"
-					onClick={() => {
-						setEmail("admin@venerian.space");
-						setPassword("Venera@3215");
-					}}
-				>
-					Use shared admin
-				</Button>
 				<p className="text-center text-sm text-muted-foreground">
 					{t("action.noAccount")}{" "}
 					<Link

@@ -1,9 +1,32 @@
 {
   "greetings": {
     "welcome": "Chào mừng",
-    "hero": "Đăng nhập để truy cập Dashboard của bạn"
+    "hero": "Đăng nhập để truy cập Dashboard của bạn",
+    "createAccount": "Tạo tài khoản",
+    "createAccountHero": "Đăng ký để bắt đầu sử dụng Dashboard"
+  },
+  "field": {
+    "email": "Email",
+    "password": "Mật khẩu",
+    "confirmPassword": "Xác nhận mật khẩu",
+    "fullName": "Họ và tên"
   },
   "action": {
-    "signIn": "Đăng nhập"
+    "signIn": "Đăng nhập",
+    "signingIn": "Đang đăng nhập...",
+    "signUp": "Đăng ký",
+    "creatingAccount": "Đang tạo tài khoản...",
+    "continueWithGoogle": "Tiếp tục với Google",
+    "or": "Hoặc",
+    "noAccount": "Chưa có tài khoản?",
+    "haveAccount": "Đã có tài khoản?"
+  },
+  "error": {
+    "invalidCredentials": "Email hoặc mật khẩu không đúng.",
+    "emailExists": "Đã tồn tại tài khoản với email này.",
+    "passwordMismatch": "Mật khẩu không khớp.",
+    "invalidInput": "Vui lòng kiểm tra lại thông tin.",
+    "serverError": "Đã xảy ra lỗi. Vui lòng thử lại.",
+    "unknown": "Đã xảy ra lỗi không mong muốn."
   }
 }

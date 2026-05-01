@@ -1,7 +1,7 @@
 import { fetchEventSource } from "@microsoft/fetch-event-source";
 import type { StreamEventType } from "@/enums/stream-chat.enum";
-import { getAuthHeaders, handleUnauthorized } from "@/lib/auth-headers";
 import type { CreateSSEParams } from "@/features/pg-chat/services/stream-chat.dto";
+import { getAuthHeaders, handleUnauthorized } from "@/lib/auth-headers";
 
 export async function createSSE<T>({
 	url,
@@ -17,6 +17,7 @@ export async function createSSE<T>({
 	return fetchEventSource(url, {
 		method: "POST",
 		headers,
+		credentials: "include",
 		body: JSON.stringify(payload),
 		signal,
 

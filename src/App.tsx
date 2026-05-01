@@ -11,7 +11,7 @@ import {
 	useLocation,
 } from "react-router-dom";
 import { Toaster } from "sonner";
-import { KeycloakProvider } from "@/features/auth/providers/keycloak-provider";
+import { IamProvider } from "@/features/auth/providers/iam-provider";
 import { query_client } from "@/query/query-client";
 import A2UIPlaygroundPage from "@/routes/a2ui-playground";
 import ApiFlowBuilderPage from "@/routes/api-flow-builder";
@@ -37,6 +37,7 @@ import HealthcareDashboardPage from "@/routes/healthcare-dashboard";
 import IntegrationDashboardPage from "@/routes/integration-dashboard";
 import KnowledgeBasePage from "@/routes/knowledge-base";
 import LoginPage from "@/routes/login";
+import RegisterPage from "@/routes/register";
 import MedicalImagePage from "@/routes/medical-image";
 import PatientHistoryPage from "@/routes/patient-history";
 import PlaygroundAISearchPage from "@/routes/playground-ai-search";
@@ -98,6 +99,14 @@ function AppRoutes() {
 					element={
 						<PublicRoute>
 							<LoginPage />
+						</PublicRoute>
+					}
+				/>
+				<Route
+					path="/register"
+					element={
+						<PublicRoute>
+							<RegisterPage />
 						</PublicRoute>
 					}
 				/>
@@ -384,12 +393,12 @@ function App() {
 	return (
 		<ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
 			<QueryClientProvider client={query_client}>
-				<KeycloakProvider>
+				<IamProvider>
 					<BrowserRouter>
 						<Toaster />
 						<AppRoutes />
 					</BrowserRouter>
-				</KeycloakProvider>
+				</IamProvider>
 			</QueryClientProvider>
 		</ThemeProvider>
 	);

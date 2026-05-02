@@ -7,19 +7,29 @@ import { API_ROUTES } from "@/config/api-routes";
 import DashboardLayout from "@/layouts/dashboard-layout";
 import { getAuthHeaders } from "@/lib/auth-headers";
 
-interface Finding {
-	description: string;
-	location?: string;
-	severity?: string;
-}
+// Backwards-compatible shape — older API returned objects, current API returns
+// strings. Render either form gracefully.
+type Finding =
+	| string
+	| { description: string; location?: string; severity?: string };
 
 interface ImageDescribeResponse {
+	success?: boolean;
 	description: string;
 	findings: Finding[];
 	suggested_diagnoses?: string[];
+	confidence?: string;
 	modality?: string;
 	body_part?: string;
+	errors?: string[];
 }
+
+const findingText = (f: Finding): string =>
+	typeof f === "string" ? f : f.description;
+const findingLocation = (f: Finding): string | undefined =>
+	typeof f === "string" ? undefined : f.location;
+const findingSeverity = (f: Finding): string | undefined =>
+	typeof f === "string" ? undefined : f.severity;
 
 const SAMPLE_IMAGES: { label: string; modality: string; src: string }[] = [
 	{
@@ -238,36 +248,58 @@ const MedicalImagePage = () => {
 									</div>
 								)}
 
+								{result.errors && result.errors.length > 0 && (
+									<div className="rounded-md border border-red-300 bg-red-50 dark:bg-red-950/30 dark:border-red-800/50 p-3 text-sm">
+										<p className="font-medium text-red-900 dark:text-red-200">
+											Analysis errors
+										</p>
+										<ul className="mt-1 text-xs text-red-800 dark:text-red-300 list-disc list-inside">
+											{result.errors.map((e, i) => (
+												<li key={`err-${i}`}>{e}</li>
+											))}
+										</ul>
+									</div>
+								)}
+
 								<div>
 									<span className="text-sm font-medium">Description</span>
-									<p className="text-sm mt-1 leading-relaxed">
-										{result.description}
+									<p className="text-sm mt-1 leading-relaxed whitespace-pre-wrap">
+										{result.description?.trim() ||
+											"(No description returned. The model may have returned an unexpected JSON shape — try a different image.)"}
 									</p>
 								</div>
 
-								{result.findings.length > 0 && (
+								{result.findings && result.findings.length > 0 && (
 									<div>
 										<span className="text-sm font-medium">Findings</span>
 										<div className="mt-2 space-y-2">
-											{result.findings.map((f, i) => (
-												<div
-													key={`finding-${i}`}
-													className="p-3 rounded-md border text-sm"
-												>
-													<p>{f.description}</p>
-													{(f.location || f.severity) && (
-														<div className="flex gap-2 mt-1 text-xs text-muted-foreground">
-															{f.location && (
-																<span>Location: {f.location}</span>
-															)}
-															{f.severity && (
-																<span>Severity: {f.severity}</span>
-															)}
-														</div>
-													)}
-												</div>
-											))}
+											{result.findings.map((f, i) => {
+												const text = findingText(f);
+												const loc = findingLocation(f);
+												const sev = findingSeverity(f);
+												return (
+													<div
+														key={`finding-${i}`}
+														className="p-3 rounded-md border text-sm"
+													>
+														<p>{text}</p>
+														{(loc || sev) && (
+															<div className="flex gap-2 mt-1 text-xs text-muted-foreground">
+																{loc && <span>Location: {loc}</span>}
+																{sev && <span>Severity: {sev}</span>}
+															</div>
+														)}
+													</div>
+												);
+											})}
 										</div>
+									</div>
+								)}
+
+								{result.confidence && (
+									<div className="text-xs text-muted-foreground">
+										Confidence:{" "}
+										<span className="font-medium">{result.confidence}</span>
 									</div>
 								)}
 

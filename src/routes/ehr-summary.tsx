@@ -4,6 +4,7 @@ import { ApiTopology, TOPOLOGIES } from "@/components/api-topology";
 import { Button } from "@/components/shadcn/button";
 import { ViewCodeDialog } from "@/components/view-code-dialog";
 import { API_ROUTES } from "@/config/api-routes";
+import { RawResponseViewer } from "@/components/raw-response-viewer";
 import { MarkdownCustom } from "@/features/pg-chat/components/MarkdownCustom";
 import {
 	type DetectedFormat,
@@ -110,6 +111,7 @@ const EhrSummaryPage = () => {
 		"summary"
 	);
 	const [conversionTime, setConversionTime] = useState<number | null>(null);
+	const [rawResponse, setRawResponse] = useState<unknown>(null);
 	const fileInputRef = useRef<HTMLInputElement>(null);
 
 	const addEntry = (label?: string, data?: string, facility?: string) => {
@@ -389,6 +391,7 @@ const EhrSummaryPage = () => {
 		setIsLoading(true);
 		setSummary("");
 		setMergedFhir(null);
+		setRawResponse(null);
 		setConversionTime(null);
 		const t0 = performance.now();
 
@@ -474,6 +477,7 @@ const EhrSummaryPage = () => {
 				throw new Error(`HTTP ${resp.status}: ${await resp.text()}`);
 
 			const json = await resp.json();
+			setRawResponse(json);
 			const elapsed = Math.round(performance.now() - t0);
 			setConversionTime(elapsed);
 
@@ -814,7 +818,14 @@ const EhrSummaryPage = () => {
 								</div>
 								<div className="flex-1 overflow-auto p-4">
 									{activeTab === "summary" && summary && (
-										<MarkdownCustom content={summary} />
+										<>
+											<MarkdownCustom content={summary} />
+											{rawResponse !== null && (
+												<div className="mt-6">
+													<RawResponseViewer data={rawResponse} />
+												</div>
+											)}
+										</>
 									)}
 									{activeTab === "fhir" && mergedFhir && (
 										<pre className="text-[12px] font-mono whitespace-pre-wrap leading-relaxed break-all">

@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import { toast } from "sonner";
 import { ApiTopology, TOPOLOGIES } from "@/components/api-topology";
+import { RawResponseViewer } from "@/components/raw-response-viewer";
 import { Button } from "@/components/shadcn/button";
 import { ViewCodeDialog } from "@/components/view-code-dialog";
 import { API_ROUTES } from "@/config/api-routes";
@@ -322,6 +323,8 @@ const MedicalImagePage = () => {
 											</ul>
 										</div>
 									)}
+
+								<RawResponseViewer data={result} />
 							</div>
 						) : (
 							<div className="flex-1 flex items-center justify-center p-8">

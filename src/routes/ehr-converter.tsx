@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { toast } from "sonner";
 import { ApiTopology, TOPOLOGIES } from "@/components/api-topology";
+import { RawResponseViewer } from "@/components/raw-response-viewer";
 import { ViewCodeDialog } from "@/components/view-code-dialog";
 import { API_ROUTES } from "@/config/api-routes";
 import { BatchPanel } from "@/features/pg-ehr-converter/components/batch-panel";
@@ -233,12 +234,19 @@ const EhrConverterPage = () => {
 							/>
 						</div>
 						{hasResult ? (
-							<ConvertResultPanel
-								result={result}
-								reverseResult={reverseResult}
-								validateResult={validateResult}
-								conversionTime={conversionTime}
-							/>
+							<>
+								<ConvertResultPanel
+									result={result}
+									reverseResult={reverseResult}
+									validateResult={validateResult}
+									conversionTime={conversionTime}
+								/>
+								<div className="px-4 pb-4">
+									<RawResponseViewer
+										data={result || reverseResult || validateResult}
+									/>
+								</div>
+							</>
 						) : (
 							<div className="flex-1 flex items-center justify-center p-8">
 								<div className="text-center space-y-3 max-w-sm">

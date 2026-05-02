@@ -476,7 +476,7 @@ export default function DigitalTwinPage() {
 
 	const requireApiKey = useCallback((): boolean => {
 		return true;
-	}, [selectedApiKey]);
+	}, []);
 
 	const handleLoad = useCallback(
 		async (pid?: string) => {
@@ -536,8 +536,8 @@ export default function DigitalTwinPage() {
 	};
 
 	useEffect(() => {
-		if (selectedApiKey) handleLoad("1");
-	}, [selectedApiKey, handleLoad]);
+		handleLoad("1");
+	}, [handleLoad]);
 
 	return (
 		<DashboardLayout pageTitle="Digital Twin">

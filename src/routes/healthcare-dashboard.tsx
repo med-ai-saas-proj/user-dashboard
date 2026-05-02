@@ -448,12 +448,12 @@ export default function HealthcareDashboardPage() {
 				setIsLoading(false);
 			}
 		},
-		[patientId, selectedApiKey]
+		[patientId]
 	);
 
 	useEffect(() => {
-		if (selectedApiKey) loadPatient("1");
-	}, [selectedApiKey, loadPatient]);
+		loadPatient("1");
+	}, [loadPatient]);
 
 	const tabs: { id: TabId; label: string }[] = [
 		{ id: "overview", label: "Overview" },

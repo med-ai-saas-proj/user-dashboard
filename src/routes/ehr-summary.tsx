@@ -349,17 +349,20 @@ const EhrSummaryPage = () => {
 			const headers = await getAuthHeaders(
 				API_ROUTES.SERVICES.EHR_CONVERTER_CONVERT
 			);
+			const ctl = new AbortController();
+			const timer = setTimeout(() => ctl.abort(), 8000);
 			const resp = await fetch(API_ROUTES.SERVICES.EHR_CONVERTER_CONVERT, {
 				method: "POST",
 				headers,
 				body: JSON.stringify({ data: trimmed, validate_output: false }),
-			});
+				signal: ctl.signal,
+			}).finally(() => clearTimeout(timer));
 			if (resp.ok) {
 				const json = await resp.json();
 				if (json.success && json.bundle) return json.bundle;
 			}
 		} catch {
-			/* conversion failed */
+			/* conversion failed or timed out */
 		}
 		return null;
 	};
@@ -391,37 +394,77 @@ const EhrSummaryPage = () => {
 
 		try {
 			const fhirBundles: Record<string, unknown>[] = [];
+			const rawSources: { label: string; data: unknown }[] = [];
 			const sourceLabels: string[] = [];
 
 			for (const entry of entries) {
 				if (!entry.data.trim()) continue;
+				const sourceLabel = entry.facility || entry.label;
+				const trimmed = entry.data.trim();
+
+				let parsedJson: unknown = null;
+				if (trimmed.startsWith("{") || trimmed.startsWith("[")) {
+					try {
+						parsedJson = JSON.parse(trimmed);
+					} catch {
+						/* not JSON */
+					}
+				}
+
+				const isFhirBundle =
+					parsedJson &&
+					typeof parsedJson === "object" &&
+					(parsedJson as { resourceType?: string }).resourceType === "Bundle";
+
+				if (isFhirBundle) {
+					fhirBundles.push(parsedJson as Record<string, unknown>);
+					sourceLabels.push(sourceLabel);
+					continue;
+				}
+
 				toast.info(`Standardizing: ${entry.label}...`);
 				const bundle = await standardizeToFhir(entry.data);
 				if (bundle) {
 					fhirBundles.push(bundle);
-					sourceLabels.push(entry.facility || entry.label);
+					sourceLabels.push(sourceLabel);
+				} else {
+					// Converter unavailable — pass raw data through to the summarizer.
+					rawSources.push({
+						label: sourceLabel,
+						data: parsedJson ?? entry.data,
+					});
+					sourceLabels.push(sourceLabel);
 				}
 			}
 
-			if (fhirBundles.length === 0) {
-				toast.error("No data could be standardized to FHIR");
+			if (fhirBundles.length === 0 && rawSources.length === 0) {
+				toast.error("No data to summarize");
 				setIsLoading(false);
 				return;
 			}
 
-			const merged = mergeBundles(fhirBundles);
-			setMergedFhir(merged);
+			let merged: Record<string, unknown> | null = null;
+			if (fhirBundles.length > 0) {
+				merged = mergeBundles(fhirBundles);
+				setMergedFhir(merged);
+			}
+
+			if (rawSources.length > 0 && fhirBundles.length === 0) {
+				toast.warning(
+					"FHIR converter unavailable — summarizing raw sources directly"
+				);
+			}
 
 			toast.info("Generating summary...");
 			const headers = await getAuthHeaders(API_ROUTES.SERVICES.EHR_SUMMARIZE);
+			const customJson: Record<string, unknown> = { sources: sourceLabels };
+			if (merged) customJson.merged_fhir_bundle = merged;
+			if (rawSources.length > 0) customJson.raw_sources = rawSources;
 			const resp = await fetch(API_ROUTES.SERVICES.EHR_SUMMARIZE, {
 				method: "POST",
 				headers,
 				body: JSON.stringify({
-					input_ehr: {
-						type: "custom_json",
-						custom_json: { sources: sourceLabels, merged_fhir_bundle: merged },
-					},
+					input_ehr: { type: "custom_json", custom_json: customJson },
 					model: "qwen-cluster",
 					stream: false,
 				}),
@@ -441,7 +484,7 @@ const EhrSummaryPage = () => {
 				textParts.map((p: { content: string }) => p.content).join("\n")
 			);
 			toast.success(
-				`Summary generated from ${fhirBundles.length} source(s) in ${elapsed}ms`
+				`Summary generated from ${sourceLabels.length} source(s) in ${elapsed}ms`
 			);
 		} catch (err) {
 			toast.error(err instanceof Error ? err.message : "Request failed");

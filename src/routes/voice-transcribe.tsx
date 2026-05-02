@@ -41,6 +41,7 @@ const VoiceTranscribePage = () => {
 	const [isRecording, setIsRecording] = useState(false);
 	const [liveText, setLiveText] = useState("");
 	const [recordingDuration, setRecordingDuration] = useState(0);
+	const [micPermissionDenied, setMicPermissionDenied] = useState(false);
 	const mediaRecorderRef = useRef<MediaRecorder | null>(null);
 	const wsRef = useRef<WebSocket | null>(null);
 	const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -227,9 +228,24 @@ const VoiceTranscribePage = () => {
 			};
 		} catch (err) {
 			if (err instanceof DOMException && err.name === "NotAllowedError") {
-				toast.error(
-					"Microphone access denied. Please allow microphone access in your browser settings."
-				);
+				const isChrome = /Chrome\//.test(navigator.userAgent);
+				const isFirefox = /Firefox\//.test(navigator.userAgent);
+				const browserHint = isChrome
+					? "Click the 🎤 icon in the address bar → Always allow"
+					: isFirefox
+						? "Click the 🎤 icon in the address bar → Allow → Remember"
+						: "Open site settings and allow microphone access";
+				toast.error("Microphone access denied", {
+					description: browserHint,
+					duration: 8000,
+				});
+				setMicPermissionDenied(true);
+			} else if (err instanceof DOMException && err.name === "NotFoundError") {
+				toast.error("No microphone detected", {
+					description:
+						"Connect a microphone or check your system audio settings.",
+					duration: 6000,
+				});
 			} else {
 				toast.error(
 					err instanceof Error ? err.message : "Failed to start recording"
@@ -409,6 +425,16 @@ const VoiceTranscribePage = () => {
 
 						{/* Real-time Recording Section */}
 						<span className="text-sm font-medium">Real-Time Transcribe</span>
+						{micPermissionDenied && (
+							<div className="text-xs rounded-md border border-amber-300 bg-amber-50 dark:bg-amber-950/30 dark:border-amber-700/50 px-3 py-2 text-amber-900 dark:text-amber-200">
+								<p className="font-medium">Microphone access blocked</p>
+								<p className="mt-0.5">
+									Click the 🎤 icon in your browser's address bar and choose
+									<strong> Always allow</strong>. Then click record again. Audio
+									file upload above still works without microphone permission.
+								</p>
+							</div>
+						)}
 						<div className="flex items-center gap-4 p-4 rounded-lg border bg-muted/20">
 							<button
 								type="button"

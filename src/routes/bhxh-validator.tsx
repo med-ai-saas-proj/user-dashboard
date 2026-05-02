@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { toast } from "sonner";
 import { ApiTopology, TOPOLOGIES } from "@/components/api-topology";
 import { Button } from "@/components/shadcn/button";
@@ -105,6 +105,28 @@ const BhxhValidatorPage = () => {
 	const [strictMode, setStrictMode] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
 	const [result, setResult] = useState<ValidateResponse | null>(null);
+	const [uploadedName, setUploadedName] = useState<string | null>(null);
+	const fileInputRef = useRef<HTMLInputElement>(null);
+
+	const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+		const f = e.target.files?.[0];
+		if (!f) return;
+		if (f.size > 20 * 1024 * 1024) {
+			toast.error("File too large (max 20 MB)");
+			return;
+		}
+		try {
+			const text = await f.text();
+			setXmlInput(text);
+			setUploadedName(f.name);
+			setResult(null);
+			toast.success(`Loaded ${f.name} (${(f.size / 1024).toFixed(1)} KB)`);
+		} catch {
+			toast.error("Could not read file");
+		} finally {
+			if (fileInputRef.current) fileInputRef.current.value = "";
+		}
+	};
 
 	const handleValidate = async () => {
 		if (!xmlInput.trim()) return;
@@ -174,7 +196,15 @@ const BhxhValidatorPage = () => {
 						</svg>
 						<span>
 							Validates against <strong>595 official BHXH error codes</strong>{" "}
-							from TT 4210.
+							from TT 4210.{" "}
+							<a
+								href="https://baohiemxahoi.gov.vn/tintuc/Pages/linh-vuc-bao-hiem-y-te.aspx?ItemID=22041"
+								target="_blank"
+								rel="noopener noreferrer"
+								className="underline font-medium hover:text-blue-700 dark:hover:text-blue-100"
+							>
+								View error code reference →
+							</a>
 						</span>
 					</div>
 				</div>
@@ -209,21 +239,47 @@ const BhxhValidatorPage = () => {
 									</span>
 									<span>Strict mode</span>
 								</button>
+								<input
+									ref={fileInputRef}
+									type="file"
+									accept=".xml,application/xml,text/xml"
+									className="hidden"
+									onChange={handleFileUpload}
+								/>
 								<Button
 									type="button"
 									variant="outline"
 									size="sm"
-									onClick={() => setXmlInput(BHXH_4210_EXAMPLE)}
+									onClick={() => fileInputRef.current?.click()}
+								>
+									Upload XML
+								</Button>
+								<Button
+									type="button"
+									variant="outline"
+									size="sm"
+									onClick={() => {
+										setXmlInput(BHXH_4210_EXAMPLE);
+										setUploadedName(null);
+									}}
 								>
 									Load Example
 								</Button>
 							</div>
 						</div>
 						<div className="flex-1 p-4 overflow-hidden flex flex-col">
+							{uploadedName && (
+								<div className="mb-2 text-xs text-muted-foreground">
+									Loaded from <span className="font-mono">{uploadedName}</span>
+								</div>
+							)}
 							<textarea
 								value={xmlInput}
-								onChange={(e) => setXmlInput(e.target.value)}
-								placeholder="Paste BHXH 4210 XML here..."
+								onChange={(e) => {
+									setXmlInput(e.target.value);
+									if (uploadedName) setUploadedName(null);
+								}}
+								placeholder="Paste BHXH 4210 XML, or click Upload XML / Load Example..."
 								className="flex-1 w-full rounded-md border px-3 py-2 text-xs font-mono bg-background resize-none"
 							/>
 							<div className="mt-3">

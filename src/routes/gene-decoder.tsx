@@ -1,5 +1,7 @@
+import { DnaIcon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { DemoEmptyState } from "@/components/demo";
 import { Button } from "@/components/shadcn/button";
 import { ViewCodeDialog } from "@/components/view-code-dialog";
 import { API_ROUTES } from "@/config/api-routes";
@@ -327,30 +329,17 @@ const GeneDecoderPage = () => {
 								)}
 							</div>
 						) : (
-							<div className="flex-1 flex items-center justify-center p-8">
-								<div className="text-center space-y-3 max-w-sm">
-									<div className="w-12 h-12 mx-auto rounded-full bg-muted flex items-center justify-center">
-										<svg
-											width="24"
-											height="24"
-											fill="none"
-											stroke="currentColor"
-											strokeWidth="1.5"
-											className="text-muted-foreground"
-											aria-hidden="true"
-										>
-											<title>DNA</title>
-											<path d="M2 15c6.667-6 13.333 0 20-6M2 9c6.667 6 13.333 0 20 6M12 3v18" />
-										</svg>
-									</div>
-									<p className="text-sm text-muted-foreground">
+							<DemoEmptyState
+								icon={DnaIcon}
+								description={
+									<>
 										Paste sequence data on the left and click{" "}
 										<strong>{mode === "decode" ? "Decode" : "Analyze"}</strong>{" "}
 										to see results. Supports FASTA, FASTQ, and raw nucleotide
 										formats.
-									</p>
-								</div>
-							</div>
+									</>
+								}
+							/>
 						)}
 					</div>
 				</div>

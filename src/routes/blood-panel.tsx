@@ -1,6 +1,14 @@
+import { DropletIcon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { ApiTopology, TOPOLOGIES } from "@/components/api-topology";
+import {
+	DemoEmptyState,
+	DemoPageDescription,
+	DemoPageShell,
+	DemoSplitLayout,
+	DemoToolbar,
+} from "@/components/demo";
 import { RawResponseViewer } from "@/components/raw-response-viewer";
 import { Button } from "@/components/shadcn/button";
 import { ViewCodeDialog } from "@/components/view-code-dialog";
@@ -183,143 +191,148 @@ const BloodPanelPage = () => {
 
 	return (
 		<DashboardLayout pageTitle="Blood Panel Analyzer">
-			<div className="flex flex-col h-[calc(100vh-4rem)] overflow-hidden">
-				<div className="px-4 py-2 border-b bg-muted/10">
-					<p className="text-xs text-muted-foreground">
-						CBC/BMP/CMP/Lipid panel analysis with critical-value flagging,
-						age/sex-adjusted reference ranges, and clinical interpretation
-						guidelines.
-					</p>
-				</div>
-				<div className="flex items-center justify-between px-4 py-1.5 border-b">
-					<div className="flex items-center gap-1.5">
-						{[
-							["CBC", CBC_PRESET],
-							["CMP", CMP_PRESET],
-							["Lipid", LIPID_PRESET],
-						].map(([label, preset]) => (
-							<Button
-								key={label as string}
-								variant={panelType === label ? "default" : "outline"}
-								size="sm"
-								onClick={() =>
-									loadPreset(preset as MarkerInput[], label as string)
-								}
-							>
-								{label as string}
-							</Button>
-						))}
-					</div>
-					<ViewCodeDialog
-						endpoint={API_ROUTES.SERVICES.BLOOD_PANEL_ANALYZE}
-						method="POST"
-						body={{
-							markers: [{ name: "Hemoglobin", value: 14.2, unit: "g/dL" }],
-							panel_type: "CBC",
-						}}
-						description="Analyze blood panel markers with AI-powered interpretation"
-					/>
-				</div>
+			<DemoPageShell>
+				<DemoPageDescription>
+					CBC/BMP/CMP/Lipid panel analysis with critical-value flagging,
+					age/sex-adjusted reference ranges, and clinical interpretation
+					guidelines.
+				</DemoPageDescription>
+				<DemoToolbar
+					start={
+						<div className="flex items-center gap-1.5">
+							{[
+								["CBC", CBC_PRESET],
+								["CMP", CMP_PRESET],
+								["Lipid", LIPID_PRESET],
+							].map(([label, preset]) => (
+								<Button
+									key={label as string}
+									variant={panelType === label ? "default" : "outline"}
+									size="sm"
+									onClick={() =>
+										loadPreset(preset as MarkerInput[], label as string)
+									}
+								>
+									{label as string}
+								</Button>
+							))}
+						</div>
+					}
+					end={
+						<ViewCodeDialog
+							endpoint={API_ROUTES.SERVICES.BLOOD_PANEL_ANALYZE}
+							method="POST"
+							body={{
+								markers: [{ name: "Hemoglobin", value: 14.2, unit: "g/dL" }],
+								panel_type: "CBC",
+							}}
+							description="Analyze blood panel markers with AI-powered interpretation"
+						/>
+					}
+				/>
 
-				<div className="flex-1 grid grid-cols-1 lg:grid-cols-2 overflow-hidden border-b">
-					{/* Left: Input */}
-					<div className="border-r flex flex-col overflow-hidden">
-						<div className="p-4 border-b">
-							<div className="grid grid-cols-2 gap-2 mb-3">
-								<div>
-									<label
-										className="text-xs text-muted-foreground"
-										htmlFor="bp-age"
-									>
-										Age
-									</label>
-									<input
-										id="bp-age"
-										value={age}
-										onChange={(e) => setAge(e.target.value)}
-										type="number"
-										className="w-full rounded-md border px-3 py-1.5 text-sm bg-background"
-									/>
-								</div>
-								<div>
-									<label
-										className="text-xs text-muted-foreground"
-										htmlFor="bp-gender"
-									>
-										Gender
-									</label>
-									<select
-										id="bp-gender"
-										value={gender}
-										onChange={(e) => setGender(e.target.value)}
-										className="w-full rounded-md border px-3 py-1.5 text-sm bg-background"
-									>
-										<option value="male">Male</option>
-										<option value="female">Female</option>
-									</select>
+				<DemoSplitLayout
+					left={
+						<>
+							<div className="p-4 border-b">
+								<div className="grid grid-cols-2 gap-2 mb-3">
+									<div>
+										<label
+											className="text-xs text-muted-foreground"
+											htmlFor="bp-age"
+										>
+											Age
+										</label>
+										<input
+											id="bp-age"
+											value={age}
+											onChange={(e) => setAge(e.target.value)}
+											type="number"
+											className="w-full rounded-md border px-3 py-1.5 text-sm bg-background"
+										/>
+									</div>
+									<div>
+										<label
+											className="text-xs text-muted-foreground"
+											htmlFor="bp-gender"
+										>
+											Gender
+										</label>
+										<select
+											id="bp-gender"
+											value={gender}
+											onChange={(e) => setGender(e.target.value)}
+											className="w-full rounded-md border px-3 py-1.5 text-sm bg-background"
+										>
+											<option value="male">Male</option>
+											<option value="female">Female</option>
+										</select>
+									</div>
 								</div>
 							</div>
-						</div>
 
-						<div className="flex-1 overflow-y-auto p-4 space-y-2">
-							{markers.map((m) => (
-								<div
-									key={m.id}
-									className="grid grid-cols-[1fr_80px_80px_32px] gap-1.5 items-center"
-								>
-									<input
-										value={m.name}
-										onChange={(e) => updateMarker(m.id, "name", e.target.value)}
-										placeholder="Marker"
-										className="rounded-md border px-2 py-1.5 text-sm bg-background"
-									/>
-									<input
-										value={m.value}
-										onChange={(e) =>
-											updateMarker(m.id, "value", e.target.value)
-										}
-										placeholder="Value"
-										className="rounded-md border px-2 py-1.5 text-sm bg-background text-right"
-									/>
-									<input
-										value={m.unit}
-										onChange={(e) => updateMarker(m.id, "unit", e.target.value)}
-										placeholder="Unit"
-										className="rounded-md border px-2 py-1.5 text-sm bg-background"
-									/>
-									<button
-										type="button"
-										onClick={() => removeMarker(m.id)}
-										className="text-muted-foreground hover:text-destructive text-lg"
+							<div className="flex-1 overflow-y-auto p-4 space-y-2">
+								{markers.map((m) => (
+									<div
+										key={m.id}
+										className="grid grid-cols-[1fr_80px_80px_32px] gap-1.5 items-center"
 									>
-										&times;
-									</button>
-								</div>
-							))}
-							<Button
-								variant="outline"
-								size="sm"
-								onClick={addMarker}
-								className="w-full"
-							>
-								+ Add Marker
-							</Button>
-						</div>
+										<input
+											value={m.name}
+											onChange={(e) =>
+												updateMarker(m.id, "name", e.target.value)
+											}
+											placeholder="Marker"
+											className="rounded-md border px-2 py-1.5 text-sm bg-background"
+										/>
+										<input
+											value={m.value}
+											onChange={(e) =>
+												updateMarker(m.id, "value", e.target.value)
+											}
+											placeholder="Value"
+											className="rounded-md border px-2 py-1.5 text-sm bg-background text-right"
+										/>
+										<input
+											value={m.unit}
+											onChange={(e) =>
+												updateMarker(m.id, "unit", e.target.value)
+											}
+											placeholder="Unit"
+											className="rounded-md border px-2 py-1.5 text-sm bg-background"
+										/>
+										<button
+											type="button"
+											onClick={() => removeMarker(m.id)}
+											className="text-muted-foreground hover:text-destructive text-lg"
+										>
+											&times;
+										</button>
+									</div>
+								))}
+								<Button
+									variant="outline"
+									size="sm"
+									onClick={addMarker}
+									className="w-full"
+								>
+									+ Add Marker
+								</Button>
+							</div>
 
-						<div className="p-4 border-t">
-							<Button
-								onClick={handleAnalyze}
-								disabled={isLoading}
-								className="w-full"
-							>
-								{isLoading ? "Analyzing..." : "Analyze Blood Panel"}
-							</Button>
-						</div>
-					</div>
-
-					{/* Right: Results */}
-					<div className="flex flex-col overflow-hidden">
-						{result ? (
+							<div className="p-4 border-t">
+								<Button
+									onClick={handleAnalyze}
+									disabled={isLoading}
+									className="w-full"
+								>
+									{isLoading ? "Analyzing..." : "Analyze Blood Panel"}
+								</Button>
+							</div>
+						</>
+					}
+					right={
+						result ? (
 							<div className="flex-1 overflow-y-auto p-4 space-y-4">
 								{/* Summary */}
 								<div className="rounded-md border p-4">
@@ -395,31 +408,19 @@ const BloodPanelPage = () => {
 								<RawResponseViewer data={result} />
 							</div>
 						) : (
-							<div className="flex-1 flex items-center justify-center p-8">
-								<div className="text-center space-y-3 max-w-sm">
-									<div className="w-12 h-12 mx-auto rounded-full bg-muted flex items-center justify-center">
-										<svg
-											width="24"
-											height="24"
-											fill="none"
-											stroke="currentColor"
-											strokeWidth="1.5"
-											className="text-muted-foreground"
-										>
-											<title>Blood Panel</title>
-											<path d="M12 2C12 2 5 9 5 13a7 7 0 0 0 14 0c0-4-7-11-7-11z" />
-										</svg>
-									</div>
-									<p className="text-sm text-muted-foreground">
+							<DemoEmptyState
+								icon={DropletIcon}
+								description={
+									<>
 										Select a panel preset or enter markers manually, then click{" "}
 										<strong>Analyze</strong>.
-									</p>
-								</div>
-							</div>
-						)}
-					</div>
-				</div>
-			</div>
+									</>
+								}
+							/>
+						)
+					}
+				/>
+			</DemoPageShell>
 
 			<div className="px-4 py-1.5 border-t bg-muted/10 text-[10px] text-muted-foreground text-center">
 				Reference ranges from Tietz / Quest Diagnostics standards

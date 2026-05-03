@@ -2,6 +2,13 @@ import { Mic as MicIcon, StopCircle as StopCircleIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { ApiTopology, TOPOLOGIES } from "@/components/api-topology";
+import {
+	DemoEmptyState,
+	DemoPageDescription,
+	DemoPageShell,
+	DemoSplitLayout,
+	DemoToolbar,
+} from "@/components/demo";
 import { RawResponseViewer } from "@/components/raw-response-viewer";
 import { Button } from "@/components/shadcn/button";
 import { ViewCodeDialog } from "@/components/view-code-dialog";
@@ -287,212 +294,214 @@ const VoiceTranscribePage = () => {
 
 	return (
 		<DashboardLayout pageTitle="Voice Transcribe">
-			<div className="flex flex-col h-[calc(100vh-4rem)] overflow-hidden">
-				<div className="px-4 py-2 border-b bg-muted/10">
-					<p className="text-xs text-muted-foreground">
-						VAD-based speech-to-text with automatic punctuation/case enhancement
-						via local Qwen LLM. Upload audio files or record live from
-						microphone. Supports Vietnamese & English.
-					</p>
-				</div>
-				<div className="flex items-center justify-between px-4 py-1.5 border-b gap-3 flex-wrap">
-					<div className="flex items-center gap-4 flex-wrap">
-						<div className="flex items-center gap-2">
+			<DemoPageShell>
+				<DemoPageDescription>
+					VAD-based speech-to-text with automatic punctuation/case enhancement
+					via local Qwen LLM. Upload audio files or record live from microphone.
+					Supports Vietnamese & English.
+				</DemoPageDescription>
+				<DemoToolbar
+					start={
+						<div className="flex items-center gap-4 flex-wrap">
+							<div className="flex items-center gap-2">
+								<label
+									htmlFor="vt-lang"
+									className="text-xs text-muted-foreground"
+								>
+									Language
+								</label>
+								<select
+									id="vt-lang"
+									value={language}
+									onChange={(e) =>
+										setLanguage(e.target.value as "auto" | "vi" | "en")
+									}
+									className="rounded-md border px-2 py-1 text-xs bg-background"
+								>
+									<option value="auto">Auto-detect</option>
+									<option value="vi">Vietnamese</option>
+									<option value="en">English</option>
+								</select>
+							</div>
 							<label
-								htmlFor="vt-lang"
-								className="text-xs text-muted-foreground"
+								htmlFor="vt-denoise"
+								className="flex items-center gap-1.5 text-xs text-muted-foreground cursor-pointer"
 							>
-								Language
+								<input
+									id="vt-denoise"
+									type="checkbox"
+									checked={denoise}
+									onChange={(e) => setDenoise(e.target.checked)}
+								/>
+								Denoise
 							</label>
-							<select
-								id="vt-lang"
-								value={language}
-								onChange={(e) =>
-									setLanguage(e.target.value as "auto" | "vi" | "en")
-								}
-								className="rounded-md border px-2 py-1 text-xs bg-background"
+							<label
+								htmlFor="vt-enhance"
+								className="flex items-center gap-1.5 text-xs text-muted-foreground cursor-pointer"
 							>
-								<option value="auto">Auto-detect</option>
-								<option value="vi">Vietnamese</option>
-								<option value="en">English</option>
-							</select>
-						</div>
-						<label
-							htmlFor="vt-denoise"
-							className="flex items-center gap-1.5 text-xs text-muted-foreground cursor-pointer"
-						>
-							<input
-								id="vt-denoise"
-								type="checkbox"
-								checked={denoise}
-								onChange={(e) => setDenoise(e.target.checked)}
-							/>
-							Denoise
-						</label>
-						<label
-							htmlFor="vt-enhance"
-							className="flex items-center gap-1.5 text-xs text-muted-foreground cursor-pointer"
-						>
-							<input
-								id="vt-enhance"
-								type="checkbox"
-								checked={enhance}
-								onChange={(e) => setEnhance(e.target.checked)}
-							/>
-							Enhance with LLM
-						</label>
-						<label
-							htmlFor="vt-translate"
-							className="flex items-center gap-1.5 text-xs text-muted-foreground cursor-pointer"
-						>
-							<input
-								id="vt-translate"
-								type="checkbox"
-								checked={translateToEnglish}
-								onChange={(e) => setTranslateToEnglish(e.target.checked)}
-							/>
-							Translate to English
-						</label>
-					</div>
-					<ViewCodeDialog
-						endpoint={API_ROUTES.SERVICES.VOICE_TRANSCRIBE}
-						method="POST"
-						contentType="multipart/form-data"
-						description="Transcribe audio file to text"
-					/>
-				</div>
-				<div className="flex-1 grid grid-cols-1 lg:grid-cols-2 overflow-hidden border-b">
-					{/* Left: Input */}
-					<div className="border-r flex flex-col overflow-hidden p-4 space-y-4 overflow-y-auto">
-						{/* File Upload Section */}
-						<span className="text-sm font-medium">Upload Audio File</span>
-						<button
-							type="button"
-							className="w-full border-2 border-dashed rounded-lg p-6 text-center cursor-pointer hover:border-primary/50 transition-colors"
-							onClick={() => fileInputRef.current?.click()}
-						>
-							<input
-								ref={fileInputRef}
-								type="file"
-								accept="audio/*"
-								onChange={handleFileChange}
-								className="hidden"
-							/>
-							<svg
-								width="32"
-								height="32"
-								fill="none"
-								stroke="currentColor"
-								strokeWidth="1.5"
-								className="mx-auto text-muted-foreground mb-2"
-								aria-hidden="true"
+								<input
+									id="vt-enhance"
+									type="checkbox"
+									checked={enhance}
+									onChange={(e) => setEnhance(e.target.checked)}
+								/>
+								Enhance with LLM
+							</label>
+							<label
+								htmlFor="vt-translate"
+								className="flex items-center gap-1.5 text-xs text-muted-foreground cursor-pointer"
 							>
-								<title>Upload audio</title>
-								<path d="M16 4v16M10 12l6-6 6 6" />
-								<path d="M4 24h24" />
-							</svg>
-							{file ? (
-								<p className="text-sm font-medium">{file.name}</p>
-							) : (
-								<p className="text-sm text-muted-foreground">
-									Click to select an audio file
-								</p>
-							)}
-							<p className="text-xs text-muted-foreground mt-1">
-								WAV, MP3, M4A, FLAC, OGG
-							</p>
-						</button>
-						{file && (
-							<div className="text-xs text-muted-foreground">
-								Size: {(file.size / 1024 / 1024).toFixed(2)} MB
-							</div>
-						)}
-						<Button
-							type="button"
-							onClick={handleTranscribe}
-							disabled={isLoading || !file}
-						>
-							{isLoading ? "Transcribing..." : "Transcribe"}
-						</Button>
-
-						{/* OR Divider */}
-						<div className="flex items-center gap-3 py-1">
-							<div className="flex-1 h-px bg-border" />
-							<span className="text-xs text-muted-foreground font-medium">
-								OR
-							</span>
-							<div className="flex-1 h-px bg-border" />
+								<input
+									id="vt-translate"
+									type="checkbox"
+									checked={translateToEnglish}
+									onChange={(e) => setTranslateToEnglish(e.target.checked)}
+								/>
+								Translate to English
+							</label>
 						</div>
-
-						{/* Real-time Recording Section */}
-						<span className="text-sm font-medium">Real-Time Transcribe</span>
-						{micPermissionDenied && (
-							<div className="text-xs rounded-md border border-amber-300 bg-amber-50 dark:bg-amber-950/30 dark:border-amber-700/50 px-3 py-2 text-amber-900 dark:text-amber-200">
-								<p className="font-medium">Microphone access blocked</p>
-								<p className="mt-0.5">
-									Click the 🎤 icon in your browser's address bar and choose
-									<strong> Always allow</strong>. Then click record again. Audio
-									file upload above still works without microphone permission.
-								</p>
-							</div>
-						)}
-						<div className="flex items-center gap-4 p-4 rounded-lg border bg-muted/20">
+					}
+					end={
+						<ViewCodeDialog
+							endpoint={API_ROUTES.SERVICES.VOICE_TRANSCRIBE}
+							method="POST"
+							contentType="multipart/form-data"
+							description="Transcribe audio file to text"
+						/>
+					}
+				/>
+				<DemoSplitLayout
+					left={
+						<div className="flex flex-col overflow-hidden p-4 space-y-4 overflow-y-auto h-full">
+							{/* File Upload Section */}
+							<span className="text-sm font-medium">Upload Audio File</span>
 							<button
 								type="button"
-								onClick={isRecording ? stopRecording : startRecording}
-								disabled={isLoading}
-								className={`w-14 h-14 shrink-0 rounded-full flex items-center justify-center transition-all ${
-									isRecording
-										? "bg-red-500 hover:bg-red-600 text-white animate-pulse"
-										: "bg-primary hover:bg-primary/90 text-primary-foreground"
-								}`}
+								className="w-full border-2 border-dashed rounded-lg p-6 text-center cursor-pointer hover:border-primary/50 transition-colors"
+								onClick={() => fileInputRef.current?.click()}
 							>
-								{isRecording ? (
-									<StopCircleIcon className="w-6 h-6" />
+								<input
+									ref={fileInputRef}
+									type="file"
+									accept="audio/*"
+									onChange={handleFileChange}
+									className="hidden"
+								/>
+								<svg
+									width="32"
+									height="32"
+									fill="none"
+									stroke="currentColor"
+									strokeWidth="1.5"
+									className="mx-auto text-muted-foreground mb-2"
+									aria-hidden="true"
+								>
+									<title>Upload audio</title>
+									<path d="M16 4v16M10 12l6-6 6 6" />
+									<path d="M4 24h24" />
+								</svg>
+								{file ? (
+									<p className="text-sm font-medium">{file.name}</p>
 								) : (
-									<MicIcon className="w-6 h-6" />
+									<p className="text-sm text-muted-foreground">
+										Click to select an audio file
+									</p>
 								)}
-							</button>
-							<div className="flex-1 min-w-0">
-								{isRecording ? (
-									<>
-										<div className="flex items-center gap-2 text-sm text-red-500 font-medium">
-											<span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
-											Recording — {formatDuration(recordingDuration)}
-										</div>
-										<p className="text-xs text-muted-foreground mt-1">
-											Click the stop button when done
-										</p>
-									</>
-								) : (
-									<>
-										<p className="text-sm text-foreground">
-											Click to start recording
-										</p>
-										<p className="text-xs text-muted-foreground mt-0.5">
-											Transcribes speech in real-time via microphone
-										</p>
-									</>
-								)}
-							</div>
-						</div>
-
-						{/* Live transcript (shown inline when recording) */}
-						{liveText && (
-							<div className="p-3 rounded-lg border bg-muted/30">
-								<span className="text-xs font-medium text-muted-foreground block mb-1">
-									{isRecording ? "Live Transcript" : "Final Transcript"}
-								</span>
-								<p className="text-sm whitespace-pre-wrap leading-relaxed">
-									{liveText}
+								<p className="text-xs text-muted-foreground mt-1">
+									WAV, MP3, M4A, FLAC, OGG
 								</p>
-							</div>
-						)}
-					</div>
+							</button>
+							{file && (
+								<div className="text-xs text-muted-foreground">
+									Size: {(file.size / 1024 / 1024).toFixed(2)} MB
+								</div>
+							)}
+							<Button
+								type="button"
+								onClick={handleTranscribe}
+								disabled={isLoading || !file}
+							>
+								{isLoading ? "Transcribing..." : "Transcribe"}
+							</Button>
 
-					{/* Right: Result */}
-					<div className="flex flex-col overflow-hidden">
-						{result ? (
+							{/* OR Divider */}
+							<div className="flex items-center gap-3 py-1">
+								<div className="flex-1 h-px bg-border" />
+								<span className="text-xs text-muted-foreground font-medium">
+									OR
+								</span>
+								<div className="flex-1 h-px bg-border" />
+							</div>
+
+							{/* Real-time Recording Section */}
+							<span className="text-sm font-medium">Real-Time Transcribe</span>
+							{micPermissionDenied && (
+								<div className="text-xs rounded-md border border-amber-300 bg-amber-50 dark:bg-amber-950/30 dark:border-amber-700/50 px-3 py-2 text-amber-900 dark:text-amber-200">
+									<p className="font-medium">Microphone access blocked</p>
+									<p className="mt-0.5">
+										Click the 🎤 icon in your browser's address bar and choose
+										<strong> Always allow</strong>. Then click record again.
+										Audio file upload above still works without microphone
+										permission.
+									</p>
+								</div>
+							)}
+							<div className="flex items-center gap-4 p-4 rounded-lg border bg-muted/20">
+								<button
+									type="button"
+									onClick={isRecording ? stopRecording : startRecording}
+									disabled={isLoading}
+									className={`w-14 h-14 shrink-0 rounded-full flex items-center justify-center transition-all ${
+										isRecording
+											? "bg-red-500 hover:bg-red-600 text-white animate-pulse"
+											: "bg-primary hover:bg-primary/90 text-primary-foreground"
+									}`}
+								>
+									{isRecording ? (
+										<StopCircleIcon className="w-6 h-6" />
+									) : (
+										<MicIcon className="w-6 h-6" />
+									)}
+								</button>
+								<div className="flex-1 min-w-0">
+									{isRecording ? (
+										<>
+											<div className="flex items-center gap-2 text-sm text-red-500 font-medium">
+												<span className="w-2 h-2 rounded-full bg-red-500 animate-pulse" />
+												Recording — {formatDuration(recordingDuration)}
+											</div>
+											<p className="text-xs text-muted-foreground mt-1">
+												Click the stop button when done
+											</p>
+										</>
+									) : (
+										<>
+											<p className="text-sm text-foreground">
+												Click to start recording
+											</p>
+											<p className="text-xs text-muted-foreground mt-0.5">
+												Transcribes speech in real-time via microphone
+											</p>
+										</>
+									)}
+								</div>
+							</div>
+
+							{/* Live transcript (shown inline when recording) */}
+							{liveText && (
+								<div className="p-3 rounded-lg border bg-muted/30">
+									<span className="text-xs font-medium text-muted-foreground block mb-1">
+										{isRecording ? "Live Transcript" : "Final Transcript"}
+									</span>
+									<p className="text-sm whitespace-pre-wrap leading-relaxed">
+										{liveText}
+									</p>
+								</div>
+							)}
+						</div>
+					}
+					right={
+						result ? (
 							<div className="flex-1 overflow-y-auto p-4 space-y-4">
 								<div className="flex items-center gap-3 text-sm text-muted-foreground flex-wrap">
 									{result.language && <span>Language: {result.language}</span>}
@@ -575,33 +584,19 @@ const VoiceTranscribePage = () => {
 								</div>
 							</div>
 						) : (
-							<div className="flex-1 flex items-center justify-center p-8">
-								<div className="text-center space-y-3 max-w-sm">
-									<div className="w-12 h-12 mx-auto rounded-full bg-muted flex items-center justify-center">
-										<svg
-											width="24"
-											height="24"
-											fill="none"
-											stroke="currentColor"
-											strokeWidth="1.5"
-											className="text-muted-foreground"
-											aria-hidden="true"
-										>
-											<title>Microphone</title>
-											<rect x="9" y="2" width="6" height="12" rx="3" />
-											<path d="M5 10a7 7 0 0014 0M12 18v4m-4 0h8" />
-										</svg>
-									</div>
-									<p className="text-sm text-muted-foreground">
+							<DemoEmptyState
+								icon={MicIcon}
+								description={
+									<>
 										Upload an audio file or use the microphone on the left, then
 										click <strong>Transcribe</strong> to see the text here.
-									</p>
-								</div>
-							</div>
-						)}
-					</div>
-				</div>
-			</div>
+									</>
+								}
+							/>
+						)
+					}
+				/>
+			</DemoPageShell>
 
 			<div className="px-4 py-1.5 border-t bg-muted/10 text-[10px] text-muted-foreground text-center">
 				Powered by Cohere Aya / Whisper-Large

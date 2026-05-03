@@ -1,6 +1,13 @@
+import { EyeOffIcon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { ApiTopology, TOPOLOGIES } from "@/components/api-topology";
+import {
+	DemoEmptyState,
+	DemoPageShell,
+	DemoSplitLayout,
+	DemoToolbar,
+} from "@/components/demo";
 import { Button } from "@/components/shadcn/button";
 import { ViewCodeDialog } from "@/components/view-code-dialog";
 import { API_ROUTES } from "@/config/api-routes";
@@ -92,53 +99,58 @@ const DataMaskingPage = () => {
 
 	return (
 		<DashboardLayout pageTitle="Data Masking">
-			<div className="flex flex-col h-[calc(100vh-4rem)] overflow-hidden">
-				<div className="flex items-center justify-end px-4 py-1.5 border-b">
-					<ViewCodeDialog
-						endpoint={API_ROUTES.SERVICES.DATA_MASKING_MASK}
-						method="POST"
-						body={{
-							bundle: { resourceType: "Bundle", type: "collection", entry: [] },
-						}}
-						description="De-identify patient data in FHIR Bundle"
-					/>
-				</div>
-				<div className="flex-1 grid grid-cols-1 lg:grid-cols-2 overflow-hidden border-b">
-					{/* Left: Input */}
-					<div className="border-r flex flex-col overflow-hidden">
-						<div className="p-4 border-b flex items-center justify-between">
-							<span className="text-sm font-medium">FHIR Bundle Input</span>
-							<Button
-								type="button"
-								variant="outline"
-								size="sm"
-								onClick={() => setInput(FHIR_BUNDLE_EXAMPLE)}
-							>
-								Load Example
-							</Button>
-						</div>
-						<div className="flex-1 p-4 overflow-hidden flex flex-col">
-							<textarea
-								value={input}
-								onChange={(e) => setInput(e.target.value)}
-								placeholder="Paste FHIR Bundle JSON here..."
-								className="flex-1 w-full rounded-md border px-3 py-2 text-xs font-mono bg-background resize-none"
-							/>
-							<div className="mt-3">
+			<DemoPageShell>
+				<DemoToolbar
+					end={
+						<ViewCodeDialog
+							endpoint={API_ROUTES.SERVICES.DATA_MASKING_MASK}
+							method="POST"
+							body={{
+								bundle: {
+									resourceType: "Bundle",
+									type: "collection",
+									entry: [],
+								},
+							}}
+							description="De-identify patient data in FHIR Bundle"
+						/>
+					}
+				/>
+				<DemoSplitLayout
+					left={
+						<>
+							<div className="p-4 border-b flex items-center justify-between">
+								<span className="text-sm font-medium">FHIR Bundle Input</span>
 								<Button
 									type="button"
-									onClick={handleMask}
-									disabled={isLoading || !input.trim()}
+									variant="outline"
+									size="sm"
+									onClick={() => setInput(FHIR_BUNDLE_EXAMPLE)}
 								>
-									{isLoading ? "Masking..." : "Mask Data"}
+									Load Example
 								</Button>
 							</div>
-						</div>
-					</div>
-
-					{/* Right: Results */}
-					<div className="flex flex-col overflow-hidden">
-						{result ? (
+							<div className="flex-1 p-4 overflow-hidden flex flex-col">
+								<textarea
+									value={input}
+									onChange={(e) => setInput(e.target.value)}
+									placeholder="Paste FHIR Bundle JSON here..."
+									className="flex-1 w-full rounded-md border px-3 py-2 text-xs font-mono bg-background resize-none"
+								/>
+								<div className="mt-3">
+									<Button
+										type="button"
+										onClick={handleMask}
+										disabled={isLoading || !input.trim()}
+									>
+										{isLoading ? "Masking..." : "Mask Data"}
+									</Button>
+								</div>
+							</div>
+						</>
+					}
+					right={
+						result ? (
 							<div className="flex flex-col h-full overflow-hidden">
 								<div className="flex border-b">
 									{(
@@ -252,33 +264,19 @@ const DataMaskingPage = () => {
 								</div>
 							</div>
 						) : (
-							<div className="flex-1 flex items-center justify-center p-8">
-								<div className="text-center space-y-3 max-w-sm">
-									<div className="w-12 h-12 mx-auto rounded-full bg-muted flex items-center justify-center">
-										<svg
-											width="24"
-											height="24"
-											fill="none"
-											stroke="currentColor"
-											strokeWidth="1.5"
-											className="text-muted-foreground"
-											aria-hidden="true"
-										>
-											<title>Mask</title>
-											<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-											<line x1="1" y1="1" x2="23" y2="23" />
-										</svg>
-									</div>
-									<p className="text-sm text-muted-foreground">
+							<DemoEmptyState
+								icon={EyeOffIcon}
+								description={
+									<>
 										Paste a FHIR Bundle on the left and click{" "}
 										<strong>Mask Data</strong> to de-identify patient data.
-									</p>
-								</div>
-							</div>
-						)}
-					</div>
-				</div>
-			</div>
+									</>
+								}
+							/>
+						)
+					}
+				/>
+			</DemoPageShell>
 
 			<div className="px-4 py-2 border-t">
 				<ApiTopology {...TOPOLOGIES.data_masking} />

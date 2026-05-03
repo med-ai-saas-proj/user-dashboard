@@ -1,5 +1,7 @@
+import { SearchIcon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { DemoEmptyState } from "@/components/demo";
 import { Button } from "@/components/shadcn/button";
 import { ViewCodeDialog } from "@/components/view-code-dialog";
 import { API_ROUTES } from "@/config/api-routes";
@@ -303,28 +305,10 @@ const CrossSearchPage = () => {
 								)}
 							</div>
 						) : (
-							<div className="flex-1 flex items-center justify-center p-8">
-								<div className="text-center space-y-3 max-w-sm">
-									<div className="w-12 h-12 mx-auto rounded-full bg-muted flex items-center justify-center">
-										<svg
-											width="24"
-											height="24"
-											fill="none"
-											stroke="currentColor"
-											strokeWidth="1.5"
-											className="text-muted-foreground"
-										>
-											<title>Search</title>
-											<circle cx="11" cy="11" r="8" />
-											<path d="m21 21-4.35-4.35" />
-										</svg>
-									</div>
-									<p className="text-sm text-muted-foreground">
-										Search for a patient by demographics to find their records
-										across all connected HIS providers and facilities.
-									</p>
-								</div>
-							</div>
+							<DemoEmptyState
+								icon={SearchIcon}
+								description="Search for a patient by demographics to find their records across all connected HIS providers and facilities."
+							/>
 						)}
 					</div>
 				</div>

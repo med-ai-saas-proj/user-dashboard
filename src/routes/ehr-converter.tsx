@@ -1,6 +1,13 @@
+import { ChevronRightIcon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { ApiTopology, TOPOLOGIES } from "@/components/api-topology";
+import {
+	DemoEmptyState,
+	DemoPageDescription,
+	DemoPageShell,
+	DemoSplitLayout,
+} from "@/components/demo";
 import { RawResponseViewer } from "@/components/raw-response-viewer";
 import { ViewCodeDialog } from "@/components/view-code-dialog";
 import { API_ROUTES } from "@/config/api-routes";
@@ -197,85 +204,66 @@ const EhrConverterPage = () => {
 
 	return (
 		<DashboardLayout pageTitle="EHR Converter">
-			<div className="flex flex-col h-[calc(100vh-4rem)] overflow-hidden">
-				<div className="px-4 py-2 border-b bg-muted/10">
-					<p className="text-xs text-muted-foreground">
-						Auto-detect & convert HL7v2/v3, CDA/C-CDA, BHXH 4210, HSYT, EMRBYT
-						to FHIR R4. Bidirectional conversion (FHIR ↔ HL7v2) via Azure FHIR
-						Converter Worker.
-					</p>
-				</div>
-				{/* Two-panel layout */}
-				<div className="flex-1 grid grid-cols-1 lg:grid-cols-2 overflow-hidden border-b">
-					{/* Left: Input */}
-					<div className="border-r flex flex-col overflow-hidden">
+			<DemoPageShell>
+				<DemoPageDescription>
+					Auto-detect & convert HL7v2/v3, CDA/C-CDA, BHXH 4210, HSYT, EMRBYT to
+					FHIR R4. Bidirectional conversion (FHIR ↔ HL7v2) via Azure FHIR
+					Converter Worker.
+				</DemoPageDescription>
+				<DemoSplitLayout
+					left={
 						<ConverterForm
 							onConvert={handleConvert}
 							onReverseConvert={handleReverseConvert}
 							onValidate={handleValidate}
 							isLoading={isLoading}
 						/>
-					</div>
-
-					{/* Right: Output */}
-					<div className="flex flex-col overflow-hidden">
-						<div className="flex items-center justify-between px-4 py-2 border-b bg-muted/30">
-							<h2 className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-								Output
-							</h2>
-							<ViewCodeDialog
-								endpoint={API_ROUTES.SERVICES.EHR_CONVERTER_CONVERT}
-								method="POST"
-								body={{
-									data: "<HL7v2 or CDA or FHIR data>",
-									validate_output: true,
-								}}
-								description="Convert healthcare data to FHIR R4"
-							/>
-						</div>
-						{hasResult ? (
-							<>
-								<ConvertResultPanel
-									result={result}
-									reverseResult={reverseResult}
-									validateResult={validateResult}
-									conversionTime={conversionTime}
+					}
+					right={
+						<>
+							<div className="flex items-center justify-between px-4 py-2 border-b bg-muted/30">
+								<h2 className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
+									Output
+								</h2>
+								<ViewCodeDialog
+									endpoint={API_ROUTES.SERVICES.EHR_CONVERTER_CONVERT}
+									method="POST"
+									body={{
+										data: "<HL7v2 or CDA or FHIR data>",
+										validate_output: true,
+									}}
+									description="Convert healthcare data to FHIR R4"
 								/>
-								<div className="px-4 pb-4">
-									<RawResponseViewer
-										data={result || reverseResult || validateResult}
-									/>
-								</div>
-							</>
-						) : (
-							<div className="flex-1 flex items-center justify-center p-8">
-								<div className="text-center space-y-3 max-w-sm">
-									<div className="w-12 h-12 mx-auto rounded-full bg-muted flex items-center justify-center">
-										<svg
-											width="24"
-											height="24"
-											fill="none"
-											stroke="currentColor"
-											strokeWidth="1.5"
-											className="text-muted-foreground"
-											aria-hidden="true"
-										>
-											<title>Convert</title>
-											<path d="M9 5l7 7-7 7" />
-										</svg>
-									</div>
-									<p className="text-sm text-muted-foreground">
-										Paste healthcare data on the left and click{" "}
-										<strong>Convert to FHIR</strong> to see the output here.
-									</p>
-									<p className="text-[11px] text-muted-foreground/60">
-										Supports HL7v2, CDA/C-CDA, HL7v3, BHXH 4210, and FHIR JSON
-									</p>
-								</div>
 							</div>
-						)}
-					</div>
-				</div>
+							{hasResult ? (
+								<>
+									<ConvertResultPanel
+										result={result}
+										reverseResult={reverseResult}
+										validateResult={validateResult}
+										conversionTime={conversionTime}
+									/>
+									<div className="px-4 pb-4">
+										<RawResponseViewer
+											data={result || reverseResult || validateResult}
+										/>
+									</div>
+								</>
+							) : (
+								<DemoEmptyState
+									icon={ChevronRightIcon}
+									description={
+										<>
+											Paste healthcare data on the left and click{" "}
+											<strong>Convert to FHIR</strong> to see the output here.
+										</>
+									}
+									hint="Supports HL7v2, CDA/C-CDA, HL7v3, BHXH 4210, and FHIR JSON"
+								/>
+							)}
+						</>
+					}
+				/>
 
 				{/* Batch section */}
 				<div className="flex-shrink-0">
@@ -308,7 +296,7 @@ const EhrConverterPage = () => {
 						</div>
 					)}
 				</div>
-			</div>
+			</DemoPageShell>
 
 			<div className="px-4 py-2 border-t">
 				<ApiTopology {...TOPOLOGIES.ehr_converter} />

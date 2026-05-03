@@ -1,7 +1,7 @@
-import type { PropsWithChildren } from "react";
+import { MoonIcon, PaletteIcon, SunIcon } from "lucide-react";
 import { useTheme } from "next-themes";
-import { MoonIcon, SunIcon, PaletteIcon } from "lucide-react";
-import { useStyleTheme } from "@/hooks/use-style-theme";
+import type { PropsWithChildren } from "react";
+import { Link } from "react-router-dom";
 import {
 	Breadcrumb,
 	BreadcrumbItem,
@@ -17,6 +17,7 @@ import {
 	SidebarTrigger,
 } from "@/components/shadcn/sidebar";
 import { AppSidebar } from "@/components/sidebar/app-sidebar";
+import { useStyleTheme } from "@/hooks/use-style-theme";
 import { cn } from "@/lib/utils";
 
 const DashboardLayout = ({
@@ -45,7 +46,9 @@ const DashboardLayout = ({
 						<Breadcrumb>
 							<BreadcrumbList>
 								<BreadcrumbItem className="hidden md:block">
-									<BreadcrumbLink href="#">My Project</BreadcrumbLink>
+									<BreadcrumbLink asChild>
+										<Link to="/">My Project</Link>
+									</BreadcrumbLink>
 								</BreadcrumbItem>
 								<BreadcrumbSeparator className="hidden md:block" />
 								<BreadcrumbItem>

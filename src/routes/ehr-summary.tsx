@@ -1,10 +1,11 @@
 import { useRef, useState } from "react";
 import { toast } from "sonner";
 import { ApiTopology, TOPOLOGIES } from "@/components/api-topology";
+import { DemoEmptyState, DemoPageDescription } from "@/components/demo";
+import { RawResponseViewer } from "@/components/raw-response-viewer";
 import { Button } from "@/components/shadcn/button";
 import { ViewCodeDialog } from "@/components/view-code-dialog";
 import { API_ROUTES } from "@/config/api-routes";
-import { RawResponseViewer } from "@/components/raw-response-viewer";
 import { MarkdownCustom } from "@/features/pg-chat/components/MarkdownCustom";
 import {
 	type DetectedFormat,
@@ -503,13 +504,11 @@ const EhrSummaryPage = () => {
 	return (
 		<DashboardLayout pageTitle="EHR Summary">
 			<div className="flex flex-col h-[calc(100vh-4rem)] overflow-hidden">
-				<div className="px-4 py-2 border-b bg-muted/10">
-					<p className="text-xs text-muted-foreground">
-						Multi-source EHR consolidation with streaming narrative generation
-						via local Qwen LLM. Upload from multiple facilities, auto-convert to
-						FHIR R4, merge, and summarize in clinical prose.
-					</p>
-				</div>
+				<DemoPageDescription>
+					Multi-source EHR consolidation with streaming narrative generation via
+					local Qwen LLM. Upload from multiple facilities, auto-convert to FHIR
+					R4, merge, and summarize in clinical prose.
+				</DemoPageDescription>
 				<div className="flex-1 flex flex-col lg:grid lg:grid-cols-2 overflow-hidden">
 					{/* Left: Multi-source input */}
 					<div className="border-b lg:border-b-0 lg:border-r flex flex-col overflow-hidden min-h-0 lg:min-h-full">
@@ -880,19 +879,16 @@ const EhrSummaryPage = () => {
 								</div>
 							</>
 						) : (
-							<div className="flex-1 flex items-center justify-center p-8">
-								<div className="text-center space-y-3 max-w-sm">
-									<p className="text-sm text-muted-foreground">
+							<DemoEmptyState
+								description={
+									<>
 										Add EHR data from multiple facilities, then click{" "}
 										<strong>Summarize</strong> to get a unified clinical
 										summary.
-									</p>
-									<p className="text-[11px] text-muted-foreground/60">
-										Pipeline: Standardize each source → FHIR R4 → Merge → Qwen
-										Cluster Summary
-									</p>
-								</div>
-							</div>
+									</>
+								}
+								hint="Pipeline: Standardize each source → FHIR R4 → Merge → Qwen Cluster Summary"
+							/>
 						)}
 					</div>
 				</div>

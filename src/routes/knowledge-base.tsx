@@ -1,6 +1,8 @@
+import { DatabaseIcon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { ApiTopology, TOPOLOGIES } from "@/components/api-topology";
+import { DemoEmptyState } from "@/components/demo";
 import { Button } from "@/components/shadcn/button";
 import { ViewCodeDialog } from "@/components/view-code-dialog";
 import { API_ROUTES } from "@/config/api-routes";
@@ -363,29 +365,10 @@ const KnowledgeBasePage = () => {
 								</div>
 							</div>
 						) : (
-							<div className="flex-1 flex items-center justify-center p-8">
-								<div className="text-center space-y-3 max-w-sm">
-									<div className="w-12 h-12 mx-auto rounded-full bg-muted flex items-center justify-center">
-										<svg
-											width="24"
-											height="24"
-											fill="none"
-											stroke="currentColor"
-											strokeWidth="1.5"
-											className="text-muted-foreground"
-											aria-hidden="true"
-										>
-											<title>Database</title>
-											<ellipse cx="12" cy="6" rx="8" ry="3" />
-											<path d="M4 6v6c0 1.7 3.6 3 8 3s8-1.3 8-3V6" />
-											<path d="M4 12v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6" />
-										</svg>
-									</div>
-									<p className="text-sm text-muted-foreground">
-										Select a knowledge base from the left or create a new one.
-									</p>
-								</div>
-							</div>
+							<DemoEmptyState
+								icon={DatabaseIcon}
+								description="Select a knowledge base from the left or create a new one."
+							/>
 						)}
 					</div>
 				</div>

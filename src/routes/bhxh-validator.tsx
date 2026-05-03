@@ -1,4 +1,5 @@
 import { useRef, useState } from "react";
+import { Link } from "react-router-dom";
 import { toast } from "sonner";
 import { ApiTopology, TOPOLOGIES } from "@/components/api-topology";
 import { RawResponseViewer } from "@/components/raw-response-viewer";
@@ -198,12 +199,12 @@ const BhxhValidatorPage = () => {
 						<span>
 							Validates against <strong>745 official BHXH error codes</strong>{" "}
 							from TT 4210.{" "}
-							<a
-								href="/bhxh-error-codes"
+							<Link
+								to="/bhxh-error-codes"
 								className="underline font-medium hover:text-blue-700 dark:hover:text-blue-100"
 							>
 								View error code reference →
-							</a>
+							</Link>
 						</span>
 					</div>
 				</div>

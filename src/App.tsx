@@ -19,6 +19,7 @@ import APIKeysPage from "@/routes/api-keys";
 import APIReferencePage from "@/routes/api-reference";
 import ArchitecturePage from "@/routes/architecture";
 import AuthCallbackPage from "@/routes/auth-callback";
+import BhxhErrorCodesPage from "@/routes/bhxh-error-codes";
 import BhxhValidatorPage from "@/routes/bhxh-validator";
 import BillingPage from "@/routes/billing";
 import BloodPanelPage from "@/routes/blood-panel";
@@ -190,6 +191,14 @@ function AppRoutes() {
 					element={
 						<ProtectedRoute>
 							<BhxhValidatorPage />
+						</ProtectedRoute>
+					}
+				/>
+				<Route
+					path="/bhxh-error-codes"
+					element={
+						<ProtectedRoute>
+							<BhxhErrorCodesPage />
 						</ProtectedRoute>
 					}
 				/>

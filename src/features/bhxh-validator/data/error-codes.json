@@ -1,0 +1,4809 @@
+[
+	{
+		"stt": 1,
+		"code": "35",
+		"source": "XML1",
+		"description": "Mã đối tượng KCB không được để trống"
+	},
+	{
+		"stt": 2,
+		"code": "37",
+		"source": "XML1",
+		"description": "Mã bệnh không được để trống và"
+	},
+	{
+		"stt": 3,
+		"code": "38",
+		"source": "XML1",
+		"description": "Mã bệnh phải gồm từ 3 đến 7 ký tự, không được tồn tại khoảng trắng ở giữa"
+	},
+	{
+		"stt": 4,
+		"code": "39",
+		"source": "XML1",
+		"description": "Mã bệnh khác không được lớn hơn 255 ký tự"
+	},
+	{
+		"stt": 5,
+		"code": "40",
+		"source": "XML1",
+		"description": "Mã lý do vào viện không được để trống"
+	},
+	{
+		"stt": 6,
+		"code": "44",
+		"source": "XML1",
+		"description": "Chẩn đoán vào viện không được để trống"
+	},
+	{
+		"stt": 7,
+		"code": "45",
+		"source": "XML1",
+		"description": "Chẩn đoán ra viện không được để trống"
+	},
+	{
+		"stt": 8,
+		"code": "46",
+		"source": "XML1",
+		"description": "Ngày vào nội trú phải đúng định dạng ngày tháng yyyymmddHHMM"
+	},
+	{
+		"stt": 9,
+		"code": "47",
+		"source": "XML1",
+		"description": "Ngày ra không được để trống và phải đúng định dạng ngày tháng yyyymmddHHMM"
+	},
+	{
+		"stt": 10,
+		"code": "50",
+		"source": "XML1",
+		"description": "Kết quả điểu trị không được để trống và phải là số nguyên có giá trị từ 1 đến 7"
+	},
+	{
+		"stt": 11,
+		"code": "51",
+		"source": "XML1",
+		"description": "Tình trạng ra viện không được để trống và phải là số nguyên có giá trị từ 1 đến 5"
+	},
+	{
+		"stt": 12,
+		"code": "52",
+		"source": "XML1",
+		"description": "Ngày thanh toán để trống (hoặc không đúng định dạng), nếu BN chưa thanh toán, hãy nhớ cập nhật lại ngày thanh toán và đẩy lại cổng BH",
+		"subcode": "130"
+	},
+	{
+		"stt": 13,
+		"code": "54",
+		"source": "XML1",
+		"description": "Cân nặng con phải gồm các số thập phân cách nhau bằng dấu ';' và mỗi số lớn hơn hoặc bằng 0 và làm tròn đến 2 đơn vị thập phân (phân cách bởi dấu '.')"
+	},
+	{
+		"stt": 14,
+		"code": "139",
+		"source": "XML1",
+		"description": "Ngày sinh không được lớn hơn thời gian hiện tại"
+	},
+	{
+		"stt": 15,
+		"code": "140",
+		"source": "XML1",
+		"description": "Ngày sinh không được lớn hơn thời gian vào viện"
+	},
+	{
+		"stt": 16,
+		"code": "142",
+		"source": "XML1",
+		"description": "Giá trị thẻ từ không được lớn hơn thời gian hiện tại"
+	},
+	{
+		"stt": 17,
+		"code": "143",
+		"source": "XML1",
+		"description": "Giá trị thẻ đến không được nhỏ hơn giá trị thẻ từ"
+	},
+	{
+		"stt": 18,
+		"code": "145",
+		"source": "XML1",
+		"description": "Mã nơi đi không được trùng với mã bệnh viện"
+	},
+	{
+		"stt": 19,
+		"code": "147",
+		"source": "XML1",
+		"description": "Ngày vào không được lớn hơn thời gian hiện tại"
+	},
+	{
+		"stt": 20,
+		"code": "148",
+		"source": "XML1",
+		"description": "Ngày ra không lớn hơn thời gian hiện tại"
+	},
+	{
+		"stt": 21,
+		"code": "149",
+		"source": "XML1",
+		"description": "Ngày ra không được nhở hơn thời gian vào"
+	},
+	{
+		"stt": 22,
+		"code": "150",
+		"source": "XML1",
+		"description": "Số ngày điều trị không khớp với công thức tính của TT37 và CV bổ sung 7117"
+	},
+	{
+		"stt": 23,
+		"code": "151",
+		"source": "XML1",
+		"description": "Tổng Số ngày điều trị trong file XML1 không khớp với tổng số ngày giường trong file XML3"
+	},
+	{
+		"stt": 24,
+		"code": "152",
+		"source": "XML1",
+		"description": "Ngày thanh toán không được nhỏ hơn ngày ra viện"
+	},
+	{
+		"stt": 25,
+		"code": "153",
+		"source": "XML1",
+		"description": "Ngày thanh toán không được lớn hơn thời gian hiện tại"
+	},
+	{
+		"stt": 26,
+		"code": "154",
+		"source": "XML1",
+		"description": "Mức hưởng không khớp với số tiền bệnh nhân thanh toán"
+	},
+	{
+		"stt": 27,
+		"code": "155",
+		"source": "XML1",
+		"description": "Tiền thuốc trong file XML1 lệch hơn 1 đồng so với tổng tiền thuốc ở file XML2"
+	},
+	{
+		"stt": 28,
+		"code": "156",
+		"source": "XML1",
+		"description": "Tiền vật tư trong file XML1 lệch hơn 1 đồng so với tổng tiền vật tư ở file XML3"
+	},
+	{
+		"stt": 29,
+		"code": "157",
+		"source": "XML1",
+		"description": "Tổng chi lệch lớn hơn 1 đồng so với tổng tiền ở file XML2 và file XML3"
+	},
+	{
+		"stt": 30,
+		"code": "158",
+		"source": "XML1",
+		"description": "Tổng chi lệch lớn hơn 1 đồng so với tổng T_BNTT + T_BHTT + T_NGUONKHAC"
+	},
+	{
+		"stt": 31,
+		"code": "208",
+		"source": "XML1",
+		"description": "Tổng chi không được bằng không"
+	},
+	{
+		"stt": 32,
+		"code": "209",
+		"source": "XML1",
+		"description": "Mã thẻ không đúng"
+	},
+	{
+		"stt": 33,
+		"code": "210",
+		"source": "XML1",
+		"description": "Thẻ hết giá trị sử dụng"
+	},
+	{
+		"stt": 34,
+		"code": "211",
+		"source": "XML1",
+		"description": "KCB khi chưa đến hạn"
+	},
+	{
+		"stt": 35,
+		"code": "214",
+		"source": "XML1",
+		"description": "Mã thẻ không có trong dữ liệu thẻ"
+	},
+	{
+		"stt": 36,
+		"code": "215",
+		"source": "XML1",
+		"description": "Thẻ sai họ tên"
+	},
+	{
+		"stt": 37,
+		"code": "216",
+		"source": "XML1",
+		"description": "Thẻ sai ngày sinh"
+	},
+	{
+		"stt": 38,
+		"code": "217",
+		"source": "XML1",
+		"description": "Thẻ sai giới tính"
+	},
+	{
+		"stt": 39,
+		"code": "218",
+		"source": "XML1",
+		"description": "Thẻ sai nơi đăng ký KCB ban đầu"
+	},
+	{
+		"stt": 40,
+		"code": "219",
+		"source": "XML1",
+		"description": "Sai mã lý do vào viện"
+	},
+	{
+		"stt": 41,
+		"code": "220",
+		"source": "XML1",
+		"description": "Tổng tiền bảo hiểm thanh toán trong xml2 , xml3 lệch so với xm1"
+	},
+	{
+		"stt": 42,
+		"code": "226",
+		"source": "XML1",
+		"description": "Không thấy thông tin thẻ BHYT"
+	},
+	{
+		"stt": 43,
+		"code": "227",
+		"source": "XML1",
+		"description": "Thẻ sai họ tên (đúng kí tự đầu)"
+	},
+	{
+		"stt": 44,
+		"code": "230",
+		"source": "XML1",
+		"description": "Thẻ đã thu hồi"
+	},
+	{
+		"stt": 45,
+		"code": "231",
+		"source": "XML1",
+		"description": "Thẻ đã báo giảm"
+	},
+	{
+		"stt": 46,
+		"code": "232",
+		"source": "XML1",
+		"description": "Thẻ đã báo giảm. Giảm chuyển ngoại tỉnh"
+	},
+	{
+		"stt": 47,
+		"code": "233",
+		"source": "XML1",
+		"description": "Thẻ đã báo giảm. Giảm chuyển nội tỉnh"
+	},
+	{
+		"stt": 48,
+		"code": "234",
+		"source": "XML1",
+		"description": "Thẻ đã báo giảm. Thu hồi do tăng lại cùng đơn vị"
+	},
+	{
+		"stt": 49,
+		"code": "235",
+		"source": "XML1",
+		"description": "Thẻ đã báo giảm. Ngừng tham gia"
+	},
+	{
+		"stt": 50,
+		"code": "313",
+		"source": "XML1",
+		"description": "Bệnh nhân ngoại trú phải có công khám"
+	},
+	{
+		"stt": 51,
+		"code": "360",
+		"source": "XML1",
+		"description": "Tên bệnh nhân sai chính tả so với thông tin trên thẻ bảo hiểm y tế"
+	},
+	{
+		"stt": 52,
+		"code": "375",
+		"source": "XML1",
+		"description": "Tổng tiền bệnh nhân thanh toán trong xml2 , xml3 lệch so với xml1"
+	},
+	{
+		"stt": 53,
+		"code": "380",
+		"source": "XML1",
+		"description": "Thẻ đã báo giảm. Ngừng tham gia trong thời gian nằm viện"
+	},
+	{
+		"stt": 54,
+		"code": "418",
+		"source": "XML1",
+		"description": "Hồ sơ khám sức khỏe không được thanh toán BHYT"
+	},
+	{
+		"stt": 55,
+		"code": "1183",
+		"source": "XML1",
+		"description": "Sai hạn thẻ: Giá trị thẻ từ sai so với giá trị trả về"
+	},
+	{
+		"stt": 56,
+		"code": "1184",
+		"source": "XML1",
+		"description": "Sai hạn thẻ: Giá trị thẻ đến sai so với giá trị trả về"
+	},
+	{
+		"stt": 57,
+		"code": "1227",
+		"source": "XML1",
+		"description": "Điều trị nội trú không cần thiết: Bệnh nhẹ mà vào điều trị Nội Trú"
+	},
+	{
+		"stt": 58,
+		"code": "1242",
+		"source": "XML1",
+		"description": "Thiếu công khám trong đợt điều trị (Nếu đã kê công khám Yêu cầu, anh chị không cần kiểm tra lỗi này)"
+	},
+	{
+		"stt": 59,
+		"code": "1261",
+		"source": "XML1",
+		"description": "Mã dân tộc không được để trống"
+	},
+	{
+		"stt": 60,
+		"code": "1262",
+		"source": "XML1",
+		"description": "Mã nghề nghiệp không được để trống"
+	},
+	{
+		"stt": 61,
+		"code": "1263",
+		"source": "XML1",
+		"description": "Mã tỉnh cư trú không được để trống hoặc lớn hơn 3 ký tự"
+	},
+	{
+		"stt": 62,
+		"code": "1265",
+		"source": "XML1",
+		"description": "Mã xã cư trú không được để trống hoặc lớn hơn 5 ký tự"
+	},
+	{
+		"stt": 63,
+		"code": "1299",
+		"source": "XML1",
+		"description": "Bệnh nhân không cấp cứu vào Viện ngoài giờ hành chính"
+	},
+	{
+		"stt": 64,
+		"code": "1300",
+		"source": "XML1",
+		"description": "Bệnh nhân nội trú vào viện sai quyết định 1351/QĐ BHXH)"
+	},
+	{
+		"stt": 65,
+		"code": "1301",
+		"source": "XML1",
+		"description": "Bệnh nhân ngoại trú lựa chọn thông tuyến (Điều 4 QĐ 1351/QĐ BHXH)"
+	},
+	{
+		"stt": 66,
+		"code": "1309",
+		"source": "XML1",
+		"description": "Bệnh nhân đã thực hiện KCB tại cơ sở khác, đề nghị kiểm tra thông tuyến cho BN"
+	},
+	{
+		"stt": 67,
+		"code": "1311",
+		"source": "XML1",
+		"description": "Chỉ có Bệnh nhân Thông tuyến và Cấp cứu mới nhập Mã Khu Vực"
+	},
+	{
+		"stt": 68,
+		"code": "1584",
+		"source": "XML1",
+		"description": "Bệnh nhân trái tuyến không nhập mã Khu Vực"
+	},
+	{
+		"stt": 69,
+		"code": "1585",
+		"source": "XML1",
+		"description": "Bệnh nhân có mã ĐK KCB Ban đầu khác với mã Viện đang khám, lý do vào Viện không để Đúng Tuyến. Đề nghị sửa lại Mã đối tượng KCB"
+	},
+	{
+		"stt": 70,
+		"code": "1600",
+		"source": "XML1",
+		"description": "Mã Bệnh Nam Giới chỉ phù hợp với Bệnh nhân Nam (Căn cứ QĐ 4400/QĐ-BYT ngày 23/10/2020)"
+	},
+	{
+		"stt": 71,
+		"code": "1601",
+		"source": "XML1",
+		"description": "Mã Bệnh Sản Phụ Khoa chỉ phù hợp với Phụ nữ từ 9 - 60 tuổi (Căn cứ QĐ 4400/QĐ-BYT ngày 23/10/2020)"
+	},
+	{
+		"stt": 72,
+		"code": "1626",
+		"source": "XML1",
+		"description": "Mã Bệnh Trẻ Sơ Sinh chỉ phù hợp với Trẻ em từ 0 - 365 ngày tuổi (Căn cứ QĐ 4469/QĐ-BYT ngày 26/10/2020)"
+	},
+	{
+		"stt": 73,
+		"code": "1627",
+		"source": "XML1",
+		"description": "Mã Bệnh Trẻ Nhỏ chỉ phù hợp với Trẻ em từ 0 - 2 tuổi (Căn cứ QĐ 4469/QĐ-BYT ngày 26/10/2020)"
+	},
+	{
+		"stt": 74,
+		"code": "1628",
+		"source": "XML1",
+		"description": "Mã Bệnh Trẻ Lớn chỉ phù hợp với Trẻ em từ 0 - 10 tuổi (Căn cứ QĐ 4469/QĐ-BYT ngày 26/10/2020)"
+	},
+	{
+		"stt": 75,
+		"code": "1629",
+		"source": "XML1",
+		"description": "Mã Bệnh Thanh Thiếu Niên chỉ phù hợp với Thiếu niên từ 0 - 19 tuổi (Căn cứ QĐ 4469/QĐ-BYT ngày 26/10/2020)"
+	},
+	{
+		"stt": 76,
+		"code": "1630",
+		"source": "XML1",
+		"description": "Mã Bệnh Trẻ Sơ Sinh chỉ phù hợp với Trẻ em trên 27 ngày tuổi (Căn cứ QĐ 4469/QĐ-BYT ngày 26/10/2020)"
+	},
+	{
+		"stt": 77,
+		"code": "1631",
+		"source": "XML1",
+		"description": "Mã Bệnh Trẻ em chỉ phù hợp với Trẻ em trên 1 tuổi (Căn cứ QĐ 4469/QĐ-BYT ngày 26/10/2020)"
+	},
+	{
+		"stt": 78,
+		"code": "1632",
+		"source": "XML1",
+		"description": "Mã Bệnh Tuổi Dậy Thì chỉ phù hợp với Thiếu niên từ 8 - 19 tuổi (Căn cứ QĐ 4469/QĐ-BYT ngày 26/10/2020)"
+	},
+	{
+		"stt": 79,
+		"code": "1633",
+		"source": "XML1",
+		"description": "Mã Bệnh Người Trưởng Thành chỉ phù hợp với Bệnh nhân trên 15 tuổi (Căn cứ QĐ 4469/QĐ-BYT ngày 26/10/2020)"
+	},
+	{
+		"stt": 80,
+		"code": "1634",
+		"source": "XML1",
+		"description": "Mã Bệnh Người Lớn chỉ phù hợp với Bệnh nhân trên 30 tuổi (Căn cứ QĐ 4469/QĐ-BYT ngày 26/10/2020)"
+	},
+	{
+		"stt": 81,
+		"code": "1635",
+		"source": "XML1",
+		"description": "Mã Bệnh Nữ Giới chỉ phù hợp với Bệnh nhân Nữ (Căn cứ QĐ 4469/QĐ-BYT ngày 26/10/2020)"
+	},
+	{
+		"stt": 82,
+		"code": "1640",
+		"source": "XML1",
+		"description": "Bệnh nhân ngoại trú có tổng thời gian khám bệnh từ lúc vào viện đến lúc ra viện dưới 15 phút"
+	},
+	{
+		"stt": 83,
+		"code": "2017",
+		"source": "XML1",
+		"description": "Thời điểm năm năm liên tục không được để trống và phải đúng định dạng ngày tháng yyyymmdd",
+		"subcode": "130"
+	},
+	{
+		"stt": 84,
+		"code": "2018",
+		"source": "XML1",
+		"description": "Lý do vào nội trú không được để trống",
+		"subcode": "130"
+	},
+	{
+		"stt": 85,
+		"code": "2019",
+		"source": "XML1",
+		"description": "Mã lý do vào nội trú không được để trống",
+		"subcode": "130"
+	},
+	{
+		"stt": 86,
+		"code": "2020",
+		"source": "XML1",
+		"description": "Chỉ được ghi tối đa 12 mã bệnh kèm theo cách nhau bởi dấu ';' và không vượt quá 100 ký tự",
+		"subcode": "130"
+	},
+	{
+		"stt": 87,
+		"code": "2021",
+		"source": "XML1",
+		"description": "Chỉ được ghi tối đa 12 mã bệnh kèm theo cách nhau bởi dấu ';' và không vượt quá 255 ký tự",
+		"subcode": "130"
+	},
+	{
+		"stt": 88,
+		"code": "2022",
+		"source": "XML1",
+		"description": "Giấy chuyển tuyến không vượt quá 50 ký tự hoặc để trống",
+		"subcode": "130"
+	},
+	{
+		"stt": 89,
+		"code": "2023",
+		"source": "XML1",
+		"description": "Chỉ ghi 0 nếu MA_LOAI_KCB có các mã \"01\", \"07\", \"09\"",
+		"subcode": "130"
+	},
+	{
+		"stt": 90,
+		"code": "2024",
+		"source": "XML1",
+		"description": "SO_NGAY_DTRI = NGAY_RA - NGAY_VAO + 1 nếu MA_LOAI_KCB có các mã \"2\",\"03\", \"04\", \"06\"",
+		"subcode": "130"
+	},
+	{
+		"stt": 91,
+		"code": "2025",
+		"source": "XML1",
+		"description": "Tiền thuốc không được để trống và phải là số thập phân lớn hơn hoặc bằng 0 và làm tròn đến 2 đơn vị thập phân (phân cách bởi dấu '.')",
+		"subcode": "130"
+	},
+	{
+		"stt": 92,
+		"code": "2026",
+		"source": "XML1",
+		"description": "Tổng số tiền đề nghị cơ quan bảo hiểm xã hội thanh toán theo công thức sau: T_BHTT = T_TONGCHI_BH - T_BNCCT",
+		"subcode": "130"
+	},
+	{
+		"stt": 93,
+		"code": "2027",
+		"source": "XML1",
+		"description": "Cân nặng con không vượt quá 100 ký tự và cách nhau bởi dấu chấm phẩy “;” hoặc để trống",
+		"subcode": "130"
+	},
+	{
+		"stt": 94,
+		"code": "2071",
+		"source": "XML1",
+		"description": "Ngày tái khám không đúng định dạng",
+		"subcode": "130"
+	},
+	{
+		"stt": 95,
+		"code": "2090",
+		"source": "XML1",
+		"description": "Mã bệnh chính phải là mã ICD10, không nhập thêm mã Bệnh YHCT",
+		"subcode": "130"
+	},
+	{
+		"stt": 96,
+		"code": "2091",
+		"source": "XML1",
+		"description": "Mã bệnh kèm theo phải là mã ICD10, không nhập thêm mã Bệnh YHCT",
+		"subcode": "130"
+	},
+	{
+		"stt": 97,
+		"code": "2179",
+		"source": "XML1",
+		"description": "Tiền thuốc không bằng tổng tiền thuốc trong XML2",
+		"subcode": "130"
+	},
+	{
+		"stt": 98,
+		"code": "2180",
+		"source": "XML1",
+		"description": "Tiền VTYT không bằng tổng tiền VTYT trong XML3",
+		"subcode": "130"
+	},
+	{
+		"stt": 99,
+		"code": "2181",
+		"source": "XML1",
+		"description": "Tổng chi BV không bằng tổng THANH_TIEN_BV trong XML2 & XML3",
+		"subcode": "130"
+	},
+	{
+		"stt": 100,
+		"code": "2182",
+		"source": "XML1",
+		"description": "Tổng chi BH không bằng tổng THANH_TIEN_BH trong XML2 & XML3",
+		"subcode": "130"
+	},
+	{
+		"stt": 101,
+		"code": "2183",
+		"source": "XML1",
+		"description": "Tiền BNTT không bằng tổng tiền T_BNTT trong XML2 & XML3",
+		"subcode": "130"
+	},
+	{
+		"stt": 102,
+		"code": "2184",
+		"source": "XML1",
+		"description": "Tiền BNCCT không bằng tổng tiền T_BNCCT trong XML2 & XML3",
+		"subcode": "130"
+	},
+	{
+		"stt": 103,
+		"code": "2185",
+		"source": "XML1",
+		"description": "Tiền nguồn khác không bằng tổng tiền T_NGUONKHAC trong XML2 & XML3",
+		"subcode": "130"
+	},
+	{
+		"stt": 104,
+		"code": "2186",
+		"source": "XML1",
+		"description": "Tiền ngoài định suất không bằng tổng tiền T_BHTT với MA_PTTT = 1 trong XML2 & XML3",
+		"subcode": "130"
+	},
+	{
+		"stt": 105,
+		"code": "2188",
+		"source": "XML1",
+		"description": "Thời gian khám bệnh từ lúc đến viện đến lúc ra viện nhỏ hơn 5 phút, cần kiểm tra",
+		"subcode": "130"
+	},
+	{
+		"stt": 106,
+		"code": "2191",
+		"source": "XML1",
+		"description": "Khám chữa bệnh nội trú bắt buộc phải có giấy ra viện (XML7) TT18/2022 BYT (Trừ TH BN tử vong hoặc trốn viện)",
+		"subcode": "130"
+	},
+	{
+		"stt": 107,
+		"code": "2199",
+		"source": "XML1",
+		"description": "Tháng quyết toán không phải là tháng h",
+		"subcode": "130"
+	},
+	{
+		"stt": 108,
+		"code": "2223",
+		"source": "XML1",
+		"description": "Giấy chuyển tuyến không có khi Bệnh nhân chuyển tuyến",
+		"subcode": "130"
+	},
+	{
+		"stt": 109,
+		"code": "2224",
+		"source": "XML1",
+		"description": "Không có thông tin XML13 khi Bệnh nhân chuyển tuyến",
+		"subcode": "130"
+	},
+	{
+		"stt": 110,
+		"code": "2225",
+		"source": "XML1",
+		"description": "Phải nhập thông tin mã nơi đến khi Bệnh nhân chuyển tuyến",
+		"subcode": "130"
+	},
+	{
+		"stt": 111,
+		"code": "2292",
+		"source": "XML1",
+		"description": "Số CCCD không đúng định dạng",
+		"subcode": "130"
+	},
+	{
+		"stt": 112,
+		"code": "2322",
+		"source": "XML1",
+		"description": "Mã ICD10 tại Mã bệnh kèm theo không có trong DS Bệnh ICD10",
+		"subcode": "130"
+	},
+	{
+		"stt": 113,
+		"code": "2323",
+		"source": "XML1",
+		"description": "Mã quốc tịch không nằm trong Danh mục phê duyệt",
+		"subcode": "130"
+	},
+	{
+		"stt": 114,
+		"code": "2324",
+		"source": "XML1",
+		"description": "Mã nghề nghiệp ko nằm trong danh mục phê duyệt",
+		"subcode": "130"
+	},
+	{
+		"stt": 115,
+		"code": "2325",
+		"source": "XML1",
+		"description": "Mã tỉnh cư trú không nằm trong Danh mục",
+		"subcode": "130"
+	},
+	{
+		"stt": 116,
+		"code": "2327",
+		"source": "XML1",
+		"description": "Mã khoa không tồn tại trong Danh mục phê duyệt",
+		"subcode": "130"
+	},
+	{
+		"stt": 117,
+		"code": "2340",
+		"source": "XML1",
+		"description": "Mã xã cư trú không có trong Danh mục phê duyệt",
+		"subcode": "130"
+	},
+	{
+		"stt": 118,
+		"code": "2343",
+		"source": "XML1",
+		"description": "Mã bệnh ICD10 nằm trong Phụ lục A2 - Các mã bệnh không sử dụng là bệnh chính QĐ 4469, KHÔNG được kê là bệnh chính",
+		"subcode": "130"
+	},
+	{
+		"stt": 119,
+		"code": "2346",
+		"source": "XML1",
+		"description": "Số lượng ngày tái khám không đúng với thông tin khai báo tại XML14",
+		"subcode": "130"
+	},
+	{
+		"stt": 120,
+		"code": "2347",
+		"source": "XML1",
+		"description": "Ngày tái khám bắt buộc phải nhập khi khai báo XML14",
+		"subcode": "130"
+	},
+	{
+		"stt": 121,
+		"code": "2348",
+		"source": "XML1",
+		"description": "Có thông tin ngày tái khám nhưng không có XML14",
+		"subcode": "130"
+	},
+	{
+		"stt": 122,
+		"code": "2349",
+		"source": "XML1",
+		"description": "Ngày tái khám không khớp với thông tin khai báo tại XML14",
+		"subcode": "130"
+	},
+	{
+		"stt": 123,
+		"code": "2355",
+		"source": "XML1",
+		"description": "Mã đối tượng KCB không nằm trong Danh mục (QĐ 2010 BYT)",
+		"subcode": "130"
+	},
+	{
+		"stt": 124,
+		"code": "2364",
+		"source": "XML1",
+		"description": "Bệnh nhân không phải đối tượng hưởng thẻ TE",
+		"subcode": "130"
+	},
+	{
+		"stt": 125,
+		"code": "2365",
+		"source": "XML1",
+		"description": "Bệnh mãn tính dài ngày, mỗi lần khám bệnh của Bệnh nhân không nhỏ hơn 30 ngày (Thông tư số 52/2017/TT-BYT)",
+		"subcode": "130"
+	},
+	{
+		"stt": 126,
+		"code": "2393",
+		"source": "XML1",
+		"description": "Cân năng không để bằng 0",
+		"subcode": "130"
+	},
+	{
+		"stt": 127,
+		"code": "2414",
+		"source": "XML1",
+		"description": "MA_LOAI_KCB có mã \"\"05\"\" thì trường thông tin SO_NGAY_DTRI = Số ngày dùng thuốc",
+		"subcode": "130"
+	},
+	{
+		"stt": 128,
+		"code": "2458",
+		"source": "XML1",
+		"description": "Ngày vào không được nhỏ hơn ngày vào nội trú",
+		"subcode": "130"
+	},
+	{
+		"stt": 129,
+		"code": "2470",
+		"source": "XML1",
+		"description": "Bắt buộc phải nhập nội dung tóm tắt hồ sơ Bệnh án (XML8) với những loại KCB là 03, 04 và 06",
+		"subcode": "130"
+	},
+	{
+		"stt": 130,
+		"code": "2472",
+		"source": "XML1",
+		"description": "Thẻ ghép bị thiếu thông tin Mã thẻ, đề nghị kiểm tra lại",
+		"subcode": "130"
+	},
+	{
+		"stt": 131,
+		"code": "2473",
+		"source": "XML1",
+		"description": "Thẻ ghép bị thiếu thông tin Giá trị thẻ từ, đề nghị kiểm tra lại",
+		"subcode": "130"
+	},
+	{
+		"stt": 132,
+		"code": "2474",
+		"source": "XML1",
+		"description": "Thẻ ghép bị thiếu thông tin Giá trị thẻ đến, đề nghị kiểm tra lại",
+		"subcode": "130"
+	},
+	{
+		"stt": 133,
+		"code": "2476",
+		"source": "XML1",
+		"description": "Hai ký tự đầu của thẻ bị sai (QĐ 1351QĐ-BHXH",
+		"subcode": "130"
+	},
+	{
+		"stt": 134,
+		"code": "2487",
+		"source": "XML1",
+		"description": "Không tồn mã Mã Bệnh YHCT trong Quyết định số 7603/QĐ-BYT 2018 của Bộ trưởng Bộ Y tế",
+		"subcode": "13"
+	},
+	{
+		"stt": 135,
+		"code": "2495",
+		"source": "XML1",
+		"description": "Mã đăng ký KCB Ban đầu trùng với Mã của Viện, Mã Đối tượng KCB phải là đúng tuyến",
+		"subcode": "130"
+	},
+	{
+		"stt": 136,
+		"code": "2498",
+		"source": "XML1",
+		"description": "Bệnh nhân chuyển tuyến (Có mã nơi đi) nhưng chưa nhập giấy chuyển tuyến hoặc giấy hẹn khám lại",
+		"subcode": "130"
+	},
+	{
+		"stt": 137,
+		"code": "2500",
+		"source": "XML1",
+		"description": "Mã đối tượng KCB là 9, không thanh toán BH y tế",
+		"subcode": "130"
+	},
+	{
+		"stt": 138,
+		"code": "2506",
+		"source": "XML1",
+		"description": "Bệnh nhân có thực hiện dịch vụ >1 ngày từ thời điểm thực hiện Y Lệnh, kiểm tra xem đi Khám bệnh hay Ngoại trú",
+		"subcode": "130"
+	},
+	{
+		"stt": 139,
+		"code": "1911",
+		"source": "XML10",
+		"description": "Mã liên kết không được để trống"
+	},
+	{
+		"stt": 140,
+		"code": "1912",
+		"source": "XML10",
+		"description": "Mã liên kết không được lớn hơn 100 ký tự"
+	},
+	{
+		"stt": 141,
+		"code": "1913",
+		"source": "XML10",
+		"description": "Số seri chứng từ không được để trống"
+	},
+	{
+		"stt": 142,
+		"code": "1914",
+		"source": "XML10",
+		"description": "Số seri chứng từ không được lớn hơn 200 ký tự"
+	},
+	{
+		"stt": 143,
+		"code": "1915",
+		"source": "XML10",
+		"description": "Số chứng từ không được để trống"
+	},
+	{
+		"stt": 144,
+		"code": "1916",
+		"source": "XML10",
+		"description": "Số chứng từ không được lớn hơn 200 ký tự"
+	},
+	{
+		"stt": 145,
+		"code": "1917",
+		"source": "XML10",
+		"description": "Số ngày không được để trống và phải là số nguyên có giá trị từ 1 đến 999"
+	},
+	{
+		"stt": 146,
+		"code": "1918",
+		"source": "XML10",
+		"description": "Tên đơn vị không được để trống"
+	},
+	{
+		"stt": 147,
+		"code": "1919",
+		"source": "XML10",
+		"description": "Tên đơn vị không được lớn hơn 1024 ký tự"
+	},
+	{
+		"stt": 148,
+		"code": "1920",
+		"source": "XML10",
+		"description": "Chẩn đoán ra viện không được để trống"
+	},
+	{
+		"stt": 149,
+		"code": "1921",
+		"source": "XML10",
+		"description": "Từ ngày không được để trống và phải đúng định dạng ngày tháng yyyymmdd"
+	},
+	{
+		"stt": 150,
+		"code": "1922",
+		"source": "XML10",
+		"description": "Đến ngày không được để trống và phải đúng định dạng ngày tháng yyyymmdd"
+	},
+	{
+		"stt": 151,
+		"code": "1925",
+		"source": "XML10",
+		"description": "Tên bác sĩ không được để trống"
+	},
+	{
+		"stt": 152,
+		"code": "1926",
+		"source": "XML10",
+		"description": "Tên bác sĩ không được lớn hơn 255 ký tự"
+	},
+	{
+		"stt": 153,
+		"code": "1927",
+		"source": "XML10",
+		"description": "Mã bác sĩ không được để trống"
+	},
+	{
+		"stt": 154,
+		"code": "1928",
+		"source": "XML10",
+		"description": "Mã bác sĩ không được lớn hơn 200 ký tự"
+	},
+	{
+		"stt": 155,
+		"code": "1929",
+		"source": "XML10",
+		"description": "Ngày chứng từ không được để trống và phải đúng định dạng ngày tháng yyyymmdd"
+	},
+	{
+		"stt": 156,
+		"code": "2300",
+		"source": "XML10",
+		"description": "Tên Bác sĩ không tồn tại trong danh mục phê duyệt",
+		"subcode": "130"
+	},
+	{
+		"stt": 157,
+		"code": "2301",
+		"source": "XML10",
+		"description": "Bác sĩ không có vị trí là 2,3 (Trưởng khoa hoặc Phó khoa ủy quyền)",
+		"subcode": "130"
+	},
+	{
+		"stt": 158,
+		"code": "2302",
+		"source": "XML10",
+		"description": "Số ngày nghỉ không khớp thông tin DENNGAY_TUNGAY",
+		"subcode": "130"
+	},
+	{
+		"stt": 159,
+		"code": "2303",
+		"source": "XML10",
+		"description": "Chẩn đoán ra viện không khớp thông tin khai báo tại XML1",
+		"subcode": "130"
+	},
+	{
+		"stt": 160,
+		"code": "1930",
+		"source": "XML11",
+		"description": "Mã liên kết không được để trống"
+	},
+	{
+		"stt": 161,
+		"code": "1931",
+		"source": "XML11",
+		"description": "Mã liên kết không được lớn hơn 100 ký tự"
+	},
+	{
+		"stt": 162,
+		"code": "1932",
+		"source": "XML11",
+		"description": "Số chứng từ không được để trống"
+	},
+	{
+		"stt": 163,
+		"code": "1933",
+		"source": "XML11",
+		"description": "Số chứng từ không được lớn hơn 200 ký tự"
+	},
+	{
+		"stt": 164,
+		"code": "1934",
+		"source": "XML11",
+		"description": "Số seri chứng từ không được để trống"
+	},
+	{
+		"stt": 165,
+		"code": "1935",
+		"source": "XML11",
+		"description": "Số seri chứng từ không được lớn hơn 200 ký tự"
+	},
+	{
+		"stt": 166,
+		"code": "1936",
+		"source": "XML11",
+		"description": "Số KCB không được để trống"
+	},
+	{
+		"stt": 167,
+		"code": "1937",
+		"source": "XML11",
+		"description": "Số KCB không được lớn hơn 200 ký tự"
+	},
+	{
+		"stt": 168,
+		"code": "1938",
+		"source": "XML11",
+		"description": "Tên đơn vị không được để trống"
+	},
+	{
+		"stt": 169,
+		"code": "1939",
+		"source": "XML11",
+		"description": "Tên đơn vị không được lớn hơn 1024 ký tự"
+	},
+	{
+		"stt": 170,
+		"code": "1940",
+		"source": "XML11",
+		"description": "Mã BHXH không được để trống"
+	},
+	{
+		"stt": 171,
+		"code": "1941",
+		"source": "XML11",
+		"description": "Mã BHXH phải gồm 10 ký tự, không được tồn tại khoảng trắng ở giữa"
+	},
+	{
+		"stt": 172,
+		"code": "1942",
+		"source": "XML11",
+		"description": "Chẩn đoán ra viện không được để trống"
+	},
+	{
+		"stt": 173,
+		"code": "1943",
+		"source": "XML11",
+		"description": "Phương pháp điều trị không được để trống"
+	},
+	{
+		"stt": 174,
+		"code": "1944",
+		"source": "XML11",
+		"description": "Số ngày nghỉ không được để trống và phải số nguyên có giá trị từ 1 đến 999"
+	},
+	{
+		"stt": 175,
+		"code": "1945",
+		"source": "XML11",
+		"description": "Từ ngày không được để trống và phải đúng định dạng ngày tháng yyyymmdd"
+	},
+	{
+		"stt": 176,
+		"code": "1946",
+		"source": "XML11",
+		"description": "Đến ngày không được để trống và phải đúng định dạng ngày tháng yyyymmdd"
+	},
+	{
+		"stt": 177,
+		"code": "1949",
+		"source": "XML11",
+		"description": "Mã bác sĩ không được để trống"
+	},
+	{
+		"stt": 178,
+		"code": "1950",
+		"source": "XML11",
+		"description": "Mã bác sĩ không được lớn hơn 200 ký tự"
+	},
+	{
+		"stt": 179,
+		"code": "1951",
+		"source": "XML11",
+		"description": "Ngày chứng từ không được để trống và phải đúng định dạng ngày tháng yyyymmdd"
+	},
+	{
+		"stt": 180,
+		"code": "2304",
+		"source": "XML11",
+		"description": "Mã thẻ bảo hiểm không khớp thông tin khai báo tại XML1",
+		"subcode": "130"
+	},
+	{
+		"stt": 181,
+		"code": "2305",
+		"source": "XML11",
+		"description": "Chẩn đoán ra viện không khớp thông tin khai báo tại XML1",
+		"subcode": "130"
+	},
+	{
+		"stt": 182,
+		"code": "2306",
+		"source": "XML11",
+		"description": "Phương pháp điều trị không khớp thông tin khai báo tại XML1",
+		"subcode": "130"
+	},
+	{
+		"stt": 183,
+		"code": "2307",
+		"source": "XML11",
+		"description": "Mã đình chỉ thai chỉ có giá trị là 0 và 1",
+		"subcode": "130"
+	},
+	{
+		"stt": 184,
+		"code": "2308",
+		"source": "XML11",
+		"description": "Nguyên nhân đình chỉ thai bắt buộc phải nhập nếu Mã đình chỉ thai là 1",
+		"subcode": "130"
+	},
+	{
+		"stt": 185,
+		"code": "2309",
+		"source": "XML11",
+		"description": "Tuổi thai bắt buộc phải nhập khi mã đình chỉ thai là 1",
+		"subcode": "130"
+	},
+	{
+		"stt": 186,
+		"code": "2253",
+		"source": "XML13",
+		"description": "Mã liên kết bắt buộc phải nhập",
+		"subcode": "130"
+	},
+	{
+		"stt": 187,
+		"code": "2254",
+		"source": "XML13",
+		"description": "Số hồ sơ bắt buộc phải nhập",
+		"subcode": "130"
+	},
+	{
+		"stt": 188,
+		"code": "2255",
+		"source": "XML13",
+		"description": "Số chuyển tuyến bắt buộc phải nhập",
+		"subcode": "130"
+	},
+	{
+		"stt": 189,
+		"code": "2256",
+		"source": "XML13",
+		"description": "Giấy chuyển tuyến bắt buộc phải nhập",
+		"subcode": "130"
+	},
+	{
+		"stt": 190,
+		"code": "2257",
+		"source": "XML13",
+		"description": "Mã cơ sở khám chữa bệnh bắt buộc phải nhập",
+		"subcode": "130"
+	},
+	{
+		"stt": 191,
+		"code": "2258",
+		"source": "XML13",
+		"description": "Mã nơi đi không khớp với thông tin khai báo tại XML1",
+		"subcode": "130"
+	},
+	{
+		"stt": 192,
+		"code": "2259",
+		"source": "XML13",
+		"description": "Mã nơi đến không khớp với thông tin khai báo tại XML1",
+		"subcode": "130"
+	},
+	{
+		"stt": 193,
+		"code": "2260",
+		"source": "XML13",
+		"description": "Họ tên bắt buộc phải nhập",
+		"subcode": "130"
+	},
+	{
+		"stt": 194,
+		"code": "2261",
+		"source": "XML13",
+		"description": "Họ tên không khớp với thông tin khai báo tại XML1",
+		"subcode": "130"
+	},
+	{
+		"stt": 195,
+		"code": "2262",
+		"source": "XML13",
+		"description": "Giấy chuyển tuyến không khớp với thông tin khai báo tại XML1",
+		"subcode": "130"
+	},
+	{
+		"stt": 196,
+		"code": "2263",
+		"source": "XML13",
+		"description": "Ngày sinh không khớp thông tin khai báo tại XML1",
+		"subcode": "130"
+	},
+	{
+		"stt": 197,
+		"code": "2264",
+		"source": "XML13",
+		"description": "Giới tính không khớp thông tin khai báo tại XML1",
+		"subcode": "130"
+	},
+	{
+		"stt": 198,
+		"code": "2265",
+		"source": "XML13",
+		"description": "Mã quốc tích không khớp thông tin khai báo tại XML1",
+		"subcode": "130"
+	},
+	{
+		"stt": 199,
+		"code": "2266",
+		"source": "XML13",
+		"description": "Mã dân tộc không khớp thông tin khai báo tại XML1",
+		"subcode": "130"
+	},
+	{
+		"stt": 200,
+		"code": "2267",
+		"source": "XML13",
+		"description": "Mã nghề nghiệp không khớp thông tin khai báo tại XML1",
+		"subcode": "130"
+	},
+	{
+		"stt": 201,
+		"code": "2268",
+		"source": "XML13",
+		"description": "Địa chỉ không khớp thông tin khai báo tại XML1",
+		"subcode": "130"
+	},
+	{
+		"stt": 202,
+		"code": "2269",
+		"source": "XML13",
+		"description": "Mã thẻ BHYT không khớp thông tin khai báo tại XML1",
+		"subcode": "130"
+	},
+	{
+		"stt": 203,
+		"code": "2270",
+		"source": "XML13",
+		"description": "Giá trị thẻ đến không khớp thông tin khai báo tại XML1",
+		"subcode": "130"
+	},
+	{
+		"stt": 204,
+		"code": "2271",
+		"source": "XML13",
+		"description": "Ngày vào không khớp thông tin khai báo tại XML1",
+		"subcode": "130"
+	},
+	{
+		"stt": 205,
+		"code": "2272",
+		"source": "XML13",
+		"description": "Ngày vào nội trú không khớp với thông tin khai báo tại XML1",
+		"subcode": "130"
+	},
+	{
+		"stt": 206,
+		"code": "2273",
+		"source": "XML13",
+		"description": "Ngày ra không khớp thông tin khai báo tại XML1",
+		"subcode": "130"
+	},
+	{
+		"stt": 207,
+		"code": "2274",
+		"source": "XML13",
+		"description": "Dấu hiệu lâm sàng bắt buộc phải nhập",
+		"subcode": "130"
+	},
+	{
+		"stt": 208,
+		"code": "2275",
+		"source": "XML13",
+		"description": "Chẩn đoán ra viện không khớp thông tin khai báo tại XML1",
+		"subcode": "130"
+	},
+	{
+		"stt": 209,
+		"code": "2276",
+		"source": "XML13",
+		"description": "Quá trình quản lý và diễn biến lâm sàng bắt buộc phải nhập",
+		"subcode": "130"
+	},
+	{
+		"stt": 210,
+		"code": "2277",
+		"source": "XML13",
+		"description": "Phương pháp điều trị bắt buộc phải nhập",
+		"subcode": "130"
+	},
+	{
+		"stt": 211,
+		"code": "2278",
+		"source": "XML13",
+		"description": "Mã bệnh chính không khớp với thông tin khai báo tại XML1",
+		"subcode": "130"
+	},
+	{
+		"stt": 212,
+		"code": "2279",
+		"source": "XML13",
+		"description": "Mã bệnh kèm theo không khớp thông tin khai báo tại XML1",
+		"subcode": "130"
+	},
+	{
+		"stt": 213,
+		"code": "2280",
+		"source": "XML13",
+		"description": "Mã bệnh y học cổ truyền không khớp thông tin khai báo tại XML1",
+		"subcode": "130"
+	},
+	{
+		"stt": 214,
+		"code": "2281",
+		"source": "XML13",
+		"description": "Tên dịch vụ kỹ thuật bắt buộc phải nhập",
+		"subcode": "130"
+	},
+	{
+		"stt": 215,
+		"code": "2282",
+		"source": "XML13",
+		"description": "PP Điều trị không khớp thông tin khai báo tại XML1",
+		"subcode": "130"
+	},
+	{
+		"stt": 216,
+		"code": "2283",
+		"source": "XML13",
+		"description": "Mã loại ra viện không khớp thông tin khai báo tại XML1",
+		"subcode": "130"
+	},
+	{
+		"stt": 217,
+		"code": "2284",
+		"source": "XML13",
+		"description": "Mã lý do chuyển tuyến bắt buộc phải nhập",
+		"subcode": "130"
+	},
+	{
+		"stt": 218,
+		"code": "2285",
+		"source": "XML13",
+		"description": "Mã lsy do chuyển tuyến phải có giá trị 1,2 hoặc 3",
+		"subcode": "130"
+	},
+	{
+		"stt": 219,
+		"code": "2286",
+		"source": "XML13",
+		"description": "Hướng điều trị bắt buộc phải nhập",
+		"subcode": "130"
+	},
+	{
+		"stt": 220,
+		"code": "2287",
+		"source": "XML13",
+		"description": "Phương tiện vận chuyển bắt buộc phải nhập",
+		"subcode": "130"
+	},
+	{
+		"stt": 221,
+		"code": "2288",
+		"source": "XML13",
+		"description": "Mã bác sĩ bắt buộc phải nhập",
+		"subcode": "130"
+	},
+	{
+		"stt": 222,
+		"code": "2489",
+		"source": "XML13",
+		"description": "Không tồn mã Mã Bệnh YHCT trong Quyết định số 7603/QĐ-BYT 2018 của Bộ trưởng Bộ Y tế",
+		"subcode": "13"
+	},
+	{
+		"stt": 223,
+		"code": "2226",
+		"source": "XML14",
+		"description": "Mã LK không được để trống",
+		"subcode": "130"
+	},
+	{
+		"stt": 224,
+		"code": "2227",
+		"source": "XML14",
+		"description": "Mã LK không trùng với nội dung Mã LK khai báo tại XML1",
+		"subcode": "130"
+	},
+	{
+		"stt": 225,
+		"code": "2228",
+		"source": "XML14",
+		"description": "Số giấy hẹn không được để trống hoặc lớn hơn 200 ký tự",
+		"subcode": "130"
+	},
+	{
+		"stt": 226,
+		"code": "2229",
+		"source": "XML14",
+		"description": "Mã CSKCB không được để trống",
+		"subcode": "130"
+	},
+	{
+		"stt": 227,
+		"code": "2230",
+		"source": "XML14",
+		"description": "Họ Tên không được để trống",
+		"subcode": "130"
+	},
+	{
+		"stt": 228,
+		"code": "2231",
+		"source": "XML14",
+		"description": "Thông tin họ tên không khớp với nội dung khai báo tại XML1",
+		"subcode": "130"
+	},
+	{
+		"stt": 229,
+		"code": "2232",
+		"source": "XML14",
+		"description": "Ngày sinh không khớp với thông tin khai báo tại XML1",
+		"subcode": "130"
+	},
+	{
+		"stt": 230,
+		"code": "2233",
+		"source": "XML14",
+		"description": "Giới tính không khớp với thông tin khai báo tại XML1",
+		"subcode": "130"
+	},
+	{
+		"stt": 231,
+		"code": "2234",
+		"source": "XML14",
+		"description": "Địa chỉ không khớp với thông tin khai báo tại XML1",
+		"subcode": "130"
+	},
+	{
+		"stt": 232,
+		"code": "2235",
+		"source": "XML14",
+		"description": "Thông tin thẻ BHYT không khớp với thông tin khai báo tại XML1",
+		"subcode": "130"
+	},
+	{
+		"stt": 233,
+		"code": "2236",
+		"source": "XML14",
+		"description": "Giá trị thẻ đến không khớp với thông tin khai báo tại XML1",
+		"subcode": "130"
+	},
+	{
+		"stt": 234,
+		"code": "2237",
+		"source": "XML14",
+		"description": "Giá trị ngày vào không khớp với thông tin khai báo tại XML1",
+		"subcode": "130"
+	},
+	{
+		"stt": 235,
+		"code": "2238",
+		"source": "XML14",
+		"description": "Ngày vào nội trú không khớp với thông tin khai báo tại XML1",
+		"subcode": "130"
+	},
+	{
+		"stt": 236,
+		"code": "2239",
+		"source": "XML14",
+		"description": "Giá trị ngày ra không khớp với thông tin khai báo tại XML1",
+		"subcode": "130"
+	},
+	{
+		"stt": 237,
+		"code": "2240",
+		"source": "XML14",
+		"description": "Ngày hẹn khám lại bắt buộc phải nhập",
+		"subcode": "130"
+	},
+	{
+		"stt": 238,
+		"code": "2241",
+		"source": "XML14",
+		"description": "Ngày hẹn khám lại đang nhỏ hơn ngày ra viện",
+		"subcode": "130"
+	},
+	{
+		"stt": 239,
+		"code": "2242",
+		"source": "XML14",
+		"description": "Chuẩn đoán ra viện không khớp với thông tin khai báo tại XML1",
+		"subcode": "130"
+	},
+	{
+		"stt": 240,
+		"code": "2243",
+		"source": "XML14",
+		"description": "Mã bệnh chính không khớp với thông tin khai báo tại XML1",
+		"subcode": "130"
+	},
+	{
+		"stt": 241,
+		"code": "2244",
+		"source": "XML14",
+		"description": "Mã bệnh kèm theo không khớp với thông tin khai báo tại XML1",
+		"subcode": "130"
+	},
+	{
+		"stt": 242,
+		"code": "2245",
+		"source": "XML14",
+		"description": "Mã bệnh YHCT không khớp với thông tin khai báo tại XML1",
+		"subcode": "130"
+	},
+	{
+		"stt": 243,
+		"code": "2246",
+		"source": "XML14",
+		"description": "Mã đối tượng KCB không khớp với thông tin khai báo tại XML1",
+		"subcode": "130"
+	},
+	{
+		"stt": 244,
+		"code": "2247",
+		"source": "XML14",
+		"description": "Mã Bác sĩ bắt buộc phải nhập",
+		"subcode": "130"
+	},
+	{
+		"stt": 245,
+		"code": "2251",
+		"source": "XML14",
+		"description": "Ngày chứng từ không được nhỏ hơn ngày vào",
+		"subcode": "130"
+	},
+	{
+		"stt": 246,
+		"code": "2490",
+		"source": "XML14",
+		"description": "Không tồn mã Mã Bệnh YHCT trong Quyết định số 7603/QĐ-BYT 2018 của Bộ trưởng Bộ Y tế",
+		"subcode": "13"
+	},
+	{
+		"stt": 247,
+		"code": "2418",
+		"source": "XML15",
+		"description": "Mã liên kết không được để trống",
+		"subcode": "130"
+	},
+	{
+		"stt": 248,
+		"code": "2419",
+		"source": "XML15",
+		"description": "Mã bệnh nhân không được để trống",
+		"subcode": "130"
+	},
+	{
+		"stt": 249,
+		"code": "2420",
+		"source": "XML15",
+		"description": "Mã Bệnh nhân không trùng khớp với Mã BN tại XML1",
+		"subcode": "130"
+	},
+	{
+		"stt": 250,
+		"code": "2421",
+		"source": "XML15",
+		"description": "Họ tên Bệnh nhân không khớp thông tin khai báo tại XML1",
+		"subcode": "130"
+	},
+	{
+		"stt": 251,
+		"code": "2422",
+		"source": "XML15",
+		"description": "Số CCCD không khớp thông tin khai báo tại XML1",
+		"subcode": "130"
+	},
+	{
+		"stt": 252,
+		"code": "2423",
+		"source": "XML15",
+		"description": "Phân loại BN Lao bắt buộc phải nhập",
+		"subcode": "130"
+	},
+	{
+		"stt": 253,
+		"code": "2434",
+		"source": "XML15",
+		"description": "Phân loại BN Lao chỉ nhập 1 hoặc 2",
+		"subcode": "130"
+	},
+	{
+		"stt": 254,
+		"code": "2435",
+		"source": "XML15",
+		"description": "Mã phân loại BN Lao theo tiền sử điều trị bắt buộc phải nhập",
+		"subcode": "130"
+	},
+	{
+		"stt": 255,
+		"code": "2436",
+		"source": "XML15",
+		"description": "Mã phân loại BN Lao theo tiền sử điều trị phải có giá trị từ 1 đến 6",
+		"subcode": "130"
+	},
+	{
+		"stt": 256,
+		"code": "2437",
+		"source": "XML15",
+		"description": "Mã phân loại BN theo tình trạng HIV bắt buộc phải nhập",
+		"subcode": "130"
+	},
+	{
+		"stt": 257,
+		"code": "2438",
+		"source": "XML15",
+		"description": "Mã phân loại BN theo tình trạng HIV phải có giá trị từ 1 đến 3",
+		"subcode": "130"
+	},
+	{
+		"stt": 258,
+		"code": "2439",
+		"source": "XML15",
+		"description": "Mã phân loại BN Lao theo bằng chứng vi khuẩn học bắt buộc phải nhập",
+		"subcode": "130"
+	},
+	{
+		"stt": 259,
+		"code": "2440",
+		"source": "XML15",
+		"description": "Mã phân loại BN Lao theo bằng chứng vi khuẩn học phải có giá trị 1 hoặc 2",
+		"subcode": "130"
+	},
+	{
+		"stt": 260,
+		"code": "2441",
+		"source": "XML15",
+		"description": "Mã phân loại BN lao theo trình trạng kháng thuốc bắt buộc phải nhập",
+		"subcode": "130"
+	},
+	{
+		"stt": 261,
+		"code": "2442",
+		"source": "XML15",
+		"description": "Mã phân loại BN lao theo trình trạng kháng thuốc phải có giá trị từ 1 đến 6",
+		"subcode": "130"
+	},
+	{
+		"stt": 262,
+		"code": "2443",
+		"source": "XML15",
+		"description": "Mã loại điều trị Lao bắt buộc phải nhập",
+		"subcode": "130"
+	},
+	{
+		"stt": 263,
+		"code": "2444",
+		"source": "XML15",
+		"description": "Mã loại điều trị Lao phải có giá trị từ 1 đến 3",
+		"subcode": "130"
+	},
+	{
+		"stt": 264,
+		"code": "2445",
+		"source": "XML15",
+		"description": "Ngày bắt đầu điều trị Lao bắt buộc phải nhập",
+		"subcode": "130"
+	},
+	{
+		"stt": 265,
+		"code": "2446",
+		"source": "XML15",
+		"description": "Phác đồ điều trị Lao bắt buộc phải nhập",
+		"subcode": "130"
+	},
+	{
+		"stt": 266,
+		"code": "2447",
+		"source": "XML15",
+		"description": "Mã phác đồ điều trị Lao phải có giá trị từ 1 đến 27",
+		"subcode": "130"
+	},
+	{
+		"stt": 267,
+		"code": "2448",
+		"source": "XML15",
+		"description": "Đẫ kết thúc điều trị cho BN, phải nhập thông tin này",
+		"subcode": "130"
+	},
+	{
+		"stt": 268,
+		"code": "2449",
+		"source": "XML15",
+		"description": "Kết quả điều trị Lao bắt buộc phải nhập",
+		"subcode": "130"
+	},
+	{
+		"stt": 269,
+		"code": "2450",
+		"source": "XML15",
+		"description": "Mã kết quả điều trị Lao phải có kết quả từ 1 đến 6",
+		"subcode": "130"
+	},
+	{
+		"stt": 270,
+		"code": "2451",
+		"source": "XML15",
+		"description": "Mã CSKCB không khớp thông tin khai báo tại XML1",
+		"subcode": "130"
+	},
+	{
+		"stt": 271,
+		"code": "103",
+		"source": "XML2",
+		"description": "Mã khoa không được để trống"
+	},
+	{
+		"stt": 272,
+		"code": "105",
+		"source": "XML2",
+		"description": "Mã bác sĩ không được để trống"
+	},
+	{
+		"stt": 273,
+		"code": "107",
+		"source": "XML2",
+		"description": "Ngày y lệnh không được để trống và phải đúng định dạng ngày tháng yyyymmddHHMM"
+	},
+	{
+		"stt": 274,
+		"code": "161",
+		"source": "XML2",
+		"description": "Tên thuốc không khớp với tên thuốc trong danh mục phê duyệt"
+	},
+	{
+		"stt": 275,
+		"code": "165",
+		"source": "XML2",
+		"description": "Đơn vị tính không khớp với đơn vị tính trong danh mục phê duyệt (Phân biệt chữ hoa, chữ thường, định dạng unicode)"
+	},
+	{
+		"stt": 276,
+		"code": "166",
+		"source": "XML2",
+		"description": "Hàm lượng không khớp với hàm lượng trong danh mục phê duyệt (So sánh tuyệt đối,Chữ hoa thường, dấu cách)"
+	},
+	{
+		"stt": 277,
+		"code": "167",
+		"source": "XML2",
+		"description": "Hàm lượng không khớp với hàm lượng trong danh mục phê duyệt (So sánh tương đối)"
+	},
+	{
+		"stt": 278,
+		"code": "170",
+		"source": "XML2",
+		"description": "Mã đường dùng không khớp với danh mục phê duyệt"
+	},
+	{
+		"stt": 279,
+		"code": "171",
+		"source": "XML2",
+		"description": "Liều dùng không được lớn hơn 1024 ký tự"
+	},
+	{
+		"stt": 280,
+		"code": "172",
+		"source": "XML2",
+		"description": "Số đăng ký không khớp với Số đăng ký trong danh mục phê duyệt (phân biệt chữ hoa, chữ thường)"
+	},
+	{
+		"stt": 281,
+		"code": "173",
+		"source": "XML2",
+		"description": "Số đăng ký không khớp với Số đăng ký trong danh mục phê duyệt ( không phân biệt chữ hoa, chữ thường, khoảng trắng)"
+	},
+	{
+		"stt": 282,
+		"code": "174",
+		"source": "XML2",
+		"description": "Đơn giá không khớp với đơn giá trong danh mục phê duyệt"
+	},
+	{
+		"stt": 283,
+		"code": "175",
+		"source": "XML2",
+		"description": "Đơn giá nhỏ hơn đơn giá trong danh mục phê duyệt"
+	},
+	{
+		"stt": 284,
+		"code": "178",
+		"source": "XML2",
+		"description": "Ngày y lệnh thuốc không được nhỏ hơn ngày vào"
+	},
+	{
+		"stt": 285,
+		"code": "179",
+		"source": "XML2",
+		"description": "Ngày y lệnh thuốc không được lớn hơn ngày ra"
+	},
+	{
+		"stt": 286,
+		"code": "200",
+		"source": "XML2",
+		"description": "Thông tin thầu không được tìm thấy trong danh mục phê duyệt, hệ thống sẽ không kiểm tra các thông tin Thuốc khác",
+		"subcode": "130"
+	},
+	{
+		"stt": 287,
+		"code": "201",
+		"source": "XML2",
+		"description": "Mã thuốc không tồn tại trong DM được phê duyệt"
+	},
+	{
+		"stt": 288,
+		"code": "202",
+		"source": "XML2",
+		"description": "Đơn giá lớn hơn đơn giá trong danh mục phê duyệt"
+	},
+	{
+		"stt": 289,
+		"code": "241",
+		"source": "XML2",
+		"description": "Số đăng ký không đúng với danh mục được phê duyệt"
+	},
+	{
+		"stt": 290,
+		"code": "274",
+		"source": "XML2",
+		"description": "Choline alfoscerat thanh toán không đúng với hướng dẫn trong TT30/2018 và TT01/2020"
+	},
+	{
+		"stt": 291,
+		"code": "279",
+		"source": "XML2",
+		"description": "Fentanyl chỉ được dùng để giảm đau do ung thư (TT30)"
+	},
+	{
+		"stt": 292,
+		"code": "281",
+		"source": "XML2",
+		"description": "Oxycodone chỉ được dùng để giảm đau do ung thư (TT30)"
+	},
+	{
+		"stt": 293,
+		"code": "282",
+		"source": "XML2",
+		"description": "Oxycodone chỉ được bảo hiểm thanh toán 50% (TT30)"
+	},
+	{
+		"stt": 294,
+		"code": "283",
+		"source": "XML2",
+		"description": "Diacerein không được phép chỉ định cho bệnh này (TT30)"
+	},
+	{
+		"stt": 295,
+		"code": "284",
+		"source": "XML2",
+		"description": "Adalimumab chỉ được bảo hiểm thanh toán 50% (TT30)"
+	},
+	{
+		"stt": 296,
+		"code": "285",
+		"source": "XML2",
+		"description": "Etanercept chỉ được bảo hiểm thanh toán 30% (TT30)"
+	},
+	{
+		"stt": 297,
+		"code": "286",
+		"source": "XML2",
+		"description": "Infliximab chỉ được bảo hiểm thanh toán 50% (TT30)"
+	},
+	{
+		"stt": 298,
+		"code": "287",
+		"source": "XML2",
+		"description": "Golimumab chỉ được bảo hiểm thanh toán 50% (TT30)"
+	},
+	{
+		"stt": 299,
+		"code": "288",
+		"source": "XML2",
+		"description": "Tocilizumab chỉ được bảo hiểm thanh toán 60% (TT30)"
+	},
+	{
+		"stt": 300,
+		"code": "289",
+		"source": "XML2",
+		"description": "Glutathion chỉ được bảo hiểm thanh toán 50% (TT30)"
+	},
+	{
+		"stt": 301,
+		"code": "290",
+		"source": "XML2",
+		"description": "Sofosbuvir chỉ được bảo hiểm thanh toán 50% (TT30)"
+	},
+	{
+		"stt": 302,
+		"code": "291",
+		"source": "XML2",
+		"description": "Ledipasvir + Sofosbuvir chỉ được bảo hiểm thanh toán 50% (TT30)"
+	},
+	{
+		"stt": 303,
+		"code": "292",
+		"source": "XML2",
+		"description": "Sofosbuvir + Velpatasvir chỉ được bảo hiểm thanh toán 50% (TT30)"
+	},
+	{
+		"stt": 304,
+		"code": "293",
+		"source": "XML2",
+		"description": "Pegylated interferon (peginterferon) alpha (2a hoặc 2b)* không được phép chỉ định cho bệnh này (TT30)"
+	},
+	{
+		"stt": 305,
+		"code": "294",
+		"source": "XML2",
+		"description": "Pegylated interferon (peginterferon) alpha (2a hoặc 2b)* chỉ được bảo hiểm thanh toán 30% (TT30)"
+	},
+	{
+		"stt": 306,
+		"code": "295",
+		"source": "XML2",
+		"description": "Decitabin chỉ được bảo hiểm thanh toán 50% (TT30)"
+	},
+	{
+		"stt": 307,
+		"code": "296",
+		"source": "XML2",
+		"description": "Afatinib dimaleate chỉ được bảo hiểm thanh toán 50% (TT30)"
+	},
+	{
+		"stt": 308,
+		"code": "297",
+		"source": "XML2",
+		"description": "Nimotuzumab chỉ được bảo hiểm thanh toán 50% (TT30)"
+	},
+	{
+		"stt": 309,
+		"code": "298",
+		"source": "XML2",
+		"description": "Pazopanib chỉ được bảo hiểm thanh toán 50% (TT30)"
+	},
+	{
+		"stt": 310,
+		"code": "299",
+		"source": "XML2",
+		"description": "Fulvestrant chỉ được bảo hiểm thanh toán 50% (TT30)"
+	},
+	{
+		"stt": 311,
+		"code": "300",
+		"source": "XML2",
+		"description": "Lenalidomid chỉ được bảo hiểm thanh toán 50% (TT30)"
+	},
+	{
+		"stt": 312,
+		"code": "301",
+		"source": "XML2",
+		"description": "Solifenacin succinate chỉ được bảo hiểm thanh toán 70% (TT30)"
+	},
+	{
+		"stt": 313,
+		"code": "302",
+		"source": "XML2",
+		"description": "Rotigotine succinate chỉ được bảo hiểm thanh toán 50% (TT30)"
+	},
+	{
+		"stt": 314,
+		"code": "303",
+		"source": "XML2",
+		"description": "Albumin succinate chỉ được bảo hiểm thanh toán 70% (TT30)"
+	},
+	{
+		"stt": 315,
+		"code": "304",
+		"source": "XML2",
+		"description": "Ticagrelor chỉ được bảo hiểm thanh toán 70% (TT30)"
+	},
+	{
+		"stt": 316,
+		"code": "305",
+		"source": "XML2",
+		"description": "Bosentan chỉ được bảo hiểm thanh toán 50% cho các bệnh Tim Phổi (TT30)"
+	},
+	{
+		"stt": 317,
+		"code": "306",
+		"source": "XML2",
+		"description": "Secukinumab chỉ được bảo hiểm thanh toán 50% (TT30)"
+	},
+	{
+		"stt": 318,
+		"code": "307",
+		"source": "XML2",
+		"description": "Ustekinumab chỉ được bảo hiểm thanh toán 50% (TT30)"
+	},
+	{
+		"stt": 319,
+		"code": "308",
+		"source": "XML2",
+		"description": "Chỉ định L-Ornithin - L- aspartat không đúng theo hướng dẫn tại TT30/2018 và TT01/2020"
+	},
+	{
+		"stt": 320,
+		"code": "309",
+		"source": "XML2",
+		"description": "Dapagliflozin chỉ được bảo hiểm thanh toán 70% (TT30)"
+	},
+	{
+		"stt": 321,
+		"code": "310",
+		"source": "XML2",
+		"description": "Empagliflozin chỉ được bảo hiểm thanh toán 70% (TT30)"
+	},
+	{
+		"stt": 322,
+		"code": "311",
+		"source": "XML2",
+		"description": "Alglucosidase alfa chỉ được bảo hiểm thanh toán 30% (TT30)"
+	},
+	{
+		"stt": 323,
+		"code": "314",
+		"source": "XML2",
+		"description": "Citicholin thanh toán không đúng với hướng dẫn trong TT39/2018 và TT01/2020"
+	},
+	{
+		"stt": 324,
+		"code": "315",
+		"source": "XML2",
+		"description": "Thuốc Cetirizin không được phép sử dụng cho trẻ em dưới 6 tuổi (TT30)"
+	},
+	{
+		"stt": 325,
+		"code": "316",
+		"source": "XML2",
+		"description": "Thuốc Cetirizin không được phép chỉ định cho phụ nữ mang thai (TT30)"
+	},
+	{
+		"stt": 326,
+		"code": "317",
+		"source": "XML2",
+		"description": "Thuốc Cetirizin không được phép chỉ định kết hợp với thuốc kháng histamin khác (TT30)"
+	},
+	{
+		"stt": 327,
+		"code": "318",
+		"source": "XML2",
+		"description": "Thuốc Loratadin không được phép chỉ định cho bệnh nhân dưới 2 tuổi (TT30)"
+	},
+	{
+		"stt": 328,
+		"code": "319",
+		"source": "XML2",
+		"description": "Thuốc Loratadin không được phép chỉ định kết hợp với thuốc kháng histamin khác (TT30)"
+	},
+	{
+		"stt": 329,
+		"code": "327",
+		"source": "XML2",
+		"description": "Thông tin thầu không khớp với danh mục được phê duyệt (Số quyết định;Gói thầu;Nhóm thầu)"
+	},
+	{
+		"stt": 330,
+		"code": "352",
+		"source": "XML2",
+		"description": "Chỉ định Glucosamin sai với không đúng hướng dẫn trong TT30/2018 và TT01/2020"
+	},
+	{
+		"stt": 331,
+		"code": "353",
+		"source": "XML2",
+		"description": "Chỉ định Trimetazidin không đúng Hướng dẫn tại TT30/2018 và TT01/2020"
+	},
+	{
+		"stt": 332,
+		"code": "354",
+		"source": "XML2",
+		"description": "Chỉ định Lansoprazol, Omeprazol, Esomeprazol, Pantoprazol, Rabeprazol sai với hướng dẫn trong TT30/2018 và TT01/2020"
+	},
+	{
+		"stt": 333,
+		"code": "388",
+		"source": "XML2",
+		"description": "Peptid (Cerebrolysin concentrate) thanh toán không đúng với hướng dẫn trong TT39/2018 và TT01/2020"
+	},
+	{
+		"stt": 334,
+		"code": "389",
+		"source": "XML2",
+		"description": "Everolimus chỉ được bảo hiểm thanh toán 50% (TT30)"
+	},
+	{
+		"stt": 335,
+		"code": "390",
+		"source": "XML2",
+		"description": "Chỉ định Albumin sai với hướng dẫn trong TT30/2018 và TT01/2020 BYT"
+	},
+	{
+		"stt": 336,
+		"code": "392",
+		"source": "XML2",
+		"description": "Chỉ định Acid amin + glucose + lipid (*) sai với hướng dẫn trong TT30/2018 và TT01/2020"
+	},
+	{
+		"stt": 337,
+		"code": "393",
+		"source": "XML2",
+		"description": "Chỉ định Ampicilin + sulbactam sai với hướng dẫn trong TT30/2018 và TT01/2020"
+	},
+	{
+		"stt": 338,
+		"code": "394",
+		"source": "XML2",
+		"description": "Chỉ định Mecobalamin sai với hướng dẫn trong TT30/2018 và TT01/2020"
+	},
+	{
+		"stt": 339,
+		"code": "395",
+		"source": "XML2",
+		"description": "Chỉ định Oseltamivir (*) sai với hướng dẫn trong TT30/2018 và TT01/2020"
+	},
+	{
+		"stt": 340,
+		"code": "396",
+		"source": "XML2",
+		"description": "Chỉ định Tolperison sai với hướng dẫn trong TT30/2018 và TT01/2020"
+	},
+	{
+		"stt": 341,
+		"code": "397",
+		"source": "XML2",
+		"description": "Chỉ định Vinpocetin sai với hướng dẫn trong TT30/2018 và TT01/2020"
+	},
+	{
+		"stt": 342,
+		"code": "444",
+		"source": "XML2",
+		"description": "Galantamin chỉ định không đúng với TT30/2018 và TT01/2020 của Bộ Y Tế"
+	},
+	{
+		"stt": 343,
+		"code": "886",
+		"source": "XML2",
+		"description": "Liều dùng không được để bằng 0 (ví dụ: 0 viên, 0 lần)"
+	},
+	{
+		"stt": 344,
+		"code": "887",
+		"source": "XML2",
+		"description": "Tổng lượng ghi trong liều dùng cao hơn với số lượng thanh toán"
+	},
+	{
+		"stt": 345,
+		"code": "898",
+		"source": "XML2",
+		"description": "Choline alfoscerat chỉ được bảo hiểm thanh toán 50% (TT30)"
+	},
+	{
+		"stt": 346,
+		"code": "899",
+		"source": "XML2",
+		"description": "Citicoline chỉ được bảo hiểm thanh toán 50% (TT30)"
+	},
+	{
+		"stt": 347,
+		"code": "900",
+		"source": "XML2",
+		"description": "Cerebrolysin BH chỉ thanh toán chỉ định cho Đột quỵ cấp tính; Sau chấn thương sọ não; Sau phẫu thuật chấn thương sọ não; Sau phẫu thuật thần kinh sọ não."
+	},
+	{
+		"stt": 348,
+		"code": "928",
+		"source": "XML2",
+		"description": "Thanh toán chi phí có y lệnh trước ngày vào Viện"
+	},
+	{
+		"stt": 349,
+		"code": "1602",
+		"source": "XML2",
+		"description": "Kê thuốc cản quang sau thời gian thực hiện Chụp CT, MRI có tiêm thuốc cản quang trong cùng ngày (XML2)"
+	},
+	{
+		"stt": 350,
+		"code": "1604",
+		"source": "XML2",
+		"description": "Kê thuốc cản quang mà không thực hiện Chụp CT, MRI có tiêm thuốc cản quang trong cùng ngày"
+	},
+	{
+		"stt": 351,
+		"code": "1638",
+		"source": "XML2",
+		"description": "Kê thuốc quá 30 ngày"
+	},
+	{
+		"stt": 352,
+		"code": "2028",
+		"source": "XML2",
+		"description": "BV Đa Khoa Măng Thít: Gabapentin chỉ định các bệnh về thần kinh"
+	},
+	{
+		"stt": 353,
+		"code": "2031",
+		"source": "XML2",
+		"description": "MA_CSKCB_THUOC Mã CSKCB thuốc không đúng định dạng 130",
+		"subcode": "130"
+	},
+	{
+		"stt": 354,
+		"code": "2032",
+		"source": "XML2",
+		"description": "Thành tiền bệnh viện lệch hơn 1 đồng so với(SO_LUONG * DON_GIA)",
+		"subcode": "130"
+	},
+	{
+		"stt": 355,
+		"code": "2035",
+		"source": "XML2",
+		"description": "Quỹ bảo hiểm y tế thanh toán tại bệnh viện hạng đặc biệt, hạng I và bệnh viện chuyên khoa ung bướu hạng II. Thanh toán 60% đối với ung thư vú có HER2 dương tính;"
+	},
+	{
+		"stt": 356,
+		"code": "2036",
+		"source": "XML2",
+		"description": "Quỹ bảo hiểm thanh toán 50% đối với ung thư dạ dày tiến xa hoặc di căn có HER2 dương tính."
+	},
+	{
+		"stt": 357,
+		"code": "2051",
+		"source": "XML2",
+		"description": "Tên thuốc không khớp với Tên thuốc trong Danh mục được phê duyệt ( không phân biệt chữ hoa, chữ thường, khoảng trắng)",
+		"subcode": "130"
+	},
+	{
+		"stt": 358,
+		"code": "2052",
+		"source": "XML2",
+		"description": "Tên thuốc không khớp với Tên thuốc trong Danh mục được phê duyệt ( không phân biệt chữ hoa, chữ thường)",
+		"subcode": "130"
+	},
+	{
+		"stt": 359,
+		"code": "2053",
+		"source": "XML2",
+		"description": "Dạng bào chế không đúng nội dung trong Danh mục phê duyệt",
+		"subcode": "130"
+	},
+	{
+		"stt": 360,
+		"code": "2054",
+		"source": "XML2",
+		"description": "Thành tiền Bệnh viện khác Số lượng * Đơn giá",
+		"subcode": "130"
+	},
+	{
+		"stt": 361,
+		"code": "2055",
+		"source": "XML2",
+		"description": "Thành tiền Bảo hiểm khác Số lượng * Đơn giá * Tỷ lệ Bảo hiểm /100",
+		"subcode": "130"
+	},
+	{
+		"stt": 362,
+		"code": "2056",
+		"source": "XML2",
+		"description": "Tiền nguồn khác sai công thức tính trong 4750",
+		"subcode": "130"
+	},
+	{
+		"stt": 363,
+		"code": "2057",
+		"source": "XML2",
+		"description": "Tiền Bệnh nhân thanh toán bị sai so với công thức hướng dẫn 4750",
+		"subcode": "130"
+	},
+	{
+		"stt": 364,
+		"code": "2058",
+		"source": "XML2",
+		"description": "Tiền Bảo hiểm thanh toán bị sai so với công thức hướng dẫn 4750",
+		"subcode": "130"
+	},
+	{
+		"stt": 365,
+		"code": "2059",
+		"source": "XML2",
+		"description": "Tiền Bệnh nhân cùng chi trả bị sai so với công thức hướng dẫn 4750",
+		"subcode": "130"
+	},
+	{
+		"stt": 366,
+		"code": "2060",
+		"source": "XML2",
+		"description": "Ngày thực hiện y lệnh thuốc không được lớn hơn thời điểm hiện tại",
+		"subcode": "130"
+	},
+	{
+		"stt": 367,
+		"code": "2061",
+		"source": "XML2",
+		"description": "Ngày thực hiện y lệnh thuốc không được lớn hơn thời điểm công bố",
+		"subcode": "130"
+	},
+	{
+		"stt": 368,
+		"code": "2069",
+		"source": "XML2",
+		"description": "Ngày thực hiện y lệnh thuốc không được lớn hơn hoặc bằng ngày ra viện",
+		"subcode": "130"
+	},
+	{
+		"stt": 369,
+		"code": "2070",
+		"source": "XML2",
+		"description": "Ngày thực hiện y lệnh thuốc không được nhỏ hơn hoặc bằng ngày vào viện",
+		"subcode": "130"
+	},
+	{
+		"stt": 370,
+		"code": "2076",
+		"source": "XML2",
+		"description": "Phạm vi là 2, thuốc nằm ngoài phạm vi hưởng BHYT",
+		"subcode": "130"
+	},
+	{
+		"stt": 371,
+		"code": "2077",
+		"source": "XML2",
+		"description": "Phạm vi là 2, thuốc nằm ngoài phạm vi hưởng BHYT",
+		"subcode": "130"
+	},
+	{
+		"stt": 372,
+		"code": "2078",
+		"source": "XML2",
+		"description": "Đối tượng không phải CA, QĐ, Cơ yếu theo NĐ 70/2015/NĐ-CP, Phạm vi không được để là 3",
+		"subcode": "130"
+	},
+	{
+		"stt": 373,
+		"code": "2175",
+		"source": "XML2",
+		"description": "Tên thuốc thừa khoảng trắng (Dấu cách), có độ dài không đúng độ dài trong danh mục phê duyệt",
+		"subcode": "130"
+	},
+	{
+		"stt": 374,
+		"code": "2178",
+		"source": "XML2",
+		"description": "Thông tin thầu không dài hơn 50 ký tự",
+		"subcode": "130"
+	},
+	{
+		"stt": 375,
+		"code": "2205",
+		"source": "XML2",
+		"description": "BV Thồng Nhất- Thuốc ACC 200 (Cơ sở xuất xưởng: Salutas Pharma GmbH, Địa chỉ: Otto-von-Guericke-Allee 1, 39179 Barleben, Germany) không dùng cho người bệnh Loét dạ dày"
+	},
+	{
+		"stt": 376,
+		"code": "2206",
+		"source": "XML2",
+		"description": "BV Thống Nhất_ Thuốc Akigol chống chỉ định với bệnh Viêm loét đại tràng và Crohn"
+	},
+	{
+		"stt": 377,
+		"code": "2207",
+		"source": "XML2",
+		"description": "BV Thống Nhất_ Thuốc Apibufen 50 chống chỉ định bệnh: Hen [suyễn]"
+	},
+	{
+		"stt": 378,
+		"code": "2208",
+		"source": "XML2",
+		"description": "BV Thống Nhất_ Thuốc Arcoxia 90mg chống chỉ định cho trẻ e dưới 16 tuổi"
+	},
+	{
+		"stt": 379,
+		"code": "2209",
+		"source": "XML2",
+		"description": "BV Thống Nhất_ Thuốc Bart chống chỉ định đối với bệnh loét dạ dày"
+	},
+	{
+		"stt": 380,
+		"code": "2210",
+		"source": "XML2",
+		"description": "BV Thống Nhất_ Thuốc Bifacold chống chỉ định với bệnh hen suyễn"
+	},
+	{
+		"stt": 381,
+		"code": "2211",
+		"source": "XML2",
+		"description": "BV Thống Nhất_ Thuốc Bổ trung ích khí và Bổ trung ích khí ĐDV chống chỉ định với bệnh động kinh"
+	},
+	{
+		"stt": 382,
+		"code": "2212",
+		"source": "XML2",
+		"description": "BV Thống Nhất_ Thuốc Brexin chống chỉ định cho bệnh hen suyễn, Viêm loét đại tràng và trẻ e dưới 18 tuổi"
+	},
+	{
+		"stt": 383,
+		"code": "2213",
+		"source": "XML2",
+		"description": "BV Thồng Nhất_ Thuốc Camzitol Chống chỉ định với bệnh nhân hen suyễn"
+	},
+	{
+		"stt": 384,
+		"code": "2214",
+		"source": "XML2",
+		"description": "BV Thống Nhất_ Thuốc Celebrex chống chỉ định đối với bệnh nhân hen suyễn"
+	},
+	{
+		"stt": 385,
+		"code": "2215",
+		"source": "XML2",
+		"description": "Sản Nhi HP:"
+	},
+	{
+		"stt": 386,
+		"code": "2216",
+		"source": "XML2",
+		"description": "BV Văn Giang: Metformin Stella 1000 mg chống chỉ định với bệnh nhân COPD, ko dùng cho bệnh nhân : suy gan, suy thận, nghiện rượu"
+	},
+	{
+		"stt": 387,
+		"code": "2217",
+		"source": "XML2",
+		"description": "BV Văn Giang: Glizym-M chống chỉ định với bệnh nhân COPD, ko dùng cho bệnh nhân : suy gan, suy thận, nghiện rượu"
+	},
+	{
+		"stt": 388,
+		"code": "2218",
+		"source": "XML2",
+		"description": "BV Văn Giang: Bluecose ko dùng cho trường hợp tăng áp lực ổ bụng- thoát vị , mang thai hoạc đang cho con bú"
+	},
+	{
+		"stt": 389,
+		"code": "2219",
+		"source": "XML2",
+		"description": "BV Văn Giang: SaviProlol Plus HCT 5/6.25 Ko dùng với bệnh nhân suy tim, hen nặng, bệnh phổi phế quản mạn tính tắc nghẽn"
+	},
+	{
+		"stt": 390,
+		"code": "2220",
+		"source": "XML2",
+		"description": "BV Văn Giang: Actelsar HCT 40mg/12,5mg chống chỉ định với bệnh nhân GOUT,HẠ kali máu, suy gan, suy thận nặng"
+	},
+	{
+		"stt": 391,
+		"code": "2221",
+		"source": "XML2",
+		"description": "BV Văn Giang: Agilosart - H 100/12,5 chống chỉ định với bệnh nhân GOUT,HẠ kali máu, suy gan, suy thận nặng"
+	},
+	{
+		"stt": 392,
+		"code": "2222",
+		"source": "XML2",
+		"description": "BV Văn Giang: Thuốc chống chỉ định với bệnh nhân GOUT,HẠ kali máu, suy gan, suy thận nặng"
+	},
+	{
+		"stt": 393,
+		"code": "2297",
+		"source": "XML2",
+		"description": "Ngày thực hiện y lệnh không được nhỏ hơn Ngày y lệnh",
+		"subcode": "130"
+	},
+	{
+		"stt": 394,
+		"code": "2317",
+		"source": "XML2",
+		"description": "Thông tin thầu không đúng định dạng 4750",
+		"subcode": "130"
+	},
+	{
+		"stt": 395,
+		"code": "2318",
+		"source": "XML2",
+		"description": "Mã thuốc thừa khoảng trắng (Dấu cách)",
+		"subcode": "130"
+	},
+	{
+		"stt": 396,
+		"code": "2328",
+		"source": "XML2",
+		"description": "Mã khoa không tồn tại trong Danh mục phê duyệt",
+		"subcode": "130"
+	},
+	{
+		"stt": 397,
+		"code": "2345",
+		"source": "XML2",
+		"description": "Liều dùng không đúng định dạng 130",
+		"subcode": "13"
+	},
+	{
+		"stt": 398,
+		"code": "2350",
+		"source": "XML2",
+		"description": "Liều dùng sai, Tổng số thuốc trong ngày không khớp với số viên/ lần * số lần/ngày",
+		"subcode": "130"
+	},
+	{
+		"stt": 399,
+		"code": "2351",
+		"source": "XML2",
+		"description": "Đơn vị tính không khớp danh mục phê duyệt (Không phân biệt chữ hoa chữ thường)",
+		"subcode": "130"
+	},
+	{
+		"stt": 400,
+		"code": "2394",
+		"source": "XML2",
+		"description": "Đơn vị tính trong liều dùng không đúng với Đơn vị tính của thuốc",
+		"subcode": "130"
+	},
+	{
+		"stt": 401,
+		"code": "2395",
+		"source": "XML2",
+		"description": "Đơn vị tính của số lần và Đơn vị tính tổng số lần trong ngày khác nhau, đề nghị xem lại",
+		"subcode": "130"
+	},
+	{
+		"stt": 402,
+		"code": "2396",
+		"source": "XML2",
+		"description": "Indapamid chống chỉ định cho suy thận nặng, suy gan nặng, HC não gan, tai biến mạch máu não, hạ kali máu"
+	},
+	{
+		"stt": 403,
+		"code": "2397",
+		"source": "XML2",
+		"description": "Ceftanir chỉ định cho nhiễm khuẩn"
+	},
+	{
+		"stt": 404,
+		"code": "2398",
+		"source": "XML2",
+		"description": "Gingko biloba chống chỉ định cho PNCT , rối loạn đông máu"
+	},
+	{
+		"stt": 405,
+		"code": "2416",
+		"source": "XML2",
+		"description": "Mã ICD không nằm trong bảng ICD của quyết định 4469",
+		"subcode": "130"
+	},
+	{
+		"stt": 406,
+		"code": "2504",
+		"source": "XML2",
+		"description": "Ngày y lệnh ngoài thời gian làm việc hành chính",
+		"subcode": "130"
+	},
+	{
+		"stt": 407,
+		"code": "2505",
+		"source": "XML2",
+		"description": "Ngày thực hiện y lệnh ngoài thời gian làm việc hành chính",
+		"subcode": "130"
+	},
+	{
+		"stt": 408,
+		"code": "114",
+		"source": "XML3",
+		"description": "Mã dịch vụ không được để trống"
+	},
+	{
+		"stt": 409,
+		"code": "116",
+		"source": "XML3",
+		"description": "Mã vật tư không được để trống"
+	},
+	{
+		"stt": 410,
+		"code": "118",
+		"source": "XML3",
+		"description": "Tên dịch vụ không được để trống"
+	},
+	{
+		"stt": 411,
+		"code": "120",
+		"source": "XML3",
+		"description": "Tên vật tư không được để trống"
+	},
+	{
+		"stt": 412,
+		"code": "133",
+		"source": "XML3",
+		"description": "Mã bác sĩ không được để trống"
+	},
+	{
+		"stt": 413,
+		"code": "134",
+		"source": "XML3",
+		"description": "Mã bệnh không được để trống"
+	},
+	{
+		"stt": 414,
+		"code": "136",
+		"source": "XML3",
+		"description": "Ngày kết quả không được để trống và phải đúng định dạng ngày tháng yyyymmddHHMM"
+	},
+	{
+		"stt": 415,
+		"code": "159",
+		"source": "XML3",
+		"description": "Phạm vi không được để trống và phải có giá trị từ 1 đến 3"
+	},
+	{
+		"stt": 416,
+		"code": "183",
+		"source": "XML3",
+		"description": "Tên dịch vụ không khớp với tên dịch vụ trong danh mục phê duyệt"
+	},
+	{
+		"stt": 417,
+		"code": "185",
+		"source": "XML3",
+		"description": "Tên vật tư không khớp với tên vật tư trong danh mục phê duyệt"
+	},
+	{
+		"stt": 418,
+		"code": "188",
+		"source": "XML3",
+		"description": "Đơn vị tính không khớp với đơn vị tính trong danh mục phê duyệt (Phân biệt chữ hoa, chữ thường ,định dạng unicode)"
+	},
+	{
+		"stt": 419,
+		"code": "189",
+		"source": "XML3",
+		"description": "Đơn vị tính không khớp với đơn vị tính trong danh mục phê duyệt (Không phân biệt chữ hoa, chữ thường)"
+	},
+	{
+		"stt": 420,
+		"code": "190",
+		"source": "XML3",
+		"description": "Đơn giá bảo hiểm không khớp với đơn giá trong danh mục phê duyệt",
+		"subcode": "130"
+	},
+	{
+		"stt": 421,
+		"code": "191",
+		"source": "XML3",
+		"description": "Đơn giá nhỏ hơn đơn giá trong danh mục phê duyệt",
+		"subcode": "130"
+	},
+	{
+		"stt": 422,
+		"code": "194",
+		"source": "XML3",
+		"description": "Ngày y lệnh dịch vụ không được nhỏ hơn ngày vào"
+	},
+	{
+		"stt": 423,
+		"code": "195",
+		"source": "XML3",
+		"description": "Ngày y lệnh dịch vụ không được lớn hơn ngày ra"
+	},
+	{
+		"stt": 424,
+		"code": "197",
+		"source": "XML3",
+		"description": "Ngày kết quả dịch vụ không được nhỏ hơn ngày vào"
+	},
+	{
+		"stt": 425,
+		"code": "198",
+		"source": "XML3",
+		"description": "Ngày kết quả dịch vụ không được nhỏ hơn ngày y lệnh"
+	},
+	{
+		"stt": 426,
+		"code": "199",
+		"source": "XML3",
+		"description": "Ngày kết quả dịch vụ không được lớn hơn hoặc bằng ngày ra"
+	},
+	{
+		"stt": 427,
+		"code": "203",
+		"source": "XML3",
+		"description": "Mã dịch vụ không được tìm thấy trong danh mục phê duyệt"
+	},
+	{
+		"stt": 428,
+		"code": "204",
+		"source": "XML3",
+		"description": "Mã dịch vụ không có hiệu lực trong danh mục phê duyệt"
+	},
+	{
+		"stt": 429,
+		"code": "205",
+		"source": "XML3",
+		"description": "Mã vật tư không tìm thấy trong danh mục phê duyệt"
+	},
+	{
+		"stt": 430,
+		"code": "206",
+		"source": "XML3",
+		"description": "Mã vật tư không có hiệu lực trong danh mục phê duyệt"
+	},
+	{
+		"stt": 431,
+		"code": "207",
+		"source": "XML3",
+		"description": "Đơn giá BH lớn hơn đơn giá trong danh mục phê duyệt",
+		"subcode": "130"
+	},
+	{
+		"stt": 432,
+		"code": "242",
+		"source": "XML3",
+		"description": "Tổng số ngày giường không được lớn hơn số ngày điều trị"
+	},
+	{
+		"stt": 433,
+		"code": "243",
+		"source": "XML3",
+		"description": "Dịch vụ trẻ em không được chỉ định cho người lớn (Sử dụng mã dịch vụ Khoa Nhi dành cho bệnh nhân lớn tuổi, sai TT 39/2018/TT-BYT)"
+	},
+	{
+		"stt": 434,
+		"code": "244",
+		"source": "XML3",
+		"description": "Tổng số ngày giường không được nhỏ hơn số ngày điều trị"
+	},
+	{
+		"stt": 435,
+		"code": "267",
+		"source": "XML3",
+		"description": "Mô bệnh học sau 1 ngày mới được chỉ định tiếp Nhuộm PAS"
+	},
+	{
+		"stt": 436,
+		"code": "356",
+		"source": "XML3",
+		"description": "Không tìm thấy kết quả CLS tại bảng XML4 (Bệnh nhân chưa thực hiện CLS)"
+	},
+	{
+		"stt": 437,
+		"code": "373",
+		"source": "XML3",
+		"description": "Ngày kết quả dịch vụ không được nhỏ hơn 5 phút tính từ thời điểm thực hiện y lệnh"
+	},
+	{
+		"stt": 438,
+		"code": "374",
+		"source": "XML3",
+		"description": "(Cảnh báo) Ngày kết quả dịch vụ không được lớn hơn 7 ngày tính từ ngày y lệnh"
+	},
+	{
+		"stt": 439,
+		"code": "413",
+		"source": "XML3",
+		"description": "Khám nội chỉ được phép thực hiện 22 ngày 1 lần với các bệnh: Đái tháo đường và Huyết áp"
+	},
+	{
+		"stt": 440,
+		"code": "414",
+		"source": "XML3",
+		"description": "Khám Răng hàm mặt chỉ được phép thực hiện 30 ngày 1 lần"
+	},
+	{
+		"stt": 441,
+		"code": "415",
+		"source": "XML3",
+		"description": "Khám YHCT chỉ được phép thực hiện 30 ngày 1 lần"
+	},
+	{
+		"stt": 442,
+		"code": "416",
+		"source": "XML3",
+		"description": "Khám Phục hồi chức năng chỉ được phép thực hiện 30 ngày 1 lần"
+	},
+	{
+		"stt": 443,
+		"code": "421",
+		"source": "XML3",
+		"description": "Dịch vụ phẫu thuật, thủ thuật không được phép thực hiện cùng thời điểm"
+	},
+	{
+		"stt": 444,
+		"code": "424",
+		"source": "XML3",
+		"description": "Không được phép tính gộp ngày giường cuối đợt điều trị"
+	},
+	{
+		"stt": 445,
+		"code": "429",
+		"source": "XML3",
+		"description": "Chỉ định Nội soi dạ dày - tá tràng không đúng theo hướng dẫn QĐ 3805/BYT ngày 25/9/2014 Bộ Y Tế"
+	},
+	{
+		"stt": 446,
+		"code": "439",
+		"source": "XML3",
+		"description": "Tổng ngày giường lớn hơn hướng dẫn của BYT (TT39)"
+	},
+	{
+		"stt": 447,
+		"code": "440",
+		"source": "XML3",
+		"description": "Tổng ngày giường nhỏ hơn hướng dẫn của BYT (TT39)"
+	},
+	{
+		"stt": 448,
+		"code": "876",
+		"source": "XML3",
+		"description": "Ngày y lệnh vật tư không được nhỏ hơn ngày vào"
+	},
+	{
+		"stt": 449,
+		"code": "877",
+		"source": "XML3",
+		"description": "Ngày y lệnh vật tư không được lớn hơn ngày ra"
+	},
+	{
+		"stt": 450,
+		"code": "888",
+		"source": "XML3",
+		"description": "Số lượng Kim luồn lớn hơn số ngày sử dụng thuốc tiêm truyền"
+	},
+	{
+		"stt": 451,
+		"code": "891",
+		"source": "XML3",
+		"description": "Phẫu thuật lần 2 trong ngày thanh toán 100% sai với CV 824-BYT"
+	},
+	{
+		"stt": 452,
+		"code": "929",
+		"source": "XML3",
+		"description": "Thanh toán chi phí có y lệnh trước ngày vào Viện"
+	},
+	{
+		"stt": 453,
+		"code": "937",
+		"source": "XML3",
+		"description": "Dịch vụ Nội soi đặt sonde JJ không được làm đồng thời với Nội soi tán sỏi niệu quản (3592/QĐ-BYT ngày 11/9/2014)"
+	},
+	{
+		"stt": 454,
+		"code": "938",
+		"source": "XML3",
+		"description": "Điều trị bằng máy kéo giãn cột sống sai chỉ định (QĐ 54/QĐ-BYT ngày 06/01/2014)"
+	},
+	{
+		"stt": 455,
+		"code": "941",
+		"source": "XML3",
+		"description": "Giường điều trị Ngoại khoa ở bệnh nhân không phẫu thuật TT39/TT22 (CV 1044/BYT-KH-TC ngày 29/02/2016 - Chuyên Đề Bảo hiểm)"
+	},
+	{
+		"stt": 456,
+		"code": "1228",
+		"source": "XML3",
+		"description": "Thời gian y lệnh cận lâm sàng sau thời gian chỉ định thuốc"
+	},
+	{
+		"stt": 457,
+		"code": "1229",
+		"source": "XML3",
+		"description": "Thời gian khám chính sau hoặc trùng thời gian khám phụ"
+	},
+	{
+		"stt": 458,
+		"code": "1239",
+		"source": "XML3",
+		"description": "Công khám lần thứ 2 trở lên sai tỷ lệ thanh toán"
+	},
+	{
+		"stt": 459,
+		"code": "1245",
+		"source": "XML3",
+		"description": "Giường ngoại khoa không được kê quá 10 ngày (TT39/2018 -TT22)"
+	},
+	{
+		"stt": 460,
+		"code": "1530",
+		"source": "XML3",
+		"description": "Ngày Kết quả tại XML4 trùng với ngày y lệnh dịch vụ tại XML3"
+	},
+	{
+		"stt": 461,
+		"code": "1603",
+		"source": "XML3",
+		"description": "Kê thuốc cản quang sau thời gian thực hiện Chụp CT, MRI có tiêm thuốc cản quang trong cùng ngày (XML3)"
+	},
+	{
+		"stt": 462,
+		"code": "1605",
+		"source": "XML3",
+		"description": "Chụp CT, MRI có tiêm thuốc cản quang mà không Kê thuốc cản quang trong cùng ngày"
+	},
+	{
+		"stt": 463,
+		"code": "1958",
+		"source": "XML3",
+		"description": "Kê giường ngoại khoa trước thời gian Phẫu thuật (Sai hướng dẫn TT39/ TT22)"
+	},
+	{
+		"stt": 464,
+		"code": "2029",
+		"source": "XML3",
+		"description": "Chống chỉ định dịch vụ rửa bàng quang đồng thời với dịch vụ thông bàng quang hoặc đặt sonde bàng quang"
+	},
+	{
+		"stt": 465,
+		"code": "2030",
+		"source": "XML3",
+		"description": "BV ĐK Tỉnh Lào Cai: Định lượng Cholesterol toàn phần thiếu chỉ định hợp lý"
+	},
+	{
+		"stt": 466,
+		"code": "2033",
+		"source": "XML3",
+		"description": "BV ĐK Tỉnh Lào Cai: Định lượng Ure thiếu chỉ định hợp lý"
+	},
+	{
+		"stt": 467,
+		"code": "2034",
+		"source": "XML3",
+		"description": "BV ĐK Tỉnh Lào Cai: Định lượng Creatinin thiếu chỉ định hợp lý"
+	},
+	{
+		"stt": 468,
+		"code": "2037",
+		"source": "XML3",
+		"description": "BV Đa Khoa Măng Thít: Định Lượng Triglycerid [Máu] thiếu chỉ định hợp lý"
+	},
+	{
+		"stt": 469,
+		"code": "2038",
+		"source": "XML3",
+		"description": "BV Đa Khoa Măng Thít: Định lượng Cholesterol[Máu] thiếu chỉ định hợp lý"
+	},
+	{
+		"stt": 470,
+		"code": "2039",
+		"source": "XML3",
+		"description": "BV Đa Khoa Măng Thít: Định lượng Ure thiếu chỉ định hợp lý"
+	},
+	{
+		"stt": 471,
+		"code": "2040",
+		"source": "XML3",
+		"description": "BV Đa Khoa Măng Thít: Đo hoạt độ ALT (GPT) chỉ thực hiện cho các bệnh về Gan"
+	},
+	{
+		"stt": 472,
+		"code": "2041",
+		"source": "XML3",
+		"description": "BV Đa Khoa Măng Thít: Đo hoạt độ AST (GOT) chỉ thực hiện cho các bệnh về Gan"
+	},
+	{
+		"stt": 473,
+		"code": "2042",
+		"source": "XML3",
+		"description": "BV Đa Khoa Măng Thít: Định lượng Glucose chỉ áp dụng cho Bệnh nhân Đái Tháo Đường"
+	},
+	{
+		"stt": 474,
+		"code": "2043",
+		"source": "XML3",
+		"description": "BV Đa Khoa Măng Thít: Siêu âm tuyến vú thiếu chỉ định hợp lý"
+	},
+	{
+		"stt": 475,
+		"code": "2044",
+		"source": "XML3",
+		"description": "BV Đa Khoa Măng Thít: Siêu âm tuyến giáp thiếu chỉ định hợp lý"
+	},
+	{
+		"stt": 476,
+		"code": "2045",
+		"source": "XML3",
+		"description": "BV Đa Khoa Măng Thít: Đường máu mao mạch thiếu chỉ định hợp lý"
+	},
+	{
+		"stt": 477,
+		"code": "2046",
+		"source": "XML3",
+		"description": "BV Đa Khoa Măng Thít: Siêu âm Tim thiếu chỉ định hợp lý"
+	},
+	{
+		"stt": 478,
+		"code": "2047",
+		"source": "XML3",
+		"description": "BV Đa Khoa Măng Thít: Định lượng Acid Uric [Máu] thiếu chỉ định hợp lý"
+	},
+	{
+		"stt": 479,
+		"code": "2048",
+		"source": "XML3",
+		"description": "BV Đa Khoa Măng Thít: Điện Tim thường thiếu chỉ định hợp lý"
+	},
+	{
+		"stt": 480,
+		"code": "2049",
+		"source": "XML3",
+		"description": "BV Đa Khoa Măng Thít: Định lượng Creatinin (máu) thiếu chỉ định hợp lý"
+	},
+	{
+		"stt": 481,
+		"code": "2050",
+		"source": "XML3",
+		"description": "BV Đa Khoa Măng Thít: Nội soi thực quản- dạ dày- tá tràng chỉ được phép chỉ định cho bệnh trào ngược dạ dày"
+	},
+	{
+		"stt": 482,
+		"code": "2062",
+		"source": "XML3",
+		"description": "Ngày thực hiện y lệnh không được lớn hơn thời điểm hiện tại",
+		"subcode": "130"
+	},
+	{
+		"stt": 483,
+		"code": "2063",
+		"source": "XML3",
+		"description": "Ngày thực hiện y lệnh không được nhỏ hơn ngày vào",
+		"subcode": "130"
+	},
+	{
+		"stt": 484,
+		"code": "2064",
+		"source": "XML3",
+		"description": "Ngày thực hiện y lệnh không được lớn hơn ngày ra",
+		"subcode": "130"
+	},
+	{
+		"stt": 485,
+		"code": "2065",
+		"source": "XML3",
+		"description": "Ngày thực hiện y lệnh không được trùng thời điểm khám bệnh",
+		"subcode": "130"
+	},
+	{
+		"stt": 486,
+		"code": "2066",
+		"source": "XML3",
+		"description": "Ngày thực hiện y lệnh không được trước thời điểm khám bệnh",
+		"subcode": "130"
+	},
+	{
+		"stt": 487,
+		"code": "2067",
+		"source": "XML3",
+		"description": "Ngày kết quả không được nhỏ hơn ngày thực hiện y lệnh",
+		"subcode": "130"
+	},
+	{
+		"stt": 488,
+		"code": "2068",
+		"source": "XML3",
+		"description": "Ngày kết quả không được nhỏ hơn ngày vào",
+		"subcode": "130"
+	},
+	{
+		"stt": 489,
+		"code": "2072",
+		"source": "XML3",
+		"description": "Ngày thực hiện y lệnh không được để trống với các mã nhóm 1,2,3,8,18",
+		"subcode": "130"
+	},
+	{
+		"stt": 490,
+		"code": "2073",
+		"source": "XML3",
+		"description": "Phương pháp vô cảm phải nhập thông tin với dịch vụ PT hoặc TT và phải có giá trị từ 1 đến 4",
+		"subcode": "130"
+	},
+	{
+		"stt": 491,
+		"code": "2074",
+		"source": "XML3",
+		"description": "Mã Xăng dầu bắt buộc phải nhập khi mã nhóm là 12",
+		"subcode": "130"
+	},
+	{
+		"stt": 492,
+		"code": "2075",
+		"source": "XML3",
+		"description": "Thông tin thầu phải nhập khi mã nhóm bằng 10",
+		"subcode": "130"
+	},
+	{
+		"stt": 493,
+		"code": "2079",
+		"source": "XML3",
+		"description": "Mã CCHN người thực hiện không được để trống",
+		"subcode": "130"
+	},
+	{
+		"stt": 494,
+		"code": "2080",
+		"source": "XML3",
+		"description": "Trống mã người thực hiện, hiển thị cách nhau bằng hai ký tự dấu chẩm phẩy",
+		"subcode": "130"
+	},
+	{
+		"stt": 495,
+		"code": "2082",
+		"source": "XML3",
+		"description": "Người thực hiện có độ dài lớn hơn 255 ký tự",
+		"subcode": "130"
+	},
+	{
+		"stt": 496,
+		"code": "2083",
+		"source": "XML3",
+		"description": "Thành tiền Bệnh viện khác Số lượng* Đơn giá * Tỷ lệ thanh toán dịch vụ/100",
+		"subcode": "130"
+	},
+	{
+		"stt": 497,
+		"code": "2084",
+		"source": "XML3",
+		"description": "Thành tiền Bảo hiểm khác Số lượng * Đơn giá * Tỷ lệ Bảo hiểm /100",
+		"subcode": "130"
+	},
+	{
+		"stt": 498,
+		"code": "2085",
+		"source": "XML3",
+		"description": "Thành tiền Bảo hiểm khác Số lượng * Đơn giá * Tỷ lệ Bảo hiểm /100 * tỷ lệ thanh toán dịch vụ/100",
+		"subcode": "130"
+	},
+	{
+		"stt": 499,
+		"code": "2086",
+		"source": "XML3",
+		"description": "Tiền nguồn khác sai công thức tính trong 4750",
+		"subcode": "130"
+	},
+	{
+		"stt": 500,
+		"code": "2087",
+		"source": "XML3",
+		"description": "Tiền Bệnh nhân thanh toán bị sai, xem lại công thức",
+		"subcode": "130"
+	},
+	{
+		"stt": 501,
+		"code": "2088",
+		"source": "XML3",
+		"description": "Tiền Bảo hiểm thanh toán bị sai so với công thức hướng dẫn 4750",
+		"subcode": "130"
+	},
+	{
+		"stt": 502,
+		"code": "2089",
+		"source": "XML3",
+		"description": "Tiền Bệnh nhân cùng chi trả bị sai so với công thức hướng dẫn 4750",
+		"subcode": "130"
+	},
+	{
+		"stt": 503,
+		"code": "2095",
+		"source": "XML3",
+		"description": "Thiếu thông tin Mã máy trong bảng XML3, nếu là DV làm thủ công, hay cập nhật Danh mục",
+		"subcode": "130"
+	},
+	{
+		"stt": 504,
+		"code": "2096",
+		"source": "XML3",
+		"description": "Mã máy không đúng định dạng quy định theo 4750",
+		"subcode": "130"
+	},
+	{
+		"stt": 505,
+		"code": "2106",
+		"source": "XML3",
+		"description": "Mã hiệu sản phẩm không đúng trong Danh mục phê duyệt",
+		"subcode": "130"
+	},
+	{
+		"stt": 506,
+		"code": "2107",
+		"source": "XML3",
+		"description": "Thông tin thầu không khớp với Thông tin thầu vật tư được phê duyệt",
+		"subcode": "130"
+	},
+	{
+		"stt": 507,
+		"code": "2176",
+		"source": "XML3",
+		"description": "Tên dịch vụ thừa khoảng trắng (Dấu cách), có độ dài không đúng độ dài trong danh mục phê duyệt",
+		"subcode": "130"
+	},
+	{
+		"stt": 508,
+		"code": "2177",
+		"source": "XML3",
+		"description": "Tên vật tư thừa khoảng trắng (Dấu cách), có độ dài không đúng độ dài trong danh mục phê duyệt",
+		"subcode": "130"
+	},
+	{
+		"stt": 509,
+		"code": "2187",
+		"source": "XML3",
+		"description": "Vết thương tái phát nếu có chỉ nhập giá trị bằng 1",
+		"subcode": "130"
+	},
+	{
+		"stt": 510,
+		"code": "2192",
+		"source": "XML3",
+		"description": "Bệnh nhân thực hiện Phẫu thuật, phải nhập Phương pháp Vô Cảm",
+		"subcode": "130"
+	},
+	{
+		"stt": 511,
+		"code": "2193",
+		"source": "XML3",
+		"description": "Xem lại mã Phương pháp vô cảm, nội dung không đúng với loại PT (Phải là Gây tê)",
+		"subcode": "130"
+	},
+	{
+		"stt": 512,
+		"code": "2194",
+		"source": "XML3",
+		"description": "Xem lại mã Phương pháp vô cảm, nội dung không đúng với loại PT (Phải là Gây mê)",
+		"subcode": "130"
+	},
+	{
+		"stt": 513,
+		"code": "2196",
+		"source": "XML3",
+		"description": "Dịch vụ thủ thuật có sử dụng phương pháp vô cảm phải nhập mã phương pháp vô cảm",
+		"subcode": "130"
+	},
+	{
+		"stt": 514,
+		"code": "2201",
+		"source": "XML3",
+		"description": "Đo định lượng PSA tự do (Free prostate-Specific Antigen) [Máu] chỉ thực hiện cho các bệnh trong ung thư tiền liệt tuyến (320/QĐ-BYT)"
+	},
+	{
+		"stt": 515,
+		"code": "2202",
+		"source": "XML3",
+		"description": "BV Xuyên Á-Vĩnh Long Thoái hóa khớp gối_khong dieu tri hong ngoai_QD3109_BYT"
+	},
+	{
+		"stt": 516,
+		"code": "2203",
+		"source": "XML3",
+		"description": "BV Xuyên Á - Vĩnh Long Điều trị sóng ngắn và sóng cực ngắn, điều trị bằng từ trường, bằng các dòng điện xung, bằng sóng xung kích, bằng dòng xung giao thoa, bằng laser công suất thấp CCĐ BN u ác tính, u máu theo quy định tại Quyết định số QĐ 54 byt"
+	},
+	{
+		"stt": 517,
+		"code": "2204",
+		"source": "XML3",
+		"description": "BV Xuyên Á - Vĩnh Long XN Troponin Chống chỉ địn cho bệnh nhồi máu cơ tim"
+	},
+	{
+		"stt": 518,
+		"code": "2294",
+		"source": "XML3",
+		"description": "Mã giường không đúng định dạng 4750",
+		"subcode": "130"
+	},
+	{
+		"stt": 519,
+		"code": "2295",
+		"source": "XML3",
+		"description": "Ngày thực hiện y lệnh không được nhỏ hơn ngày y lệnh",
+		"subcode": "130"
+	},
+	{
+		"stt": 520,
+		"code": "2296",
+		"source": "XML3",
+		"description": "Ngày thực hiện y lệnh không được lớn hơn ngày kết quả",
+		"subcode": "130"
+	},
+	{
+		"stt": 521,
+		"code": "2319",
+		"source": "XML3",
+		"description": "Mã dịch vụ thừa khoảng trắng (Dấu cách)",
+		"subcode": "130"
+	},
+	{
+		"stt": 522,
+		"code": "2320",
+		"source": "XML3",
+		"description": "Mã vật tư thừa khoảng trắng (Dấu cách)",
+		"subcode": "130"
+	},
+	{
+		"stt": 523,
+		"code": "2329",
+		"source": "XML3",
+		"description": "Mã khoa không tồn tại trong Danh mục phê duyệt",
+		"subcode": "130"
+	},
+	{
+		"stt": 524,
+		"code": "2341",
+		"source": "XML3",
+		"description": "Tên dịch vụ không khớp với Danh mục phê duyệt (Không phân biệt chữ hoa chữ thường)",
+		"subcode": "130"
+	},
+	{
+		"stt": 525,
+		"code": "2359",
+		"source": "XML3",
+		"description": "Thông tin thầu không đúng định dạng 4750",
+		"subcode": "130"
+	},
+	{
+		"stt": 526,
+		"code": "2390",
+		"source": "XML3",
+		"description": "Các dịch vụ CĐHA (Nhóm 2) thực hiện nhỏ hơn 3 phút",
+		"subcode": "130"
+	},
+	{
+		"stt": 527,
+		"code": "2391",
+		"source": "XML3",
+		"description": "Thời gian thực hiện y lệnh trùng thời gian kết quả",
+		"subcode": "130"
+	},
+	{
+		"stt": 528,
+		"code": "2392",
+		"source": "XML3",
+		"description": "Thông tin thầu khớp trong Danh mục phê duyệt, tuy nhiên không đúng định dạng 4750, các anh chị lưu ý",
+		"subcode": "130"
+	},
+	{
+		"stt": 529,
+		"code": "2401",
+		"source": "XML3",
+		"description": "Mã máy không có trong danh mục phê duyệt",
+		"subcode": "130"
+	},
+	{
+		"stt": 530,
+		"code": "2417",
+		"source": "XML3",
+		"description": "Mã ICD không nằm trong bảng ICD của quyết định 4469",
+		"subcode": "130"
+	},
+	{
+		"stt": 531,
+		"code": "2452",
+		"source": "XML3",
+		"description": "Thời gian thực hiện xét nghiệm (Nhóm 1) không nhỏ hơn 3p",
+		"subcode": "130"
+	},
+	{
+		"stt": 532,
+		"code": "2453",
+		"source": "XML3",
+		"description": "Thời gian thực hiện TDCN (Nhóm 3) không nhỏ hơn 3p",
+		"subcode": "130"
+	},
+	{
+		"stt": 533,
+		"code": "2454",
+		"source": "XML3",
+		"description": "Thời gian thực hiện y lệnh trùng thời điểm với dịch vụ khác",
+		"subcode": "130"
+	},
+	{
+		"stt": 534,
+		"code": "2459",
+		"source": "XML3",
+		"description": "Ngày kết quả của Dịch vụ Theo dõi nhịp tim thai và cơn co tử cung bằng monitor sản khoa không được lớn hơn hoặc bằng thời gian thực hiện dịch vụ đỡ đẻ",
+		"subcode": "130"
+	},
+	{
+		"stt": 535,
+		"code": "2460",
+		"source": "XML3",
+		"description": "Bệnh nhân chỉ thực hiện duy nhất 1 công khám, Tỷ lệ thanh toán DV phải để 100%",
+		"subcode": "130"
+	},
+	{
+		"stt": 536,
+		"code": "2475",
+		"source": "XML3",
+		"description": "Dịch vụ giường nhưng không khai báo mã giường, đề nghị kiểm tra",
+		"subcode": "130"
+	},
+	{
+		"stt": 537,
+		"code": "2486",
+		"source": "XML3",
+		"description": "Bác sĩ vừa y lệnh và thực hiện y lệnh cho các nhóm 1,2,3 (Đề nghị kiểm tra lại)",
+		"subcode": "130"
+	},
+	{
+		"stt": 538,
+		"code": "2488",
+		"source": "XML3",
+		"description": "Không tồn mã Mã Bệnh YHCT trong 7603/QĐ-BYT 2018 của Bộ trưởng Bộ Y tế",
+		"subcode": "13"
+	},
+	{
+		"stt": 539,
+		"code": "2501",
+		"source": "XML3",
+		"description": "Ngày kết quả đang để trống (Mã nhóm 8,18,14,15 không được để trống)",
+		"subcode": "130"
+	},
+	{
+		"stt": 540,
+		"code": "2502",
+		"source": "XML3",
+		"description": "Ngày y lệnh ngoài thời gian làm việc hành chính",
+		"subcode": "130"
+	},
+	{
+		"stt": 541,
+		"code": "2503",
+		"source": "XML3",
+		"description": "Ngày thực hiện y lệnh ngoài thời gian làm việc hành chính",
+		"subcode": "130"
+	},
+	{
+		"stt": 542,
+		"code": "2519",
+		"source": "XML3",
+		"description": "Ngày KQ ngoài thời gian làm việc hành chính của Viện",
+		"subcode": "130"
+	},
+	{
+		"stt": 543,
+		"code": "775",
+		"source": "XML3",
+		"description": "Tên dịch vụ sai bảng mã so với danh mục được phê duyệt"
+	},
+	{
+		"stt": 544,
+		"code": "1223",
+		"source": "XML4",
+		"description": "Ngày Kết quả không được lớn hơn thời điểm hiện tại"
+	},
+	{
+		"stt": 545,
+		"code": "1230",
+		"source": "XML4",
+		"description": "Mã máy không đúng định dạng 4210"
+	},
+	{
+		"stt": 546,
+		"code": "1270",
+		"source": "XML4",
+		"description": "Mã liên kết không được để trống"
+	},
+	{
+		"stt": 547,
+		"code": "1271",
+		"source": "XML4",
+		"description": "Mã liên kết không được lớn hơn 100 ký tự"
+	},
+	{
+		"stt": 548,
+		"code": "1272",
+		"source": "XML4",
+		"description": "Mã dịch vụ không được để trống"
+	},
+	{
+		"stt": 549,
+		"code": "1273",
+		"source": "XML4",
+		"description": "Mã dịch vụ không được lớn hơn 15 ký tự"
+	},
+	{
+		"stt": 550,
+		"code": "1275",
+		"source": "XML4",
+		"description": "Mã chỉ số không được lớn hơn 50 ký tự"
+	},
+	{
+		"stt": 551,
+		"code": "1276",
+		"source": "XML4",
+		"description": "Tên chỉ số không được để trống"
+	},
+	{
+		"stt": 552,
+		"code": "1277",
+		"source": "XML4",
+		"description": "Tên chỉ số không được lớn hơn 255 ký tự"
+	},
+	{
+		"stt": 553,
+		"code": "1531",
+		"source": "XML4",
+		"description": "Thiếu thông tin MA_MAY trong bảng XML4"
+	},
+	{
+		"stt": 554,
+		"code": "1961",
+		"source": "XML4",
+		"description": "Dịch vụ Chẩn đoán hình ảnh không có đủ Mô tả & Kết luận trong XML4",
+		"subcode": "130"
+	},
+	{
+		"stt": 555,
+		"code": "2097",
+		"source": "XML4",
+		"description": "Ngày kết quả tại XML4 không được nhỏ hơn ngày vào",
+		"subcode": "130"
+	},
+	{
+		"stt": 556,
+		"code": "2098",
+		"source": "XML4",
+		"description": "Ngày kết quả tại XML4 không trùng với ngày kết quả tại XML3",
+		"subcode": "130"
+	},
+	{
+		"stt": 557,
+		"code": "2105",
+		"source": "XML4",
+		"description": "Ngày kết quả không được để trống",
+		"subcode": "130"
+	},
+	{
+		"stt": 558,
+		"code": "2344",
+		"source": "XML4",
+		"description": "Trường giá trị không nhập quá 50 ký tự",
+		"subcode": "130"
+	},
+	{
+		"stt": 559,
+		"code": "2356",
+		"source": "XML4",
+		"description": "Mã BS đọc kết quả không được để trống",
+		"subcode": "130"
+	},
+	{
+		"stt": 560,
+		"code": "2471",
+		"source": "XML4",
+		"description": "Trường kết luận không nhập nội dung cho các Dịch vụ CĐHA (Mã nhóm =2)",
+		"subcode": "130"
+	},
+	{
+		"stt": 561,
+		"code": "2520",
+		"source": "XML4",
+		"description": "Ngày KQ ngoài thời gian làm việc hành chính của Viện",
+		"subcode": "130"
+	},
+	{
+		"stt": 562,
+		"code": "432",
+		"source": "XML5",
+		"description": "Không có thông tin Diễn biên Bệnh trong hồ sơ XML đề nghị Thanh toán"
+	},
+	{
+		"stt": 563,
+		"code": "433",
+		"source": "XML5",
+		"description": "Diễn biến bệnh không được để trống"
+	},
+	{
+		"stt": 564,
+		"code": "436",
+		"source": "XML5",
+		"description": "Nội dung Diễn biến điều trị có kết quả trùng nhau",
+		"subcode": "130"
+	},
+	{
+		"stt": 565,
+		"code": "1224",
+		"source": "XML5",
+		"description": "Ngày Y lệnh không được lớn hơn thời điểm hiện tại"
+	},
+	{
+		"stt": 566,
+		"code": "1226",
+		"source": "XML5",
+		"description": "Ngày Y lệnh không được lớn hoặc bằng hơn ngày ra viện"
+	},
+	{
+		"stt": 567,
+		"code": "1278",
+		"source": "XML5",
+		"description": "Thời điểm DBLS không được để trống và phải đúng định dạng ngày tháng yyyymmddHHMM"
+	},
+	{
+		"stt": 568,
+		"code": "1824",
+		"source": "XML5",
+		"description": "Mã liên kết không được để trống"
+	},
+	{
+		"stt": 569,
+		"code": "1825",
+		"source": "XML5",
+		"description": "Mã liên kết không được lớn hơn 100 ký tự"
+	},
+	{
+		"stt": 570,
+		"code": "1826",
+		"source": "XML5",
+		"description": "Người thực hiện không được để trống"
+	},
+	{
+		"stt": 571,
+		"code": "1827",
+		"source": "XML5",
+		"description": "Người thực hiện không được lớn hơn 255 ký tự"
+	},
+	{
+		"stt": 572,
+		"code": "2101",
+		"source": "XML5",
+		"description": "Thời điểm diễn biến lâm sàng không được lớn hơn hiện tại",
+		"subcode": "130"
+	},
+	{
+		"stt": 573,
+		"code": "2102",
+		"source": "XML5",
+		"description": "Thời điểm diễn biến lâm sàng không được lớn hơn ngày ra viện",
+		"subcode": "130"
+	},
+	{
+		"stt": 574,
+		"code": "2103",
+		"source": "XML5",
+		"description": "Thời điểm diễn biến lâm sàng không được trước ngày vào viện",
+		"subcode": "130"
+	},
+	{
+		"stt": 575,
+		"code": "2104",
+		"source": "XML5",
+		"description": "Thời điểm diễn biến lâm sàng không được để trống",
+		"subcode": "130"
+	},
+	{
+		"stt": 576,
+		"code": "1828",
+		"source": "XML6",
+		"description": "Mã liên kết không được để trống"
+	},
+	{
+		"stt": 577,
+		"code": "1829",
+		"source": "XML6",
+		"description": "Mã liên kết không được lớn hơn 100 ký tự"
+	},
+	{
+		"stt": 578,
+		"code": "1830",
+		"source": "XML6",
+		"description": "Mã lý do điều trị không được để trống và phải là số nguyên có giá trị từ 1 đến 5"
+	},
+	{
+		"stt": 579,
+		"code": "1831",
+		"source": "XML6",
+		"description": "Loại điều trị lao không được để trống và phải là số nguyên có giá trị từ 0 đến 3"
+	},
+	{
+		"stt": 580,
+		"code": "1832",
+		"source": "XML6",
+		"description": "Mã loại bệnh nhân không được để trống và phải là số nguyên có giá trị từ 1 đến 5"
+	},
+	{
+		"stt": 581,
+		"code": "1833",
+		"source": "XML6",
+		"description": "Mã tình trạng đến khám không được để trống"
+	},
+	{
+		"stt": 582,
+		"code": "1834",
+		"source": "XML6",
+		"description": "Mã tình trạng đến khám không được lớn hơn 18 ký tự và gồm các số nguyên từ 1 đến 9 cách nhau bằng dấu ';', không tồn tại khoảng trắng ở giữa"
+	},
+	{
+		"stt": 583,
+		"code": "1835",
+		"source": "XML6",
+		"description": "Mã xử trí không được để trống và phải là số nguyên có giá trị từ 1 đến 7"
+	},
+	{
+		"stt": 584,
+		"code": "1836",
+		"source": "XML6",
+		"description": "Mã phác đồ điều trị không được để trống"
+	},
+	{
+		"stt": 585,
+		"code": "1837",
+		"source": "XML6",
+		"description": "Mã phác đồ điều trị không được lớn hơn 200 ký tự"
+	},
+	{
+		"stt": 586,
+		"code": "2108",
+		"source": "XML6",
+		"description": "Phác đồ điều trị Lao bắt buộc phải nhập, có giá trị từ 1 đến 12",
+		"subcode": "130"
+	},
+	{
+		"stt": 587,
+		"code": "2109",
+		"source": "XML6",
+		"description": "Ngày bắt đầu điều trị Lao bắt buộc phải nhập",
+		"subcode": "130"
+	},
+	{
+		"stt": 588,
+		"code": "2110",
+		"source": "XML6",
+		"description": "Ngày kết thúc điều trị Lao bắt buộc phải nhập",
+		"subcode": "130"
+	},
+	{
+		"stt": 589,
+		"code": "2111",
+		"source": "XML6",
+		"description": "Ngày kết thúc điều trị không được nhỏ hơn ngày bắt đầu điều trị",
+		"subcode": "130"
+	},
+	{
+		"stt": 590,
+		"code": "2112",
+		"source": "XML6",
+		"description": "Lần xét nghiệm PCR bắt buộc phải nhập",
+		"subcode": "130"
+	},
+	{
+		"stt": 591,
+		"code": "2113",
+		"source": "XML6",
+		"description": "Ngày xét nghiệm PCR bắt buộc phải nhập",
+		"subcode": "130"
+	},
+	{
+		"stt": 592,
+		"code": "2114",
+		"source": "XML6",
+		"description": "Ngày kết quả xét nghiệp PCR bắt buộc phải nhập",
+		"subcode": "130"
+	},
+	{
+		"stt": 593,
+		"code": "2115",
+		"source": "XML6",
+		"description": "Mã kết quả xét nghiệm PCR bắt buộc phải nhập",
+		"subcode": "130"
+	},
+	{
+		"stt": 594,
+		"code": "2116",
+		"source": "XML6",
+		"description": "Ngày bắt đầu xử trí bắt buộc phải nhập",
+		"subcode": "130"
+	},
+	{
+		"stt": 595,
+		"code": "2117",
+		"source": "XML6",
+		"description": "Ngày kết thúc xử trý bắt buộc phải nhập",
+		"subcode": "130"
+	},
+	{
+		"stt": 596,
+		"code": "2118",
+		"source": "XML6",
+		"description": "Ngày kết thúc xử trí không được nhỏ hơn ngày bắt đầu",
+		"subcode": "130"
+	},
+	{
+		"stt": 597,
+		"code": "2119",
+		"source": "XML6",
+		"description": "Số ngày cấp thuốc ARV bắt buộc phải nhập",
+		"subcode": "130"
+	},
+	{
+		"stt": 598,
+		"code": "2120",
+		"source": "XML6",
+		"description": "Số ngày cấp thuốc ARV phải lớn hơn 0",
+		"subcode": "130"
+	},
+	{
+		"stt": 599,
+		"code": "2121",
+		"source": "XML6",
+		"description": "Mã thẻ BHYT không trùng thông tin với Mã thẻ BHYT tại XML1",
+		"subcode": "130"
+	},
+	{
+		"stt": 600,
+		"code": "2122",
+		"source": "XML6",
+		"description": "Số CCCD không trùng với số CCCD tại XML1",
+		"subcode": "130"
+	},
+	{
+		"stt": 601,
+		"code": "2123",
+		"source": "XML6",
+		"description": "Mã Phác đồ điều trị BD không đúng Phụ Lục 10 QĐ 5937/QĐ BYT",
+		"subcode": "130"
+	},
+	{
+		"stt": 602,
+		"code": "2124",
+		"source": "XML6",
+		"description": "Ngày sinh không trùng thông tin tại XML1",
+		"subcode": "130"
+	},
+	{
+		"stt": 603,
+		"code": "2125",
+		"source": "XML6",
+		"description": "Kiểm tra lại thông tin mã xử trí, nội dung không nằm trong mã từ 1 đến 8",
+		"subcode": "130"
+	},
+	{
+		"stt": 604,
+		"code": "2126",
+		"source": "XML6",
+		"description": "Mã bậc phác đồ điều trị ban đầu phải có giá trị từ 1 đến 3",
+		"subcode": "130"
+	},
+	{
+		"stt": 605,
+		"code": "2127",
+		"source": "XML6",
+		"description": "Mã lý do xét nghiệm đo tải lượng virus phải có giá trị từ 1 đến 3",
+		"subcode": "130"
+	},
+	{
+		"stt": 606,
+		"code": "2128",
+		"source": "XML6",
+		"description": "Ngày lấy mẫu xét nghiệm tải lượng virus bắt buộc phải nhập",
+		"subcode": "130"
+	},
+	{
+		"stt": 607,
+		"code": "2129",
+		"source": "XML6",
+		"description": "Mã kết quả xét nghiệm tải lượng virus bắt buộc phải nhập và có giá trị từ 1 đến 5",
+		"subcode": "130"
+	},
+	{
+		"stt": 608,
+		"code": "2130",
+		"source": "XML6",
+		"description": "Thời điểm có kết quả xét nghiệm tải lượng virus bắt buộc phải nhập",
+		"subcode": "130"
+	},
+	{
+		"stt": 609,
+		"code": "2131",
+		"source": "XML6",
+		"description": "Mã tình trặng đăng ký phải có giá trị từ 1 đến 9",
+		"subcode": "130"
+	},
+	{
+		"stt": 610,
+		"code": "2132",
+		"source": "XML6",
+		"description": "Lần xét nghiệp PCR chỉ áp dụng cho trẻ dưới 18 tháng bị phơi nhiễm và phải có giá trị từ 1 đến 3",
+		"subcode": "130"
+	},
+	{
+		"stt": 611,
+		"code": "2133",
+		"source": "XML6",
+		"description": "Ngày xét nghiệm PCR bắt buộc phải nhập",
+		"subcode": "130"
+	},
+	{
+		"stt": 612,
+		"code": "2134",
+		"source": "XML6",
+		"description": "Ngày kết quả xét nghiệm PCR bắt buộc phải nhập",
+		"subcode": "130"
+	},
+	{
+		"stt": 613,
+		"code": "2135",
+		"source": "XML6",
+		"description": "Mã kết quả xét nghiệm PCR bắt buộc phải nhập và phải có giá trị từ 0 đến 1",
+		"subcode": "130"
+	},
+	{
+		"stt": 614,
+		"code": "2136",
+		"source": "XML6",
+		"description": "Ngày kết quả xét nghiệm PCR không được nhỏ hơn ngày xét nghiệm",
+		"subcode": "130"
+	},
+	{
+		"stt": 615,
+		"code": "2137",
+		"source": "XML6",
+		"description": "Thông tin giới tính không trùng với nội dung tại XML1",
+		"subcode": "130"
+	},
+	{
+		"stt": 616,
+		"code": "2138",
+		"source": "XML6",
+		"description": "Thông tin địa chỉ không trùng với thông tin địa chỉ tại XML1",
+		"subcode": "130"
+	},
+	{
+		"stt": 617,
+		"code": "2139",
+		"source": "XML6",
+		"description": "Thông tin mã tỉnh cư trú không khớp với thông tin mã tỉnh cư trú tại XML1",
+		"subcode": "130"
+	},
+	{
+		"stt": 618,
+		"code": "2141",
+		"source": "XML6",
+		"description": "Thông tin mã xã cư trú không khớp với thông tin mã xã cư trú tại XML1",
+		"subcode": "130"
+	},
+	{
+		"stt": 619,
+		"code": "2142",
+		"source": "XML6",
+		"description": "Mã phương pháp sàng lọc Lao bắt buộc phải nhập, và phải có giá trị từ 1 đến 4",
+		"subcode": "130"
+	},
+	{
+		"stt": 620,
+		"code": "2143",
+		"source": "XML6",
+		"description": "Kết quả điều trị Lao bắt buộc phải nhập, và phải có giá trị từ 1 đến 7",
+		"subcode": "130"
+	},
+	{
+		"stt": 621,
+		"code": "2144",
+		"source": "XML6",
+		"description": "Giai đoạn lầm sàng chỉ nhập các mã có từ 1 đến 4",
+		"subcode": "130"
+	},
+	{
+		"stt": 622,
+		"code": "2145",
+		"source": "XML6",
+		"description": "Nhóm đối tượng chỉ nhập các mã từ 0 đến 11",
+		"subcode": "130"
+	},
+	{
+		"stt": 623,
+		"code": "2146",
+		"source": "XML6",
+		"description": "Số ngày cấp thuốc lớn hơn thực tế (ngày kết thúc - ngày bắt đầu)",
+		"subcode": "130"
+	},
+	{
+		"stt": 624,
+		"code": "2147",
+		"source": "XML6",
+		"description": "Lý do chuyển phác đồ phải có giá trị từ 1 đến 6",
+		"subcode": "130"
+	},
+	{
+		"stt": 625,
+		"code": "2148",
+		"source": "XML6",
+		"description": "Ngày chuyển phác đồ bắt buộc phải nhập",
+		"subcode": "130"
+	},
+	{
+		"stt": 626,
+		"code": "2149",
+		"source": "XML6",
+		"description": "Mã CSKCB không trùng với mã CSKCB hiện tại",
+		"subcode": "130"
+	},
+	{
+		"stt": 627,
+		"code": "1838",
+		"source": "XML7",
+		"description": "Mã liên kết không được để trống"
+	},
+	{
+		"stt": 628,
+		"code": "1839",
+		"source": "XML7",
+		"description": "Mã liên kết không được lớn hơn 100 ký tự"
+	},
+	{
+		"stt": 629,
+		"code": "1840",
+		"source": "XML7",
+		"description": "Số lưu trữ không được để trống"
+	},
+	{
+		"stt": 630,
+		"code": "1841",
+		"source": "XML7",
+		"description": "Mã y tế không được để trống"
+	},
+	{
+		"stt": 631,
+		"code": "1843",
+		"source": "XML7",
+		"description": "Mã khoa ra viện không được để trống"
+	},
+	{
+		"stt": 632,
+		"code": "1844",
+		"source": "XML7",
+		"description": "Mã khoa ra viện không được lớn hơn 200 ký tự"
+	},
+	{
+		"stt": 633,
+		"code": "1845",
+		"source": "XML7",
+		"description": "Ngày vào không được để trống và phải đúng định dạng ngày tháng yyyymmddHHMM"
+	},
+	{
+		"stt": 634,
+		"code": "1846",
+		"source": "XML7",
+		"description": "Ngày ra không được để trống và phải đúng định dạng ngày tháng yyyymmddHHMM"
+	},
+	{
+		"stt": 635,
+		"code": "1847",
+		"source": "XML7",
+		"description": "Chẩn đoán ra viện không được để trống"
+	},
+	{
+		"stt": 636,
+		"code": "1848",
+		"source": "XML7",
+		"description": "Chẩn đoán ra viện không được lớn hơn 1500 ký tự"
+	},
+	{
+		"stt": 637,
+		"code": "1849",
+		"source": "XML7",
+		"description": "Phương pháp điều trị không được để trống"
+	},
+	{
+		"stt": 638,
+		"code": "1850",
+		"source": "XML7",
+		"description": "Phương pháp điều trị không được lớn hơn 1500 ký tự"
+	},
+	{
+		"stt": 639,
+		"code": "1853",
+		"source": "XML7",
+		"description": "Mã bác sĩ không được để trống"
+	},
+	{
+		"stt": 640,
+		"code": "1854",
+		"source": "XML7",
+		"description": "Mã bác sĩ không được lớn hơn 200 ký tự"
+	},
+	{
+		"stt": 641,
+		"code": "1855",
+		"source": "XML7",
+		"description": "Tên bác sĩ không được để trống"
+	},
+	{
+		"stt": 642,
+		"code": "1856",
+		"source": "XML7",
+		"description": "Tên bác sĩ không được lớn hơn 255 ký tự"
+	},
+	{
+		"stt": 643,
+		"code": "1857",
+		"source": "XML7",
+		"description": "Ngày chứng từ không được để trống và phải đúng định dạng ngày tháng yyyymmdd"
+	},
+	{
+		"stt": 644,
+		"code": "1952",
+		"source": "XML7",
+		"description": "Số lưu trữ không được lớn hơn 200 ký tự"
+	},
+	{
+		"stt": 645,
+		"code": "2150",
+		"source": "XML7",
+		"description": "Mã y tế không trùng với Mã BN tại XML1",
+		"subcode": "130"
+	},
+	{
+		"stt": 646,
+		"code": "2151",
+		"source": "XML7",
+		"description": "Mã Khoa ra Viện không trùng thông tin Mã Khoa tại XML1",
+		"subcode": "130"
+	},
+	{
+		"stt": 647,
+		"code": "2152",
+		"source": "XML7",
+		"description": "Ngày vào không trùng thông tin ngày vào tại XML1",
+		"subcode": "130"
+	},
+	{
+		"stt": 648,
+		"code": "2153",
+		"source": "XML7",
+		"description": "Ngày ra không trùng với thông tin ngày ra tại XML1",
+		"subcode": "130"
+	},
+	{
+		"stt": 649,
+		"code": "2154",
+		"source": "XML7",
+		"description": "Nguyên nhân đình chỉ thai bắt buộc phải nhập",
+		"subcode": "130"
+	},
+	{
+		"stt": 650,
+		"code": "2155",
+		"source": "XML7",
+		"description": "Mã đình chỉ thai chỉ có giá trị là 0 và 1",
+		"subcode": "130"
+	},
+	{
+		"stt": 651,
+		"code": "2156",
+		"source": "XML7",
+		"description": "Thời gian đình chỉ thai bắt buộc phải nhập",
+		"subcode": "130"
+	},
+	{
+		"stt": 652,
+		"code": "2157",
+		"source": "XML7",
+		"description": "Tuổi thai bắt buộc phải nhập",
+		"subcode": "130"
+	},
+	{
+		"stt": 653,
+		"code": "2310",
+		"source": "XML7",
+		"description": "[[130] Số ngày nghỉ bắt buộc phải nhập"
+	},
+	{
+		"stt": 654,
+		"code": "2311",
+		"source": "XML7",
+		"description": "Bắt đầu nghỉ ngoại trú bắt buộc phải nhập",
+		"subcode": "130"
+	},
+	{
+		"stt": 655,
+		"code": "2312",
+		"source": "XML7",
+		"description": "Ngoại trú đến ngày bắt buộc phải nhập",
+		"subcode": "130"
+	},
+	{
+		"stt": 656,
+		"code": "2313",
+		"source": "XML7",
+		"description": "Bắt đầu nghỉ ngoại trú không được nhỏ hơn ngày ra viện",
+		"subcode": "130"
+	},
+	{
+		"stt": 657,
+		"code": "2314",
+		"source": "XML7",
+		"description": "Ngoại trú đến ngày không nhỏ hơn ngày ra viện",
+		"subcode": "130"
+	},
+	{
+		"stt": 658,
+		"code": "2315",
+		"source": "XML7",
+		"description": "Ngoại trú đến ngày ko được nhỏ hơn ngày bắt đầu nghỉ",
+		"subcode": "130"
+	},
+	{
+		"stt": 659,
+		"code": "2316",
+		"source": "XML7",
+		"description": "Số ngày nghỉ không đúng đến ngày - từ ngày",
+		"subcode": "130"
+	},
+	{
+		"stt": 660,
+		"code": "2360",
+		"source": "XML7",
+		"description": "Mã thẻ tạm không đúng định dạng",
+		"subcode": "130"
+	},
+	{
+		"stt": 661,
+		"code": "2387",
+		"source": "XML7",
+		"description": "Ngày ra không được nhỏ hơn ngày vào nội trú",
+		"subcode": "130"
+	},
+	{
+		"stt": 662,
+		"code": "2399",
+		"source": "XML7",
+		"description": "Ngoại trú từ ngày đang lớn hơn ngày ra viện (>ngày ra+1)",
+		"subcode": "130"
+	},
+	{
+		"stt": 663,
+		"code": "1858",
+		"source": "XML8",
+		"description": "Mã liên kết không được để trống"
+	},
+	{
+		"stt": 664,
+		"code": "1859",
+		"source": "XML8",
+		"description": "Mã liên kết không được lớn hơn 100 ký tự"
+	},
+	{
+		"stt": 665,
+		"code": "1861",
+		"source": "XML8",
+		"description": "Ngày ra không được để trống và phải đúng định dạng ngày tháng yyyymmddHHMM"
+	},
+	{
+		"stt": 666,
+		"code": "1862",
+		"source": "XML8",
+		"description": "Chẩn đoán vào viện không được để trống"
+	},
+	{
+		"stt": 667,
+		"code": "1863",
+		"source": "XML8",
+		"description": "Chẩn đoán ra viện không được để trống"
+	},
+	{
+		"stt": 668,
+		"code": "1864",
+		"source": "XML8",
+		"description": "Quá trình bệnh lý không được để trống"
+	},
+	{
+		"stt": 669,
+		"code": "1865",
+		"source": "XML8",
+		"description": "Tóm tắt kết quả không được để trống"
+	},
+	{
+		"stt": 670,
+		"code": "1866",
+		"source": "XML8",
+		"description": "Phương pháp điều trị không được để trống"
+	},
+	{
+		"stt": 671,
+		"code": "1867",
+		"source": "XML8",
+		"description": "Kết quả điều trị không được để trống và phải là số nguyên có giá trị từ 1 đến 8"
+	},
+	{
+		"stt": 672,
+		"code": "1870",
+		"source": "XML8",
+		"description": "Ngày chứng từ không được để trống và phải đúng định dạng ngày tháng yyyymmdd"
+	},
+	{
+		"stt": 673,
+		"code": "1953",
+		"source": "XML8",
+		"description": "Mã loại KCB không được để trống và phải là số nguyên có giá trị từ 1 đến 10"
+	},
+	{
+		"stt": 674,
+		"code": "2165",
+		"source": "XML8",
+		"description": "Mã loại KCB phải có giá trị là 02, 03 hoặc 04",
+		"subcode": "130"
+	},
+	{
+		"stt": 675,
+		"code": "2166",
+		"source": "XML8",
+		"description": "Mã loại KCB không trùng với thông tin nhập tại XML1",
+		"subcode": "130"
+	},
+	{
+		"stt": 676,
+		"code": "2167",
+		"source": "XML8",
+		"description": "Ngày vào không trùng với thông tin khai báo tại XML1",
+		"subcode": "130"
+	},
+	{
+		"stt": 677,
+		"code": "2168",
+		"source": "XML8",
+		"description": "Ngày ra không trùng với thông tin khai báo tại XML1",
+		"subcode": "130"
+	},
+	{
+		"stt": 678,
+		"code": "2169",
+		"source": "XML8",
+		"description": "Chuẩn đoán vào viện không trùng với thông tin khái báo tại XML1",
+		"subcode": "130"
+	},
+	{
+		"stt": 679,
+		"code": "2170",
+		"source": "XML8",
+		"description": "Chuẩn đoán ra viện không trùng với thông tin khai báo tại XML1",
+		"subcode": "130"
+	},
+	{
+		"stt": 680,
+		"code": "2173",
+		"source": "XML8",
+		"description": "Ngày chứng từ không trùng với ngày ra viện",
+		"subcode": "130"
+	},
+	{
+		"stt": 681,
+		"code": "2174",
+		"source": "XML8",
+		"description": "Mã thẻ tạm không trùng thông tin khai báo tại XML1",
+		"subcode": "130"
+	},
+	{
+		"stt": 682,
+		"code": "2291",
+		"source": "XML8",
+		"description": "Tóm tắt kết quả lớn hơn 4000 ký tự",
+		"subcode": "130"
+	},
+	{
+		"stt": 683,
+		"code": "2342",
+		"source": "XML8",
+		"description": "Nội dung tóm tắt kết quả quá ngắn, đề nghị xem lại",
+		"subcode": "130"
+	},
+	{
+		"stt": 684,
+		"code": "1871",
+		"source": "XML9",
+		"description": "Mã liên kết không được để trống"
+	},
+	{
+		"stt": 685,
+		"code": "1872",
+		"source": "XML9",
+		"description": "Mã liên kết không được lớn hơn 100 ký tự"
+	},
+	{
+		"stt": 686,
+		"code": "1873",
+		"source": "XML9",
+		"description": "Họ tên người nuôi dưỡng không được để trống"
+	},
+	{
+		"stt": 687,
+		"code": "1874",
+		"source": "XML9",
+		"description": "Họ tên người nuôi dưỡng không được lớn hơn 255 ký tự"
+	},
+	{
+		"stt": 688,
+		"code": "1875",
+		"source": "XML9",
+		"description": "Ngày sinh của người nuôi dưỡng không được để trống và phải đúng định dạng ngày tháng yyyymmdd"
+	},
+	{
+		"stt": 689,
+		"code": "1876",
+		"source": "XML9",
+		"description": "Mã dân tộc của người nuôi dưỡng không được để trống"
+	},
+	{
+		"stt": 690,
+		"code": "1877",
+		"source": "XML9",
+		"description": "Số CCCD của người nuôi dưỡng không được để trống"
+	},
+	{
+		"stt": 691,
+		"code": "1878",
+		"source": "XML9",
+		"description": "Số CCCD của người nuôi dưỡng không được lớn hơn 15 ký tự, không được tồn tại khoảng trắng ở giữa"
+	},
+	{
+		"stt": 692,
+		"code": "1879",
+		"source": "XML9",
+		"description": "Ngày cấp CCCD của người nuôi dưỡng không được để trống và phải đúng định dạng ngày tháng yyyymmdd"
+	},
+	{
+		"stt": 693,
+		"code": "1880",
+		"source": "XML9",
+		"description": "Nơi cấp CCCD của người nuôi dưỡng không được để trống"
+	},
+	{
+		"stt": 694,
+		"code": "1881",
+		"source": "XML9",
+		"description": "Nơi cấp CCCD của người nuôi dưỡng không được lớn hơn 1024 ký tự"
+	},
+	{
+		"stt": 695,
+		"code": "1882",
+		"source": "XML9",
+		"description": "Nơi cư trú của người nuôi dưỡng không được để trống"
+	},
+	{
+		"stt": 696,
+		"code": "1883",
+		"source": "XML9",
+		"description": "Nơi cư trú của người nuôi dưỡng không được lớn hơn 1024 ký tự"
+	},
+	{
+		"stt": 697,
+		"code": "1884",
+		"source": "XML9",
+		"description": "Mã quốc tịch của người nuôi dưỡng không được để trống"
+	},
+	{
+		"stt": 698,
+		"code": "1885",
+		"source": "XML9",
+		"description": "Mã tỉnh của người nuôi dưỡng không được để trống"
+	},
+	{
+		"stt": 699,
+		"code": "1887",
+		"source": "XML9",
+		"description": "Mã xã của người nuôi dưỡng không được để trống"
+	},
+	{
+		"stt": 700,
+		"code": "1888",
+		"source": "XML9",
+		"description": "Mã thẻ tạm không được để trống"
+	},
+	{
+		"stt": 701,
+		"code": "1889",
+		"source": "XML9",
+		"description": "Giới tính của con không được để trống và phải có giá trị từ 1 đến 3"
+	},
+	{
+		"stt": 702,
+		"code": "1890",
+		"source": "XML9",
+		"description": "Số con không được để trống và phải có giá trị từ 1 đến 99"
+	},
+	{
+		"stt": 703,
+		"code": "1891",
+		"source": "XML9",
+		"description": "Lần sinh không được để trống và phải có giá trị từ 1 đến 99"
+	},
+	{
+		"stt": 704,
+		"code": "1892",
+		"source": "XML9",
+		"description": "Số con đang sống không được để trống và phải có giá trị từ 0 đến 99"
+	},
+	{
+		"stt": 705,
+		"code": "1893",
+		"source": "XML9",
+		"description": "Cân nặng con không được để trống và phải là số nguyên lớn hơn 0"
+	},
+	{
+		"stt": 706,
+		"code": "1894",
+		"source": "XML9",
+		"description": "Ngày sinh con không được để trống và phải đúng định dạng ngày tháng yyyymmddHHMM"
+	},
+	{
+		"stt": 707,
+		"code": "1895",
+		"source": "XML9",
+		"description": "Nơi sinh con không được để trống"
+	},
+	{
+		"stt": 708,
+		"code": "1896",
+		"source": "XML9",
+		"description": "Nơi sinh con không được lớn hơn 1024 ký tự"
+	},
+	{
+		"stt": 709,
+		"code": "1897",
+		"source": "XML9",
+		"description": "Tình trạng con không được để trống"
+	},
+	{
+		"stt": 710,
+		"code": "1898",
+		"source": "XML9",
+		"description": "Sinh con phẫu thuật không được để trống và phải có giá trị là 0 hoặc 1"
+	},
+	{
+		"stt": 711,
+		"code": "1899",
+		"source": "XML9",
+		"description": "Sinh con dưới 32 tuần không được để trống và phải có giá trị là 0 hoặc 1"
+	},
+	{
+		"stt": 712,
+		"code": "1900",
+		"source": "XML9",
+		"description": "Họ tên người đỡ đẻ không được để trống"
+	},
+	{
+		"stt": 713,
+		"code": "1901",
+		"source": "XML9",
+		"description": "Họ tên người đỡ đẻ không được lớn hơn 255 ký tự"
+	},
+	{
+		"stt": 714,
+		"code": "1902",
+		"source": "XML9",
+		"description": "Họ tên người ghi chứng từ không được để trống"
+	},
+	{
+		"stt": 715,
+		"code": "1903",
+		"source": "XML9",
+		"description": "Họ tên người ghi chứng từ không được lớn hơn 255 ký tự"
+	},
+	{
+		"stt": 716,
+		"code": "1904",
+		"source": "XML9",
+		"description": "Ngày chứng từ không được để trống và phải đúng định dạng ngày tháng yyyymmdd"
+	},
+	{
+		"stt": 717,
+		"code": "1905",
+		"source": "XML9",
+		"description": "Số chứng từ không được để trống"
+	},
+	{
+		"stt": 718,
+		"code": "1906",
+		"source": "XML9",
+		"description": "Số chứng từ không được lớn hơn 200 ký tự"
+	},
+	{
+		"stt": 719,
+		"code": "1907",
+		"source": "XML9",
+		"description": "Quyển số không được để trống"
+	},
+	{
+		"stt": 720,
+		"code": "1908",
+		"source": "XML9",
+		"description": "Quyển số không được lớn hơn 200 ký tự"
+	},
+	{
+		"stt": 721,
+		"code": "1954",
+		"source": "XML9",
+		"description": "Mã thẻ tạm không được lớn hơn 15 ký tự, không được tồn tại khoảng trắng ở giữa"
+	},
+	{
+		"stt": 722,
+		"code": "2197",
+		"source": "XML9",
+		"description": "Tình trang con bắt buộc phải nhập thông tin",
+		"subcode": "130"
+	},
+	{
+		"stt": 723,
+		"code": "2198",
+		"source": "XML9",
+		"description": "Ghi chú không được để trống",
+		"subcode": "130"
+	},
+	{
+		"stt": 724,
+		"code": "2293",
+		"source": "XML9",
+		"description": "Số CCCD người nuôi dưỡng không đúng định dạng",
+		"subcode": "130"
+	},
+	{
+		"stt": 725,
+		"code": "2361",
+		"source": "XML9",
+		"description": "Mã thẻ tạm không đúng định dạng",
+		"subcode": "130"
+	},
+	{
+		"stt": 1,
+		"code": "270",
+		"source": "XML3",
+		"description": "Chụp động mạch vành không được phép chỉ định cho bệnh này (Chuyên đề Bảo hiểm)"
+	},
+	{
+		"stt": 2,
+		"code": "275",
+		"source": "XML3",
+		"description": "Đo chức năng hô hấp không được chỉ định cho bệnh này (Chuyên đề Bảo hiểm)"
+	},
+	{
+		"stt": 3,
+		"code": "751",
+		"source": "XML3",
+		"description": "Không thực hiện các dịch vụ chuyên khoa Điện Quang trong cùng một thời điểm"
+	},
+	{
+		"stt": 4,
+		"code": "752",
+		"source": "XML3",
+		"description": "Chỉ bác sĩ chuyên khoa Nội mới được thực hiện KCB"
+	},
+	{
+		"stt": 5,
+		"code": "753",
+		"source": "XML3",
+		"description": "Chỉ bác sĩ chuyên khoa Răng Hàm Mặt và Đa Khoa được thực hiện KCB"
+	},
+	{
+		"stt": 6,
+		"code": "890",
+		"source": "XML3",
+		"description": "Thừa dịch vụ xét nghiệm đối với bệnh nhân ngoại trú (Chuyên đề BH)"
+	},
+	{
+		"stt": 7,
+		"code": "927",
+		"source": "XML3",
+		"description": "(Chuyên đề Bảo hiểm): Định lượng Pro calcitionin không được phép chỉ định đồng thời với DVKT Định lượng CRP/CRP hs (theo TT35/2016/TT-BYT)"
+	},
+	{
+		"stt": 8,
+		"code": "930",
+		"source": "XML3",
+		"description": "Các DVKT được xếp tương đương về quy trình kỹ thuật (Chuyên Đề bảo hiểm)"
+	},
+	{
+		"stt": 9,
+		"code": "942",
+		"source": "XML3",
+		"description": "Khám bệnh không đúng chuyên môn của CCHN bác sĩ"
+	},
+	{
+		"stt": 10,
+		"code": "3285",
+		"source": "XML3",
+		"description": "Chuyên đề BH: Không được phép chỉ định DVKT CK-MB đồng thời CK",
+		"subcode": "3176"
+	},
+	{
+		"stt": 11,
+		"code": "3327",
+		"source": "XML3",
+		"description": "Chuyên đề bảo hiểm: Siêu âm ổ bụng sau PT ko phù hợp tình trạng bệnh",
+		"subcode": "3176"
+	},
+	{
+		"stt": 12,
+		"code": "3343",
+		"source": "XML3",
+		"description": "Bắc Giang: Dịch vụ kỹ thuật “Phục hồi cổ răng bằng Composite” chỉ định quá 01 lần trong Hồ sơ bệnh án (Chuyên đề bảo hiểm KT40)",
+		"subcode": "3176"
+	},
+	{
+		"stt": 13,
+		"code": "3344",
+		"source": "XML3",
+		"description": "Bắc Giang: Dịch vụ Xoa bóp bấm huyệt điều trị hội chứng vai gáy chống chỉ định cho Đau vai gáy trong bệnh cảnh có ép tuỷ cổ (viêm tuỷ, thoát vị đĩa đệm thể trung tâm, u tuỷ, rỗng tuỷ ... quy trình kỹ thuật 792/QĐ-BYT ngày 12/03/2013) (Chuyên đề Bảo hiểm KT03)",
+		"subcode": "3176"
+	},
+	{
+		"stt": 14,
+		"code": "3345",
+		"source": "XML3",
+		"description": "Bắc Giang: Dịch vụ Xoa bóp bấm huyệt điều trị hội chứng vai gáy Chỉ định cho Đau vai gáy do thoái hoá đốt sống cổ quy trình kỹ thuật 792/QĐ-BYT ngày 12/03/2013) (Chuyên đề Bảo hiểm KT03)",
+		"subcode": "3176"
+	},
+	{
+		"stt": 15,
+		"code": "3465",
+		"source": "XML3",
+		"description": "Chuyên đề BH: căn cứ quy trình KT quy định tại QĐ 5737/QĐ-BYT đợt 2, thực hiện từ chối thanh toán các DVKT không có chỉ định bước sóng laser, công suất phát, chế độ phát, cường độ chùm tia",
+		"subcode": "3176"
+	},
+	{
+		"stt": 16,
+		"code": "3622",
+		"source": "XML3",
+		"description": "Thanh Hóa: Điều Dưỡng không được phép y lệnh Giường cho Bệnh nhân (Chuyên đề bảo hiểm)",
+		"subcode": "3176"
+	},
+	{
+		"stt": 17,
+		"code": "763",
+		"source": "XML2",
+		"description": "Không thực hiện kê thuốc trước thời gian hiệu lực của thẻ BHYT"
+	},
+	{
+		"stt": 18,
+		"code": "764",
+		"source": "XML3",
+		"description": "Không thực hiện chỉ định dịch vụ trước thời gian hiệu lực của thẻ BHYT"
+	},
+	{
+		"stt": 19,
+		"code": "323",
+		"source": "XML3",
+		"description": "Định lượng Glucose máu không được phép chỉ định quá 1 lần trong 6 tháng"
+	},
+	{
+		"stt": 20,
+		"code": "345",
+		"source": "XML3",
+		"description": "Siêu Âm Tim không được phép chỉ định quá 1 lần trong 6 tháng cho các bệnh nhân có Bệnh Tiểu Đường hoặc Cao huyết Áp"
+	}
+]

@@ -196,12 +196,10 @@ const BhxhValidatorPage = () => {
 							<path d="M12 16v-4M12 8h.01" />
 						</svg>
 						<span>
-							Validates against <strong>595 official BHXH error codes</strong>{" "}
+							Validates against <strong>745 official BHXH error codes</strong>{" "}
 							from TT 4210.{" "}
 							<a
-								href="https://baohiemxahoi.gov.vn/tintuc/Pages/linh-vuc-bao-hiem-y-te.aspx?ItemID=22041"
-								target="_blank"
-								rel="noopener noreferrer"
+								href="/bhxh-error-codes"
 								className="underline font-medium hover:text-blue-700 dark:hover:text-blue-100"
 							>
 								View error code reference →

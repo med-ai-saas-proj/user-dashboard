@@ -108,7 +108,7 @@ const CrossSearchPage = () => {
 			const data: SearchResult = await resp.json();
 			setSearchResult(data);
 			toast.success(`Found ${data.total_matches} facility matches`);
-		} catch (_err) {
+		} catch (err) {
 			toast.error(err instanceof Error ? err.message : "Search failed");
 		} finally {
 			setIsLoading(false);

@@ -81,6 +81,10 @@ export const API_ROUTES = {
 			`service/api/${API_VERSION}/voice_transcribe`,
 			BASE_API_URL
 		).toString(),
+		VOICE_TRANSCRIBE_STREAM: new URL(
+			`service/api/${API_VERSION}/voice_transcribe/stream`,
+			BASE_API_URL
+		).toString(),
 		VOICE_TRANSCRIBE_WS: new URL(
 			`service/api/${API_VERSION}/voice_transcribe/ws`,
 			BASE_API_URL.replace("https://", "wss://").replace("http://", "ws://")

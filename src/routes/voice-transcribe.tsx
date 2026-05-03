@@ -17,6 +17,13 @@ import { useServiceApiKeyStore } from "@/features/api-keys/store/service-api-key
 import DashboardLayout from "@/layouts/dashboard-layout";
 import { getAuthHeaders } from "@/lib/auth-headers";
 
+interface TranscribeSegment {
+	start: number;
+	end: number;
+	text: string;
+	speaker?: string | null;
+}
+
 interface TranscribeResponse {
 	text: string;
 	transcript?: string;
@@ -25,8 +32,27 @@ interface TranscribeResponse {
 	duration?: number;
 	enhanced?: boolean;
 	translation?: string | null;
-	segments?: { start: number; end: number; text: string }[];
+	segments?: TranscribeSegment[];
 }
+
+type StreamEvent =
+	| { type: "delta"; text: string }
+	| {
+			type: "segment";
+			start: number;
+			end: number;
+			text: string;
+			speaker?: string | null;
+	  }
+	| {
+			type: "done";
+			text: string;
+			segments: TranscribeSegment[];
+			language: string;
+			duration_seconds: number | null;
+			model_used: string;
+	  }
+	| { type: "error"; message: string };
 
 const formatDuration = (seconds: number) => {
 	const m = Math.floor(seconds / 60);
@@ -82,7 +108,12 @@ const VoiceTranscribePage = () => {
 	const handleTranscribe = async () => {
 		if (!file) return;
 		setIsLoading(true);
-		setResult(null);
+		setResult({
+			text: "",
+			transcript: "",
+			language: language === "auto" ? "" : language,
+			segments: [],
+		});
 
 		try {
 			const formData = new FormData();
@@ -90,26 +121,83 @@ const VoiceTranscribePage = () => {
 			if (language !== "auto") {
 				formData.append("language", language);
 			}
-			formData.append("denoise", denoise ? "true" : "false");
-			formData.append("enhance", enhance ? "true" : "false");
-			if (translateToEnglish) {
-				formData.append("translate_to", "en");
-			}
 
 			const headers = await getAuthHeaders(
-				API_ROUTES.SERVICES.VOICE_TRANSCRIBE
+				API_ROUTES.SERVICES.VOICE_TRANSCRIBE_STREAM
 			);
 			delete headers["Content-Type"];
-			const resp = await fetch(API_ROUTES.SERVICES.VOICE_TRANSCRIBE, {
+			const resp = await fetch(API_ROUTES.SERVICES.VOICE_TRANSCRIBE_STREAM, {
 				method: "POST",
 				headers,
 				body: formData,
 			});
-			if (!resp.ok)
+			if (!resp.ok || !resp.body)
 				throw new Error(`HTTP ${resp.status}: ${await resp.text()}`);
-			const json: TranscribeResponse = await resp.json();
-			setResult(json);
-			toast.success("Transcription complete");
+
+			const reader = resp.body.getReader();
+			const decoder = new TextDecoder();
+			let buffer = "";
+			let accumulatedText = "";
+			const accumulatedSegments: TranscribeSegment[] = [];
+
+			// Parse SSE: events separated by \n\n, each has `data: <payload>`.
+			while (true) {
+				const { done, value } = await reader.read();
+				if (done) break;
+				buffer += decoder.decode(value, { stream: true });
+
+				let idx = buffer.indexOf("\n\n");
+				while (idx !== -1) {
+					const raw = buffer.slice(0, idx);
+					buffer = buffer.slice(idx + 2);
+					const dataLine = raw.split("\n").find((l) => l.startsWith("data:"));
+					if (!dataLine) continue;
+					const payload = dataLine.slice(5).trim();
+					if (!payload || payload === "[DONE]") continue;
+
+					let evt: StreamEvent;
+					try {
+						evt = JSON.parse(payload);
+					} catch {
+						continue;
+					}
+
+					if (evt.type === "delta") {
+						accumulatedText += evt.text;
+						setResult((prev) => ({
+							...(prev ?? { text: "", segments: [] }),
+							text: accumulatedText,
+							transcript: accumulatedText,
+						}));
+					} else if (evt.type === "segment") {
+						accumulatedSegments.push({
+							start: evt.start,
+							end: evt.end,
+							text: evt.text,
+							speaker: evt.speaker,
+						});
+						setResult((prev) => ({
+							...(prev ?? { text: "", segments: [] }),
+							text: accumulatedText,
+							transcript: accumulatedText,
+							segments: [...accumulatedSegments],
+						}));
+					} else if (evt.type === "done") {
+						setResult({
+							text: evt.text,
+							transcript: evt.text,
+							language: evt.language,
+							duration_seconds: evt.duration_seconds ?? undefined,
+							segments: evt.segments,
+						});
+						toast.success("Transcription complete");
+					} else if (evt.type === "error") {
+						throw new Error(evt.message);
+					}
+
+					idx = buffer.indexOf("\n\n");
+				}
+			}
 		} catch (err) {
 			toast.error(err instanceof Error ? err.message : "Transcription failed");
 		} finally {

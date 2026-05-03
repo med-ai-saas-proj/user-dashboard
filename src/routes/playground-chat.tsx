@@ -1,12 +1,17 @@
+import { ApiTopology, TOPOLOGIES } from "@/components/api-topology";
+import {
+	DemoPageDescription,
+	DemoPageShell,
+	DemoToolbar,
+} from "@/components/demo";
+import { ViewCodeDialog } from "@/components/view-code-dialog";
 import { API_ROUTES } from "@/config/api-routes";
 import ChatContent from "@/features/pg-chat/components/ChatContent";
 import ChatInput from "@/features/pg-chat/components/ChatInput";
 import type { ChatRequest } from "@/features/pg-chat/services/chat.dto";
 import { useChatStore } from "@/features/pg-chat/store/chat.store";
-import { useStream } from "@/lib/streaming/use-stream";
-import { ViewCodeDialog } from "@/components/view-code-dialog";
-import { ApiTopology, TOPOLOGIES } from "@/components/api-topology";
 import DashboardLayout from "@/layouts/dashboard-layout";
+import { useStream } from "@/lib/streaming/use-stream";
 
 export default function PlaygroundChatPage() {
 	const {
@@ -53,23 +58,33 @@ export default function PlaygroundChatPage() {
 	};
 
 	return (
-		<DashboardLayout pageTitle="Chat" className="pb-0">
-			<div className="w-full h-full flex flex-col items-stretch justify-between px-4 sm:px-6 md:px-12 lg:px-24 xl:px-64 relative">
-				<div className="absolute top-2 right-4 z-10 sm:right-6 md:right-12 lg:right-24 xl:right-64">
-					<ViewCodeDialog
-						endpoint={API_ROUTES.SERVICES.CHAT}
-						method="POST"
-						body={{
-							conversation_id: null,
-							model: "default",
-							input: "Hello, how can you help?",
-						}}
-						description="Chat with AI assistant (streaming SSE)"
+		<DashboardLayout pageTitle="Chat">
+			<DemoPageShell>
+				<DemoPageDescription>
+					Multi-turn chat with streaming SSE, tool use, and model selection.
+				</DemoPageDescription>
+				<DemoToolbar
+					end={
+						<ViewCodeDialog
+							endpoint={API_ROUTES.SERVICES.CHAT}
+							method="POST"
+							body={{
+								conversation_id: null,
+								model: "default",
+								input: "Hello, how can you help?",
+							}}
+							description="Chat with AI assistant (streaming SSE)"
+						/>
+					}
+				/>
+				<div className="flex-1 flex flex-col overflow-hidden px-4 sm:px-6 md:px-12 lg:px-24 xl:px-64">
+					<ChatContent messages={messages} isLoading={isStreaming} />
+					<ChatInput
+						onSendMessage={handleSendMessage}
+						isLoading={isStreaming}
 					/>
 				</div>
-				<ChatContent messages={messages} isLoading={isStreaming} />
-				<ChatInput onSendMessage={handleSendMessage} isLoading={isStreaming} />
-			</div>
+			</DemoPageShell>
 			<div className="px-4 py-2 border-t">
 				<ApiTopology {...TOPOLOGIES.chat} />
 			</div>

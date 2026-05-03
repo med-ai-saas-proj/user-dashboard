@@ -509,6 +509,10 @@ const EhrSummaryPage = () => {
 					local Qwen LLM. Upload from multiple facilities, auto-convert to FHIR
 					R4, merge, and summarize in clinical prose.
 				</DemoPageDescription>
+				<div className="px-6 pb-2 -mt-2 text-[11px] text-muted-foreground">
+					Pipeline: detect format → standardize each source to FHIR R4 via EHR
+					Converter → merge → summarize.
+				</div>
 				<div className="flex-1 flex flex-col lg:grid lg:grid-cols-2 overflow-hidden">
 					{/* Left: Multi-source input */}
 					<div className="border-b lg:border-b-0 lg:border-r flex flex-col overflow-hidden min-h-0 lg:min-h-full">
@@ -533,6 +537,19 @@ const EhrSummaryPage = () => {
 								>
 									Upload EHR
 								</Button>
+								{entries.length > 0 && (
+									<Button
+										variant="ghost"
+										size="sm"
+										className="h-7 text-xs text-destructive hover:text-destructive"
+										onClick={() => {
+											setEntries([]);
+											setSelectedEntry(null);
+										}}
+									>
+										Clear all
+									</Button>
+								)}
 								<Button
 									variant="ghost"
 									size="sm"

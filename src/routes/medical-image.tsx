@@ -191,9 +191,26 @@ const MedicalImagePage = () => {
 								)}
 							</button>
 							{file && (
-								<p className="text-xs text-muted-foreground">
-									{file.name} ({(file.size / 1024 / 1024).toFixed(2)} MB)
-								</p>
+								<div className="flex items-center justify-between gap-2">
+									<p className="text-xs text-muted-foreground">
+										{file.name} ({(file.size / 1024 / 1024).toFixed(2)} MB)
+									</p>
+									<Button
+										type="button"
+										variant="ghost"
+										size="sm"
+										className="h-7 text-xs"
+										onClick={() => {
+											setFile(null);
+											setPreview(null);
+											setResult(null);
+											fileInputRef.current?.click();
+										}}
+									>
+										<ImageIcon className="h-3 w-3 mr-1" />
+										Change image
+									</Button>
+								</div>
 							)}
 							<Button
 								type="button"

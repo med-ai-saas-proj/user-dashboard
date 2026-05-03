@@ -73,6 +73,10 @@ export const API_ROUTES = {
 			`service/api/${API_VERSION}/bhxh_validator/validate`,
 			BASE_API_URL
 		).toString(),
+		BHXH_VALIDATE_BUNDLE: new URL(
+			`service/api/${API_VERSION}/bhxh_validator/validate_bundle`,
+			BASE_API_URL
+		).toString(),
 		VOICE_TRANSCRIBE: new URL(
 			`service/api/${API_VERSION}/voice_transcribe`,
 			BASE_API_URL

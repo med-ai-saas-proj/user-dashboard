@@ -13,7 +13,6 @@ import { RawResponseViewer } from "@/components/raw-response-viewer";
 import { Button } from "@/components/shadcn/button";
 import { ViewCodeDialog } from "@/components/view-code-dialog";
 import { API_ROUTES } from "@/config/api-routes";
-import { useServiceApiKeyStore } from "@/features/api-keys/store/service-api-key.store";
 import DashboardLayout from "@/layouts/dashboard-layout";
 import { getAuthHeaders } from "@/lib/auth-headers";
 
@@ -73,11 +72,11 @@ const VoiceTranscribePage = () => {
 
 	// Real-time state
 	const [isRecording, setIsRecording] = useState(false);
-	const [liveText, setLiveText] = useState("");
 	const [recordingDuration, setRecordingDuration] = useState(0);
 	const [micPermissionDenied, setMicPermissionDenied] = useState(false);
 	const mediaRecorderRef = useRef<MediaRecorder | null>(null);
-	const wsRef = useRef<WebSocket | null>(null);
+	const recordedChunksRef = useRef<Blob[]>([]);
+	const recordedMimeTypeRef = useRef<string>("");
 	const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
 	// Cleanup on unmount
@@ -92,9 +91,6 @@ const VoiceTranscribePage = () => {
 				mediaRecorderRef.current.stream.getTracks().forEach((t) => {
 					t.stop();
 				});
-			}
-			if (wsRef.current) {
-				wsRef.current.close();
 			}
 		};
 	}, []);
@@ -157,8 +153,10 @@ const VoiceTranscribePage = () => {
 		setResult(null);
 	};
 
-	const handleTranscribe = async () => {
-		if (!file) return;
+	// Upload an audio blob to the backend and consume its SSE stream.
+	// Used by both the file-upload path and the in-browser recording path —
+	// recording captures the whole clip and posts it the same way as a file.
+	const transcribeBlob = async (blob: Blob, filename: string) => {
 		setIsLoading(true);
 		setShowSegments(false); // collapse segment list by default — long audio can have 100s
 		setResult({
@@ -198,7 +196,7 @@ const VoiceTranscribePage = () => {
 
 		try {
 			const formData = new FormData();
-			formData.append("file", file);
+			formData.append("file", blob, filename);
 			if (language !== "auto") {
 				formData.append("language", language);
 			}
@@ -298,6 +296,15 @@ const VoiceTranscribePage = () => {
 		}
 	};
 
+	const handleTranscribe = async () => {
+		if (!file) return;
+		await transcribeBlob(file, file.name);
+	};
+
+	// Record-then-upload: capture the whole clip in the browser, then on
+	// stop, send it as a single file to the same /voice_transcribe/stream
+	// endpoint that file uploads use. Simpler than a chunked WebSocket
+	// pipeline and gives Azure a complete clip for diarization.
 	const startRecording = async () => {
 		if (!navigator.mediaDevices?.getUserMedia) {
 			toast.error(
@@ -315,7 +322,6 @@ const VoiceTranscribePage = () => {
 				audio: true,
 			});
 
-			// Determine a supported mimeType
 			const preferredTypes = [
 				"audio/webm;codecs=opus",
 				"audio/webm",
@@ -339,91 +345,50 @@ const VoiceTranscribePage = () => {
 				return;
 			}
 
+			recordedChunksRef.current = [];
+			recordedMimeTypeRef.current = mimeType;
+
 			const mediaRecorder = new MediaRecorder(stream, { mimeType });
 			mediaRecorderRef.current = mediaRecorder;
 
-			// Open WebSocket — browsers cannot set headers on `new WebSocket(...)`,
-			// so we pass the API key and language as query parameters.
-			const apiKey = useServiceApiKeyStore.getState().selectedApiKey;
-			const params = new URLSearchParams();
-			if (apiKey) params.set("api_key", apiKey);
-			if (language !== "auto") params.set("language", language);
-			const wsUrl =
-				API_ROUTES.SERVICES.VOICE_TRANSCRIBE_WS +
-				(params.toString() ? `?${params.toString()}` : "");
-			const ws = new WebSocket(wsUrl);
-			wsRef.current = ws;
-
-			ws.onmessage = (event) => {
-				try {
-					const msg = JSON.parse(event.data);
-					if (msg.type === "partial" || msg.type === "final") {
-						setLiveText(msg.text);
-					}
-					if (msg.type === "final") {
-						setResult({
-							text: msg.text,
-							language: msg.language,
-							duration: msg.duration,
-						});
-						stopRecording();
-					}
-					if (msg.type === "error") {
-						toast.error(msg.text || "Transcription error");
-					}
-				} catch {
-					// Non-JSON message, ignore
+			mediaRecorder.ondataavailable = (event) => {
+				if (event.data.size > 0) {
+					recordedChunksRef.current.push(event.data);
 				}
 			};
 
-			ws.onerror = () => {
-				toast.error("WebSocket connection error");
-				stopRecording();
-			};
-
-			ws.onclose = () => {
-				// If still recording when ws closes unexpectedly, stop
-				if (mediaRecorderRef.current?.state === "recording") {
-					stopRecording();
+			mediaRecorder.onstop = async () => {
+				stream.getTracks().forEach((t) => {
+					t.stop();
+				});
+				const chunks = recordedChunksRef.current;
+				recordedChunksRef.current = [];
+				if (chunks.length === 0) {
+					toast.error("No audio captured");
+					return;
 				}
+				const mt = recordedMimeTypeRef.current || mimeType;
+				const blob = new Blob(chunks, { type: mt });
+				const ext = mt.includes("ogg")
+					? "ogg"
+					: mt.includes("mp4")
+						? "m4a"
+						: "webm";
+				const filename = `recording-${Date.now()}.${ext}`;
+				await transcribeBlob(blob, filename);
 			};
 
-			ws.onopen = () => {
-				mediaRecorder.start(2000); // Get chunks every 2 seconds
-				setIsRecording(true);
-				setLiveText("");
-				setRecordingDuration(0);
-				setResult(null);
+			// One single chunk per recording — collect everything, send on stop.
+			mediaRecorder.start();
+			setIsRecording(true);
+			setRecordingDuration(0);
+			setResult(null);
 
-				// Duration timer
-				timerRef.current = setInterval(() => {
-					setRecordingDuration((d) => d + 1);
-				}, 1000);
-			};
-
-			mediaRecorder.ondataavailable = async (event) => {
-				if (event.data.size > 0 && ws.readyState === WebSocket.OPEN) {
-					const arrayBuffer = await event.data.arrayBuffer();
-					const bytes = new Uint8Array(arrayBuffer);
-					let binary = "";
-					for (let i = 0; i < bytes.length; i++) {
-						binary += String.fromCharCode(bytes[i]);
-					}
-					const base64 = btoa(binary);
-					ws.send(
-						JSON.stringify({
-							audio: base64,
-							format: mimeType.split(";")[0],
-							final: false,
-						})
-					);
-				}
-			};
+			timerRef.current = setInterval(() => {
+				setRecordingDuration((d) => d + 1);
+			}, 1000);
 		} catch (err) {
 			if (err instanceof DOMException && err.name === "NotAllowedError") {
-				// Query the Permissions API so the message matches the actual
-				// situation — the fix path differs depending on whether the
-				// site itself is blocked or whether the OS / audio stack is.
 				let sitePermission: "granted" | "denied" | "prompt" | "unknown" =
 					"unknown";
 				try {
@@ -469,24 +434,9 @@ const VoiceTranscribePage = () => {
 			mediaRecorderRef.current &&
 			mediaRecorderRef.current.state !== "inactive"
 		) {
+			// onstop handler will gather chunks, build a Blob, and upload.
 			mediaRecorderRef.current.stop();
-			mediaRecorderRef.current.stream.getTracks().forEach((t) => {
-				t.stop();
-			});
 		}
-
-		// Send final signal
-		if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
-			wsRef.current.send(JSON.stringify({ audio: "", final: true }));
-			// Don't close immediately - wait for final response
-			const currentWs = wsRef.current;
-			setTimeout(() => {
-				if (currentWs.readyState === WebSocket.OPEN) {
-					currentWs.close();
-				}
-			}, 5000);
-		}
-
 		if (timerRef.current) {
 			clearInterval(timerRef.current);
 			timerRef.current = null;
@@ -499,8 +449,8 @@ const VoiceTranscribePage = () => {
 			<DemoPageShell>
 				<DemoPageDescription>
 					VAD-based speech-to-text with automatic punctuation/case enhancement
-					via local Qwen LLM. Upload audio files or record live from microphone.
-					Supports Vietnamese & English.
+					via Azure GPT-4o transcribe + diarize. Upload an audio file or record
+					from microphone. Supports Vietnamese & English.
 				</DemoPageDescription>
 				<DemoToolbar
 					start={
@@ -716,24 +666,17 @@ const VoiceTranscribePage = () => {
 												Click to start recording
 											</p>
 											<p className="text-xs text-muted-foreground mt-0.5">
-												Transcribes speech in real-time via microphone
+												Records the full clip, then transcribes when you stop.
 											</p>
 										</>
 									)}
 								</div>
 							</div>
 
-							{/* Live transcript (shown inline when recording) */}
-							{liveText && (
-								<div className="p-3 rounded-lg border bg-muted/30">
-									<span className="text-xs font-medium text-muted-foreground block mb-1">
-										{isRecording ? "Live Transcript" : "Final Transcript"}
-									</span>
-									<p className="text-sm whitespace-pre-wrap leading-relaxed">
-										{liveText}
-									</p>
-								</div>
-							)}
+							{/* While the upload is in flight after recording, the
+							     standard isLoading button copy + segment stream on the
+							     right pane provides the feedback. No live-transcript
+							     side panel anymore. */}
 						</div>
 					}
 					right={

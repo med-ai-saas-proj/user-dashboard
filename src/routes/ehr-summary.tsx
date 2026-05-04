@@ -391,59 +391,50 @@ const EhrSummaryPage = () => {
 			}
 		}
 
+		// Anything we can't recognize as a structured EHR format goes
+		// straight to the LLM as raw text. Trying to push HL7v2 / arbitrary
+		// narratives through the FHIR converter usually 500s and adds
+		// latency; the summarizer handles raw text fine.
+		if (format !== "bhyt-xml" && format !== "emrbyt-xml") {
+			return null;
+		}
+
 		const ctl = new AbortController();
 		const timer = setTimeout(() => ctl.abort(), 30_000);
 
 		try {
-			if (format === "bhyt-xml" || format === "emrbyt-xml") {
-				const url =
-					format === "bhyt-xml"
-						? API_ROUTES.SERVICES.FHIR_CONVERTER_BHYT_TO_FHIR
-						: API_ROUTES.SERVICES.FHIR_CONVERTER_EMRBYT_TO_FHIR;
-				const headers = await getAuthHeaders(url);
-				headers["Content-Type"] = "application/xml";
-				const resp = await fetch(url, {
-					method: "POST",
-					headers,
-					body: trimmed,
-					signal: ctl.signal,
-				});
-				if (resp.ok) {
-					const out = await resp.json();
-					// bhyt-to-fhir returns an array of bundles; emrbyt-to-fhir returns one
-					if (Array.isArray(out)) {
-						const allEntries: Record<string, unknown>[] = [];
-						for (const b of out) {
-							const e =
-								(b as { entry?: Record<string, unknown>[] }).entry || [];
-							allEntries.push(...e);
-						}
-						return {
-							resourceType: "Bundle",
-							type: "collection",
-							total: allEntries.length,
-							entry: allEntries,
-						};
-					}
-					if (out?.resourceType === "Bundle") return out;
-				}
-			}
-
-			// Legacy fallback for HL7v2 / narrative / unknown
-			const url = API_ROUTES.SERVICES.EHR_CONVERTER_CONVERT;
+			const url =
+				format === "bhyt-xml"
+					? API_ROUTES.SERVICES.FHIR_CONVERTER_BHYT_TO_FHIR
+					: API_ROUTES.SERVICES.FHIR_CONVERTER_EMRBYT_TO_FHIR;
 			const headers = await getAuthHeaders(url);
+			headers["Content-Type"] = "application/xml";
 			const resp = await fetch(url, {
 				method: "POST",
 				headers,
-				body: JSON.stringify({ data: trimmed, validate_output: false }),
+				body: trimmed,
 				signal: ctl.signal,
 			});
 			if (resp.ok) {
-				const json = await resp.json();
-				if (json.success && json.bundle) return json.bundle;
+				const out = await resp.json();
+				// bhyt-to-fhir returns an array of bundles; emrbyt-to-fhir returns one
+				if (Array.isArray(out)) {
+					const allEntries: Record<string, unknown>[] = [];
+					for (const b of out) {
+						const e = (b as { entry?: Record<string, unknown>[] }).entry || [];
+						allEntries.push(...e);
+					}
+					return {
+						resourceType: "Bundle",
+						type: "collection",
+						total: allEntries.length,
+						entry: allEntries,
+					};
+				}
+				if (out?.resourceType === "Bundle") return out;
 			}
 		} catch {
-			/* conversion failed or timed out */
+			/* conversion failed or timed out — caller will fall back to raw */
 		} finally {
 			clearTimeout(timer);
 		}
@@ -506,13 +497,18 @@ const EhrSummaryPage = () => {
 					continue;
 				}
 
-				toast.info(`Standardizing: ${entry.label}...`);
+				const fmt = detectSourceFormat(trimmed);
+				if (fmt === "bhyt-xml" || fmt === "emrbyt-xml") {
+					toast.info(`Standardizing: ${entry.label}...`);
+				}
 				const bundle = await standardizeToFhir(entry.data);
 				if (bundle) {
 					fhirBundles.push(bundle);
 					sourceLabels.push(sourceLabel);
 				} else {
-					// Converter unavailable — pass raw data through to the summarizer.
+					// Format we can't standardize (or converter unavailable) —
+					// pass raw data through to the summarizer for the LLM to
+					// handle directly.
 					rawSources.push({
 						label: sourceLabel,
 						data: parsedJson ?? entry.data,
@@ -534,9 +530,7 @@ const EhrSummaryPage = () => {
 			}
 
 			if (rawSources.length > 0 && fhirBundles.length === 0) {
-				toast.warning(
-					"FHIR converter unavailable — summarizing raw sources directly"
-				);
+				toast.info("Sending raw input to the LLM for summarization");
 			}
 
 			toast.info("Generating summary...");

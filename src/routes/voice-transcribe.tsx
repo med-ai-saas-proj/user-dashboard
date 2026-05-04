@@ -108,12 +108,41 @@ const VoiceTranscribePage = () => {
 	const handleTranscribe = async () => {
 		if (!file) return;
 		setIsLoading(true);
+		setShowSegments(false); // collapse segment list by default — long audio can have 100s
 		setResult({
 			text: "",
 			transcript: "",
 			language: language === "auto" ? "" : language,
 			segments: [],
 		});
+
+		// Coalesce setState across many segment events into one render per
+		// animation frame. Without this, an 80-segment file fires ~80 React
+		// rerenders within ~100ms and the page goes Unresponsive.
+		let accumulatedText = "";
+		const accumulatedSegments: TranscribeSegment[] = [];
+		let pendingFlush = false;
+		let lastTextSnapshot = "";
+		let lastSegLen = 0;
+
+		const scheduleFlush = () => {
+			if (pendingFlush) return;
+			pendingFlush = true;
+			requestAnimationFrame(() => {
+				pendingFlush = false;
+				const textChanged = accumulatedText !== lastTextSnapshot;
+				const segChanged = accumulatedSegments.length !== lastSegLen;
+				if (!textChanged && !segChanged) return;
+				lastTextSnapshot = accumulatedText;
+				lastSegLen = accumulatedSegments.length;
+				setResult((prev) => ({
+					...(prev ?? { text: "", segments: [] }),
+					text: accumulatedText,
+					transcript: accumulatedText,
+					segments: accumulatedSegments.slice(),
+				}));
+			});
+		};
 
 		try {
 			const formData = new FormData();
@@ -137,20 +166,33 @@ const VoiceTranscribePage = () => {
 			const reader = resp.body.getReader();
 			const decoder = new TextDecoder();
 			let buffer = "";
-			let accumulatedText = "";
-			const accumulatedSegments: TranscribeSegment[] = [];
 
-			// Parse SSE: events separated by \n\n, each has `data: <payload>`.
+			// Parse SSE: events separated by \r\n\r\n or \n\n, each has `data: <payload>`.
 			while (true) {
 				const { done, value } = await reader.read();
 				if (done) break;
 				buffer += decoder.decode(value, { stream: true });
 
-				let idx = buffer.indexOf("\n\n");
-				while (idx !== -1) {
-					const raw = buffer.slice(0, idx);
-					buffer = buffer.slice(idx + 2);
-					const dataLine = raw.split("\n").find((l) => l.startsWith("data:"));
+				while (true) {
+					const idxRn = buffer.indexOf("\r\n\r\n");
+					const idxN = buffer.indexOf("\n\n");
+					let sepIdx = -1;
+					let sepLen = 0;
+					if (idxRn !== -1 && (idxN === -1 || idxRn <= idxN)) {
+						sepIdx = idxRn;
+						sepLen = 4;
+					} else if (idxN !== -1) {
+						sepIdx = idxN;
+						sepLen = 2;
+					} else {
+						break;
+					}
+					const raw = buffer.slice(0, sepIdx);
+					buffer = buffer.slice(sepIdx + sepLen);
+					const dataLine = raw
+						.replace(/\r\n/g, "\n")
+						.split("\n")
+						.find((l) => l.startsWith("data:"));
 					if (!dataLine) continue;
 					const payload = dataLine.slice(5).trim();
 					if (!payload || payload === "[DONE]") continue;
@@ -164,11 +206,7 @@ const VoiceTranscribePage = () => {
 
 					if (evt.type === "delta") {
 						accumulatedText += evt.text;
-						setResult((prev) => ({
-							...(prev ?? { text: "", segments: [] }),
-							text: accumulatedText,
-							transcript: accumulatedText,
-						}));
+						scheduleFlush();
 					} else if (evt.type === "segment") {
 						accumulatedSegments.push({
 							start: evt.start,
@@ -176,12 +214,17 @@ const VoiceTranscribePage = () => {
 							text: evt.text,
 							speaker: evt.speaker,
 						});
-						setResult((prev) => ({
-							...(prev ?? { text: "", segments: [] }),
-							text: accumulatedText,
-							transcript: accumulatedText,
-							segments: [...accumulatedSegments],
-						}));
+						// Build accumulatedText from segments when the backend
+						// emits segments without per-token deltas (the diarize
+						// path does this — segments arrive every few seconds).
+						if (!accumulatedText || accumulatedSegments.length === 1) {
+							accumulatedText = accumulatedSegments
+								.map((s) => s.text)
+								.join(" ");
+						} else {
+							accumulatedText = `${accumulatedText} ${evt.text}`.trim();
+						}
+						scheduleFlush();
 					} else if (evt.type === "done") {
 						setResult({
 							text: evt.text,
@@ -194,8 +237,6 @@ const VoiceTranscribePage = () => {
 					} else if (evt.type === "error") {
 						throw new Error(evt.message);
 					}
-
-					idx = buffer.indexOf("\n\n");
 				}
 			}
 		} catch (err) {
@@ -639,19 +680,27 @@ const VoiceTranscribePage = () => {
 											{showSegments ? "▼" : "▶"} Segments (
 											{result.segments.length})
 										</button>
-										{showSegments &&
-											result.segments.map((seg, i) => (
-												<div
-													key={`${seg.start}-${i}`}
-													className="flex gap-3 text-xs p-2 rounded border"
-												>
-													<span className="text-muted-foreground font-mono shrink-0">
-														{seg.start.toFixed(1)}s{" – "}
-														{seg.end.toFixed(1)}s
-													</span>
-													<span>{seg.text}</span>
-												</div>
-											))}
+										{showSegments && (
+											<div className="max-h-96 overflow-y-auto space-y-1 pr-2">
+												{result.segments.map((seg, i) => (
+													<div
+														key={`${seg.start}-${i}`}
+														className="flex gap-3 text-xs p-2 rounded border"
+													>
+														<span className="text-muted-foreground font-mono shrink-0">
+															{seg.start.toFixed(1)}s{" – "}
+															{seg.end.toFixed(1)}s
+														</span>
+														{seg.speaker && (
+															<span className="text-muted-foreground font-mono shrink-0">
+																[{seg.speaker}]
+															</span>
+														)}
+														<span>{seg.text}</span>
+													</div>
+												))}
+											</div>
+										)}
 									</div>
 								)}
 								<Button

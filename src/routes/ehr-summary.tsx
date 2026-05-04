@@ -550,24 +550,92 @@ const EhrSummaryPage = () => {
 				body: JSON.stringify({
 					input_ehr: { type: "custom_json", custom_json: customJson },
 					model: "qwen-cluster",
-					stream: false,
+					stream: true,
 				}),
 			});
 
-			if (!resp.ok)
+			if (!resp.ok || !resp.body)
 				throw new Error(`HTTP ${resp.status}: ${await resp.text()}`);
 
-			const json = await resp.json();
-			setRawResponse(json);
+			// Stream the SSE response from /ehr_summarize. Backend emits
+			// `event: <name>\ndata: <json>\n\n` events. We accumulate output
+			// deltas into the summary panel, coalescing renders to one per
+			// animation frame to keep the page responsive on long outputs.
+			const reader = resp.body.getReader();
+			const decoder = new TextDecoder();
+			let buffer = "";
+			let accumulated = "";
+			let finalEvent: unknown = null;
+			let pendingFlush = false;
+			let lastSnapshot = "";
+
+			const flush = () => {
+				if (pendingFlush) return;
+				pendingFlush = true;
+				requestAnimationFrame(() => {
+					pendingFlush = false;
+					if (accumulated === lastSnapshot) return;
+					lastSnapshot = accumulated;
+					setSummary(accumulated);
+				});
+			};
+
+			while (true) {
+				const { done, value } = await reader.read();
+				if (done) break;
+				buffer += decoder.decode(value, { stream: true });
+				while (true) {
+					const idxRn = buffer.indexOf("\r\n\r\n");
+					const idxN = buffer.indexOf("\n\n");
+					let sepIdx = -1;
+					let sepLen = 0;
+					if (idxRn !== -1 && (idxN === -1 || idxRn <= idxN)) {
+						sepIdx = idxRn;
+						sepLen = 4;
+					} else if (idxN !== -1) {
+						sepIdx = idxN;
+						sepLen = 2;
+					} else {
+						break;
+					}
+					const raw = buffer.slice(0, sepIdx);
+					buffer = buffer.slice(sepIdx + sepLen);
+					let evtName: string | null = null;
+					let dataPayload: string | null = null;
+					for (const line of raw.replace(/\r\n/g, "\n").split("\n")) {
+						if (line.startsWith("event:")) evtName = line.slice(6).trim();
+						else if (line.startsWith("data:"))
+							dataPayload = (dataPayload ?? "") + line.slice(5).trim();
+					}
+					if (!dataPayload || dataPayload === "[DONE]") continue;
+					let parsed: unknown;
+					try {
+						parsed = JSON.parse(dataPayload);
+					} catch {
+						continue;
+					}
+					const data = parsed as { type?: string; delta?: string } | null;
+					if (
+						evtName === "part_delta" &&
+						data?.type === "output" &&
+						data.delta
+					) {
+						accumulated += data.delta;
+						flush();
+					} else if (evtName === "final_result") {
+						finalEvent = parsed;
+					}
+				}
+			}
+
+			// Final paint
+			lastSnapshot = accumulated;
+			setSummary(accumulated);
+
 			const elapsed = Math.round(performance.now() - t0);
 			setConversionTime(elapsed);
+			setRawResponse(finalEvent ?? { summary: accumulated });
 
-			const textParts = (json.output || []).filter(
-				(p: { type: string }) => p.type === "text"
-			);
-			setSummary(
-				textParts.map((p: { content: string }) => p.content).join("\n")
-			);
 			toast.success(
 				`Summary generated from ${sourceLabels.length} source(s) in ${elapsed}ms`
 			);

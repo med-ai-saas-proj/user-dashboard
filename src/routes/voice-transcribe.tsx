@@ -565,11 +565,18 @@ const VoiceTranscribePage = () => {
 							{/* Real-time Recording Section */}
 							<span className="text-sm font-medium">Real-Time Transcribe</span>
 							{micPermissionDenied && (
-								<div className="text-xs rounded-md border border-amber-300 bg-amber-50 dark:bg-amber-950/30 dark:border-amber-700/50 px-3 py-2 text-amber-900 dark:text-amber-200">
+								<div className="text-xs rounded-md border border-amber-300 bg-amber-50 dark:bg-amber-950/30 dark:border-amber-700/50 px-3 py-2 text-amber-900 dark:text-amber-200 space-y-1">
 									<p className="font-medium">Microphone access blocked</p>
-									<p className="mt-0.5">
+									<p>
 										Click the 🎤 icon in your browser's address bar and choose
 										<strong> Always allow</strong>. Then click record again.
+									</p>
+									<p>
+										<strong>Incognito / private windows:</strong> permissions
+										are scoped to the incognito session — even if you allowed
+										the mic in a regular window, you must allow it again here.
+									</p>
+									<p className="text-muted-foreground">
 										Audio file upload above still works without microphone
 										permission.
 									</p>

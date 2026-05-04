@@ -646,7 +646,15 @@ const EhrSummaryPage = () => {
 				`Summary generated from ${sourceLabels.length} source(s) in ${elapsed}ms`
 			);
 		} catch (err) {
-			toast.error(err instanceof Error ? err.message : "Request failed");
+			const raw = err instanceof Error ? err.message : "Request failed";
+			// nginx 502/504 dumps the full HTML page into the body; surface a
+			// short message to the user instead of the markup.
+			let friendly = raw;
+			if (/^HTTP 5\d{2}/.test(raw) || raw.includes("<html>")) {
+				const code = raw.match(/HTTP (\d{3})/)?.[1] ?? "5xx";
+				friendly = `Upstream temporarily unavailable (HTTP ${code}). The summarizer or its proxy is busy — please retry in a moment.`;
+			}
+			toast.error(friendly);
 		} finally {
 			setIsLoading(false);
 		}

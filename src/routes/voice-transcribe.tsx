@@ -99,10 +99,12 @@ const VoiceTranscribePage = () => {
 		};
 	}, []);
 
-	// Sync the banner with the *actual* live permission state. Without this,
-	// the banner can stay stuck on after a single denial even if the user
-	// later allows access via the address-bar icon. We listen for changes so
-	// the banner clears the moment the permission flips to granted/prompt.
+	// Only auto-clear the banner when the browser flips permission to
+	// granted/prompt (e.g. user allows mic in site settings). We deliberately
+	// DO NOT set the banner from the passive Permissions API — its "denied"
+	// state can lag behind the actual site setting (esp. after a previous
+	// dismissed prompt) which produced false-positive banners. The banner is
+	// raised only after a real getUserMedia rejection in handleStartRecording.
 	useEffect(() => {
 		const perms = (
 			navigator as Navigator & {
@@ -123,8 +125,10 @@ const VoiceTranscribePage = () => {
 		} | null = null;
 		let cancelled = false;
 		const handler = () => {
-			if (status) {
-				setMicPermissionDenied(status.state === "denied");
+			// Clear the banner if the permission becomes granted or prompt.
+			// Never raise it here — only handleStartRecording does that.
+			if (status && status.state !== "denied") {
+				setMicPermissionDenied(false);
 			}
 		};
 		perms
@@ -132,7 +136,9 @@ const VoiceTranscribePage = () => {
 			.then((s) => {
 				if (cancelled) return;
 				status = s;
-				setMicPermissionDenied(s.state === "denied");
+				if (s.state !== "denied") {
+					setMicPermissionDenied(false);
+				}
 				s.addEventListener?.("change", handler);
 			})
 			.catch(() => {

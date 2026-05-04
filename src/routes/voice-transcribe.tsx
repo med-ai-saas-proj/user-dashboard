@@ -421,16 +421,48 @@ const VoiceTranscribePage = () => {
 			};
 		} catch (err) {
 			if (err instanceof DOMException && err.name === "NotAllowedError") {
+				// Site permission may already be granted yet getUserMedia still
+				// rejected — that points at the OS-level mic permission for the
+				// browser, not the site setting. Query the Permissions API now
+				// to disambiguate the two cases.
+				let sitePermission: "granted" | "denied" | "prompt" | "unknown" =
+					"unknown";
+				try {
+					const perms = (
+						navigator as Navigator & {
+							permissions?: {
+								query: (d: { name: string }) => Promise<{
+									state: "granted" | "denied" | "prompt";
+								}>;
+							};
+						}
+					).permissions;
+					const status = await perms?.query({ name: "microphone" });
+					if (status) sitePermission = status.state;
+				} catch {
+					/* ignore */
+				}
+				const isMac = /Mac|iPhone|iPad/.test(navigator.userAgent);
 				const isChrome = /Chrome\//.test(navigator.userAgent);
 				const isFirefox = /Firefox\//.test(navigator.userAgent);
-				const browserHint = isChrome
-					? "Click the 🎤 icon in the address bar → Always allow"
+				const browserName = isChrome
+					? "Chrome"
 					: isFirefox
-						? "Click the 🎤 icon in the address bar → Allow → Remember"
-						: "Open site settings and allow microphone access";
+						? "Firefox"
+						: "your browser";
+				const description =
+					sitePermission === "granted"
+						? isMac
+							? `Site permission is allowed, so the OS is blocking the browser. Open System Settings → Privacy & Security → Microphone, enable ${browserName}, then try again.`
+							: `Site permission is allowed, so the OS is blocking the browser. Open OS settings and grant microphone access to ${browserName}, then try again.`
+						: isChrome
+							? "Click the 🎤 icon in the address bar → Always allow"
+							: isFirefox
+								? "Click the 🎤 icon in the address bar → Allow → Remember"
+								: "Open site settings and allow microphone access";
 				toast.error("Microphone access denied", {
-					description: browserHint,
-					duration: 8000,
+					description,
+					duration: 10000,
 				});
 				setMicPermissionDenied(true);
 			} else if (err instanceof DOMException && err.name === "NotFoundError") {
@@ -624,9 +656,16 @@ const VoiceTranscribePage = () => {
 								<div className="text-xs rounded-md border border-amber-300 bg-amber-50 dark:bg-amber-950/30 dark:border-amber-700/50 px-3 py-2 text-amber-900 dark:text-amber-200 space-y-1">
 									<p className="font-medium">Microphone access blocked</p>
 									<p>
-										Click the 🔒 lock icon in the address bar → Site settings →
-										Microphone → <strong>Allow</strong>. Then click record
-										again, or hit <em>Try again</em> below to re-prompt.
+										<strong>1. Site permission:</strong> Click the 🔒 lock icon
+										in the address bar → Site settings → Microphone →{" "}
+										<strong>Allow</strong>. Then hit <em>Try again</em> below.
+									</p>
+									<p>
+										<strong>2. OS permission:</strong> If site permission is
+										already allowed, your OS may be blocking the browser. On
+										macOS: System Settings → Privacy & Security → Microphone →
+										enable your browser. On Windows: Settings → Privacy →
+										Microphone → enable your browser.
 									</p>
 									<p>
 										<strong>Incognito / private windows:</strong> permissions

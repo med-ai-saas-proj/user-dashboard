@@ -442,19 +442,30 @@ const VoiceTranscribePage = () => {
 				} catch {
 					/* ignore */
 				}
-				const isMac = /Mac|iPhone|iPad/.test(navigator.userAgent);
-				const isChrome = /Chrome\//.test(navigator.userAgent);
-				const isFirefox = /Firefox\//.test(navigator.userAgent);
+				const ua = navigator.userAgent;
+				const isMac = /Mac|iPhone|iPad/.test(ua);
+				const isWindows = /Windows/.test(ua);
+				const isLinux = /Linux|X11/.test(ua) && !/Android/.test(ua);
+				const isChrome = /Chrome\//.test(ua);
+				const isFirefox = /Firefox\//.test(ua);
 				const browserName = isChrome
 					? "Chrome"
 					: isFirefox
 						? "Firefox"
 						: "your browser";
+				let osHint: string;
+				if (isMac) {
+					osHint = `Open System Settings → Privacy & Security → Microphone, enable ${browserName}.`;
+				} else if (isWindows) {
+					osHint = `Open Settings → Privacy → Microphone, allow apps to access the microphone, and enable ${browserName}.`;
+				} else if (isLinux) {
+					osHint = `On Linux, this is usually a PulseAudio/PipeWire input issue or a Snap/Flatpak permission. Try: (1) check that your input device is unmuted in pavucontrol; (2) for Snap Chrome/Chromium: \`sudo snap connect chromium:audio-record\`; (3) for Flatpak: enable Microphone in Flatseal for the browser.`;
+				} else {
+					osHint = `Open OS settings and grant microphone access to ${browserName}.`;
+				}
 				const description =
 					sitePermission === "granted"
-						? isMac
-							? `Site permission is allowed, so the OS is blocking the browser. Open System Settings → Privacy & Security → Microphone, enable ${browserName}, then try again.`
-							: `Site permission is allowed, so the OS is blocking the browser. Open OS settings and grant microphone access to ${browserName}, then try again.`
+						? `Site permission is allowed, so the OS is blocking the browser. ${osHint} Then try again.`
 						: isChrome
 							? "Click the 🎤 icon in the address bar → Always allow"
 							: isFirefox
@@ -661,12 +672,27 @@ const VoiceTranscribePage = () => {
 										<strong>Allow</strong>. Then hit <em>Try again</em> below.
 									</p>
 									<p>
-										<strong>2. OS permission:</strong> If site permission is
-										already allowed, your OS may be blocking the browser. On
-										macOS: System Settings → Privacy & Security → Microphone →
-										enable your browser. On Windows: Settings → Privacy →
-										Microphone → enable your browser.
+										<strong>2. OS / audio stack:</strong> If site permission is
+										already allowed, your OS or audio stack may be blocking the
+										browser.
 									</p>
+									<ul className="list-disc pl-5 space-y-0.5">
+										<li>
+											<strong>macOS:</strong> System Settings → Privacy &
+											Security → Microphone → enable your browser.
+										</li>
+										<li>
+											<strong>Windows:</strong> Settings → Privacy → Microphone
+											→ enable your browser.
+										</li>
+										<li>
+											<strong>Linux:</strong> open <code>pavucontrol</code> and
+											unmute your input device on the <em>Input Devices</em>{" "}
+											tab. For Snap browsers run{" "}
+											<code>sudo snap connect chromium:audio-record</code>. For
+											Flatpak browsers, enable Microphone in Flatseal.
+										</li>
+									</ul>
 									<p>
 										<strong>Incognito / private windows:</strong> permissions
 										are scoped to the incognito session — even if you allowed

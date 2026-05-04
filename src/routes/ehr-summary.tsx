@@ -336,36 +336,116 @@ const EhrSummaryPage = () => {
 		}
 	};
 
-	const standardizeToFhir = async (
-		rawData: string
-	): Promise<Record<string, unknown> | null> => {
-		const trimmed = rawData.trim();
-		if (trimmed.startsWith("{")) {
+	// Detect the source format and route to the matching converter:
+	// - JSON FHIR Bundle → use as-is
+	// - BHXH/BHYT XML (GIAMDINHHS envelope or XML1-XML5) → /fhir-converter/convert/bhyt-to-fhir
+	// - EMRBYT/HSYT XML (HoSoBenhAn) → /fhir-converter/convert/emrbyt-to-fhir
+	// - Anything else (HL7v2, narrative text) → legacy /ehr_converter/convert
+	const detectSourceFormat = (
+		raw: string
+	): "fhir-json" | "bhyt-xml" | "emrbyt-xml" | "other" => {
+		const t = raw.trim();
+		if (t.startsWith("{")) {
 			try {
-				const parsed = JSON.parse(trimmed);
-				if (parsed.resourceType === "Bundle") return parsed;
+				const p = JSON.parse(t);
+				if (p?.resourceType === "Bundle") return "fhir-json";
 			} catch {
 				/* not JSON */
 			}
 		}
+		if (t.startsWith("<")) {
+			// Look at the first ~2KB for marker tags. BHYT/BHXH files include
+			// GIAMDINHHS envelopes or XML1..XML5 root tables; EMRBYT files
+			// expose HoSoBenhAn / TT32 markers.
+			const head = t.slice(0, 2048).toUpperCase();
+			if (
+				head.includes("GIAMDINHHS") ||
+				/<XML[1-5]\b/.test(head) ||
+				head.includes("THONGTINDONTHUOC") ||
+				head.includes("DSACHCHIDINHDVKT")
+			) {
+				return "bhyt-xml";
+			}
+			if (
+				head.includes("HOSOBENHAN") ||
+				head.includes("HỒ SƠ BỆNH ÁN") ||
+				head.includes("TT32")
+			) {
+				return "emrbyt-xml";
+			}
+		}
+		return "other";
+	};
+
+	const standardizeToFhir = async (
+		rawData: string
+	): Promise<Record<string, unknown> | null> => {
+		const trimmed = rawData.trim();
+		const format = detectSourceFormat(trimmed);
+
+		if (format === "fhir-json") {
+			try {
+				return JSON.parse(trimmed);
+			} catch {
+				/* fall through */
+			}
+		}
+
+		const ctl = new AbortController();
+		const timer = setTimeout(() => ctl.abort(), 30_000);
+
 		try {
-			const headers = await getAuthHeaders(
-				API_ROUTES.SERVICES.EHR_CONVERTER_CONVERT
-			);
-			const ctl = new AbortController();
-			const timer = setTimeout(() => ctl.abort(), 8000);
-			const resp = await fetch(API_ROUTES.SERVICES.EHR_CONVERTER_CONVERT, {
+			if (format === "bhyt-xml" || format === "emrbyt-xml") {
+				const url =
+					format === "bhyt-xml"
+						? API_ROUTES.SERVICES.FHIR_CONVERTER_BHYT_TO_FHIR
+						: API_ROUTES.SERVICES.FHIR_CONVERTER_EMRBYT_TO_FHIR;
+				const headers = await getAuthHeaders(url);
+				headers["Content-Type"] = "application/xml";
+				const resp = await fetch(url, {
+					method: "POST",
+					headers,
+					body: trimmed,
+					signal: ctl.signal,
+				});
+				if (resp.ok) {
+					const out = await resp.json();
+					// bhyt-to-fhir returns an array of bundles; emrbyt-to-fhir returns one
+					if (Array.isArray(out)) {
+						const allEntries: Record<string, unknown>[] = [];
+						for (const b of out) {
+							const e =
+								(b as { entry?: Record<string, unknown>[] }).entry || [];
+							allEntries.push(...e);
+						}
+						return {
+							resourceType: "Bundle",
+							type: "collection",
+							total: allEntries.length,
+							entry: allEntries,
+						};
+					}
+					if (out?.resourceType === "Bundle") return out;
+				}
+			}
+
+			// Legacy fallback for HL7v2 / narrative / unknown
+			const url = API_ROUTES.SERVICES.EHR_CONVERTER_CONVERT;
+			const headers = await getAuthHeaders(url);
+			const resp = await fetch(url, {
 				method: "POST",
 				headers,
 				body: JSON.stringify({ data: trimmed, validate_output: false }),
 				signal: ctl.signal,
-			}).finally(() => clearTimeout(timer));
+			});
 			if (resp.ok) {
 				const json = await resp.json();
 				if (json.success && json.bundle) return json.bundle;
 			}
 		} catch {
 			/* conversion failed or timed out */
+		} finally {
+			clearTimeout(timer);
 		}
 		return null;
 	};

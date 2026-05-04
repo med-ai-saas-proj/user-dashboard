@@ -10,6 +10,28 @@ export type DetectedFormat =
 	| "BHXH 4210"
 	| "Unknown";
 
+// Markers that uniquely identify a BHXH/BHYT XML table or fragment.
+// Source: QD 4210/2017 + QD 130/2018 + QD 5937/2023 (GIAMDINHHS schema).
+// We accept both the official envelope and bare child tables that users
+// commonly paste from a single record.
+const BHXH_MARKERS = [
+	"giamdinhhs", // full envelope
+	"<tong_hop", // XML1
+	"chitietkcb", // XML1 alt
+	"<chi_tiet_thuoc", // XML2
+	"chitietthuoc", // XML2
+	"chitiet_dvkt", // XML3
+	"chitiet_clsanlamsang", // XML3 alt
+	"chitieu_chitiet_dichvucanlamsang", // XML3 (paraclinical service detail)
+	"chitiet_dien_bien", // XML4
+	"chitiet_dien_bien_benh", // XML4 alt
+	"chitiet_ra_vien", // XML5
+	"thongtindonthuoc", // XML6
+	"chitiet_giam_dinh", // XML7
+	"chitiet_chuyen_de", // XML8
+	"chitiet_thanh_toan", // XML9
+];
+
 export function detectFormat(data: string): DetectedFormat {
 	const trimmed = data.trim();
 	if (!trimmed) return "Unknown";
@@ -28,11 +50,15 @@ export function detectFormat(data: string): DetectedFormat {
 	}
 	if (trimmed.startsWith("<?xml") || trimmed.startsWith("<")) {
 		const lower = trimmed.substring(0, 3000).toLowerCase();
+		// Top-level <XMLn> tables are also BHXH fragments.
 		if (
-			lower.includes("giamdinhhs") ||
-			(lower.includes("tong_hop") && lower.includes("ma_the"))
-		)
+			BHXH_MARKERS.some((m) => lower.includes(m)) ||
+			/<xml[1-9]\b/.test(lower) ||
+			(lower.includes("ma_lk") &&
+				(lower.includes("ma_the") || lower.includes("ma_dich_vu")))
+		) {
 			return "BHXH 4210";
+		}
 		if (
 			lower.includes("clinicaldocument") &&
 			!lower.match(/prpa_|qupc_|repc_|porx_/)

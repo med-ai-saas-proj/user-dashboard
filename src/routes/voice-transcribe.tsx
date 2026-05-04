@@ -99,6 +99,52 @@ const VoiceTranscribePage = () => {
 		};
 	}, []);
 
+	// Sync the banner with the *actual* live permission state. Without this,
+	// the banner can stay stuck on after a single denial even if the user
+	// later allows access via the address-bar icon. We listen for changes so
+	// the banner clears the moment the permission flips to granted/prompt.
+	useEffect(() => {
+		const perms = (
+			navigator as Navigator & {
+				permissions?: {
+					query: (d: { name: string }) => Promise<{
+						state: "granted" | "denied" | "prompt";
+						addEventListener?: (t: string, f: () => void) => void;
+						removeEventListener?: (t: string, f: () => void) => void;
+					}>;
+				};
+			}
+		).permissions;
+		if (!perms?.query) return;
+
+		let status: {
+			state: string;
+			removeEventListener?: (t: string, f: () => void) => void;
+		} | null = null;
+		let cancelled = false;
+		const handler = () => {
+			if (status) {
+				setMicPermissionDenied(status.state === "denied");
+			}
+		};
+		perms
+			.query({ name: "microphone" })
+			.then((s) => {
+				if (cancelled) return;
+				status = s;
+				setMicPermissionDenied(s.state === "denied");
+				s.addEventListener?.("change", handler);
+			})
+			.catch(() => {
+				/* Permissions API not supported for "microphone" — fall back
+				   to the post-click error path. */
+			});
+		return () => {
+			cancelled = true;
+			status?.removeEventListener?.("change", handler);
+		};
+	}, []);
+
 	const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const f = e.target.files?.[0] ?? null;
 		setFile(f);
@@ -253,6 +299,10 @@ const VoiceTranscribePage = () => {
 			);
 			return;
 		}
+
+		// Clear the stale banner before the request — getUserMedia will
+		// reinstate it via the catch block if access is still denied.
+		setMicPermissionDenied(false);
 
 		try {
 			const stream = await navigator.mediaDevices.getUserMedia({
@@ -568,15 +618,36 @@ const VoiceTranscribePage = () => {
 								<div className="text-xs rounded-md border border-amber-300 bg-amber-50 dark:bg-amber-950/30 dark:border-amber-700/50 px-3 py-2 text-amber-900 dark:text-amber-200 space-y-1">
 									<p className="font-medium">Microphone access blocked</p>
 									<p>
-										Click the 🎤 icon in your browser's address bar and choose
-										<strong> Always allow</strong>. Then click record again.
+										Click the 🔒 lock icon in the address bar → Site settings →
+										Microphone → <strong>Allow</strong>. Then click record
+										again, or hit <em>Try again</em> below to re-prompt.
 									</p>
 									<p>
 										<strong>Incognito / private windows:</strong> permissions
 										are scoped to the incognito session — even if you allowed
 										the mic in a regular window, you must allow it again here.
 									</p>
-									<p className="text-muted-foreground">
+									<div className="flex items-center gap-2 pt-1">
+										<Button
+											type="button"
+											variant="outline"
+											size="sm"
+											className="h-7 text-xs"
+											onClick={startRecording}
+										>
+											Try again
+										</Button>
+										<Button
+											type="button"
+											variant="ghost"
+											size="sm"
+											className="h-7 text-xs"
+											onClick={() => setMicPermissionDenied(false)}
+										>
+											Dismiss
+										</Button>
+									</div>
+									<p className="text-muted-foreground pt-1">
 										Audio file upload above still works without microphone
 										permission.
 									</p>

@@ -12,11 +12,13 @@ import { RawResponseViewer } from "@/components/raw-response-viewer";
 import { ViewCodeDialog } from "@/components/view-code-dialog";
 import { API_ROUTES } from "@/config/api-routes";
 import { BatchPanel } from "@/features/pg-ehr-converter/components/batch-panel";
+import { BhxhEnvelopeInspector } from "@/features/pg-ehr-converter/components/bhxh-envelope-inspector";
 import { ConvertResultPanel } from "@/features/pg-ehr-converter/components/convert-result-panel";
 import {
 	ConverterForm,
 	detectFormat,
 } from "@/features/pg-ehr-converter/components/converter-form";
+import { wrapBareBhxhTables } from "@/features/pg-ehr-converter/services/bhxh-envelope";
 import type {
 	BatchConvertResponse,
 	ConvertResponse,
@@ -40,6 +42,7 @@ const EhrConverterPage = () => {
 		null
 	);
 	const [showBatch, setShowBatch] = useState(false);
+	const [showInspector, setShowInspector] = useState(false);
 
 	const clearResults = () => {
 		setResult(null);
@@ -48,57 +51,19 @@ const EhrConverterPage = () => {
 		setConversionTime(null);
 	};
 
-	// Wrap a bare BHXH XML fragment (e.g. <CHITIEU_CHITIET_DICHVUCANLAMSANG>)
-	// in the GIAMDINHHS envelope shape the FHIR Converter Worker expects.
-	// The worker reads each table from <NOIDUNGFILE>base64</NOIDUNGFILE> with
-	// a <LOAIHOSO>XMLn</LOAIHOSO> tag describing which table it is.
-	const wrapBhxhFragment = (raw: string): string => {
-		const stripped = raw.trim().replace(/^<\?xml[^?]*\?>\s*/i, "");
-		// Pull out the root element tag to map to a table number.
-		const m = stripped.match(/^<([A-Z0-9_]+)/i);
-		const root = m?.[1]?.toUpperCase() ?? "";
-		const ROOT_TO_LOAI: Record<string, string> = {
-			TONG_HOP: "XML1",
-			CHITIEUKCB: "XML1",
-			CHI_TIET_THUOC: "XML2",
-			CHITIETTHUOC: "XML2",
-			CHITIEU_CHITIET_DICHVUCANLAMSANG: "XML3",
-			CHITIET_DVKT: "XML3",
-			CHITIEU_CHITIET_DVKT_VTYT: "XML3",
-			CHITIET_CLSANLAMSANG: "XML3",
-			CHITIET_DIEN_BIEN: "XML4",
-			CHITIET_DIEN_BIEN_BENH: "XML4",
-			CHITIET_RA_VIEN: "XML5",
-			THONGTINDONTHUOC: "XML6",
-			CHITIET_GIAM_DINH: "XML7",
-			CHITIET_CHUYEN_DE: "XML8",
-			CHITIET_THANH_TOAN: "XML9",
-		};
-		// XML[1-9] tags pass through verbatim.
-		const xmlTagMatch = root.match(/^XML([1-9])$/);
-		const loaiHoSo =
-			ROOT_TO_LOAI[root] ?? (xmlTagMatch ? `XML${xmlTagMatch[1]}` : "XML1");
-		// btoa wants Latin-1; encode UTF-8 first to keep Vietnamese diacritics intact.
-		const utf8 = unescape(encodeURIComponent(stripped));
-		const b64 = btoa(utf8);
-		return `<?xml version="1.0" encoding="utf-8" standalone="yes"?>
-<GIAMDINHHS>
-  <THONGTINDONVI>
-    <MACSKCB>00000</MACSKCB>
-  </THONGTINDONVI>
-  <THONGTINHOSO>
-    <NGAYLAP>${new Date().toISOString().slice(0, 10).replace(/-/g, "")}</NGAYLAP>
-    <SOLUONGHOSO>1</SOLUONGHOSO>
-    <DANHSACHHOSO>
-      <HOSO>
-        <FILEHOSO>
-          <LOAIHOSO>${loaiHoSo}</LOAIHOSO>
-          <NOIDUNGFILE>${b64}</NOIDUNGFILE>
-        </FILEHOSO>
-      </HOSO>
-    </DANHSACHHOSO>
-  </THONGTINHOSO>
-</GIAMDINHHS>`;
+	// Split a paste/upload that may contain several bare BHXH tables
+	// concatenated. Tables start at top-level tags (XML1..XML9 roots);
+	// we use a forgiving split on blank lines + a leading `<` and let the
+	// envelope helper drop anything that doesn't map to a known table.
+	const splitConcatenatedXml = (raw: string): string[] => {
+		const trimmed = raw.trim().replace(/^<\?xml[^?]*\?>\s*/i, "");
+		// Try double-newline split first; if that yields a single chunk,
+		// assume the whole input is one table.
+		const blocks = trimmed
+			.split(/\n\s*\n+/)
+			.map((s) => s.trim())
+			.filter((s) => s.startsWith("<"));
+		return blocks.length > 0 ? blocks : [trimmed];
 	};
 
 	const handleConvert = async (data: string, validate: boolean) => {
@@ -109,30 +74,31 @@ const EhrConverterPage = () => {
 		const t0 = performance.now();
 
 		try {
-			// BHXH/BHYT XML uses the FHIR Converter Worker. If the user pasted
-			// a bare child table (XML1..XML9) instead of the GIAMDINHHS envelope,
-			// auto-wrap it before sending — the worker only accepts envelopes.
+			// BHXH/BHYT XML uses the FHIR Converter Worker. The worker only
+			// accepts the GIAMDINHHS envelope shape, so:
+			//   - if the user pasted an envelope, send it as-is;
+			//   - if the user pasted bare tables (one OR several concatenated),
+			//     pack them all into one synthetic envelope. Sending XML1
+			//     alone returns an empty bundle; bundling XML1 + line items
+			//     yields a populated bundle.
 			if (format === "BHXH 4210") {
 				const lower = data.trim().toLowerCase();
-				const isEnvelope = lower.includes("<giamdinhhs");
-				const xmlBody = isEnvelope ? data : wrapBhxhFragment(data);
-
-				// Detect a wrap of a child table that lacks XML1: the worker
-				// needs at least an XML1 patient/encounter record because XML2-9
-				// records reference it via MA_LK.
-				if (!isEnvelope) {
-					const rootMatch = data
-						.trim()
-						.replace(/^<\?xml[^?]*\?>\s*/i, "")
-						.match(/^<([A-Z0-9_]+)/i);
-					const root = rootMatch?.[1]?.toUpperCase() ?? "";
-					const isXml1 =
-						root === "TONG_HOP" || root === "CHITIEUKCB" || root === "XML1";
-					if (!isXml1) {
-						toast.warning(
-							"BHXH child table detected (XML2–XML9). The worker needs an XML1 (TONG_HOP) header in the same envelope to know which patient/encounter the records belong to. Wrap your data in <GIAMDINHHS> with both XML1 and the child table, or paste an XML1 by itself."
+				const inputIsEnvelope = lower.includes("<giamdinhhs");
+				let xmlBody = data;
+				if (!inputIsEnvelope) {
+					const blocks = splitConcatenatedXml(data);
+					const { envelope, tables, missingXml1 } = wrapBareBhxhTables(blocks);
+					if (tables.length === 0) {
+						throw new Error(
+							"No recognisable BHXH tables found. Paste a <GIAMDINHHS> envelope, or one or more bare tables (TONG_HOP, CHITIEU_CHITIET_THUOC, etc.) separated by blank lines."
 						);
 					}
+					if (missingXml1) {
+						toast.warning(
+							"No XML1 (TONG_HOP) detected. Without a patient/encounter header, line items have nothing to reference and the FHIR Bundle will be empty or rejected. Paste an XML1 alongside your line tables."
+						);
+					}
+					xmlBody = envelope;
 				}
 
 				const url = API_ROUTES.SERVICES.FHIR_CONVERTER_BHYT_TO_FHIR;
@@ -146,11 +112,9 @@ const EhrConverterPage = () => {
 
 				if (!resp.ok) {
 					const errText = await resp.text();
-					// Worker often returns 502/500 when fed a child table without
-					// an XML1 header — surface a friendlier message.
 					if (resp.status >= 500) {
 						throw new Error(
-							"FHIR Converter Worker rejected this BHXH input. If you pasted a child table (XML2-XML9), include an XML1 (TONG_HOP) record in the same <GIAMDINHHS> envelope so the worker can resolve patient references."
+							"FHIR Converter Worker rejected this BHXH input. The most common cause is a child table (XML2-XML9) being sent without its XML1 (TONG_HOP) header — bundle them together so the worker can link line items to the patient/encounter."
 						);
 					}
 					throw new Error(`HTTP ${resp.status}: ${errText}`);
@@ -434,6 +398,35 @@ const EhrConverterPage = () => {
 								isLoading={batchLoading}
 								batchResult={batchResult}
 							/>
+						</div>
+					)}
+				</div>
+
+				{/* BHXH envelope inspector — paste a GIAMDINHHS file or bare
+				    BHXH tables to inspect what the worker actually parses. */}
+				<div className="flex-shrink-0">
+					<button
+						type="button"
+						onClick={() => setShowInspector(!showInspector)}
+						className="w-full flex items-center gap-2 px-4 py-2 text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-muted/30 transition-colors"
+					>
+						<svg
+							width="12"
+							height="12"
+							fill="none"
+							stroke="currentColor"
+							strokeWidth="2"
+							className={`transition-transform ${showInspector ? "rotate-90" : ""}`}
+							aria-hidden="true"
+						>
+							<title>Toggle</title>
+							<path d="M4 2l5 4-5 4" />
+						</svg>
+						BHXH Envelope Inspector
+					</button>
+					{showInspector && (
+						<div className="px-4 pb-4">
+							<BhxhEnvelopeInspector />
 						</div>
 					)}
 				</div>

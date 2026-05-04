@@ -615,14 +615,20 @@ const EhrSummaryPage = () => {
 						continue;
 					}
 					const data = parsed as { type?: string; delta?: string } | null;
-					if (
-						evtName === "part_delta" &&
-						data?.type === "output" &&
-						data.delta
-					) {
+					// Backend currently serializes the enum as its repr
+					// ("StreamEventType.part_delta") rather than the bare
+					// value ("part_delta"). Accept both so the frontend keeps
+					// working if the wire format is fixed.
+					const isPartDelta =
+						evtName === "part_delta" ||
+						evtName === "StreamEventType.part_delta";
+					const isFinalResult =
+						evtName === "final_result" ||
+						evtName === "StreamEventType.final_result";
+					if (isPartDelta && data?.type === "output" && data.delta) {
 						accumulated += data.delta;
 						flush();
-					} else if (evtName === "final_result") {
+					} else if (isFinalResult) {
 						finalEvent = parsed;
 					}
 				}

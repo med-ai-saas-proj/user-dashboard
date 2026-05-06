@@ -1,5 +1,6 @@
-import { useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { Button } from "@/components/shadcn/button";
+import { decodeBhxhEnvelopeToReadable } from "../services/bhxh-envelope";
 import { EXAMPLES, type ExampleData } from "../services/examples";
 
 export type DetectedFormat =
@@ -98,10 +99,35 @@ export function ConverterForm({
 	const [inputData, setInputData] = useState("");
 	const [validate, setValidate] = useState(true);
 	const [showExamples, setShowExamples] = useState(false);
+	// "encoded" shows the user's raw text (the only editable view); "decoded"
+	// shows base64-decoded NOIDUNGFILE contents inline so the user can verify
+	// what the FHIR Converter Worker will receive. Only meaningful when the
+	// input is a GIAMDINHHS envelope.
+	const [inputView, setInputView] = useState<"encoded" | "decoded">("encoded");
 	const fileInputRef = useRef<HTMLInputElement>(null);
 
 	const detectedFormat = detectFormat(inputData);
 	const isFhirInput = detectedFormat === "FHIR JSON";
+
+	// The toggle only appears when the input is an actual GIAMDINHHS envelope —
+	// bare BHXH tables have no base64 to decode.
+	const isBhxhEnvelope = useMemo(
+		() =>
+			detectedFormat === "BHXH 4210" &&
+			/^\s*(?:<\?xml[^?]*\?>\s*)?(?:<!--[\s\S]*?-->\s*)*<GIAMDINHHS[\s>]/i.test(
+				inputData
+			),
+		[detectedFormat, inputData]
+	);
+
+	const decodedView = useMemo(() => {
+		if (!isBhxhEnvelope || inputView !== "decoded") return "";
+		try {
+			return decodeBhxhEnvelopeToReadable(inputData);
+		} catch (err) {
+			return `<!-- decode failed: ${err instanceof Error ? err.message : String(err)} -->`;
+		}
+	}, [isBhxhEnvelope, inputView, inputData]);
 
 	const loadExample = (example: ExampleData) => {
 		setInputData(example.data);
@@ -207,22 +233,65 @@ export function ConverterForm({
 				</div>
 			)}
 
+			{isBhxhEnvelope && (
+				<div className="flex items-center justify-between gap-2 px-4 py-2 border-b bg-muted/10 flex-wrap">
+					<div className="inline-flex items-center rounded-md border bg-background p-0.5 text-[11px]">
+						<button
+							type="button"
+							onClick={() => setInputView("encoded")}
+							className={`px-2.5 py-1 rounded-sm font-medium transition-colors ${
+								inputView === "encoded"
+									? "bg-foreground text-background"
+									: "hover:bg-muted"
+							}`}
+						>
+							Encoded (raw)
+						</button>
+						<button
+							type="button"
+							onClick={() => setInputView("decoded")}
+							className={`px-2.5 py-1 rounded-sm font-medium transition-colors ${
+								inputView === "decoded"
+									? "bg-foreground text-background"
+									: "hover:bg-muted"
+							}`}
+						>
+							Decoded (human-readable)
+						</button>
+					</div>
+					<span className="text-[11px] text-muted-foreground">
+						{inputView === "decoded"
+							? "Read-only — switch back to Encoded to edit"
+							: "GIAMDINHHS envelope — toggle to verify decoded contents"}
+					</span>
+				</div>
+			)}
+
 			<div className="flex-1 relative">
-				<textarea
-					value={inputData}
-					onChange={(e) => setInputData(e.target.value)}
-					onKeyDown={(e) => {
-						if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
-							e.preventDefault();
-							handleConvert();
+				{isBhxhEnvelope && inputView === "decoded" ? (
+					<textarea
+						value={decodedView}
+						readOnly
+						className="w-full h-full min-h-[400px] p-4 font-mono text-[13px] leading-relaxed bg-muted/20 focus:outline-none resize-none"
+						spellCheck={false}
+					/>
+				) : (
+					<textarea
+						value={inputData}
+						onChange={(e) => setInputData(e.target.value)}
+						onKeyDown={(e) => {
+							if ((e.metaKey || e.ctrlKey) && e.key === "Enter") {
+								e.preventDefault();
+								handleConvert();
+							}
+						}}
+						placeholder={
+							"Paste HL7v2, CDA/C-CDA, HL7v3, BHXH 4210, or FHIR JSON here...\n\nOr click 'Examples' to try sample data.\nOr 'Upload' to load a file."
 						}
-					}}
-					placeholder={
-						"Paste HL7v2, CDA/C-CDA, HL7v3, BHXH 4210, or FHIR JSON here...\n\nOr click 'Examples' to try sample data.\nOr 'Upload' to load a file."
-					}
-					className="w-full h-full min-h-[400px] p-4 font-mono text-[13px] leading-relaxed bg-transparent focus:outline-none resize-none"
-					spellCheck={false}
-				/>
+						className="w-full h-full min-h-[400px] p-4 font-mono text-[13px] leading-relaxed bg-transparent focus:outline-none resize-none"
+						spellCheck={false}
+					/>
+				)}
 			</div>
 
 			<div className="flex items-center justify-between px-4 py-2.5 border-t bg-muted/30">

@@ -232,8 +232,6 @@ const ErrorCodeChip = ({ code, subcode, size = "md" }: ErrorCodeChipProps) => {
 				<TooltipTrigger asChild>
 					<Link
 						to={`/bhxh-error-codes#code-${encodeURIComponent(code)}`}
-						target="_blank"
-						rel="noreferrer"
 						className={`font-mono ${baseFont} ${padding} rounded border border-primary/40 bg-primary/10 text-primary hover:bg-primary/20 hover:border-primary inline-flex items-center gap-1 transition-colors no-underline`}
 					>
 						<span className="font-semibold">{code}</span>

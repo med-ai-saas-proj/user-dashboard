@@ -2,12 +2,12 @@ import { useState } from "react";
 import { Button } from "@/components/shadcn/button";
 import type {
 	ConvertResponse,
+	FhirEntry,
 	ReverseConvertResponse,
 	ValidateResponse,
-	FhirEntry,
 } from "../services/ehr-converter.dto";
 
-type ResultTab = "resources" | "bundle" | "validation";
+type ResultTab = "resources" | "bundle" | "validation" | "decoded";
 
 const RESOURCE_COLORS: Record<string, string> = {
 	Patient: "bg-blue-500",
@@ -94,6 +94,12 @@ type ConvertResultPanelProps = {
 	reverseResult: ReverseConvertResponse | null;
 	validateResult: ValidateResponse | null;
 	conversionTime: number | null;
+	// When the source format encodes its content (e.g. BHXH 4210 wraps each
+	// FILEHOSO in base64), pass a human-readable rendering here so the user
+	// can verify what the converter actually saw. When omitted the Decoded
+	// Input tab is hidden.
+	decodedInput?: string | null;
+	decodedInputLabel?: string;
 };
 
 export function ConvertResultPanel({
@@ -101,6 +107,8 @@ export function ConvertResultPanel({
 	reverseResult,
 	validateResult,
 	conversionTime,
+	decodedInput,
+	decodedInputLabel,
 }: ConvertResultPanelProps) {
 	const [activeTab, setActiveTab] = useState<ResultTab>("resources");
 	const [selectedResource, setSelectedResource] = useState<number | null>(null);
@@ -236,6 +244,9 @@ export function ConvertResultPanel({
 		{ id: "bundle", label: "Bundle JSON" },
 		{ id: "validation", label: "Validation", count: validationCount },
 	];
+	if (decodedInput) {
+		tabs.push({ id: "decoded", label: decodedInputLabel ?? "Decoded Input" });
+	}
 
 	return (
 		<div className="flex flex-col h-full">
@@ -406,6 +417,47 @@ export function ConvertResultPanel({
 								</div>
 							))
 						)}
+					</div>
+				)}
+
+				{activeTab === "decoded" && decodedInput && (
+					<div className="p-4 space-y-3">
+						<p className="text-[11px] text-muted-foreground leading-relaxed">
+							This is the human-readable rendering of the input the converter
+							saw — base64-encoded <code>NOIDUNGFILE</code> blocks decoded
+							inline so you can verify the FHIR Bundle on the right matches what
+							was sent.
+						</p>
+						<pre className="p-4 bg-muted/30 rounded-lg text-[12px] font-mono whitespace-pre-wrap border leading-relaxed max-h-[600px] overflow-auto">
+							{decodedInput}
+						</pre>
+						<div className="flex justify-end gap-2">
+							<Button
+								variant="outline"
+								size="sm"
+								className="h-7 text-xs"
+								onClick={() => navigator.clipboard.writeText(decodedInput)}
+							>
+								Copy Decoded XML
+							</Button>
+							<Button
+								variant="outline"
+								size="sm"
+								className="h-7 text-xs"
+								onClick={() => {
+									const blob = new Blob([decodedInput], {
+										type: "application/xml",
+									});
+									const a = document.createElement("a");
+									a.href = URL.createObjectURL(blob);
+									a.download = "decoded-input.xml";
+									a.click();
+									URL.revokeObjectURL(a.href);
+								}}
+							>
+								Download
+							</Button>
+						</div>
 					</div>
 				)}
 			</div>

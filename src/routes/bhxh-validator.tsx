@@ -1,4 +1,4 @@
-import { PackageIcon, ShieldCheckIcon } from "lucide-react";
+import { ExternalLinkIcon, PackageIcon, ShieldCheckIcon } from "lucide-react";
 import { useMemo, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
@@ -12,8 +12,16 @@ import {
 } from "@/components/demo";
 import { RawResponseViewer } from "@/components/raw-response-viewer";
 import { Button } from "@/components/shadcn/button";
+import {
+	Tooltip,
+	TooltipContent,
+	TooltipProvider,
+	TooltipTrigger,
+} from "@/components/shadcn/tooltip";
 import { ViewCodeDialog } from "@/components/view-code-dialog";
 import { API_ROUTES } from "@/config/api-routes";
+import errorCodeReference from "@/features/bhxh-validator/data/error-codes.json";
+import { decodeBhxhEnvelopeToReadable } from "@/features/pg-ehr-converter/services/bhxh-envelope";
 import DashboardLayout from "@/layouts/dashboard-layout";
 import { getAuthHeaders } from "@/lib/auth-headers";
 
@@ -148,6 +156,107 @@ const XML_LEGEND: { code: string; label: string; color: string }[] = [
 	{ code: "XML15", label: "Imaging / radiology", color: "bg-violet-500" },
 ];
 
+interface ErrorCodeReferenceEntry {
+	stt: number;
+	code: string;
+	source: string;
+	description: string;
+	subcode?: string;
+}
+
+// Build the code -> entry lookup once at module load. The reference file ships
+// 745 entries; rebuilding this on every issue render would be wasteful.
+const ERROR_CODE_LOOKUP: Map<string, ErrorCodeReferenceEntry> = (() => {
+	const map = new Map<string, ErrorCodeReferenceEntry>();
+	for (const e of errorCodeReference as ErrorCodeReferenceEntry[]) {
+		// First entry wins if the same code appears more than once across XMLs.
+		if (!map.has(e.code)) map.set(e.code, e);
+	}
+	return map;
+})();
+
+// Pydantic / framework-generated codes that won't be in the BHXH reference.
+const isSchemaValidationCode = (code: string): boolean =>
+	code.startsWith("PYDANTIC_") || code === "SCHEMA_VALIDATION";
+
+interface ErrorCodeChipProps {
+	code: string;
+	subcode?: string | null;
+	size?: "sm" | "md";
+}
+
+/**
+ * Renders an error code as either a tooltip-backed link to the reference
+ * page (when the code exists in the BHXH catalogue) or as plain text
+ * (Pydantic / schema-only codes that have no canonical row to link to).
+ */
+const ErrorCodeChip = ({ code, subcode, size = "md" }: ErrorCodeChipProps) => {
+	const entry = ERROR_CODE_LOOKUP.get(code);
+	const baseFont = size === "sm" ? "text-[10px]" : "text-xs";
+	const padding = size === "sm" ? "px-1.5 py-px" : "px-2 py-0.5";
+	const iconSize = size === "sm" ? "w-2.5 h-2.5" : "w-3 h-3";
+	const subcodeMarkup = subcode ? (
+		<span className="ml-1 text-[10px] text-muted-foreground/80">
+			[{subcode}]
+		</span>
+	) : null;
+
+	if (!entry) {
+		// Pydantic / schema codes: render as plain text with a generic tooltip
+		// so users still get context, but no broken link.
+		const tooltipText = isSchemaValidationCode(code)
+			? "Schema validation (no BHXH catalogue entry)"
+			: "No reference entry for this code";
+		return (
+			<TooltipProvider delayDuration={150}>
+				<Tooltip>
+					<TooltipTrigger asChild>
+						<span
+							className={`font-mono ${baseFont} ${padding} rounded border border-dashed border-muted-foreground/30 text-muted-foreground bg-muted/30 cursor-help`}
+						>
+							{code}
+							{subcodeMarkup}
+						</span>
+					</TooltipTrigger>
+					<TooltipContent className="max-w-xs">
+						<p className="text-xs">{tooltipText}</p>
+					</TooltipContent>
+				</Tooltip>
+			</TooltipProvider>
+		);
+	}
+
+	return (
+		<TooltipProvider delayDuration={150}>
+			<Tooltip>
+				<TooltipTrigger asChild>
+					<Link
+						to={`/bhxh-error-codes#code-${encodeURIComponent(code)}`}
+						target="_blank"
+						rel="noreferrer"
+						className={`font-mono ${baseFont} ${padding} rounded border border-primary/40 bg-primary/10 text-primary hover:bg-primary/20 hover:border-primary inline-flex items-center gap-1 transition-colors no-underline`}
+					>
+						<span className="font-semibold">{code}</span>
+						{subcodeMarkup}
+						<ExternalLinkIcon className={iconSize} aria-hidden="true" />
+					</Link>
+				</TooltipTrigger>
+				<TooltipContent className="max-w-sm">
+					<div className="space-y-1">
+						<p className="text-xs font-semibold">
+							[{code}] · {entry.source}
+						</p>
+						<p className="text-xs leading-relaxed">{entry.description}</p>
+						<p className="text-[10px] opacity-80">
+							Click to open the official reference entry
+						</p>
+					</div>
+				</TooltipContent>
+			</Tooltip>
+		</TooltipProvider>
+	);
+};
+
 const xmlChipClasses = (code?: string | null): string => {
 	switch (code) {
 		case "XML1":
@@ -194,6 +303,10 @@ const BhxhValidatorPage = () => {
 		null
 	);
 	const [uploadedName, setUploadedName] = useState<string | null>(null);
+	// "encoded" shows the user's raw text; "decoded" shows base64-decoded
+	// FILEHOSO contents inline so the user can verify what the validator sees.
+	// Only meaningful when the input is a GIAMDINHHS envelope.
+	const [inputView, setInputView] = useState<"encoded" | "decoded">("encoded");
 	const fileInputRef = useRef<HTMLInputElement>(null);
 
 	// Bundle-mode state
@@ -206,6 +319,12 @@ const BhxhValidatorPage = () => {
 	);
 	const [isDragging, setIsDragging] = useState(false);
 	const [showFormatHelp, setShowFormatHelp] = useState(false);
+	// Cached decoded preview of the uploaded bundle (only when it's a .xml
+	// envelope — RAR archives need server-side extraction first).
+	const [bundleDecodedPreview, setBundleDecodedPreview] = useState<
+		string | null
+	>(null);
+	const [showBundleDecoded, setShowBundleDecoded] = useState(false);
 	const bundleFileInputRef = useRef<HTMLInputElement>(null);
 
 	const switchMode = (next: ValidatorMode) => {
@@ -284,7 +403,24 @@ const BhxhValidatorPage = () => {
 		setBundleFile(f);
 		setBundleResult(null);
 		setExpandedRecords(new Set());
+		setBundleDecodedPreview(null);
+		setShowBundleDecoded(false);
 		toast.success(`Loaded ${f.name} (${(f.size / 1024).toFixed(1)} KB)`);
+		// For .xml envelopes we can decode client-side immediately so the user
+		// can verify what the validator will see. RAR archives are deferred
+		// to the server (we don't ship a RAR decoder in the browser).
+		if (isXml) {
+			f.text()
+				.then((text) => {
+					try {
+						const decoded = decodeBhxhEnvelopeToReadable(text);
+						setBundleDecodedPreview(decoded);
+					} catch {
+						setBundleDecodedPreview(null);
+					}
+				})
+				.catch(() => setBundleDecodedPreview(null));
+		}
 		return true;
 	};
 
@@ -386,6 +522,28 @@ const BhxhValidatorPage = () => {
 	};
 
 	const allIssues = singleResult?.issues ?? [];
+
+	// Detect whether the user's input is a GIAMDINHHS envelope so the
+	// Encoded/Decoded toggle only appears when there's actually base64
+	// content to decode. A bare TONG_HOP record has nothing to decode.
+	const isEnvelope = useMemo(
+		() =>
+			/^\s*(?:<\?xml[^?]*\?>\s*)?(?:<!--[\s\S]*?-->\s*)*<GIAMDINHHS[\s>]/i.test(
+				xmlInput
+			),
+		[xmlInput]
+	);
+
+	// Compute the decoded view lazily so we don't pay the cost on every
+	// keystroke when the user is editing in encoded mode.
+	const decodedView = useMemo(() => {
+		if (!isEnvelope || inputView !== "decoded") return "";
+		try {
+			return decodeBhxhEnvelopeToReadable(xmlInput);
+		} catch (err) {
+			return `<!-- decode failed: ${err instanceof Error ? err.message : String(err)} -->`;
+		}
+	}, [isEnvelope, inputView, xmlInput]);
 
 	const xmlTypeSummary = useMemo(() => {
 		if (!bundleResult)
@@ -507,6 +665,7 @@ const BhxhValidatorPage = () => {
 						onClick={() => {
 							setXmlInput(BHXH_4210_EXAMPLE);
 							setUploadedName(null);
+							setInputView("encoded");
 						}}
 					>
 						Load Example
@@ -519,15 +678,56 @@ const BhxhValidatorPage = () => {
 						Loaded from <span className="font-mono">{uploadedName}</span>
 					</div>
 				)}
-				<textarea
-					value={xmlInput}
-					onChange={(e) => {
-						setXmlInput(e.target.value);
-						if (uploadedName) setUploadedName(null);
-					}}
-					placeholder={inputPlaceholder}
-					className="flex-1 w-full rounded-md border px-3 py-2 text-xs font-mono bg-background resize-none"
-				/>
+				{isEnvelope && (
+					<div className="mb-2 flex items-center justify-between gap-2 flex-wrap">
+						<div className="inline-flex items-center rounded-md border bg-background p-0.5 text-[11px]">
+							<button
+								type="button"
+								onClick={() => setInputView("encoded")}
+								className={`px-2.5 py-1 rounded-sm font-medium transition-colors ${
+									inputView === "encoded"
+										? "bg-foreground text-background"
+										: "hover:bg-muted"
+								}`}
+							>
+								Encoded (raw)
+							</button>
+							<button
+								type="button"
+								onClick={() => setInputView("decoded")}
+								className={`px-2.5 py-1 rounded-sm font-medium transition-colors ${
+									inputView === "decoded"
+										? "bg-foreground text-background"
+										: "hover:bg-muted"
+								}`}
+							>
+								Decoded (human-readable)
+							</button>
+						</div>
+						<span className="text-[11px] text-muted-foreground">
+							{inputView === "decoded"
+								? "Read-only — switch back to Encoded to edit"
+								: "GIAMDINHHS envelope — toggle to inspect base64-decoded contents"}
+						</span>
+					</div>
+				)}
+				{inputView === "decoded" && isEnvelope ? (
+					<textarea
+						value={decodedView}
+						readOnly
+						className="flex-1 w-full rounded-md border px-3 py-2 text-xs font-mono bg-muted/40 resize-none"
+					/>
+				) : (
+					<textarea
+						value={xmlInput}
+						onChange={(e) => {
+							setXmlInput(e.target.value);
+							if (uploadedName) setUploadedName(null);
+						}}
+						placeholder={inputPlaceholder}
+						className="flex-1 w-full rounded-md border px-3 py-2 text-xs font-mono bg-background resize-none"
+					/>
+				)}
 				<div className="mt-3">
 					<Button
 						type="button"
@@ -611,6 +811,37 @@ const BhxhValidatorPage = () => {
 						</div>
 					)}
 				</button>
+				{bundleDecodedPreview && (
+					<div className="mt-3 border rounded-md overflow-hidden">
+						<button
+							type="button"
+							onClick={() => setShowBundleDecoded((v) => !v)}
+							className="w-full flex items-center justify-between gap-2 px-3 py-2 bg-muted/30 hover:bg-muted/50 text-xs font-medium transition-colors"
+						>
+							<span className="flex items-center gap-2">
+								<span
+									className={`inline-block transition-transform text-muted-foreground ${
+										showBundleDecoded ? "rotate-90" : ""
+									}`}
+								>
+									▸
+								</span>
+								Decoded preview (verify what the validator sees)
+							</span>
+							<span className="text-[10px] text-muted-foreground">
+								{(bundleDecodedPreview.length / 1024).toFixed(1)} KB
+							</span>
+						</button>
+						{showBundleDecoded && (
+							<textarea
+								value={bundleDecodedPreview}
+								readOnly
+								className="block w-full max-h-64 px-3 py-2 text-[11px] font-mono bg-background resize-none border-t"
+								style={{ minHeight: "200px" }}
+							/>
+						)}
+					</div>
+				)}
 				<div className="mt-3">
 					<Button
 						type="button"
@@ -662,9 +893,7 @@ const BhxhValidatorPage = () => {
 											{issue.severity}
 										</span>
 										{issue.code && (
-											<span className="text-xs text-muted-foreground font-mono">
-												{issue.code}
-											</span>
+											<ErrorCodeChip code={issue.code} size="md" />
 										)}
 									</div>
 									<p>{issue.message}</p>
@@ -822,9 +1051,10 @@ const BhxhValidatorPage = () => {
 																				{issue.severity}
 																			</span>
 																			{issue.code && (
-																				<span className="font-mono text-muted-foreground">
-																					{issue.code}
-																				</span>
+																				<ErrorCodeChip
+																					code={issue.code}
+																					size="sm"
+																				/>
 																			)}
 																		</div>
 																		<p>{issue.message}</p>

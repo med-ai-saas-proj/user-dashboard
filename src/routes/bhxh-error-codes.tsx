@@ -1,4 +1,5 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useLocation } from "react-router-dom";
 import errorCodes from "@/features/bhxh-validator/data/error-codes.json";
 import DashboardLayout from "@/layouts/dashboard-layout";
 
@@ -29,8 +30,53 @@ const SOURCE_LABELS: Record<string, string> = {
 const BhxhErrorCodesPage = () => {
 	const [query, setQuery] = useState("");
 	const [activeSource, setActiveSource] = useState<string>("ALL");
+	const [highlightedCode, setHighlightedCode] = useState<string | null>(null);
+	const location = useLocation();
 
 	const entries = errorCodes as ErrorEntry[];
+
+	// Mirror activeSource into a ref so the deep-link effect can read its
+	// latest value without taking a dependency — re-running the effect on
+	// every filter change would cancel the highlight while the user is
+	// still looking at it.
+	const activeSourceRef = useRef(activeSource);
+	useEffect(() => {
+		activeSourceRef.current = activeSource;
+	}, [activeSource]);
+
+	// Scroll to and briefly highlight a row when navigated via #code-{code} hash.
+	useEffect(() => {
+		const hash = location.hash;
+		if (!hash.startsWith("#code-")) return;
+		const code = decodeURIComponent(hash.slice("#code-".length));
+		if (!code) return;
+
+		// If the active filter would hide this code, reset it so the row is visible.
+		const currentSource = activeSourceRef.current;
+		const entry = entries.find((e) => e.code === code);
+		if (entry && currentSource !== "ALL" && entry.source !== currentSource) {
+			setActiveSource("ALL");
+		}
+
+		// Defer so the DOM has rendered the (possibly newly visible) row.
+		const id = `code-${code}`;
+		const scrollTimer = window.setTimeout(() => {
+			const el = document.getElementById(id);
+			if (el) {
+				el.scrollIntoView({ behavior: "smooth", block: "center" });
+				setHighlightedCode(code);
+			}
+		}, 50);
+
+		const clearTimer = window.setTimeout(() => {
+			setHighlightedCode(null);
+		}, 2200);
+
+		return () => {
+			window.clearTimeout(scrollTimer);
+			window.clearTimeout(clearTimer);
+		};
+	}, [location.hash, entries]);
 
 	const sources = useMemo(() => {
 		const set = new Set<string>();
@@ -140,7 +186,12 @@ const BhxhErrorCodesPage = () => {
 								filtered.map((e) => (
 									<tr
 										key={`${e.stt}-${e.code}-${e.source}`}
-										className="border-b hover:bg-muted/30"
+										id={`code-${e.code}`}
+										className={`border-b hover:bg-muted/30 transition-shadow ${
+											highlightedCode === e.code
+												? "ring-2 ring-primary bg-primary/5"
+												: ""
+										}`}
 									>
 										<td className="px-4 py-2 text-muted-foreground tabular-nums">
 											{e.stt}

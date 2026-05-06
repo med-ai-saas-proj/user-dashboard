@@ -18,7 +18,10 @@ import {
 	ConverterForm,
 	detectFormat,
 } from "@/features/pg-ehr-converter/components/converter-form";
-import { wrapBareBhxhTables } from "@/features/pg-ehr-converter/services/bhxh-envelope";
+import {
+	decodeBhxhEnvelopeToReadable,
+	wrapBareBhxhTables,
+} from "@/features/pg-ehr-converter/services/bhxh-envelope";
 import type {
 	BatchConvertResponse,
 	ConvertResponse,
@@ -43,12 +46,16 @@ const EhrConverterPage = () => {
 	);
 	const [showBatch, setShowBatch] = useState(false);
 	const [showInspector, setShowInspector] = useState(false);
+	// Decoded rendering of the BHXH input the worker actually saw — used to
+	// surface a "Decoded Input" tab so the user can verify the bundle.
+	const [decodedInput, setDecodedInput] = useState<string | null>(null);
 
 	const clearResults = () => {
 		setResult(null);
 		setReverseResult(null);
 		setValidateResult(null);
 		setConversionTime(null);
+		setDecodedInput(null);
 	};
 
 	// Split a paste/upload that may contain several bare BHXH tables
@@ -148,6 +155,15 @@ const EhrConverterPage = () => {
 					raw_response: out,
 				} as unknown as ConvertResponse);
 				setConversionTime(elapsed);
+				// Decode the XML body the worker received so the user can verify
+				// what got converted. wrapBareBhxhTables already produced a clean
+				// envelope when needed, and decodeBhxhEnvelopeToReadable falls
+				// back to the input itself if it's not a GIAMDINHHS envelope.
+				try {
+					setDecodedInput(decodeBhxhEnvelopeToReadable(xmlBody));
+				} catch {
+					setDecodedInput(null);
+				}
 				toast.success(
 					`Converted BHXH XML → FHIR R4 (${allEntries.length} resources, ${elapsed}ms)`
 				);
@@ -347,6 +363,8 @@ const EhrConverterPage = () => {
 										reverseResult={reverseResult}
 										validateResult={validateResult}
 										conversionTime={conversionTime}
+										decodedInput={decodedInput}
+										decodedInputLabel="Decoded Input"
 									/>
 									<div className="px-4 pb-4">
 										<RawResponseViewer

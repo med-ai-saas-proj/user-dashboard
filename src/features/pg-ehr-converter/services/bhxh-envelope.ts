@@ -101,6 +101,135 @@ export const decodeBhxhEnvelope = (xml: string): BhxhTable[] => {
 	return tables;
 };
 
+// Decoded record (one HOSO with all its FILEHOSO children decoded).
+export type BhxhDecodedRecord = {
+	maLk: string | null; // first MA_LK found across files in this record
+	tables: BhxhTable[];
+};
+
+// Decode a GIAMDINHHS envelope grouped by HOSO (record). Each HOSO is one
+// medical episode and contains one FILEHOSO per XML type. This is the shape
+// the validator's per-record view needs so the user can match decoded XML
+// to the per-MA_LK error report.
+export const decodeBhxhEnvelopeByRecord = (
+	xml: string
+): BhxhDecodedRecord[] => {
+	if (!isEnvelope(xml)) return [];
+	const records: BhxhDecodedRecord[] = [];
+	const hosoRe = /<HOSO>([\s\S]*?)<\/HOSO>/gi;
+	let hosoMatch: RegExpExecArray | null = hosoRe.exec(xml);
+	while (hosoMatch !== null) {
+		const hosoBlock = hosoMatch[1];
+		const tables: BhxhTable[] = [];
+		const fileRe = /<FILEHOSO>([\s\S]*?)<\/FILEHOSO>/gi;
+		let fileMatch: RegExpExecArray | null = fileRe.exec(hosoBlock);
+		while (fileMatch !== null) {
+			const block = fileMatch[1];
+			const loaiMatch = /<LOAIHOSO>\s*([^<]+?)\s*<\/LOAIHOSO>/i.exec(block);
+			const noidungMatch = /<NOIDUNGFILE>\s*([^<]+?)\s*<\/NOIDUNGFILE>/i.exec(
+				block
+			);
+			if (loaiMatch && noidungMatch) {
+				let innerXml = "";
+				try {
+					innerXml = base64ToUtf8(noidungMatch[1]);
+				} catch {
+					innerXml = "";
+				}
+				tables.push({
+					loaiHoSo: loaiMatch[1].toUpperCase(),
+					innerXml,
+					rootTag: rootTagOf(innerXml),
+				});
+			}
+			fileMatch = fileRe.exec(hosoBlock);
+		}
+		// Best-effort MA_LK from the first file that has one.
+		let maLk: string | null = null;
+		for (const t of tables) {
+			const m = /<MA_LK>\s*([^<]+?)\s*<\/MA_LK>/i.exec(t.innerXml);
+			if (m) {
+				maLk = m[1];
+				break;
+			}
+		}
+		records.push({ maLk, tables });
+		hosoMatch = hosoRe.exec(xml);
+	}
+	return records;
+};
+
+// Light-touch pretty-printer for the decoded inner XML. Adds newlines after
+// every closing tag so the output is readable in a textarea without pulling
+// in a heavy XML formatter dependency. Self-closing and CDATA blocks are
+// preserved verbatim.
+const prettyXml = (xml: string): string => {
+	const cleaned = xml.replace(/>\s+</g, "><").trim();
+	let depth = 0;
+	let out = "";
+	let i = 0;
+	while (i < cleaned.length) {
+		if (cleaned.startsWith("<![CDATA[", i)) {
+			const end = cleaned.indexOf("]]>", i);
+			if (end === -1) {
+				out += cleaned.slice(i);
+				break;
+			}
+			out += cleaned.slice(i, end + 3);
+			i = end + 3;
+			continue;
+		}
+		if (cleaned[i] === "<") {
+			const end = cleaned.indexOf(">", i);
+			if (end === -1) {
+				out += cleaned.slice(i);
+				break;
+			}
+			const tag = cleaned.slice(i, end + 1);
+			const isClosing = tag.startsWith("</");
+			const isSelfClosing = tag.endsWith("/>") || tag.startsWith("<?");
+			if (isClosing) depth = Math.max(0, depth - 1);
+			if (out && !out.endsWith("\n")) out += "\n";
+			out += `${"  ".repeat(depth)}${tag}`;
+			if (!isClosing && !isSelfClosing) depth += 1;
+			i = end + 1;
+		} else {
+			const next = cleaned.indexOf("<", i);
+			if (next === -1) {
+				out += cleaned.slice(i);
+				break;
+			}
+			out += cleaned.slice(i, next);
+			i = next;
+		}
+	}
+	return out.replace(/\n+/g, "\n");
+};
+
+// Render a GIAMDINHHS envelope as a single human-readable XML document where
+// each FILEHOSO/NOIDUNGFILE has been base64-decoded inline. Records are
+// separated by visible markers so the user can scroll through 500 hồ sơ
+// efficiently.
+export const decodeBhxhEnvelopeToReadable = (xml: string): string => {
+	const records = decodeBhxhEnvelopeByRecord(xml);
+	if (records.length === 0) return xml; // not an envelope; nothing to decode
+	const sections: string[] = [];
+	for (let r = 0; r < records.length; r++) {
+		const rec = records[r];
+		const header = `<!-- ===== Record ${r + 1} of ${records.length}${
+			rec.maLk ? ` · MA_LK=${rec.maLk}` : ""
+		} ===== -->`;
+		const tableBlocks = rec.tables.map((t) => {
+			const body = t.innerXml.trim() ? prettyXml(t.innerXml) : "(empty)";
+			return `<!-- --- ${t.loaiHoSo}${
+				t.rootTag ? ` (${t.rootTag})` : ""
+			} --- -->\n${body}`;
+		});
+		sections.push([header, ...tableBlocks].join("\n\n"));
+	}
+	return sections.join("\n\n");
+};
+
 // Wrap one or more bare BHXH tables into a synthetic GIAMDINHHS envelope.
 // Tables are sorted into XML1..XML9 order. Multiple tables for the same
 // LOAIHOSO are kept in input order and packed under the same <HOSO>.

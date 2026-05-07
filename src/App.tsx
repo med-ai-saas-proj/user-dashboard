@@ -30,6 +30,7 @@ import ProjectPeople from "./routes/project-people";
 import ProjectPeopleMember from "./features/project/components/project-people/project-people-member";
 import ProjectPeopleRole from "./features/project/components/project-people/project-people-role";
 import ProjectRouteGuard from "./routes/project-route-guard";
+import ProjectBucketsPage from "./routes/project-buckets";
 import DashboardAggregateOrganization from "./features/dashboard/components/dashboard-aggregate-organization";
 import DashboardAggregateProjects from "./features/dashboard/components/dashboard-aggregate-projects";
 import OrganizationBillingActivityLog from "./features/organization/components/organization-billing/organization-billing-activity-log";
@@ -127,6 +128,7 @@ function App() {
 										<Route path="roles" element={<ProjectPeopleRole />} />
 									</Route>
 									<Route path="api-keys" element={<APIKeysPage />} />
+									<Route path="buckets" element={<ProjectBucketsPage />} />
 								</Route>
 							</Route>
 						</Route>

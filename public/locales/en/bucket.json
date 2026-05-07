@@ -1,0 +1,18 @@
+{
+  "title": "RAG Data",
+  "description": "Manage and view your RAG files.",
+  "action": {
+    "upload": "Click to upload or drag and drop"
+  },
+  "table": {
+    "fileName": "File Name",
+    "fileSize": "Size",
+    "uploadDate": "Upload Date",
+    "actions": "Actions"
+  },
+  "emptyState": {
+    "title": "No files found.",
+    "description": "You don't have any RAG files yet. Add a file to get started.",
+    "buttonText": "Add RAG File"
+  }
+}

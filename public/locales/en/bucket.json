@@ -4,6 +4,11 @@
   "action": {
     "upload": "Click to upload or drag and drop"
   },
+  "tagDialog": {
+    "title": "Edit tags",
+    "description": "Manage tags for {fileName}. Press enter to add a tag.",
+    "inputPlaceholder": "Enter a tag and press Enter"
+  },
   "table": {
     "fileName": "File Name",
     "fileSize": "Size",

@@ -17,8 +17,27 @@ import {
 	CardTitle,
 	CardDescription,
 } from "@/components/shadcn/card";
-import { UploadCloud, File, Trash2, FileText, Search } from "lucide-react";
+import {
+	UploadCloud,
+	File,
+	Trash2,
+	FileText,
+	Search,
+	Download,
+	Tag,
+	X,
+} from "lucide-react";
 import { Input } from "@/components/shadcn/input";
+import {
+	Dialog,
+	DialogClose,
+	DialogContent,
+	DialogDescription,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+} from "@/components/shadcn/dialog";
+import { Label } from "@/components/shadcn/label";
 
 // Mock data for files
 type UploadedFile = {
@@ -26,6 +45,7 @@ type UploadedFile = {
 	name: string;
 	size: string;
 	uploadDate: string;
+	tags: string[];
 };
 
 const MOCK_FILES: UploadedFile[] = [
@@ -34,18 +54,21 @@ const MOCK_FILES: UploadedFile[] = [
 		name: "Q1_Financial_Report.pdf",
 		size: "2.4 MB",
 		uploadDate: "2026-05-01",
+		tags: ["finance", "report"],
 	},
 	{
 		id: "2",
 		name: "Employee_Handbook_2026.docx",
 		size: "1.1 MB",
 		uploadDate: "2026-05-02",
+		tags: ["hr", "handbook"],
 	},
 	{
 		id: "3",
 		name: "Product_Roadmap_Q2.pptx",
 		size: "3.5 MB",
 		uploadDate: "2026-05-05",
+		tags: ["product"],
 	},
 ];
 
@@ -54,6 +77,11 @@ export default function ProjectBucketsPage() {
 	const [files, setFiles] = useState<UploadedFile[]>(MOCK_FILES);
 	const [isDragging, setIsDragging] = useState(false);
 	const [searchQuery, setSearchQuery] = useState("");
+
+	const [tagDialogOpen, setTagDialogOpen] = useState(false);
+	const [selectedFile, setSelectedFile] = useState<UploadedFile | null>(null);
+	const [tagInput, setTagInput] = useState("");
+	const [tempTags, setTempTags] = useState<string[]>([]);
 
 	const handleDragOver = (e: React.DragEvent) => {
 		e.preventDefault();
@@ -84,12 +112,51 @@ export default function ProjectBucketsPage() {
 			name: file.name,
 			size: (file.size / (1024 * 1024)).toFixed(2) + " MB",
 			uploadDate: new Date().toISOString().split("T")[0],
+			tags: [],
 		}));
 		setFiles((prev) => [...newFiles, ...prev]);
 	};
 
 	const deleteFile = (id: string) => {
 		setFiles((prev) => prev.filter((file) => file.id !== id));
+	};
+
+	const downloadFile = (file: UploadedFile) => {
+		// Mock download logic
+		console.log("Downloading", file.name);
+	};
+
+	const openTagDialog = (file: UploadedFile) => {
+		setSelectedFile(file);
+		setTempTags(file.tags || []);
+		setTagInput("");
+		setTagDialogOpen(true);
+	};
+
+	const saveTags = () => {
+		if (selectedFile) {
+			setFiles((prev) =>
+				prev.map((f) =>
+					f.id === selectedFile.id ? { ...f, tags: tempTags } : f
+				)
+			);
+		}
+		setTagDialogOpen(false);
+	};
+
+	const addTempTag = (e: React.KeyboardEvent<HTMLInputElement>) => {
+		if (e.key === "Enter" && tagInput.trim()) {
+			e.preventDefault();
+			const newTag = tagInput.trim();
+			if (!tempTags.includes(newTag)) {
+				setTempTags([...tempTags, newTag]);
+			}
+			setTagInput("");
+		}
+	};
+
+	const removeTempTag = (tagToRemove: string) => {
+		setTempTags(tempTags.filter((tag) => tag !== tagToRemove));
 	};
 
 	const filteredFiles = files.filter((file) =>
@@ -121,7 +188,7 @@ export default function ProjectBucketsPage() {
 								onDragOver={handleDragOver}
 								onDragLeave={handleDragLeave}
 								onDrop={handleDrop}
-								className={`relative flex flex-col items-center justify-center p-12 border-2 border-dashed rounded-lg transition-colors ${
+								className={`relative flex flex-col items-center justify-center p-12 border-2 border-dashed rounded-lg transition-colors w-full ${
 									isDragging
 										? "border-primary bg-primary/5"
 										: "border-muted-foreground/25 hover:border-primary/50 hover:bg-muted/50"
@@ -181,6 +248,7 @@ export default function ProjectBucketsPage() {
 											</TableHead>
 											<TableHead>{t("bucket:table.fileSize")}</TableHead>
 											<TableHead>{t("bucket:table.uploadDate")}</TableHead>
+											<TableHead>Tags</TableHead>
 											<TableHead className="text-right">
 												{t("bucket:table.actions")}
 											</TableHead>
@@ -204,23 +272,66 @@ export default function ProjectBucketsPage() {
 													<TableCell className="text-muted-foreground">
 														{file.uploadDate}
 													</TableCell>
+													<TableCell>
+														<div className="flex flex-wrap gap-1">
+															{file.tags && file.tags.length > 0 ? (
+																file.tags.slice(0, 2).map((tag, i) => (
+																	<span
+																		key={i}
+																		className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-secondary text-secondary-foreground"
+																	>
+																		{tag}
+																	</span>
+																))
+															) : (
+																<span className="text-xs text-muted-foreground">
+																	No tags
+																</span>
+															)}
+															{file.tags && file.tags.length > 2 && (
+																<span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-secondary text-secondary-foreground">
+																	+{file.tags.length - 2}
+																</span>
+															)}
+														</div>
+													</TableCell>
 													<TableCell className="text-right">
-														<Button
-															variant="ghost"
-															size="icon"
-															className="text-destructive hover:text-destructive hover:bg-destructive/10"
-															onClick={() => deleteFile(file.id)}
-															title="Delete file"
-														>
-															<Trash2 className="w-4 h-4" />
-														</Button>
+														<div className="flex justify-end gap-1">
+															<Button
+																variant="ghost"
+																size="icon"
+																className="text-muted-foreground hover:text-foreground"
+																onClick={() => downloadFile(file)}
+																title="Download file"
+															>
+																<Download className="w-4 h-4" />
+															</Button>
+															<Button
+																variant="ghost"
+																size="icon"
+																className="text-muted-foreground hover:text-foreground"
+																onClick={() => openTagDialog(file)}
+																title="Edit tags"
+															>
+																<Tag className="w-4 h-4" />
+															</Button>
+															<Button
+																variant="ghost"
+																size="icon"
+																className="text-destructive hover:text-destructive hover:bg-destructive/10"
+																onClick={() => deleteFile(file.id)}
+																title="Delete file"
+															>
+																<Trash2 className="w-4 h-4" />
+															</Button>
+														</div>
 													</TableCell>
 												</TableRow>
 											))
 										) : (
 											<TableRow>
 												<TableCell
-													colSpan={4}
+													colSpan={5}
 													className="h-32 text-center text-muted-foreground"
 												>
 													<div className="flex flex-col items-center justify-center gap-2">
@@ -237,6 +348,54 @@ export default function ProjectBucketsPage() {
 					</Card>
 				</div>
 			</div>
+
+			<Dialog open={tagDialogOpen} onOpenChange={setTagDialogOpen}>
+				<DialogContent className="sm:max-w-[425px]">
+					<DialogHeader>
+						<DialogTitle>{t("bucket:tagDialog.title")}</DialogTitle>
+						<DialogDescription>
+							{t("bucket:tagDialog.description", {
+								fileName: selectedFile?.name || "this file",
+							})}
+						</DialogDescription>
+					</DialogHeader>
+					<div className="grid gap-4 py-4">
+						<div className="space-y-2">
+							<Label htmlFor="tags">Tags</Label>
+							<div className="flex flex-wrap gap-2 mb-2">
+								{tempTags.map((tag) => (
+									<span
+										key={tag}
+										className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-sm font-medium bg-primary/10 text-primary"
+									>
+										{tag}
+										<button
+											type="button"
+											onClick={() => removeTempTag(tag)}
+											className="text-primary/70 hover:text-primary rounded-full focus:outline-none"
+										>
+											<X className="w-3 h-3" />
+										</button>
+									</span>
+								))}
+							</div>
+							<Input
+								id="tags"
+								placeholder="Add a new tag and press Enter..."
+								value={tagInput}
+								onChange={(e) => setTagInput(e.target.value)}
+								onKeyDown={addTempTag}
+							/>
+						</div>
+					</div>
+					<DialogFooter>
+						<DialogClose asChild>
+							<Button variant="outline">{t("common:action.cancel")}</Button>
+						</DialogClose>
+						<Button onClick={saveTags}>{t("common:action.save")}</Button>
+					</DialogFooter>
+				</DialogContent>
+			</Dialog>
 		</DashboardLayout>
 	);
 }

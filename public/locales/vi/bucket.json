@@ -4,6 +4,11 @@
   "action": {
     "upload": "Nhấp để tải lên hoặc kéo và thả"
   },
+  "tagDialog": {
+    "title": "Chỉnh sửa tags",
+    "description": "Quản lý tags cho {fileName}. Nhấn enter để thêm một tag.",
+    "inputPlaceholder": "Nhập một tag và nhấn Enter"
+  },
   "table": {
     "fileName": "Tên tệp",
     "fileSize": "Kích thước tệp",

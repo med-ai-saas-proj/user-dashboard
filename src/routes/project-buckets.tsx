@@ -19,13 +19,13 @@ import {
 } from "@/components/shadcn/card";
 import {
 	UploadCloud,
-	File,
-	Trash2,
-	FileText,
 	Search,
-	Download,
-	Tag,
 	X,
+	FileIcon,
+	Trash2Icon,
+	TagIcon,
+	DownloadIcon,
+	FileTextIcon,
 } from "lucide-react";
 import { Input } from "@/components/shadcn/input";
 import {
@@ -46,6 +46,7 @@ type UploadedFile = {
 	size: string;
 	uploadDate: string;
 	tags: string[];
+	file: File;
 };
 
 const MOCK_FILES: UploadedFile[] = [
@@ -55,6 +56,7 @@ const MOCK_FILES: UploadedFile[] = [
 		size: "2.4 MB",
 		uploadDate: "2026-05-01",
 		tags: ["finance", "report"],
+		file: new File([], "Q1_Financial_Report.pdf"),
 	},
 	{
 		id: "2",
@@ -62,6 +64,7 @@ const MOCK_FILES: UploadedFile[] = [
 		size: "1.1 MB",
 		uploadDate: "2026-05-02",
 		tags: ["hr", "handbook"],
+		file: new File([], "Employee_Handbook_2026.docx"),
 	},
 	{
 		id: "3",
@@ -69,6 +72,7 @@ const MOCK_FILES: UploadedFile[] = [
 		size: "3.5 MB",
 		uploadDate: "2026-05-05",
 		tags: ["product"],
+		file: new File([], "Product_Roadmap_Q2.pptx"),
 	},
 ];
 
@@ -113,7 +117,9 @@ export default function ProjectBucketsPage() {
 			size: (file.size / (1024 * 1024)).toFixed(2) + " MB",
 			uploadDate: new Date().toISOString().split("T")[0],
 			tags: [],
+			file,
 		}));
+
 		setFiles((prev) => [...newFiles, ...prev]);
 	};
 
@@ -122,8 +128,17 @@ export default function ProjectBucketsPage() {
 	};
 
 	const downloadFile = (file: UploadedFile) => {
-		// Mock download logic
-		console.log("Downloading", file.name);
+		const url = URL.createObjectURL(file.file);
+
+		const link = document.createElement("a");
+		link.href = url;
+		link.download = file.name;
+
+		document.body.appendChild(link);
+		link.click();
+
+		document.body.removeChild(link);
+		URL.revokeObjectURL(url);
 	};
 
 	const openTagDialog = (file: UploadedFile) => {
@@ -260,7 +275,7 @@ export default function ProjectBucketsPage() {
 												<TableRow key={file.id}>
 													<TableCell className="font-medium">
 														<div className="flex items-center gap-2">
-															<FileText className="w-4 h-4 text-primary/70" />
+															<FileTextIcon className="w-4 h-4 text-primary/70" />
 															<span className="truncate max-w-[300px]">
 																{file.name}
 															</span>
@@ -304,7 +319,7 @@ export default function ProjectBucketsPage() {
 																onClick={() => downloadFile(file)}
 																title="Download file"
 															>
-																<Download className="w-4 h-4" />
+																<DownloadIcon className="w-4 h-4" />
 															</Button>
 															<Button
 																variant="ghost"
@@ -313,7 +328,7 @@ export default function ProjectBucketsPage() {
 																onClick={() => openTagDialog(file)}
 																title="Edit tags"
 															>
-																<Tag className="w-4 h-4" />
+																<TagIcon className="w-4 h-4" />
 															</Button>
 															<Button
 																variant="ghost"
@@ -322,7 +337,7 @@ export default function ProjectBucketsPage() {
 																onClick={() => deleteFile(file.id)}
 																title="Delete file"
 															>
-																<Trash2 className="w-4 h-4" />
+																<Trash2Icon className="w-4 h-4" />
 															</Button>
 														</div>
 													</TableCell>
@@ -335,7 +350,7 @@ export default function ProjectBucketsPage() {
 													className="h-32 text-center text-muted-foreground"
 												>
 													<div className="flex flex-col items-center justify-center gap-2">
-														<File className="w-8 h-8 opacity-20" />
+														<FileIcon className="w-8 h-8 opacity-20" />
 														<p>{t("bucket:emptyState.title")}</p>
 													</div>
 												</TableCell>

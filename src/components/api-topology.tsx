@@ -112,6 +112,20 @@ export const TOPOLOGIES: Record<string, TopologyDef> = {
 			},
 		],
 	},
+	ophth_summary: {
+		title: "Ophthalmology Summary Pipeline",
+		description:
+			"Takes a patient's longitudinal ophthalmology EHR (1–63 visits), preprocesses encounters, and produces structured per-eye summary, deduplicated meds/diagnoses, condensed timeline, and follow-up plan.",
+		flowId: "ophth_summary",
+		nodes: [
+			{
+				id: "summarize",
+				label: "Ophth Summarize",
+				endpoint: "/ophth_summarize",
+				method: "POST",
+			},
+		],
+	},
 	rx_advisor: {
 		title: "Rx Advisor Pipeline",
 		description:

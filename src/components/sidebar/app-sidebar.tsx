@@ -11,6 +11,7 @@ import {
 	DatabaseIcon,
 	DnaIcon,
 	DropletIcon,
+	EyeIcon,
 	EyeOffIcon,
 	FileHeartIcon,
 	FileJson2Icon,
@@ -170,6 +171,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 				name: t("operation.ehrSummary.title"),
 				url: "/ehr-summary",
 				icon: ClipboardPlusIcon,
+			},
+			{
+				name: "Ophthalmology Summary",
+				url: "/ophth-summary",
+				icon: EyeIcon,
 			},
 			{
 				name: "EHR Overview",

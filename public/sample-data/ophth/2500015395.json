@@ -1,0 +1,302 @@
+﻿{
+  "exportMetadata": {
+    "exportDate": "2026-05-08T17:22:26.760",
+    "sourceSystem": "Bệnh viện Mắt Hà Nội cơ sở 2",
+    "sourceSystemId": "BV_MATTASKO"
+  },
+  "patient": {
+    "patientId": "2500015395",
+    "name": {
+      "Full": "LÊ THỊ NGA"
+    },
+    "gender": "Nữ",
+    "birthDate": "1960-08-13T00:00:00",
+    "address": {
+      "line": "",
+      "city": "Tỉnh Thanh Hóa",
+      "country": "Việt Nam"
+    },
+    "telecom": {
+      "phone": "",
+      "email": ""
+    },
+    "occupation": "Hưu và dưới 60 tuổi",
+    "ethnicity": "Ba na          ",
+    "encounters": [
+      {
+        "encounterId": "HSKBNT20250515095133896",
+        "class": "outpatient",
+        "department": "Khoa Khám Bệnh",
+        "period": {
+          "start": "2025-05-15T00:00:00",
+          "end": "2025-05-15T15:17:54.870"
+        },
+        "practitioner": {
+          "practitionerId": "057",
+          "name": "Ths.Bs Mai Thị Anh Thư"
+        },
+        "reasonForVisit": "Khám lại sau phẫu thuật vào ngày kế tiếp ngay sau ngày mổ và khám lại vào BUỔI CHIỀU các ngày tiếp t",
+        "pastMedicalHistory": "",
+        "familyHistory": "",
+        "vitalSigns": {
+          "bloodPressure": "",
+          "heartRate": "",
+          "temperature": "",
+          "height": "0",
+          "weight": ""
+        },
+        "ophthalmicExamination": {
+          "eyesockets": {},
+          "globecondition": {},
+          "ocularmotility": {},
+          "lacrimalsystem": {
+            "right": "",
+            "left": ""
+          },
+          "conjunctiva": {
+            "right": "",
+            "left": ""
+          },
+          "cornea": {
+            "right": "",
+            "left": ""
+          },
+          "sclera": {},
+          "anteriorchamber": {
+            "right": "",
+            "left": ""
+          },
+          "iris": {
+            "right": "",
+            "left": ""
+          },
+          "pupil": {},
+          "lens": {
+            "right": "",
+            "left": ""
+          },
+          "vitreous": {
+            "right": "",
+            "left": ""
+          },
+          "opticdisc": {
+            "right": "",
+            "left": ""
+          },
+          "retina": {
+            "right": "",
+            "left": ""
+          }
+        },
+        "refraction": {
+          "rightEye": {
+            "sphere": "er",
+            "cylinder": "",
+            "axis": ""
+          },
+          "leftEye": {
+            "sphere": "-0.25",
+            "cylinder": "-0.25",
+            "axis": "130"
+          },
+          "measuredAt": "2025-05-15T10:19:20"
+        },
+        "diagnoses": [
+          {
+            "code": "H25.1",
+            "text": "Đục thể thủy tinh vùng nhân ở người già",
+            "laterality": "right",
+            "codeSystem": "ICD-10"
+          },
+          {
+            "code": "",
+            "text": "Sau PT thay TTT 1 ngày",
+            "laterality": "left",
+            "codeSystem": "ICD-10"
+          },
+          {
+            "code": "",
+            "text": "",
+            "laterality": "",
+            "codeSystem": "ICD-10"
+          }
+        ],
+        "procedureRequests": [
+          {
+            "procedureRequestId": "PTTTDC20250515105947721",
+            "name": "Vệ sinh mắt sau phẫu thuật (1 mắt)",
+            "scheduledDate": "2025-05-15T10:57:51.507",
+            "assessment": "",
+            "note": "MT phaco 14/05/25"
+          }
+        ]
+      },
+      {
+        "encounterId": "HSKBNT20250514114028503",
+        "class": "outpatient",
+        "department": "Khoa Khám Bệnh",
+        "period": {
+          "start": "2025-05-14T00:00:00",
+          "end": "1900-01-01T00:00:00"
+        },
+        "practitioner": {
+          "practitionerId": "057",
+          "name": "Ths.Bs Mai Thị Anh Thư"
+        },
+        "reasonForVisit": "Khám theo lịch hẹn phẫu thuật",
+        "pastMedicalHistory": "",
+        "familyHistory": "",
+        "vitalSigns": {
+          "bloodPressure": "",
+          "heartRate": "",
+          "temperature": "",
+          "height": "0",
+          "weight": ""
+        },
+        "ophthalmicExamination": {
+          "eyesockets": {},
+          "globecondition": {},
+          "ocularmotility": {},
+          "lacrimalsystem": {
+            "right": "",
+            "left": ""
+          },
+          "conjunctiva": {
+            "right": "",
+            "left": ""
+          },
+          "cornea": {
+            "right": "",
+            "left": ""
+          },
+          "sclera": {},
+          "anteriorchamber": {
+            "right": "",
+            "left": ""
+          },
+          "iris": {
+            "right": "",
+            "left": ""
+          },
+          "pupil": {},
+          "lens": {
+            "right": "",
+            "left": ""
+          },
+          "vitreous": {
+            "right": "",
+            "left": ""
+          },
+          "opticdisc": {
+            "right": "",
+            "left": ""
+          },
+          "retina": {
+            "right": "",
+            "left": ""
+          }
+        },
+        "refraction": {
+          "rightEye": {
+            "sphere": "er",
+            "cylinder": "",
+            "axis": ""
+          },
+          "leftEye": {
+            "sphere": "-14.25",
+            "cylinder": "-1.00",
+            "axis": "40"
+          },
+          "measuredAt": "2025-05-14T11:47:40.963"
+        },
+        "diagnosticReports": [
+          {
+            "reportId": "CDHA202505141230247561",
+            "type": "CDHA",
+            "performedDate": "2025-05-14T12:59:48.430",
+            "conclusion": ",Chụp IOL master",
+            "detail": "{\\rtf1\\ansi\\ansicpg1252\\deff0\\deflang1033{\\fonttbl{\\f0\\fnil\\fcharset163 Times New Roman;}}\r\n\\viewkind4\\uc1\\pard\\f0\\fs24\\par\r\n}\r\n"
+          },
+          {
+            "reportId": "XN20250514123023217",
+            "type": "XN",
+            "performedDate": "2025-05-14T00:00:00",
+            "conclusion": "HBsAg test nhanh",
+            "detail": "Âm tính"
+          },
+          {
+            "reportId": "XN20250514123023217",
+            "type": "XN",
+            "performedDate": "2025-05-14T00:00:00",
+            "conclusion": "HIV Ab test nhanh",
+            "detail": "Âm tính"
+          },
+          {
+            "reportId": "XN20250514123023217",
+            "type": "XN",
+            "performedDate": "2025-05-14T00:00:00",
+            "conclusion": "Tổng phân tích tế bào máu ngoại vi (bằng máy đếm tổng trở)",
+            "detail": "[{\"code\":\"22.0120.1370\",\"name\":\"WBC (Số lượng bạch cầu)\",\"result\":\"7.7 G\\/L\"},{\"code\":\"22.0120.1370\",\"name\":\"RBC ( Số lượng hồng cầu)\",\"result\":\"4.25 T\\/L\"},{\"code\":\"22.0120.1370\",\"name\":\"HGB (Nồng độ huyết sắc tố)\",\"result\":\"13.2 g\\/dL\"},{\"code\":\"22.0120.1370\",\"name\":\"HCT (Thể tích khối hồng cầu)\",\"result\":\"40.2 %\"},{\"code\":\"22.0120.1370\",\"name\":\"MCV (Thể tích trung bình hồng cầu)\",\"result\":\"94.6 fL\"},{\"code\":\"22.0120.1370\",\"name\":\"MCH (Lượng huyết sắc tố trung bình hồng cầu)\",\"result\":\"31.1 pg\"},{\"code\":\"22.0120.1370\",\"name\":\"MCHC (Nồng độ HST trung bình hồng cầu)\",\"result\":\"32.8 g\\/dL\"},{\"code\":\"22.0120.1370\",\"name\":\"RDW-CV (Dải phân bố kích thước HC-Độ biến thiên)\",\"result\":\"12.2 %\"},{\"code\":\"22.0120.1370\",\"name\":\"PLT (Số lượng tiểu cầu)\",\"result\":\"208.0 G\\/L\"},{\"code\":\"22.0120.1370\",\"name\":\"PCT(Khối tiểu cầu)\",\"result\":\"0.15 %\"},{\"code\":\"22.0120.1370\",\"name\":\"MPV (Thể tích trung bình tiểu cầu)\",\"result\":\"7.4 fL\"},{\"code\":\"22.0120.1370\",\"name\":\"PDW (Dải phân bố kích thước tiểu cầu)\",\"result\":\"18.0 %\"},{\"code\":\"22.0120.1370\",\"name\":\"Lym% ( Tỷ lệ % lympho)\",\"result\":\"47.2 %\"},{\"code\":\"22.0120.1370\",\"name\":\"MXD% ( Tỷ lệ % mono)\",\"result\":\"2.2 %\"},{\"code\":\"22.0120.1370\",\"name\":\"Neut% (Tỷ lệ % bạch cầu hạt trung tính)\",\"result\":\"50.6 %\"},{\"code\":\"22.0120.1370\",\"name\":\"Lym# (Số lượng lympho)\",\"result\":\"3.6 G\\/L\"},{\"code\":\"22.0120.1370\",\"name\":\"MXD# (Số lượng mono)\",\"result\":\"0.2 G\\/L\"},{\"code\":\"22.0120.1370\",\"name\":\"Neut# (Số lượng bạch cầu hạt trung tính)\",\"result\":\"3.9 G\\/L\"}]"
+          },
+          {
+            "reportId": "XN20250514123023217",
+            "type": "XN",
+            "performedDate": "2025-05-14T00:00:00",
+            "conclusion": "Định lượng Glucose [Máu]",
+            "detail": "4.61"
+          },
+          {
+            "reportId": "XN20250514123023217",
+            "type": "XN",
+            "performedDate": "2025-05-14T00:00:00",
+            "conclusion": "Định lượng Creatinin (máu)",
+            "detail": "67.82"
+          },
+          {
+            "reportId": "XN20250514123023217",
+            "type": "XN",
+            "performedDate": "2025-05-14T00:00:00",
+            "conclusion": "Thời gian thromboplastin một phần hoạt hóa (APTT)",
+            "detail": "[{\"code\":\"DV00011\",\"name\":\"Thời gian APTT\",\"result\":\"22.1 giây(s)\"},{\"code\":\"DV00011\",\"name\":\"Tỷ lệ APTT\",\"result\":\"0.9 Bệnh\\/chứng\"}]"
+          },
+          {
+            "reportId": "XN20250514123023217",
+            "type": "XN",
+            "performedDate": "2025-05-14T00:00:00",
+            "conclusion": "Định lượng Fibrinogen (định lượng trực tiếp)",
+            "detail": "[{\"code\":\"DV00012\",\"name\":\"Nồng độ Fibrinogen\",\"result\":\"2.7 g\\/l\"}]"
+          }
+        ],
+        "diagnoses": [
+          {
+            "code": "",
+            "text": "",
+            "laterality": "right",
+            "codeSystem": "ICD-10"
+          },
+          {
+            "code": "",
+            "text": "",
+            "laterality": "left",
+            "codeSystem": "ICD-10"
+          },
+          {
+            "code": "H25.1",
+            "text": "Đục thể thủy tinh vùng nhân ở người già",
+            "laterality": "",
+            "codeSystem": "ICD-10"
+          }
+        ],
+        "procedureRequests": [
+          {
+            "procedureRequestId": "PTTTDC20250514123023984",
+            "name": "PT ĐỤC THỦY TINH THỂ",
+            "scheduledDate": "2025-05-14T12:28:58.073",
+            "assessment": "MT: Phaco + IOL (IQ )",
+            "note": ""
+          }
+        ]
+      }
+    ]
+  }
+}

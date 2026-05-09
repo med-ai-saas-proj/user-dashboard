@@ -40,6 +40,7 @@ import IntegrationDashboardPage from "@/routes/integration-dashboard";
 import KnowledgeBasePage from "@/routes/knowledge-base";
 import LoginPage from "@/routes/login";
 import MedicalImagePage from "@/routes/medical-image";
+import OphthSummaryPage from "@/routes/ophth-summary";
 import PatientHistoryPage from "@/routes/patient-history";
 import PlaygroundAISearchPage from "@/routes/playground-ai-search";
 import { ProtectedRoute } from "@/routes/protected-route";
@@ -151,6 +152,14 @@ function AppRoutes() {
 					element={
 						<ProtectedRoute>
 							<EHRSummaryPage />
+						</ProtectedRoute>
+					}
+				/>
+				<Route
+					path="/ophth-summary"
+					element={
+						<ProtectedRoute>
+							<OphthSummaryPage />
 						</ProtectedRoute>
 					}
 				/>

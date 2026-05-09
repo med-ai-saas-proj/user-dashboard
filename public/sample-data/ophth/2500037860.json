@@ -1,0 +1,191 @@
+﻿{
+  "exportMetadata": {
+    "exportDate": "2026-05-08T17:24:01.333",
+    "sourceSystem": "Bệnh viện Mắt Hà Nội cơ sở 2",
+    "sourceSystemId": "BV_MATTASKO"
+  },
+  "patient": {
+    "patientId": "2500037860",
+    "name": {
+      "Full": "ĐỖ VĂN KHANG"
+    },
+    "gender": "Nam",
+    "birthDate": "1986-06-18T00:00:00",
+    "address": {
+      "ward": "Xã Hoạt Giang",
+      "line": "",
+      "city": "Tỉnh Thanh Hóa",
+      "country": "Việt Nam"
+    },
+    "telecom": {
+      "phone": "",
+      "email": ""
+    },
+    "occupation": "Hành chính, sự nghiệp",
+    "ethnicity": "Ba na          ",
+    "encounters": [
+      {
+        "encounterId": "HSKBNT20251014090254527",
+        "class": "outpatient",
+        "department": "Khoa Khám Bệnh",
+        "period": {
+          "start": "2025-10-14T00:00:00",
+          "end": "2025-10-14T11:11:29.930"
+        },
+        "practitioner": {
+          "practitionerId": "BS169",
+          "name": "TS. BS Vũ Hoàng Việt Chi"
+        },
+        "reasonForVisit": "Khám lâm sàng chung (Lần 1)",
+        "pastMedicalHistory": "Không",
+        "familyHistory": "",
+        "vitalSigns": {
+          "bloodPressure": "",
+          "heartRate": "",
+          "temperature": "",
+          "height": "0",
+          "weight": ""
+        },
+        "ophthalmicExamination": {
+          "eyesockets": {
+            "right": "Bình thường",
+            "left": "Bình thường"
+          },
+          "globecondition": {
+            "right": "Bình thường",
+            "left": "Bình thường"
+          },
+          "ocularmotility": {
+            "right": "Bình thường",
+            "left": "Bình thường"
+          },
+          "lacrimalsystem": {
+            "right": "Bình thường",
+            "left": "Bình thường"
+          },
+          "conjunctiva": {
+            "right": "Hồng",
+            "left": "Hồng"
+          },
+          "cornea": {
+            "right": "Trong",
+            "left": "Sẹo đục"
+          },
+          "sclera": {
+            "right": "Bình thường",
+            "left": "Bình thường"
+          },
+          "anteriorchamber": {
+            "right": "Sâu, sạch",
+            "left": "Không soi được"
+          },
+          "iris": {
+            "right": "Nâu, xốp",
+            "left": "Không soi được"
+          },
+          "pupil": {
+            "right": "Tròn, đường kính 3mm, PXAS (+)",
+            "left": "Không soi được"
+          },
+          "lens": {
+            "right": "Trong",
+            "left": "Không soi được"
+          },
+          "vitreous": {
+            "right": "Trong",
+            "left": "Không soi được"
+          },
+          "opticdisc": {
+            "right": "Hồng, bờ rõ",
+            "left": "Không soi được"
+          },
+          "retina": {
+            "right": "Hoàng điểm rõ ánh trung tâm, các mạch máu mềm mại",
+            "left": "Không soi được"
+          }
+        },
+        "refraction": {
+          "rightEye": {
+            "sphere": "+0.25",
+            "cylinder": "-0.75",
+            "axis": "175"
+          },
+          "leftEye": {
+            "sphere": "er",
+            "cylinder": "",
+            "axis": ""
+          },
+          "measuredAt": "2025-10-14T09:12:30.947"
+        },
+        "diagnosticReports": [
+          {
+            "reportId": "CDHA20251014093458994",
+            "type": "CDHA",
+            "performedDate": "2025-10-14T10:10:19.197",
+            "conclusion": ",Siêu âm bán phần trước",
+            "detail": "{\\rtf1\\ansi\\ansicpg1252\\deff0\\deflang1033{\\fonttbl{\\f0\\fnil\\fcharset163 Times New Roman;}}\r\n\\viewkind4\\uc1\\pard\\f0\\fs24\\par\r\n}\r\n"
+          },
+          {
+            "reportId": "CDHA20251014093459776",
+            "type": "CDHA",
+            "performedDate": "2025-10-14T10:07:48.220",
+            "conclusion": ",Siêu âm mắt",
+            "detail": "{\\rtf1\\ansi\\ansicpg1252\\deff0\\deflang1033{\\fonttbl{\\f0\\fnil\\fcharset163 Times New Roman;}}\r\n\\viewkind4\\uc1\\pard\\f0\\fs24\\par\r\n}\r\n"
+          }
+        ],
+        "diagnoses": [
+          {
+            "code": "",
+            "text": "",
+            "laterality": "right",
+            "codeSystem": "ICD-10"
+          },
+          {
+            "code": "H40.8",
+            "text": "Nhãn áp không điều chỉnh với thuốc",
+            "laterality": "left",
+            "codeSystem": "ICD-10"
+          },
+          {
+            "code": "",
+            "text": "",
+            "laterality": "",
+            "codeSystem": "ICD-10"
+          }
+        ],
+        "medicationRequests": [
+          {
+            "medication": {
+              "code": "T0031",
+              "name": "Tafluprost (Taflotan 0,0015% 2,5ml)",
+              "ingredient": "Tafluprost",
+              "strength": "0,0375mg/2,5ml"
+            },
+            "dosageInstruction": {
+              "text": "Tra mắt trái 1 lần/ngày, mỗi lần 1 giọt , 21h, hàng ngày",
+              "route": "21h, hàng ngày",
+              "dose": 1.000000000000000e+000,
+              "frequency": 1.000000000000000e+000
+            },
+            "quantity": 1.00
+          },
+          {
+            "medication": {
+              "code": "T000681",
+              "name": "Dorzolamide + Timolol (Cosopt 5ml)",
+              "ingredient": "Dorzolamide 100mg/5ml + Timolol 25mg/5ml",
+              "strength": ""
+            },
+            "dosageInstruction": {
+              "text": "Tra mắt trái 2 lần/ngày, mỗi lần 1 giọt , 8h - 20h",
+              "route": "8h - 20h",
+              "dose": 1.000000000000000e+000,
+              "frequency": 2.000000000000000e+000
+            },
+            "quantity": 1.00
+          }
+        ]
+      }
+    ]
+  }
+}

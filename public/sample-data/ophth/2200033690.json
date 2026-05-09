@@ -1,0 +1,2955 @@
+﻿{
+  "exportMetadata": {
+    "exportDate": "2026-05-08T17:28:04.227",
+    "sourceSystem": "Bệnh viện Mắt Hà Nội cơ sở 2",
+    "sourceSystemId": "BV_MATTASKO"
+  },
+  "patient": {
+    "patientId": "2200033690",
+    "name": {
+      "Full": "TRẦN MINH PHÚC"
+    },
+    "gender": "Nam",
+    "birthDate": "2020-01-10T00:00:00",
+    "address": {
+      "ward": "Phường Đông Ngạc",
+      "line": "",
+      "city": "Thành phố Hà Nội",
+      "country": "Việt Nam"
+    },
+    "telecom": {
+      "phone": "",
+      "email": ""
+    },
+    "occupation": "Trẻ dưới 6 tuổi đi học, dưới 15 tuổi không đi học",
+    "ethnicity": "Ba na          ",
+    "encounters": [
+      {
+        "encounterId": "HSKBNT20221025154655209",
+        "class": "outpatient",
+        "department": "Khoa Khám Bệnh",
+        "period": {
+          "start": "2022-10-25T00:00:00",
+          "end": "1900-01-01T00:00:00"
+        },
+        "practitioner": {
+          "practitionerId": "057",
+          "name": "Ths.Bs Mai Thị Anh Thư"
+        },
+        "reasonForVisit": "Khám lâm sàng chung (Lần 1)",
+        "pastMedicalHistory": "",
+        "familyHistory": "",
+        "vitalSigns": {
+          "bloodPressure": "",
+          "heartRate": "",
+          "temperature": "",
+          "height": "0",
+          "weight": ""
+        },
+        "ophthalmicExamination": {
+          "eyesockets": {},
+          "globecondition": {},
+          "ocularmotility": {},
+          "lacrimalsystem": {
+            "right": "Bình thường",
+            "left": "Bình thường"
+          },
+          "conjunctiva": {
+            "right": "Bình thường",
+            "left": "Bình thường"
+          },
+          "cornea": {
+            "right": "Trong",
+            "left": "Trong"
+          },
+          "sclera": {},
+          "anteriorchamber": {
+            "right": "Sâu, sạch",
+            "left": "Sâu, sạch"
+          },
+          "iris": {
+            "right": "Nâu, xốp",
+            "left": "Nâu, xốp"
+          },
+          "pupil": {},
+          "lens": {
+            "right": "Trong",
+            "left": "Trong"
+          },
+          "vitreous": {
+            "right": "Sạch",
+            "left": "Sạch"
+          },
+          "opticdisc": {
+            "right": "Gai hồng",
+            "left": "Gai hồng"
+          },
+          "retina": {
+            "right": "Hệ mạch máu bình thường",
+            "left": "Hệ mạch máu bình thường"
+          }
+        },
+        "refraction": {
+          "rightEye": {
+            "sphere": "0.00",
+            "cylinder": "-0.50",
+            "axis": "85"
+          },
+          "leftEye": {
+            "sphere": "0.00",
+            "cylinder": "-0.75",
+            "axis": "90"
+          },
+          "measuredAt": "2022-10-25T15:50:31.233"
+        },
+        "diagnoses": [
+          {
+            "code": "",
+            "text": "",
+            "laterality": "right",
+            "codeSystem": "ICD-10"
+          },
+          {
+            "code": "",
+            "text": "",
+            "laterality": "left",
+            "codeSystem": "ICD-10"
+          },
+          {
+            "code": "H10",
+            "text": "Viêm kết mạc ",
+            "laterality": "",
+            "codeSystem": "ICD-10"
+          }
+        ],
+        "medicationRequests": [
+          {
+            "medication": {
+              "code": "T0016",
+              "name": "Carbomer (Liposic 0,2% 10g)",
+              "ingredient": "Carbomer",
+              "strength": "0.2%-10g"
+            },
+            "dosageInstruction": {
+              "text": "Tra hai mắt 2 lần/ngày, mỗi lần 1 cm , trưa - tối",
+              "route": "trưa - tối",
+              "dose": 1.000000000000000e+000,
+              "frequency": "2"
+            },
+            "quantity": 1.00
+          }
+        ]
+      },
+      {
+        "encounterId": "HSKBNT20230913172022751",
+        "class": "outpatient",
+        "department": "Khoa Khám Bệnh",
+        "period": {
+          "start": "2023-09-13T00:00:00",
+          "end": "1900-01-01T00:00:00"
+        },
+        "practitioner": {
+          "practitionerId": "057",
+          "name": "Ths.Bs Mai Thị Anh Thư"
+        },
+        "reasonForVisit": "Khám lại (trong vòng 07 ngày)",
+        "pastMedicalHistory": "",
+        "familyHistory": "",
+        "vitalSigns": {
+          "bloodPressure": "",
+          "heartRate": "",
+          "temperature": "",
+          "height": "0",
+          "weight": ""
+        },
+        "ophthalmicExamination": {
+          "eyesockets": {},
+          "globecondition": {},
+          "ocularmotility": {},
+          "lacrimalsystem": {
+            "right": "Bình thường",
+            "left": "Bình thường"
+          },
+          "conjunctiva": {
+            "right": "Bình thường",
+            "left": "Bình thường"
+          },
+          "cornea": {
+            "right": "",
+            "left": ""
+          },
+          "sclera": {},
+          "anteriorchamber": {
+            "right": "",
+            "left": ""
+          },
+          "iris": {
+            "right": "",
+            "left": ""
+          },
+          "pupil": {},
+          "lens": {
+            "right": "",
+            "left": ""
+          },
+          "vitreous": {
+            "right": "",
+            "left": ""
+          },
+          "opticdisc": {
+            "right": "",
+            "left": ""
+          },
+          "retina": {
+            "right": "",
+            "left": ""
+          }
+        },
+        "refraction": {
+          "rightEye": {
+            "sphere": "",
+            "cylinder": "",
+            "axis": ""
+          },
+          "leftEye": {
+            "sphere": "",
+            "cylinder": "",
+            "axis": ""
+          },
+          "measuredAt": "2023-09-13T17:23:35.767"
+        },
+        "diagnoses": [
+          {
+            "code": "",
+            "text": "",
+            "laterality": "right",
+            "codeSystem": "ICD-10"
+          },
+          {
+            "code": "",
+            "text": "",
+            "laterality": "left",
+            "codeSystem": "ICD-10"
+          },
+          {
+            "code": "H10",
+            "text": "Viêm kết mạc chưa có giả mạc ",
+            "laterality": "",
+            "codeSystem": "ICD-10"
+          }
+        ],
+        "medicationRequests": [
+          {
+            "medication": {
+              "code": "T0057",
+              "name": "Ofloxacin (Oflovid ophthalmic ointment 0,3% 3,5g)",
+              "ingredient": "Ofloxacin",
+              "strength": "0,3%"
+            },
+            "dosageInstruction": {
+              "text": "Tra hai mắt 1 lần/ngày, mỗi lần 1 cm , tối",
+              "route": "tối",
+              "dose": 1.000000000000000e+000,
+              "frequency": "1"
+            },
+            "quantity": 1.00
+          },
+          {
+            "medication": {
+              "code": "T0009",
+              "name": "Natri hyaluronat (Sanlein 0,1% 5ml)",
+              "ingredient": "Natri hyaluronat",
+              "strength": "5mg/5ml"
+            },
+            "dosageInstruction": {
+              "text": "Tra hai mắt 4 lần/ngày, mỗi lần 1 giọt ,",
+              "route": "",
+              "dose": 1.000000000000000e+000,
+              "frequency": "4"
+            },
+            "quantity": 1.00
+          },
+          {
+            "medication": {
+              "code": "T0054",
+              "name": "Tobramycin (Tobrex 0,3% 5ml)",
+              "ingredient": "Tobramycin",
+              "strength": "3mg/ml"
+            },
+            "dosageInstruction": {
+              "text": "Tra hai mắt 4 lần/ngày, mỗi lần 1 giọt , x 10 ngày ( đã có)",
+              "route": "x 10 ngày ( đã có)",
+              "dose": 1.000000000000000e+000,
+              "frequency": "4"
+            },
+            "quantity": 1.00
+          }
+        ]
+      },
+      {
+        "encounterId": "HSKBNT20240324083756643",
+        "class": "outpatient",
+        "department": "Khoa Khám Bệnh",
+        "period": {
+          "start": "2024-03-24T00:00:00",
+          "end": "1900-01-01T00:00:00"
+        },
+        "practitioner": {
+          "practitionerId": "057",
+          "name": "Ths.Bs Mai Thị Anh Thư"
+        },
+        "reasonForVisit": "Khám lâm sàng chung (từ lần 2 trở đi)",
+        "pastMedicalHistory": "",
+        "familyHistory": "",
+        "vitalSigns": {
+          "bloodPressure": "",
+          "heartRate": "",
+          "temperature": "",
+          "height": "0",
+          "weight": "13"
+        },
+        "ophthalmicExamination": {
+          "eyesockets": {},
+          "globecondition": {},
+          "ocularmotility": {},
+          "lacrimalsystem": {
+            "right": "",
+            "left": ""
+          },
+          "conjunctiva": {
+            "right": "",
+            "left": ""
+          },
+          "cornea": {
+            "right": "",
+            "left": ""
+          },
+          "sclera": {},
+          "anteriorchamber": {
+            "right": "",
+            "left": ""
+          },
+          "iris": {
+            "right": "",
+            "left": ""
+          },
+          "pupil": {},
+          "lens": {
+            "right": "",
+            "left": ""
+          },
+          "vitreous": {
+            "right": "",
+            "left": ""
+          },
+          "opticdisc": {
+            "right": "",
+            "left": ""
+          },
+          "retina": {
+            "right": "",
+            "left": ""
+          }
+        },
+        "refraction": {
+          "rightEye": {
+            "sphere": "-0.50",
+            "cylinder": "-0.75",
+            "axis": "180"
+          },
+          "leftEye": {
+            "sphere": "-0.25",
+            "cylinder": "-1.50",
+            "axis": "175"
+          },
+          "measuredAt": "2024-03-24T08:55:09.500"
+        },
+        "diagnoses": [
+          {
+            "code": "",
+            "text": "",
+            "laterality": "right",
+            "codeSystem": "ICD-10"
+          },
+          {
+            "code": "",
+            "text": "",
+            "laterality": "left",
+            "codeSystem": "ICD-10"
+          },
+          {
+            "code": "H10",
+            "text": "Viêm kết mạc",
+            "laterality": "",
+            "codeSystem": "ICD-10"
+          }
+        ],
+        "medicationRequests": [
+          {
+            "medication": {
+              "code": "T0058",
+              "name": "Ofloxacin (Oflovid ophthalmic solution 3mg/ml 5ml)",
+              "ingredient": "Ofloxacin",
+              "strength": "15mg/5ml"
+            },
+            "dosageInstruction": {
+              "text": "Tra hai mắt 4 lần/ngày, mỗi lần 1 giọt , x 10 ngày",
+              "route": "x 10 ngày",
+              "dose": 1.000000000000000e+000,
+              "frequency": "4"
+            },
+            "quantity": 1.00
+          },
+          {
+            "medication": {
+              "code": "T0003",
+              "name": "Polyethylen glycol + Propylen glycol (Systane Ultra 10ml )",
+              "ingredient": "Propylene glycol USP 0.3%, polyethylene glycol 400 NF 0.4%,",
+              "strength": "Systane Ultra 10ml"
+            },
+            "dosageInstruction": {
+              "text": "Tra hai mắt 4 lần/ngày, mỗi lần 1 giọt , hàng ngày",
+              "route": "hàng ngày",
+              "dose": 1.000000000000000e+000,
+              "frequency": "4"
+            },
+            "quantity": 1.00
+          }
+        ]
+      },
+      {
+        "encounterId": "HSKBNT20240416170820592",
+        "class": "outpatient",
+        "department": "Khoa Khám Bệnh",
+        "period": {
+          "start": "2024-04-16T00:00:00",
+          "end": "1900-01-01T00:00:00"
+        },
+        "practitioner": {
+          "practitionerId": "057",
+          "name": "Ths.Bs Mai Thị Anh Thư"
+        },
+        "reasonForVisit": "Khám lại (trong vòng 07 ngày)",
+        "pastMedicalHistory": "",
+        "familyHistory": "",
+        "vitalSigns": {
+          "bloodPressure": "",
+          "heartRate": "",
+          "temperature": "",
+          "height": "0",
+          "weight": ""
+        },
+        "ophthalmicExamination": {
+          "eyesockets": {},
+          "globecondition": {},
+          "ocularmotility": {},
+          "lacrimalsystem": {
+            "right": "",
+            "left": ""
+          },
+          "conjunctiva": {
+            "right": "",
+            "left": ""
+          },
+          "cornea": {
+            "right": "",
+            "left": ""
+          },
+          "sclera": {},
+          "anteriorchamber": {
+            "right": "",
+            "left": ""
+          },
+          "iris": {
+            "right": "",
+            "left": ""
+          },
+          "pupil": {},
+          "lens": {
+            "right": "",
+            "left": ""
+          },
+          "vitreous": {
+            "right": "",
+            "left": ""
+          },
+          "opticdisc": {
+            "right": "",
+            "left": ""
+          },
+          "retina": {
+            "right": "",
+            "left": ""
+          }
+        },
+        "refraction": {
+          "rightEye": {
+            "sphere": "",
+            "cylinder": "",
+            "axis": ""
+          },
+          "leftEye": {
+            "sphere": "",
+            "cylinder": "",
+            "axis": ""
+          },
+          "measuredAt": "2024-04-16T17:14:38.940"
+        },
+        "diagnoses": [
+          {
+            "code": "",
+            "text": "",
+            "laterality": "right",
+            "codeSystem": "ICD-10"
+          },
+          {
+            "code": "",
+            "text": "",
+            "laterality": "left",
+            "codeSystem": "ICD-10"
+          },
+          {
+            "code": "H10",
+            "text": "Viêm kết mạc dị ứng",
+            "laterality": "",
+            "codeSystem": "ICD-10"
+          }
+        ],
+        "medicationRequests": [
+          {
+            "medication": {
+              "code": "T0033",
+              "name": "Olopatadin hydroclorid (Pataday 0,2% 2,5ml )",
+              "ingredient": "Olopatadin hydrochlorid",
+              "strength": "0,2%"
+            },
+            "dosageInstruction": {
+              "text": "Tra hai mắt 2 lần/ngày, mỗi lần 1 giọt ,",
+              "route": "",
+              "dose": 1.000000000000000e+000,
+              "frequency": "2"
+            },
+            "quantity": 1.00
+          }
+        ]
+      },
+      {
+        "encounterId": "HSKBNT20240911171642623",
+        "class": "outpatient",
+        "department": "Khoa Khám Bệnh",
+        "period": {
+          "start": "2024-09-11T00:00:00",
+          "end": "2024-09-11T17:27:28.663"
+        },
+        "practitioner": {
+          "practitionerId": "057",
+          "name": "Ths.Bs Mai Thị Anh Thư"
+        },
+        "reasonForVisit": "Khám lâm sàng chung (từ lần 2 trở đi)",
+        "pastMedicalHistory": "",
+        "familyHistory": "",
+        "vitalSigns": {
+          "bloodPressure": "",
+          "heartRate": "",
+          "temperature": "",
+          "height": "0",
+          "weight": "19.5"
+        },
+        "ophthalmicExamination": {
+          "eyesockets": {},
+          "globecondition": {},
+          "ocularmotility": {},
+          "lacrimalsystem": {
+            "right": "",
+            "left": ""
+          },
+          "conjunctiva": {
+            "right": "",
+            "left": ""
+          },
+          "cornea": {
+            "right": "",
+            "left": ""
+          },
+          "sclera": {},
+          "anteriorchamber": {
+            "right": "",
+            "left": ""
+          },
+          "iris": {
+            "right": "",
+            "left": ""
+          },
+          "pupil": {},
+          "lens": {
+            "right": "",
+            "left": ""
+          },
+          "vitreous": {
+            "right": "",
+            "left": ""
+          },
+          "opticdisc": {
+            "right": "",
+            "left": ""
+          },
+          "retina": {
+            "right": "",
+            "left": ""
+          }
+        },
+        "refraction": {
+          "rightEye": {
+            "sphere": "+0.25",
+            "cylinder": "-1.50",
+            "axis": "170"
+          },
+          "leftEye": {
+            "sphere": "0.00",
+            "cylinder": "-0.75",
+            "axis": "15"
+          },
+          "measuredAt": "2024-09-11T17:23:17.357"
+        },
+        "diagnoses": [
+          {
+            "code": "",
+            "text": "",
+            "laterality": "right",
+            "codeSystem": "ICD-10"
+          },
+          {
+            "code": "",
+            "text": "",
+            "laterality": "left",
+            "codeSystem": "ICD-10"
+          },
+          {
+            "code": "H10.1",
+            "text": "Viêm kết mạc dị ứng",
+            "laterality": "",
+            "codeSystem": "ICD-10"
+          }
+        ],
+        "medicationRequests": [
+          {
+            "medication": {
+              "code": "T000788",
+              "name": "Hylan A (Comfort Shield MDS 0,15% 10ml)",
+              "ingredient": "Hylan A",
+              "strength": "0,15%"
+            },
+            "dosageInstruction": {
+              "text": "Tra hai mắt 4 lần/ngày, mỗi lần 1 giọt ,",
+              "route": "",
+              "dose": 1.000000000000000e+000,
+              "frequency": "4"
+            },
+            "quantity": 3.00
+          }
+        ]
+      },
+      {
+        "encounterId": "HSKBNT20240619164012378",
+        "class": "outpatient",
+        "department": "Khoa Khám Bệnh",
+        "period": {
+          "start": "2024-06-19T00:00:00",
+          "end": "1900-01-01T00:00:00"
+        },
+        "practitioner": {
+          "practitionerId": "BS0127",
+          "name": "BSCKI. Hoàng Thị Thảo"
+        },
+        "reasonForVisit": "Khám lại (trong vòng 07 ngày)",
+        "pastMedicalHistory": "",
+        "familyHistory": "",
+        "vitalSigns": {
+          "bloodPressure": "",
+          "heartRate": "",
+          "temperature": "",
+          "height": "0",
+          "weight": "17"
+        },
+        "ophthalmicExamination": {
+          "eyesockets": {},
+          "globecondition": {},
+          "ocularmotility": {},
+          "lacrimalsystem": {
+            "right": "",
+            "left": ""
+          },
+          "conjunctiva": {
+            "right": "",
+            "left": ""
+          },
+          "cornea": {
+            "right": "",
+            "left": ""
+          },
+          "sclera": {},
+          "anteriorchamber": {
+            "right": "",
+            "left": ""
+          },
+          "iris": {
+            "right": "",
+            "left": ""
+          },
+          "pupil": {},
+          "lens": {
+            "right": "",
+            "left": ""
+          },
+          "vitreous": {
+            "right": "",
+            "left": ""
+          },
+          "opticdisc": {
+            "right": "",
+            "left": ""
+          },
+          "retina": {
+            "right": "",
+            "left": ""
+          }
+        },
+        "refraction": {
+          "rightEye": {
+            "sphere": "+0.25",
+            "cylinder": "-0.50",
+            "axis": "165"
+          },
+          "leftEye": {
+            "sphere": "+0.25",
+            "cylinder": "-0.75",
+            "axis": "175"
+          },
+          "measuredAt": "2024-06-19T16:46:28.163"
+        },
+        "diagnoses": [
+          {
+            "code": "",
+            "text": "",
+            "laterality": "right",
+            "codeSystem": "ICD-10"
+          },
+          {
+            "code": "",
+            "text": "",
+            "laterality": "left",
+            "codeSystem": "ICD-10"
+          },
+          {
+            "code": "H10.1",
+            "text": "Viêm kết mạc dị ứng ",
+            "laterality": "",
+            "codeSystem": "ICD-10"
+          }
+        ]
+      },
+      {
+        "encounterId": "HSKBNT20240626164325936",
+        "class": "outpatient",
+        "department": "Khoa Khám Bệnh",
+        "period": {
+          "start": "2024-06-26T00:00:00",
+          "end": "1900-01-01T00:00:00"
+        },
+        "practitioner": {
+          "practitionerId": "BS0127",
+          "name": "BSCKI. Hoàng Thị Thảo"
+        },
+        "reasonForVisit": "Khám lại (trong vòng 07 ngày)",
+        "pastMedicalHistory": "",
+        "familyHistory": "",
+        "vitalSigns": {
+          "bloodPressure": "",
+          "heartRate": "",
+          "temperature": "",
+          "height": "0",
+          "weight": "17"
+        },
+        "ophthalmicExamination": {
+          "eyesockets": {},
+          "globecondition": {},
+          "ocularmotility": {},
+          "lacrimalsystem": {
+            "right": "",
+            "left": ""
+          },
+          "conjunctiva": {
+            "right": "",
+            "left": ""
+          },
+          "cornea": {
+            "right": "",
+            "left": ""
+          },
+          "sclera": {},
+          "anteriorchamber": {
+            "right": "",
+            "left": ""
+          },
+          "iris": {
+            "right": "",
+            "left": ""
+          },
+          "pupil": {},
+          "lens": {
+            "right": "",
+            "left": ""
+          },
+          "vitreous": {
+            "right": "",
+            "left": ""
+          },
+          "opticdisc": {
+            "right": "",
+            "left": ""
+          },
+          "retina": {
+            "right": "",
+            "left": ""
+          }
+        },
+        "refraction": {
+          "rightEye": {
+            "sphere": "-0.25",
+            "cylinder": "-0.25",
+            "axis": "175"
+          },
+          "leftEye": {
+            "sphere": "0.00",
+            "cylinder": "-0.50",
+            "axis": "180"
+          },
+          "measuredAt": "2024-06-26T16:50:06.293"
+        },
+        "diagnoses": [
+          {
+            "code": "",
+            "text": "",
+            "laterality": "right",
+            "codeSystem": "ICD-10"
+          },
+          {
+            "code": "",
+            "text": "",
+            "laterality": "left",
+            "codeSystem": "ICD-10"
+          },
+          {
+            "code": "H10.1",
+            "text": "Viêm kết mạc dị ứng ",
+            "laterality": "",
+            "codeSystem": "ICD-10"
+          }
+        ],
+        "medicationRequests": [
+          {
+            "medication": {
+              "code": "T000788",
+              "name": "Hylan A (Comfort Shield MDS 0,15% 10ml)",
+              "ingredient": "Hylan A",
+              "strength": "0,15%"
+            },
+            "dosageInstruction": {
+              "text": "Tra hai mắt 4 lần/ngày, mỗi lần 1 giọt , hàng ngày",
+              "route": "hàng ngày",
+              "dose": 1.000000000000000e+000,
+              "frequency": "4"
+            },
+            "quantity": 1.00
+          }
+        ]
+      },
+      {
+        "encounterId": "HSKBNT20240723163845648",
+        "class": "outpatient",
+        "department": "Khoa Khám Bệnh",
+        "period": {
+          "start": "2024-07-23T00:00:00",
+          "end": "2024-07-23T16:43:45.787"
+        },
+        "practitioner": {
+          "practitionerId": "BS0127",
+          "name": "BSCKI. Hoàng Thị Thảo"
+        },
+        "reasonForVisit": "Khám lâm sàng chung (từ lần 2 trở đi)",
+        "pastMedicalHistory": "",
+        "familyHistory": "",
+        "vitalSigns": {
+          "bloodPressure": "",
+          "heartRate": "",
+          "temperature": "",
+          "height": "0",
+          "weight": "17"
+        },
+        "ophthalmicExamination": {
+          "eyesockets": {},
+          "globecondition": {},
+          "ocularmotility": {},
+          "lacrimalsystem": {
+            "right": "",
+            "left": ""
+          },
+          "conjunctiva": {
+            "right": "",
+            "left": ""
+          },
+          "cornea": {
+            "right": "",
+            "left": ""
+          },
+          "sclera": {},
+          "anteriorchamber": {
+            "right": "",
+            "left": ""
+          },
+          "iris": {
+            "right": "",
+            "left": ""
+          },
+          "pupil": {},
+          "lens": {
+            "right": "",
+            "left": ""
+          },
+          "vitreous": {
+            "right": "",
+            "left": ""
+          },
+          "opticdisc": {
+            "right": "",
+            "left": ""
+          },
+          "retina": {
+            "right": "",
+            "left": ""
+          }
+        },
+        "refraction": {
+          "rightEye": {
+            "sphere": "",
+            "cylinder": "",
+            "axis": ""
+          },
+          "leftEye": {
+            "sphere": "",
+            "cylinder": "",
+            "axis": ""
+          },
+          "measuredAt": "2024-07-23T16:43:57.213"
+        },
+        "diagnoses": [
+          {
+            "code": "",
+            "text": "",
+            "laterality": "right",
+            "codeSystem": "ICD-10"
+          },
+          {
+            "code": "",
+            "text": "",
+            "laterality": "left",
+            "codeSystem": "ICD-10"
+          },
+          {
+            "code": "H10.1",
+            "text": "Viêm kết mạc dị ứng cấp đã đỡ",
+            "laterality": "",
+            "codeSystem": "ICD-10"
+          }
+        ],
+        "medicationRequests": [
+          {
+            "medication": {
+              "code": "T000788",
+              "name": "Hylan A (Comfort Shield MDS 0,15% 10ml)",
+              "ingredient": "Hylan A",
+              "strength": "0,15%"
+            },
+            "dosageInstruction": {
+              "text": "Tra hai mắt 4-6 lần/ngày, mỗi lần 1 giọt , hàng ngày",
+              "route": "hàng ngày",
+              "dose": 1.000000000000000e+000,
+              "frequency": "4-6"
+            },
+            "quantity": 3.00
+          }
+        ]
+      },
+      {
+        "encounterId": "HSKBNT20240329172358457",
+        "class": "outpatient",
+        "department": "Khoa Khám Bệnh",
+        "period": {
+          "start": "2024-03-29T00:00:00",
+          "end": "1900-01-01T00:00:00"
+        },
+        "practitioner": {
+          "practitionerId": "BS0127",
+          "name": "BSCKI. Hoàng Thị Thảo"
+        },
+        "reasonForVisit": "Khám lại (trong vòng 07 ngày)",
+        "pastMedicalHistory": "",
+        "familyHistory": "",
+        "vitalSigns": {
+          "bloodPressure": "",
+          "heartRate": "",
+          "temperature": "",
+          "height": "0",
+          "weight": ""
+        },
+        "ophthalmicExamination": {
+          "eyesockets": {},
+          "globecondition": {},
+          "ocularmotility": {},
+          "lacrimalsystem": {
+            "right": "Kết mạc không cương tụ. Giác mạc trong",
+            "left": "Kết mạc không cương tụ. Giác mạc trong"
+          },
+          "conjunctiva": {
+            "right": "Bình thường",
+            "left": "Bình thường"
+          },
+          "cornea": {
+            "right": "",
+            "left": ""
+          },
+          "sclera": {},
+          "anteriorchamber": {
+            "right": "",
+            "left": ""
+          },
+          "iris": {
+            "right": "",
+            "left": ""
+          },
+          "pupil": {},
+          "lens": {
+            "right": "",
+            "left": ""
+          },
+          "vitreous": {
+            "right": "",
+            "left": ""
+          },
+          "opticdisc": {
+            "right": "",
+            "left": ""
+          },
+          "retina": {
+            "right": "",
+            "left": ""
+          }
+        },
+        "refraction": {
+          "rightEye": {
+            "sphere": "+0.50",
+            "cylinder": "-1.25",
+            "axis": "175"
+          },
+          "leftEye": {
+            "sphere": "+0.25",
+            "cylinder": "-1.25",
+            "axis": "10"
+          },
+          "measuredAt": "2024-03-29T17:32:02.700"
+        },
+        "diagnoses": [
+          {
+            "code": "",
+            "text": "",
+            "laterality": "right",
+            "codeSystem": "ICD-10"
+          },
+          {
+            "code": "",
+            "text": "",
+            "laterality": "left",
+            "codeSystem": "ICD-10"
+          },
+          {
+            "code": "H10",
+            "text": "Viêm kết mạc ",
+            "laterality": "",
+            "codeSystem": "ICD-10"
+          }
+        ]
+      },
+      {
+        "encounterId": "HSKBNT20231202165235653",
+        "class": "outpatient",
+        "department": "Khoa Khám Bệnh",
+        "period": {
+          "start": "2023-12-02T00:00:00",
+          "end": "1900-01-01T00:00:00"
+        },
+        "practitioner": {
+          "practitionerId": "BS0127",
+          "name": "BSCKI. Hoàng Thị Thảo"
+        },
+        "reasonForVisit": "Khám lâm sàng chung (từ lần 2 trở đi)",
+        "pastMedicalHistory": "",
+        "familyHistory": "",
+        "vitalSigns": {
+          "bloodPressure": "",
+          "heartRate": "",
+          "temperature": "",
+          "height": "0",
+          "weight": ""
+        },
+        "ophthalmicExamination": {
+          "eyesockets": {},
+          "globecondition": {},
+          "ocularmotility": {},
+          "lacrimalsystem": {
+            "right": "",
+            "left": ""
+          },
+          "conjunctiva": {
+            "right": "",
+            "left": ""
+          },
+          "cornea": {
+            "right": "",
+            "left": ""
+          },
+          "sclera": {},
+          "anteriorchamber": {
+            "right": "",
+            "left": ""
+          },
+          "iris": {
+            "right": "",
+            "left": ""
+          },
+          "pupil": {},
+          "lens": {
+            "right": "",
+            "left": ""
+          },
+          "vitreous": {
+            "right": "",
+            "left": ""
+          },
+          "opticdisc": {
+            "right": "",
+            "left": ""
+          },
+          "retina": {
+            "right": "",
+            "left": ""
+          }
+        },
+        "refraction": {
+          "rightEye": {
+            "sphere": "+0.50",
+            "cylinder": "-1.00",
+            "axis": "5"
+          },
+          "leftEye": {
+            "sphere": "+0.50",
+            "cylinder": "-0.25",
+            "axis": "35"
+          },
+          "measuredAt": "2023-12-02T17:00:41.487"
+        },
+        "diagnoses": [
+          {
+            "code": "",
+            "text": "",
+            "laterality": "right",
+            "codeSystem": "ICD-10"
+          },
+          {
+            "code": "",
+            "text": "",
+            "laterality": "left",
+            "codeSystem": "ICD-10"
+          },
+          {
+            "code": "H10",
+            "text": "Viêm kết mạc cấp ",
+            "laterality": "",
+            "codeSystem": "ICD-10"
+          }
+        ],
+        "medicationRequests": [
+          {
+            "medication": {
+              "code": "T0058",
+              "name": "Ofloxacin (Oflovid ophthalmic solution 3mg/ml 5ml)",
+              "ingredient": "Ofloxacin",
+              "strength": "15mg/5ml"
+            },
+            "dosageInstruction": {
+              "text": "Tra hai mắt 4 lần/ngày, mỗi lần 1 giọt , x 7 ngày",
+              "route": "x 7 ngày ",
+              "dose": 1.000000000000000e+000,
+              "frequency": "4"
+            },
+            "quantity": 1.00
+          },
+          {
+            "medication": {
+              "code": "T0009",
+              "name": "Natri hyaluronat (Sanlein 0,1% 5ml)",
+              "ingredient": "Natri hyaluronat",
+              "strength": "5mg/5ml"
+            },
+            "dosageInstruction": {
+              "text": "Tra hai mắt 4 lần/ngày, mỗi lần 1 giọt , hàng ngày",
+              "route": "hàng ngày",
+              "dose": 1.000000000000000e+000,
+              "frequency": "4"
+            },
+            "quantity": 1.00
+          }
+        ]
+      },
+      {
+        "encounterId": "HSKBNT2023120717365999",
+        "class": "outpatient",
+        "department": "Khoa Khám Bệnh",
+        "period": {
+          "start": "2023-12-07T00:00:00",
+          "end": "1900-01-01T00:00:00"
+        },
+        "practitioner": {
+          "practitionerId": "BS0127",
+          "name": "BSCKI. Hoàng Thị Thảo"
+        },
+        "reasonForVisit": "Khám lại (trong vòng 07 ngày)",
+        "pastMedicalHistory": "",
+        "familyHistory": "",
+        "vitalSigns": {
+          "bloodPressure": "",
+          "heartRate": "",
+          "temperature": "",
+          "height": "0",
+          "weight": ""
+        },
+        "ophthalmicExamination": {
+          "eyesockets": {},
+          "globecondition": {},
+          "ocularmotility": {},
+          "lacrimalsystem": {
+            "right": "",
+            "left": ""
+          },
+          "conjunctiva": {
+            "right": "",
+            "left": ""
+          },
+          "cornea": {
+            "right": "",
+            "left": ""
+          },
+          "sclera": {},
+          "anteriorchamber": {
+            "right": "",
+            "left": ""
+          },
+          "iris": {
+            "right": "",
+            "left": ""
+          },
+          "pupil": {},
+          "lens": {
+            "right": "",
+            "left": ""
+          },
+          "vitreous": {
+            "right": "",
+            "left": ""
+          },
+          "opticdisc": {
+            "right": "",
+            "left": ""
+          },
+          "retina": {
+            "right": "",
+            "left": ""
+          }
+        },
+        "refraction": {
+          "rightEye": {
+            "sphere": "",
+            "cylinder": "",
+            "axis": ""
+          },
+          "leftEye": {
+            "sphere": "",
+            "cylinder": "",
+            "axis": ""
+          },
+          "measuredAt": "2023-12-07T17:43:25.173"
+        },
+        "diagnoses": [
+          {
+            "code": "",
+            "text": "",
+            "laterality": "right",
+            "codeSystem": "ICD-10"
+          },
+          {
+            "code": "",
+            "text": "",
+            "laterality": "left",
+            "codeSystem": "ICD-10"
+          },
+          {
+            "code": "H10",
+            "text": "Viêm kết mạc",
+            "laterality": "",
+            "codeSystem": "ICD-10"
+          }
+        ],
+        "medicationRequests": [
+          {
+            "medication": {
+              "code": "T000613",
+              "name": "Natri hyaluronat (Clinitas 0,2% 0,5ml - Hộp 30 tép)",
+              "ingredient": "Natri hyaluronate",
+              "strength": "0,2% 0,5ml"
+            },
+            "dosageInstruction": {
+              "text": "Tra hai mắt 6 lần/ngày, mỗi lần 1 giọt ,",
+              "route": "",
+              "dose": 1.000000000000000e+000,
+              "frequency": "6"
+            },
+            "quantity": 30.00
+          }
+        ]
+      },
+      {
+        "encounterId": "HSKBNT20231212170828707",
+        "class": "outpatient",
+        "department": "Khoa Khám Bệnh",
+        "period": {
+          "start": "2023-12-12T00:00:00",
+          "end": "1900-01-01T00:00:00"
+        },
+        "practitioner": {
+          "practitionerId": "BS0127",
+          "name": "BSCKI. Hoàng Thị Thảo"
+        },
+        "reasonForVisit": "Khám lại (trong vòng 07 ngày)",
+        "pastMedicalHistory": "",
+        "familyHistory": "",
+        "vitalSigns": {
+          "bloodPressure": "",
+          "heartRate": "",
+          "temperature": "",
+          "height": "0",
+          "weight": ""
+        },
+        "ophthalmicExamination": {
+          "eyesockets": {},
+          "globecondition": {},
+          "ocularmotility": {},
+          "lacrimalsystem": {
+            "right": "",
+            "left": ""
+          },
+          "conjunctiva": {
+            "right": "",
+            "left": ""
+          },
+          "cornea": {
+            "right": "",
+            "left": ""
+          },
+          "sclera": {},
+          "anteriorchamber": {
+            "right": "",
+            "left": ""
+          },
+          "iris": {
+            "right": "",
+            "left": ""
+          },
+          "pupil": {},
+          "lens": {
+            "right": "",
+            "left": ""
+          },
+          "vitreous": {
+            "right": "",
+            "left": ""
+          },
+          "opticdisc": {
+            "right": "",
+            "left": ""
+          },
+          "retina": {
+            "right": "",
+            "left": ""
+          }
+        },
+        "refraction": {
+          "rightEye": {
+            "sphere": "+0.75",
+            "cylinder": "",
+            "axis": ""
+          },
+          "leftEye": {
+            "sphere": "+0.50",
+            "cylinder": "-0.50",
+            "axis": "119"
+          },
+          "measuredAt": "2023-12-12T17:25:43.207"
+        },
+        "diagnoses": [
+          {
+            "code": "",
+            "text": "",
+            "laterality": "right",
+            "codeSystem": "ICD-10"
+          },
+          {
+            "code": "",
+            "text": "",
+            "laterality": "left",
+            "codeSystem": "ICD-10"
+          },
+          {
+            "code": "H10",
+            "text": "Viêm kết mạc ổn định ",
+            "laterality": "",
+            "codeSystem": "ICD-10"
+          }
+        ]
+      },
+      {
+        "encounterId": "HSKBNT20230924092342815",
+        "class": "outpatient",
+        "department": "Khoa Khám Bệnh",
+        "period": {
+          "start": "2023-09-24T00:00:00",
+          "end": "1900-01-01T00:00:00"
+        },
+        "practitioner": {
+          "practitionerId": "BS0127",
+          "name": "BSCKI. Hoàng Thị Thảo"
+        },
+        "reasonForVisit": "Khám lại (trong vòng 07 ngày)",
+        "pastMedicalHistory": "",
+        "familyHistory": "",
+        "vitalSigns": {
+          "bloodPressure": "",
+          "heartRate": "",
+          "temperature": "",
+          "height": "0",
+          "weight": ""
+        },
+        "ophthalmicExamination": {
+          "eyesockets": {},
+          "globecondition": {},
+          "ocularmotility": {},
+          "lacrimalsystem": {
+            "right": "",
+            "left": ""
+          },
+          "conjunctiva": {
+            "right": "",
+            "left": ""
+          },
+          "cornea": {
+            "right": "",
+            "left": ""
+          },
+          "sclera": {},
+          "anteriorchamber": {
+            "right": "",
+            "left": ""
+          },
+          "iris": {
+            "right": "",
+            "left": ""
+          },
+          "pupil": {},
+          "lens": {
+            "right": "",
+            "left": ""
+          },
+          "vitreous": {
+            "right": "",
+            "left": ""
+          },
+          "opticdisc": {
+            "right": "",
+            "left": ""
+          },
+          "retina": {
+            "right": "",
+            "left": ""
+          }
+        },
+        "refraction": {
+          "rightEye": {
+            "sphere": "",
+            "cylinder": "",
+            "axis": ""
+          },
+          "leftEye": {
+            "sphere": "",
+            "cylinder": "",
+            "axis": ""
+          },
+          "measuredAt": "2023-09-24T09:29:44.583"
+        },
+        "diagnoses": [
+          {
+            "code": "",
+            "text": "",
+            "laterality": "right",
+            "codeSystem": "ICD-10"
+          },
+          {
+            "code": "",
+            "text": "",
+            "laterality": "left",
+            "codeSystem": "ICD-10"
+          },
+          {
+            "code": "H10",
+            "text": "Viêm kết mạc ổn định",
+            "laterality": "",
+            "codeSystem": "ICD-10"
+          }
+        ],
+        "medicationRequests": [
+          {
+            "medication": {
+              "code": "T0009",
+              "name": "Natri hyaluronat (Sanlein 0,1% 5ml)",
+              "ingredient": "Natri hyaluronat",
+              "strength": "5mg/5ml"
+            },
+            "dosageInstruction": {
+              "text": "Tra hai mắt 6 lần/ngày, mỗi lần 1 giọt , hàng ngày",
+              "route": "hàng ngày",
+              "dose": 1.000000000000000e+000,
+              "frequency": "6"
+            },
+            "quantity": 1.00
+          }
+        ]
+      },
+      {
+        "encounterId": "HSKBNT2023021516591500",
+        "class": "outpatient",
+        "department": "Khoa Khám Bệnh",
+        "period": {
+          "start": "2023-02-15T00:00:00",
+          "end": "1900-01-01T00:00:00"
+        },
+        "practitioner": {
+          "practitionerId": "BS0127",
+          "name": "BSCKI. Hoàng Thị Thảo"
+        },
+        "reasonForVisit": "Khám lâm sàng chung (từ lần 2 trở đi)",
+        "pastMedicalHistory": "",
+        "familyHistory": "",
+        "vitalSigns": {
+          "bloodPressure": "",
+          "heartRate": "",
+          "temperature": "",
+          "height": "0",
+          "weight": ""
+        },
+        "ophthalmicExamination": {
+          "eyesockets": {},
+          "globecondition": {},
+          "ocularmotility": {},
+          "lacrimalsystem": {
+            "right": "Bình thường",
+            "left": "Bình thường"
+          },
+          "conjunctiva": {
+            "right": "Bình thường",
+            "left": "Bình thường"
+          },
+          "cornea": {
+            "right": "",
+            "left": ""
+          },
+          "sclera": {},
+          "anteriorchamber": {
+            "right": "",
+            "left": ""
+          },
+          "iris": {
+            "right": "",
+            "left": ""
+          },
+          "pupil": {},
+          "lens": {
+            "right": "",
+            "left": ""
+          },
+          "vitreous": {
+            "right": "",
+            "left": ""
+          },
+          "opticdisc": {
+            "right": "",
+            "left": ""
+          },
+          "retina": {
+            "right": "",
+            "left": ""
+          }
+        },
+        "refraction": {
+          "rightEye": {
+            "sphere": "+0.50",
+            "cylinder": "-0.50",
+            "axis": "171"
+          },
+          "leftEye": {
+            "sphere": "0.00",
+            "cylinder": "",
+            "axis": ""
+          },
+          "measuredAt": "2023-02-15T17:04:46.723"
+        },
+        "diagnoses": [
+          {
+            "code": "",
+            "text": "",
+            "laterality": "right",
+            "codeSystem": "ICD-10"
+          },
+          {
+            "code": "",
+            "text": "",
+            "laterality": "left",
+            "codeSystem": "ICD-10"
+          },
+          {
+            "code": "H10",
+            "text": "Viêm kết mạc",
+            "laterality": "",
+            "codeSystem": "ICD-10"
+          }
+        ],
+        "medicationRequests": [
+          {
+            "medication": {
+              "code": "T0056",
+              "name": "Levofloxacin (Cravit 0,5% 5ml)",
+              "ingredient": "Levofloxacin",
+              "strength": "25mg/5ml"
+            },
+            "dosageInstruction": {
+              "text": "Tra hai mắt 4 lần/ngày, mỗi lần 1 giọt , x 10 ngày",
+              "route": "x 10 ngày",
+              "dose": 1.000000000000000e+000,
+              "frequency": "4"
+            },
+            "quantity": 1.00
+          }
+        ]
+      },
+      {
+        "encounterId": "HSKBNT2023011915524018",
+        "class": "outpatient",
+        "department": "Khoa Khám Bệnh",
+        "period": {
+          "start": "2023-01-19T00:00:00",
+          "end": "1900-01-01T00:00:00"
+        },
+        "practitioner": {
+          "practitionerId": "BS138",
+          "name": "BSCKII. Tạ Tiểu Hoa"
+        },
+        "reasonForVisit": "Khám lâm sàng chung (từ lần 2 trở đi)",
+        "pastMedicalHistory": "",
+        "familyHistory": "",
+        "vitalSigns": {
+          "bloodPressure": "",
+          "heartRate": "",
+          "temperature": "",
+          "height": "0",
+          "weight": ""
+        },
+        "ophthalmicExamination": {
+          "eyesockets": {},
+          "globecondition": {},
+          "ocularmotility": {},
+          "lacrimalsystem": {
+            "right": "Bình thường",
+            "left": "Bình thường"
+          },
+          "conjunctiva": {
+            "right": "Bình thường",
+            "left": "Bình thường"
+          },
+          "cornea": {
+            "right": "",
+            "left": ""
+          },
+          "sclera": {},
+          "anteriorchamber": {
+            "right": "",
+            "left": ""
+          },
+          "iris": {
+            "right": "",
+            "left": ""
+          },
+          "pupil": {},
+          "lens": {
+            "right": "",
+            "left": ""
+          },
+          "vitreous": {
+            "right": "",
+            "left": ""
+          },
+          "opticdisc": {
+            "right": "",
+            "left": ""
+          },
+          "retina": {
+            "right": "",
+            "left": ""
+          }
+        },
+        "refraction": {
+          "rightEye": {
+            "sphere": "+0.50",
+            "cylinder": "-0.50",
+            "axis": "168"
+          },
+          "leftEye": {
+            "sphere": "+0.25",
+            "cylinder": "",
+            "axis": ""
+          },
+          "measuredAt": "2023-01-19T15:58:03.880"
+        },
+        "diagnoses": [
+          {
+            "code": "",
+            "text": "",
+            "laterality": "right",
+            "codeSystem": "ICD-10"
+          },
+          {
+            "code": "",
+            "text": "",
+            "laterality": "left",
+            "codeSystem": "ICD-10"
+          },
+          {
+            "code": "",
+            "text": "Bình thường",
+            "laterality": "",
+            "codeSystem": "ICD-10"
+          }
+        ]
+      },
+      {
+        "encounterId": "HSKBNT20240409163454333",
+        "class": "outpatient",
+        "department": "Khoa Khám Bệnh",
+        "period": {
+          "start": "2024-04-09T00:00:00",
+          "end": "1900-01-01T00:00:00"
+        },
+        "practitioner": {
+          "practitionerId": "BS160",
+          "name": "BS.CKI Lê Thị Phương Thảo"
+        },
+        "reasonForVisit": "Khám lại (trong vòng 07 ngày)",
+        "pastMedicalHistory": "",
+        "familyHistory": "",
+        "vitalSigns": {
+          "bloodPressure": "",
+          "heartRate": "",
+          "temperature": "",
+          "height": "0",
+          "weight": ""
+        },
+        "ophthalmicExamination": {
+          "eyesockets": {},
+          "globecondition": {},
+          "ocularmotility": {},
+          "lacrimalsystem": {
+            "right": "",
+            "left": ""
+          },
+          "conjunctiva": {
+            "right": "",
+            "left": ""
+          },
+          "cornea": {
+            "right": "",
+            "left": ""
+          },
+          "sclera": {},
+          "anteriorchamber": {
+            "right": "",
+            "left": ""
+          },
+          "iris": {
+            "right": "",
+            "left": ""
+          },
+          "pupil": {},
+          "lens": {
+            "right": "",
+            "left": ""
+          },
+          "vitreous": {
+            "right": "",
+            "left": ""
+          },
+          "opticdisc": {
+            "right": "",
+            "left": ""
+          },
+          "retina": {
+            "right": "",
+            "left": ""
+          }
+        },
+        "refraction": {
+          "rightEye": {
+            "sphere": "",
+            "cylinder": "",
+            "axis": ""
+          },
+          "leftEye": {
+            "sphere": "",
+            "cylinder": "",
+            "axis": ""
+          },
+          "measuredAt": "2024-04-09T16:43:57.113"
+        },
+        "diagnoses": [
+          {
+            "code": "",
+            "text": "",
+            "laterality": "right",
+            "codeSystem": "ICD-10"
+          },
+          {
+            "code": "",
+            "text": "",
+            "laterality": "left",
+            "codeSystem": "ICD-10"
+          },
+          {
+            "code": "H10",
+            "text": "Viêm kết mạc",
+            "laterality": "",
+            "codeSystem": "ICD-10"
+          }
+        ],
+        "medicationRequests": [
+          {
+            "medication": {
+              "code": "T0003",
+              "name": "Polyethylen glycol + Propylen glycol (Systane Ultra 10ml )",
+              "ingredient": "Propylene glycol USP 0.3%, polyethylene glycol 400 NF 0.4%,",
+              "strength": "Systane Ultra 10ml"
+            },
+            "dosageInstruction": {
+              "text": "Tra hai mắt 4 lần/ngày, mỗi lần 1 giọt , (đã có)",
+              "route": "(đã có)",
+              "dose": 1.000000000000000e+000,
+              "frequency": "4"
+            },
+            "quantity": 1.00
+          },
+          {
+            "medication": {
+              "code": "T0042",
+              "name": "Fluorometholon (Flumetholon 0,1% 5ml )",
+              "ingredient": "Fluorometholon",
+              "strength": "1mg/ml"
+            },
+            "dosageInstruction": {
+              "text": "Tra hai mắt 3 lần/ngày, mỗi lần 1 giọt , x 5 ngày (đã có)",
+              "route": "x 5 ngày (đã có)",
+              "dose": 1.000000000000000e+000,
+              "frequency": "3"
+            },
+            "quantity": 1.00
+          },
+          {
+            "medication": {
+              "code": "T0058",
+              "name": "Ofloxacin (Oflovid ophthalmic solution 3mg/ml 5ml)",
+              "ingredient": "Ofloxacin",
+              "strength": "15mg/5ml"
+            },
+            "dosageInstruction": {
+              "text": "Tra hai mắt 3 lần/ngày, mỗi lần 1 giọt , x 5 ngày",
+              "route": "x 5 ngày",
+              "dose": 1.000000000000000e+000,
+              "frequency": "3"
+            },
+            "quantity": 1.00
+          }
+        ]
+      },
+      {
+        "encounterId": "HSKBNT2024061310190416",
+        "class": "outpatient",
+        "department": "Khoa Khám Bệnh",
+        "period": {
+          "start": "2024-06-13T00:00:00",
+          "end": "1900-01-01T00:00:00"
+        },
+        "practitioner": {
+          "practitionerId": "BS160",
+          "name": "BS.CKI Lê Thị Phương Thảo"
+        },
+        "reasonForVisit": "Khám lâm sàng chung (từ lần 2 trở đi)",
+        "pastMedicalHistory": "",
+        "familyHistory": "",
+        "vitalSigns": {
+          "bloodPressure": "",
+          "heartRate": "",
+          "temperature": "",
+          "height": "0",
+          "weight": "17.2"
+        },
+        "ophthalmicExamination": {
+          "eyesockets": {},
+          "globecondition": {},
+          "ocularmotility": {},
+          "lacrimalsystem": {
+            "right": "",
+            "left": ""
+          },
+          "conjunctiva": {
+            "right": "",
+            "left": ""
+          },
+          "cornea": {
+            "right": "",
+            "left": ""
+          },
+          "sclera": {},
+          "anteriorchamber": {
+            "right": "",
+            "left": ""
+          },
+          "iris": {
+            "right": "",
+            "left": ""
+          },
+          "pupil": {},
+          "lens": {
+            "right": "",
+            "left": ""
+          },
+          "vitreous": {
+            "right": "",
+            "left": ""
+          },
+          "opticdisc": {
+            "right": "",
+            "left": ""
+          },
+          "retina": {
+            "right": "",
+            "left": ""
+          }
+        },
+        "refraction": {
+          "rightEye": {
+            "sphere": "+0.25",
+            "cylinder": "-0.50",
+            "axis": "175"
+          },
+          "leftEye": {
+            "sphere": "+0.50",
+            "cylinder": "-0.75",
+            "axis": "25"
+          },
+          "measuredAt": "2024-06-13T11:08:03.537"
+        },
+        "diagnoses": [
+          {
+            "code": "",
+            "text": "",
+            "laterality": "right",
+            "codeSystem": "ICD-10"
+          },
+          {
+            "code": "",
+            "text": "",
+            "laterality": "left",
+            "codeSystem": "ICD-10"
+          },
+          {
+            "code": "H10.1",
+            "text": "Viêm kết mạc dị ứng ",
+            "laterality": "",
+            "codeSystem": "ICD-10"
+          }
+        ],
+        "medicationRequests": [
+          {
+            "medication": {
+              "code": "T0190",
+              "name": "Epinastine HCL (Relestat 0,05% 5ml)",
+              "ingredient": "Epinastine HCL ",
+              "strength": "0.5mg/ml"
+            },
+            "dosageInstruction": {
+              "text": "Tra hai mắt 3 lần/ngày, mỗi lần 1 giọt ,",
+              "route": "",
+              "dose": 1.000000000000000e+000,
+              "frequency": "3"
+            },
+            "quantity": 1.00
+          },
+          {
+            "medication": {
+              "code": "T000622",
+              "name": "Natri hyaluronat (Hye 0,4% 10ml)",
+              "ingredient": "Natri Hyaluronate 0.4%",
+              "strength": ""
+            },
+            "dosageInstruction": {
+              "text": "Tra hai mắt 4 lần/ngày, mỗi lần 1 giọt ,",
+              "route": "",
+              "dose": 1.000000000000000e+000,
+              "frequency": "4"
+            },
+            "quantity": 1.00
+          }
+        ]
+      },
+      {
+        "encounterId": "HSKBNT20230918172741350",
+        "class": "outpatient",
+        "department": "Khoa Khám Bệnh",
+        "period": {
+          "start": "2023-09-18T00:00:00",
+          "end": "1900-01-01T00:00:00"
+        },
+        "practitioner": {
+          "practitionerId": "BS160",
+          "name": "BS.CKI Lê Thị Phương Thảo"
+        },
+        "reasonForVisit": "Khám lại (trong vòng 07 ngày)",
+        "pastMedicalHistory": "",
+        "familyHistory": "",
+        "vitalSigns": {
+          "bloodPressure": "",
+          "heartRate": "",
+          "temperature": "",
+          "height": "0",
+          "weight": ""
+        },
+        "ophthalmicExamination": {
+          "eyesockets": {},
+          "globecondition": {},
+          "ocularmotility": {},
+          "lacrimalsystem": {
+            "right": "",
+            "left": ""
+          },
+          "conjunctiva": {
+            "right": "",
+            "left": ""
+          },
+          "cornea": {
+            "right": "",
+            "left": ""
+          },
+          "sclera": {},
+          "anteriorchamber": {
+            "right": "",
+            "left": ""
+          },
+          "iris": {
+            "right": "",
+            "left": ""
+          },
+          "pupil": {},
+          "lens": {
+            "right": "",
+            "left": ""
+          },
+          "vitreous": {
+            "right": "",
+            "left": ""
+          },
+          "opticdisc": {
+            "right": "",
+            "left": ""
+          },
+          "retina": {
+            "right": "",
+            "left": ""
+          }
+        },
+        "refraction": {
+          "rightEye": {
+            "sphere": "0.00",
+            "cylinder": "",
+            "axis": ""
+          },
+          "leftEye": {
+            "sphere": "-0.50",
+            "cylinder": "-0.25",
+            "axis": "15"
+          },
+          "measuredAt": "2023-09-18T17:34:55.340"
+        },
+        "diagnoses": [
+          {
+            "code": "",
+            "text": "",
+            "laterality": "right",
+            "codeSystem": "ICD-10"
+          },
+          {
+            "code": "",
+            "text": "",
+            "laterality": "left",
+            "codeSystem": "ICD-10"
+          },
+          {
+            "code": "H10",
+            "text": "Viêm kết mạc có đỡ , hiện không có giả mạc, giác mạc trong",
+            "laterality": "",
+            "codeSystem": "ICD-10"
+          }
+        ],
+        "medicationRequests": [
+          {
+            "medication": {
+              "code": "T0054",
+              "name": "Tobramycin (Tobrex 0,3% 5ml)",
+              "ingredient": "Tobramycin",
+              "strength": "3mg/ml"
+            },
+            "dosageInstruction": {
+              "text": "Tra hai mắt 4 lần/ngày, mỗi lần 1 giọt ,",
+              "route": "",
+              "dose": 1.000000000000000e+000,
+              "frequency": "4"
+            },
+            "quantity": 1.00
+          },
+          {
+            "medication": {
+              "code": "T0057",
+              "name": "Ofloxacin (Oflovid ophthalmic ointment 0,3% 3,5g)",
+              "ingredient": "Ofloxacin",
+              "strength": "0,3%"
+            },
+            "dosageInstruction": {
+              "text": "Tra hai mắt 1 lần/ngày, mỗi lần 1 cm , tối",
+              "route": "tối   ",
+              "dose": 1.000000000000000e+000,
+              "frequency": "1"
+            },
+            "quantity": 1.00
+          },
+          {
+            "medication": {
+              "code": "T000601",
+              "name": "Natri hyaluronat (Sanlein 0,3% 5ml)",
+              "ingredient": "Natri hyaluronat",
+              "strength": "15mg/5ml"
+            },
+            "dosageInstruction": {
+              "text": "Tra hai mắt 04-6 lần/ngày, mỗi lần 01 giọt ,",
+              "route": "",
+              "dose": 1.000000000000000e+000,
+              "frequency": "04-6"
+            },
+            "quantity": 1.00
+          }
+        ]
+      },
+      {
+        "encounterId": "HSKBNT20250707164121889",
+        "class": "outpatient",
+        "department": "Khoa Khám Bệnh",
+        "period": {
+          "start": "2025-07-07T00:00:00",
+          "end": "2025-07-07T17:35:08.603"
+        },
+        "practitioner": {
+          "practitionerId": "BS160",
+          "name": "BS.CKI Lê Thị Phương Thảo"
+        },
+        "reasonForVisit": "Khám lâm sàng chung (từ lần 2 trở đi)",
+        "pastMedicalHistory": "",
+        "familyHistory": "",
+        "vitalSigns": {
+          "bloodPressure": "",
+          "heartRate": "",
+          "temperature": "",
+          "height": "0",
+          "weight": "25"
+        },
+        "ophthalmicExamination": {
+          "eyesockets": {},
+          "globecondition": {},
+          "ocularmotility": {},
+          "lacrimalsystem": {
+            "right": "",
+            "left": ""
+          },
+          "conjunctiva": {
+            "right": "",
+            "left": ""
+          },
+          "cornea": {
+            "right": "",
+            "left": ""
+          },
+          "sclera": {},
+          "anteriorchamber": {
+            "right": "",
+            "left": ""
+          },
+          "iris": {
+            "right": "",
+            "left": ""
+          },
+          "pupil": {},
+          "lens": {
+            "right": "",
+            "left": ""
+          },
+          "vitreous": {
+            "right": "",
+            "left": ""
+          },
+          "opticdisc": {
+            "right": "",
+            "left": ""
+          },
+          "retina": {
+            "right": "",
+            "left": ""
+          }
+        },
+        "refraction": {
+          "rightEye": {
+            "sphere": "-1.00",
+            "cylinder": "-0.25",
+            "axis": "150"
+          },
+          "leftEye": {
+            "sphere": "-0.25",
+            "cylinder": "",
+            "axis": ""
+          },
+          "measuredAt": "2025-07-07T17:05:17.303"
+        },
+        "diagnoses": [
+          {
+            "code": "",
+            "text": "",
+            "laterality": "right",
+            "codeSystem": "ICD-10"
+          },
+          {
+            "code": "",
+            "text": "",
+            "laterality": "left",
+            "codeSystem": "ICD-10"
+          },
+          {
+            "code": "H10.1",
+            "text": "Viêm kết mạc dị ứng ",
+            "laterality": "",
+            "codeSystem": "ICD-10"
+          }
+        ],
+        "medicationRequests": [
+          {
+            "medication": {
+              "code": "T0032",
+              "name": "Pemirolast kali (Alegysal Eye drop 0,1% 5ml )",
+              "ingredient": "Pemirolast Kali",
+              "strength": "5mg/5ml"
+            },
+            "dosageInstruction": {
+              "text": "Tra hai mắt 2 lần/ngày, mỗi lần 1 giọt ,",
+              "route": "",
+              "dose": 1.000000000000000e+000,
+              "frequency": "2"
+            },
+            "quantity": 1.00
+          },
+          {
+            "medication": {
+              "code": "T000788",
+              "name": "Hylan A (Comfort Shield MDS 0,15% 10ml)",
+              "ingredient": "Hylan A",
+              "strength": "0,15%"
+            },
+            "dosageInstruction": {
+              "text": "Tra hai mắt 4 lần/ngày, mỗi lần 1 giọt , hàng ngày",
+              "route": "hàng ngày",
+              "dose": 1.000000000000000e+000,
+              "frequency": "4"
+            },
+            "quantity": 1.00
+          },
+          {
+            "medication": {
+              "code": "T00086",
+              "name": "Desloratadine (Aerius SYRUP 0,5mg/ml 60ml)",
+              "ingredient": "Desloratadine",
+              "strength": "0,5mg/ml"
+            },
+            "dosageInstruction": {
+              "text": "Uống 1 lần/ngày, mỗi lần 2.5 ml , sau ăn ( uống 5 ngày rồi dừng)",
+              "route": "sau ăn ( uống 5 ngày rồi dừng)",
+              "dose": 2.500000000000000e+000,
+              "frequency": "1"
+            },
+            "quantity": 1.00
+          }
+        ]
+      },
+      {
+        "encounterId": "HSKBNT20250714163811320",
+        "class": "outpatient",
+        "department": "Khoa Khám Bệnh",
+        "period": {
+          "start": "2025-07-14T00:00:00",
+          "end": "2025-07-14T17:45:09.887"
+        },
+        "practitioner": {
+          "practitionerId": "BS160",
+          "name": "BS.CKI Lê Thị Phương Thảo"
+        },
+        "reasonForVisit": "Khám lại (trong vòng 07 ngày)",
+        "pastMedicalHistory": "",
+        "familyHistory": "",
+        "vitalSigns": {
+          "bloodPressure": "",
+          "heartRate": "",
+          "temperature": "",
+          "height": "0",
+          "weight": "22.5"
+        },
+        "ophthalmicExamination": {
+          "eyesockets": {},
+          "globecondition": {},
+          "ocularmotility": {},
+          "lacrimalsystem": {
+            "right": "",
+            "left": ""
+          },
+          "conjunctiva": {
+            "right": "",
+            "left": ""
+          },
+          "cornea": {
+            "right": "",
+            "left": ""
+          },
+          "sclera": {},
+          "anteriorchamber": {
+            "right": "",
+            "left": ""
+          },
+          "iris": {
+            "right": "",
+            "left": ""
+          },
+          "pupil": {},
+          "lens": {
+            "right": "",
+            "left": ""
+          },
+          "vitreous": {
+            "right": "",
+            "left": ""
+          },
+          "opticdisc": {
+            "right": "",
+            "left": ""
+          },
+          "retina": {
+            "right": "",
+            "left": ""
+          }
+        },
+        "refraction": {
+          "rightEye": {
+            "sphere": "-0.50",
+            "cylinder": "-0.50",
+            "axis": "155"
+          },
+          "leftEye": {
+            "sphere": "-1.75",
+            "cylinder": "-1.00",
+            "axis": "160"
+          },
+          "measuredAt": "2025-07-14T16:45:11.810"
+        },
+        "diagnoses": [
+          {
+            "code": "",
+            "text": "",
+            "laterality": "right",
+            "codeSystem": "ICD-10"
+          },
+          {
+            "code": "",
+            "text": "",
+            "laterality": "left",
+            "codeSystem": "ICD-10"
+          },
+          {
+            "code": "H10",
+            "text": "Viêm kết mạc dị ứng đỡ",
+            "laterality": "",
+            "codeSystem": "ICD-10"
+          }
+        ],
+        "medicationRequests": [
+          {
+            "medication": {
+              "code": "T0032",
+              "name": "Pemirolast kali (Alegysal Eye drop 0,1% 5ml )",
+              "ingredient": "Pemirolast Kali",
+              "strength": "5mg/5ml"
+            },
+            "dosageInstruction": {
+              "text": "Tra hai mắt 2 lần/ngày, mỗi lần 1 giọt ,",
+              "route": "",
+              "dose": 1.000000000000000e+000,
+              "frequency": "2"
+            },
+            "quantity": 1.00
+          },
+          {
+            "medication": {
+              "code": "T000788",
+              "name": "Hylan A (Comfort Shield MDS 0,15% 10ml)",
+              "ingredient": "Hylan A",
+              "strength": "0,15%"
+            },
+            "dosageInstruction": {
+              "text": "Tra hai mắt 4 lần/ngày, mỗi lần 1 giọt , hàng ngày",
+              "route": "hàng ngày",
+              "dose": 1.000000000000000e+000,
+              "frequency": "4"
+            },
+            "quantity": 1.00
+          }
+        ]
+      },
+      {
+        "encounterId": "HSKBNT20230910090412829",
+        "class": "outpatient",
+        "department": "Khoa Khám Bệnh",
+        "period": {
+          "start": "2023-09-10T00:00:00",
+          "end": "1900-01-01T00:00:00"
+        },
+        "practitioner": {
+          "practitionerId": "BS177",
+          "name": "Ths. BS Hoàng Thanh Nga"
+        },
+        "reasonForVisit": "Khám lâm sàng chung (từ lần 2 trở đi)",
+        "pastMedicalHistory": "",
+        "familyHistory": "",
+        "vitalSigns": {
+          "bloodPressure": "",
+          "heartRate": "",
+          "temperature": "",
+          "height": "0",
+          "weight": ""
+        },
+        "ophthalmicExamination": {
+          "eyesockets": {},
+          "globecondition": {},
+          "ocularmotility": {},
+          "lacrimalsystem": {
+            "right": "Bình thường",
+            "left": "Bình thường"
+          },
+          "conjunctiva": {
+            "right": "Bình thường",
+            "left": "Bình thường"
+          },
+          "cornea": {
+            "right": "",
+            "left": ""
+          },
+          "sclera": {},
+          "anteriorchamber": {
+            "right": "",
+            "left": ""
+          },
+          "iris": {
+            "right": "",
+            "left": ""
+          },
+          "pupil": {},
+          "lens": {
+            "right": "",
+            "left": ""
+          },
+          "vitreous": {
+            "right": "",
+            "left": ""
+          },
+          "opticdisc": {
+            "right": "",
+            "left": ""
+          },
+          "retina": {
+            "right": "",
+            "left": ""
+          }
+        },
+        "refraction": {
+          "rightEye": {
+            "sphere": "",
+            "cylinder": "",
+            "axis": ""
+          },
+          "leftEye": {
+            "sphere": "",
+            "cylinder": "",
+            "axis": ""
+          },
+          "measuredAt": "2023-09-10T09:08:18.860"
+        },
+        "diagnoses": [
+          {
+            "code": "",
+            "text": "",
+            "laterality": "right",
+            "codeSystem": "ICD-10"
+          },
+          {
+            "code": "H10",
+            "text": "Viêm kết mạc/ TD Lẹo nhỏ mi dưới",
+            "laterality": "left",
+            "codeSystem": "ICD-10"
+          },
+          {
+            "code": "",
+            "text": "",
+            "laterality": "",
+            "codeSystem": "ICD-10"
+          }
+        ],
+        "medicationRequests": [
+          {
+            "medication": {
+              "code": "T0054",
+              "name": "Tobramycin (Tobrex 0,3% 5ml)",
+              "ingredient": "Tobramycin",
+              "strength": "3mg/ml"
+            },
+            "dosageInstruction": {
+              "text": "Tra mắt trái 4 lần/ngày, mỗi lần 1 giọt , x 7 ngày",
+              "route": "x 7 ngày",
+              "dose": 1.000000000000000e+000,
+              "frequency": "4"
+            },
+            "quantity": 1.00
+          },
+          {
+            "medication": {
+              "code": "T0057",
+              "name": "Ofloxacin (Oflovid ophthalmic ointment 0,3% 3,5g)",
+              "ingredient": "Ofloxacin",
+              "strength": "0,3%"
+            },
+            "dosageInstruction": {
+              "text": "Bôi da mi + Tra mắt trái 2 lần/ngày, mỗi lần 1 cm ,",
+              "route": "",
+              "dose": 1.000000000000000e+000,
+              "frequency": "2"
+            },
+            "quantity": 1.00
+          }
+        ]
+      },
+      {
+        "encounterId": "HSKBNT20221031162700159",
+        "class": "outpatient",
+        "department": "Khoa Khám Bệnh",
+        "period": {
+          "start": "2022-10-31T00:00:00",
+          "end": "1900-01-01T00:00:00"
+        },
+        "practitioner": {
+          "practitionerId": "BS177",
+          "name": "Ths. BS Hoàng Thanh Nga"
+        },
+        "reasonForVisit": "Khám lại (trong vòng 07 ngày)",
+        "pastMedicalHistory": "",
+        "familyHistory": "",
+        "vitalSigns": {
+          "bloodPressure": "",
+          "heartRate": "",
+          "temperature": "",
+          "height": "0",
+          "weight": ""
+        },
+        "ophthalmicExamination": {
+          "eyesockets": {},
+          "globecondition": {},
+          "ocularmotility": {},
+          "lacrimalsystem": {
+            "right": "Bình thường",
+            "left": "Bình thường"
+          },
+          "conjunctiva": {
+            "right": "Bình thường",
+            "left": "Bình thường"
+          },
+          "cornea": {
+            "right": "",
+            "left": ""
+          },
+          "sclera": {},
+          "anteriorchamber": {
+            "right": "",
+            "left": ""
+          },
+          "iris": {
+            "right": "",
+            "left": ""
+          },
+          "pupil": {},
+          "lens": {
+            "right": "",
+            "left": ""
+          },
+          "vitreous": {
+            "right": "",
+            "left": ""
+          },
+          "opticdisc": {
+            "right": "",
+            "left": ""
+          },
+          "retina": {
+            "right": "",
+            "left": ""
+          }
+        },
+        "refraction": {
+          "rightEye": {
+            "sphere": "-0.25",
+            "cylinder": "",
+            "axis": ""
+          },
+          "leftEye": {
+            "sphere": "-0.50",
+            "cylinder": "",
+            "axis": ""
+          },
+          "measuredAt": "2022-10-31T16:31:39.130"
+        },
+        "diagnoses": [
+          {
+            "code": "",
+            "text": "",
+            "laterality": "right",
+            "codeSystem": "ICD-10"
+          },
+          {
+            "code": "",
+            "text": "",
+            "laterality": "left",
+            "codeSystem": "ICD-10"
+          },
+          {
+            "code": "H10",
+            "text": "Viêm kết mạc đỡ/Khô mắt",
+            "laterality": "",
+            "codeSystem": "ICD-10"
+          }
+        ],
+        "medicationRequests": [
+          {
+            "medication": {
+              "code": "T0009",
+              "name": "Natri hyaluronat (Sanlein 0,1% 5ml)",
+              "ingredient": "Natri hyaluronat",
+              "strength": "5mg/5ml"
+            },
+            "dosageInstruction": {
+              "text": "Tra hai mắt 4 lần/ngày, mỗi lần 1 giọt , hàng ngày",
+              "route": "hàng ngày",
+              "dose": 1.000000000000000e+000,
+              "frequency": "4"
+            },
+            "quantity": 2.00
+          },
+          {
+            "medication": {
+              "code": "T0016",
+              "name": "Carbomer (Liposic 0,2% 10g)",
+              "ingredient": "Carbomer",
+              "strength": "0.2%-10g"
+            },
+            "dosageInstruction": {
+              "text": "Tra hai mắt 1 lần/ngày, mỗi lần 1 cm , tối trước ngủ, dùng hàng ngày.",
+              "route": "tối trước ngủ, dùng hàng ngày.",
+              "dose": 1.000000000000000e+000,
+              "frequency": "1"
+            },
+            "quantity": 1.00
+          }
+        ]
+      },
+      {
+        "encounterId": "HSKBNT20240404173543276",
+        "class": "outpatient",
+        "department": "Khoa Khám Bệnh",
+        "period": {
+          "start": "2024-04-04T00:00:00",
+          "end": "1900-01-01T00:00:00"
+        },
+        "practitioner": {
+          "practitionerId": "BS177",
+          "name": "Ths. BS Hoàng Thanh Nga"
+        },
+        "reasonForVisit": "Khám lại (trong vòng 07 ngày)",
+        "pastMedicalHistory": "",
+        "familyHistory": "",
+        "vitalSigns": {
+          "bloodPressure": "",
+          "heartRate": "",
+          "temperature": "",
+          "height": "0",
+          "weight": ""
+        },
+        "ophthalmicExamination": {
+          "eyesockets": {},
+          "globecondition": {},
+          "ocularmotility": {},
+          "lacrimalsystem": {
+            "right": "",
+            "left": ""
+          },
+          "conjunctiva": {
+            "right": "",
+            "left": ""
+          },
+          "cornea": {
+            "right": "",
+            "left": ""
+          },
+          "sclera": {},
+          "anteriorchamber": {
+            "right": "",
+            "left": ""
+          },
+          "iris": {
+            "right": "",
+            "left": ""
+          },
+          "pupil": {},
+          "lens": {
+            "right": "",
+            "left": ""
+          },
+          "vitreous": {
+            "right": "",
+            "left": ""
+          },
+          "opticdisc": {
+            "right": "",
+            "left": ""
+          },
+          "retina": {
+            "right": "",
+            "left": ""
+          }
+        },
+        "refraction": {
+          "rightEye": {
+            "sphere": "0.0",
+            "cylinder": "-0.75",
+            "axis": "180"
+          },
+          "leftEye": {
+            "sphere": "0.00",
+            "cylinder": "-1.00",
+            "axis": "5"
+          },
+          "measuredAt": "2024-04-04T17:54:49.860"
+        },
+        "diagnoses": [
+          {
+            "code": "",
+            "text": "",
+            "laterality": "right",
+            "codeSystem": "ICD-10"
+          },
+          {
+            "code": "H16",
+            "text": "Viêm giác mạc",
+            "laterality": "left",
+            "codeSystem": "ICD-10"
+          },
+          {
+            "code": "H10",
+            "text": "Viêm kết mạc ",
+            "laterality": "",
+            "codeSystem": "ICD-10"
+          }
+        ],
+        "medicationRequests": [
+          {
+            "medication": {
+              "code": "T0042",
+              "name": "Fluorometholon (Flumetholon 0,1% 5ml )",
+              "ingredient": "Fluorometholon",
+              "strength": "1mg/ml"
+            },
+            "dosageInstruction": {
+              "text": "Tra hai mắt 4 lần/ngày, mỗi lần 1 giọt , x 7 ngày",
+              "route": "x 7 ngày",
+              "dose": 1.000000000000000e+000,
+              "frequency": "4"
+            },
+            "quantity": 1.00
+          }
+        ]
+      },
+      {
+        "encounterId": "HSKBNT20231001085941830",
+        "class": "outpatient",
+        "department": "Khoa Khám Bệnh",
+        "period": {
+          "start": "2023-10-01T00:00:00",
+          "end": "1900-01-01T00:00:00"
+        },
+        "practitioner": {
+          "practitionerId": "BS180",
+          "name": "THS. BS. Lê Đức Thiện"
+        },
+        "reasonForVisit": "Khám lại (trong vòng 07 ngày)",
+        "pastMedicalHistory": "",
+        "familyHistory": "",
+        "vitalSigns": {
+          "bloodPressure": "",
+          "heartRate": "",
+          "temperature": "",
+          "height": "0",
+          "weight": ""
+        },
+        "ophthalmicExamination": {
+          "eyesockets": {},
+          "globecondition": {},
+          "ocularmotility": {},
+          "lacrimalsystem": {
+            "right": "",
+            "left": ""
+          },
+          "conjunctiva": {
+            "right": "",
+            "left": ""
+          },
+          "cornea": {
+            "right": "",
+            "left": ""
+          },
+          "sclera": {},
+          "anteriorchamber": {
+            "right": "",
+            "left": ""
+          },
+          "iris": {
+            "right": "",
+            "left": ""
+          },
+          "pupil": {},
+          "lens": {
+            "right": "",
+            "left": ""
+          },
+          "vitreous": {
+            "right": "",
+            "left": ""
+          },
+          "opticdisc": {
+            "right": "",
+            "left": ""
+          },
+          "retina": {
+            "right": "",
+            "left": ""
+          }
+        },
+        "refraction": {
+          "rightEye": {
+            "sphere": "-0.25",
+            "cylinder": "-0.50",
+            "axis": "165"
+          },
+          "leftEye": {
+            "sphere": "-0.25",
+            "cylinder": "-0.25",
+            "axis": "10"
+          },
+          "measuredAt": "2023-10-01T09:38:47.777"
+        },
+        "diagnoses": [
+          {
+            "code": "",
+            "text": "",
+            "laterality": "right",
+            "codeSystem": "ICD-10"
+          },
+          {
+            "code": "",
+            "text": "",
+            "laterality": "left",
+            "codeSystem": "ICD-10"
+          },
+          {
+            "code": "H10",
+            "text": "Viêm kết mạc đã khỏi ",
+            "laterality": "",
+            "codeSystem": "ICD-10"
+          }
+        ],
+        "medicationRequests": [
+          {
+            "medication": {
+              "code": "T0001",
+              "name": "Polyethylen glycol + Propylen glycol (Systane Ultra 5ml)",
+              "ingredient": "Polyethylen glycol + Propylen glycol",
+              "strength": "0,4% + 0,3%"
+            },
+            "dosageInstruction": {
+              "text": "Tra hai mắt 4 lần/ngày, mỗi lần 1 giọt ,",
+              "route": "",
+              "dose": 1.000000000000000e+000,
+              "frequency": "4"
+            },
+            "quantity": 1.00
+          }
+        ]
+      }
+    ]
+  }
+}

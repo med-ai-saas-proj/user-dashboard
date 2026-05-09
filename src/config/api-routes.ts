@@ -32,6 +32,10 @@ export const API_ROUTES = {
 			`service/api/${API_VERSION}/ehr_summarize`,
 			BASE_API_URL
 		).toString(),
+		OPHTH_SUMMARIZE: new URL(
+			`service/api/${API_VERSION}/ophth_summarize`,
+			BASE_API_URL
+		).toString(),
 		RX_ADVISOR: new URL(
 			`service/api/${API_VERSION}/rx_advisor`,
 			BASE_API_URL

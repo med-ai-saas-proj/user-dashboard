@@ -24,11 +24,10 @@ src/features/pg-rx-advisor/utils/rx-advisor.utils.ts ← services/rx-advisor
 src/lib/streaming/use-stream.ts ← base-stream
 ```
 
-## changes (last 5 commits — 5 minutes ago)
+## changes (last 5 commits — 7 minutes ago)
 ```
 src/App.tsx                                   ~AppRoutes
 src/components/sidebar/app-sidebar.tsx        ~AppSidebar
-src/features/pg-ehr-converter/components/bhxh-envelope-inspector.tsx +BhxhEnvelopeInspector  +splitBlocks
 src/features/pg-ehr-converter/components/convert-result-panel.tsx ~ConvertResultPanel
 src/features/pg-ehr-converter/components/converter-form.tsx ~ConverterForm
 ```
@@ -384,6 +383,9 @@ hook useState
 hook useCallback
 hook useEffect
 hook useMemo
+handler onOpenChange
+handler onClick
+handler onVariants
 ```
 
 ### src/components/shadcn/skeleton.tsx

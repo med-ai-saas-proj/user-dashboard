@@ -26,7 +26,6 @@ interface OphthRefractionSnapshot {
 }
 
 interface OphthEye {
-	laterality: "right" | "left";
 	summary: string;
 	findings: OphthEyeFinding[];
 	refraction?: OphthRefractionSnapshot | null;
@@ -115,15 +114,15 @@ interface OphthSummary {
 // ---------------- Timeline visual config ----------------
 
 const TIMELINE_TYPE_LABEL: Record<TimelineType, string> = {
-	first_visit: "Lần khám đầu",
-	new_dx: "Chẩn đoán mới",
-	med_started: "Bắt đầu thuốc",
-	med_stopped: "Dừng thuốc",
-	test_ordered: "Chỉ định XN",
-	test_result: "Kết quả XN",
-	status_change: "Thay đổi diễn tiến",
-	post_op_followup: "Tái khám sau mổ",
-	stable_summary: "Giai đoạn ổn định",
+	first_visit: "First visit",
+	new_dx: "New diagnosis",
+	med_started: "Med started",
+	med_stopped: "Med stopped",
+	test_ordered: "Test ordered",
+	test_result: "Test result",
+	status_change: "Status change",
+	post_op_followup: "Post-op follow-up",
+	stable_summary: "Stable interval",
 };
 
 const TIMELINE_TYPE_COLOR: Record<TimelineType, string> = {
@@ -154,9 +153,9 @@ const fmtDate = (iso?: string | null) => {
 	try {
 		const d = new Date(iso);
 		if (Number.isNaN(d.getTime())) return iso;
-		return d.toLocaleDateString("vi-VN", {
+		return d.toLocaleDateString("en-GB", {
 			year: "numeric",
-			month: "2-digit",
+			month: "short",
 			day: "2-digit",
 		});
 	} catch {
@@ -213,9 +212,7 @@ const OphthSummaryPage = () => {
 			});
 		} catch (e) {
 			setParsedPreview(null);
-			setParseError(
-				e instanceof Error ? e.message : "Không phân tích được JSON"
-			);
+			setParseError(e instanceof Error ? e.message : "Could not parse JSON");
 		}
 	};
 
@@ -233,7 +230,7 @@ const OphthSummaryPage = () => {
 			const resp = await fetch(`/sample-data/ophth/${id}.json`);
 			if (resp.ok) {
 				updatePreview(await resp.text());
-				toast.success(`Đã tải mẫu ${id}`);
+				toast.success(`Loaded sample ${id}`);
 				return;
 			}
 		} catch {
@@ -291,14 +288,14 @@ const OphthSummaryPage = () => {
 			)
 		);
 		toast.info(
-			`Mẫu ${id} chưa được bundle. Đã nạp một dữ liệu nhỏ làm ví dụ — upload file thật để có kết quả phong phú.`
+			`Sample ${id} not bundled — loaded a tiny inline example. Upload the real file for a richer result.`
 		);
 	};
 
 	const handleSummarize = async () => {
 		const cleaned = stripBom(rawJson).trim();
 		if (!cleaned) {
-			toast.error("Hãy upload hoặc dán JSON hồ sơ nhãn khoa.");
+			toast.error("Upload or paste an ophthalmology EHR JSON first.");
 			return;
 		}
 		let parsed: unknown;
@@ -306,7 +303,7 @@ const OphthSummaryPage = () => {
 			parsed = JSON.parse(cleaned);
 		} catch (e) {
 			toast.error(
-				e instanceof Error ? `JSON lỗi: ${e.message}` : "JSON không hợp lệ"
+				e instanceof Error ? `JSON error: ${e.message}` : "Invalid JSON"
 			);
 			return;
 		}
@@ -315,7 +312,7 @@ const OphthSummaryPage = () => {
 			typeof parsed !== "object" ||
 			!(parsed as { patient?: unknown }).patient
 		) {
-			toast.error("JSON phải có trường `patient` ở cấp cao nhất.");
+			toast.error("JSON must contain a top-level `patient` field.");
 			return;
 		}
 
@@ -345,13 +342,13 @@ const OphthSummaryPage = () => {
 			setRawResponse(data);
 			const elapsed = Math.round(performance.now() - t0);
 			setConversionTime(elapsed);
-			toast.success(`Đã tổng hợp trong ${elapsed}ms`);
+			toast.success(`Summary generated in ${elapsed}ms`);
 		} catch (err) {
-			const raw = err instanceof Error ? err.message : "Yêu cầu thất bại";
+			const raw = err instanceof Error ? err.message : "Request failed";
 			let friendly = raw;
 			if (/^HTTP 5\d{2}/.test(raw) || raw.includes("<html>")) {
 				const code = raw.match(/HTTP (\d{3})/)?.[1] ?? "5xx";
-				friendly = `Upstream tạm thời không phản hồi (HTTP ${code}). Hãy thử lại sau.`;
+				friendly = `Upstream temporarily unavailable (HTTP ${code}). Please retry shortly.`;
 			}
 			toast.error(friendly);
 		} finally {
@@ -368,8 +365,8 @@ const OphthSummaryPage = () => {
 					diagnoses, condensed timeline, and follow-up plan with red flags.
 				</DemoPageDescription>
 				<div className="px-6 pb-2 -mt-2 text-[11px] text-muted-foreground">
-					Pipeline: upload patient JSON → preprocess (sort + prune) → Vietnamese
-					ophthalmology agent → structured `OphthSummary`.
+					Pipeline: upload patient JSON → preprocess (sort + prune) →
+					ophthalmology agent (Azure OpenAI) → structured `OphthSummary`.
 				</div>
 				<div className="flex-1 flex flex-col lg:grid lg:grid-cols-2 overflow-hidden">
 					{/* Left: Input */}
@@ -446,28 +443,29 @@ const OphthSummaryPage = () => {
 								<div className="text-muted-foreground">
 									{parsedPreview.gender}
 									{parsedPreview.birthDate && ` · ${parsedPreview.birthDate}`} ·{" "}
-									{parsedPreview.encounterCount} lần khám ·{" "}
+									{parsedPreview.encounterCount} visit
+									{parsedPreview.encounterCount === 1 ? "" : "s"} ·{" "}
 									{parsedPreview.sourceSystem}
 								</div>
 							</div>
 						)}
 						{parseError && (
 							<div className="px-4 py-2 border-b bg-destructive/5 text-[12px] text-destructive">
-								JSON lỗi: {parseError}
+								JSON error: {parseError}
 							</div>
 						)}
 
 						<textarea
 							value={rawJson}
 							onChange={(e) => updatePreview(e.target.value)}
-							placeholder='Dán JSON hồ sơ nhãn khoa ở đây... ví dụ {"exportMetadata":{...},"patient":{...}}'
+							placeholder='Paste ophthalmology EHR JSON here... e.g. {"exportMetadata":{...},"patient":{...}}'
 							className="flex-1 p-4 font-mono text-[12px] leading-relaxed bg-transparent focus:outline-none resize-none"
 							spellCheck={false}
 						/>
 
 						<div className="flex items-center justify-between px-4 py-2.5 border-t bg-muted/30 gap-2 flex-wrap">
 							<span className="text-[11px] text-muted-foreground/60 hidden sm:inline">
-								JSON → preprocess → Vietnamese ophthalmology summarizer
+								JSON → preprocess → ophthalmology summarizer
 							</span>
 							<Button
 								size="sm"
@@ -478,10 +476,10 @@ const OphthSummaryPage = () => {
 								{isLoading ? (
 									<span className="flex items-center gap-1.5">
 										<span className="w-3 h-3 border-2 border-current border-t-transparent rounded-full animate-spin" />
-										Đang xử lý…
+										Summarizing…
 									</span>
 								) : (
-									"Tổng hợp"
+									"Summarize"
 								)}
 							</Button>
 						</div>
@@ -491,7 +489,7 @@ const OphthSummaryPage = () => {
 					<div className="flex flex-col overflow-hidden min-h-0 lg:min-h-full">
 						<div className="flex items-center justify-between px-4 py-3 border-b bg-muted/30">
 							<h2 className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
-								Bản tổng hợp
+								Summary
 								{conversionTime != null && (
 									<span className="ml-2 text-[11px] font-normal normal-case tracking-normal">
 										({conversionTime}ms)
@@ -541,7 +539,7 @@ const OphthSummaryPage = () => {
 										{summary.overview.headline}
 									</div>
 									<div className="text-[11px] text-muted-foreground mt-1">
-										{summary.overview.encounter_count} lần khám ·{" "}
+										{summary.overview.encounter_count} visit(s) ·{" "}
 										{fmtDate(summary.overview.span?.first_visit)} →{" "}
 										{fmtDate(summary.overview.span?.last_visit)}
 										{summary.patient.source_system &&
@@ -585,7 +583,7 @@ const OphthSummaryPage = () => {
 											</div>
 											{summary.timeline.length === 0 ? (
 												<div className="text-sm text-muted-foreground italic">
-													Không có sự kiện đáng kể trong timeline.
+													No notable events on the timeline.
 												</div>
 											) : (
 												<ol className="relative border-l-2 border-muted pl-6 space-y-4">
@@ -603,9 +601,9 @@ const OphthSummaryPage = () => {
 																</span>
 																{item.laterality && (
 																	<span className="text-[10px] px-1.5 py-0.5 rounded bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-300">
-																		{item.laterality === "right" && "Mắt P"}
-																		{item.laterality === "left" && "Mắt T"}
-																		{item.laterality === "both" && "Cả hai"}
+																		{item.laterality === "right" && "OD"}
+																		{item.laterality === "left" && "OS"}
+																		{item.laterality === "both" && "OU"}
 																	</span>
 																)}
 															</div>
@@ -637,8 +635,8 @@ const OphthSummaryPage = () => {
 														<div className="flex items-center gap-2 mb-2">
 															<div className="text-[10px] uppercase font-semibold tracking-wider text-muted-foreground">
 																{side === "right"
-																	? "Mắt Phải (OD)"
-																	: "Mắt Trái (OS)"}
+																	? "Right Eye (OD)"
+																	: "Left Eye (OS)"}
 															</div>
 														</div>
 														<div className="text-[13px] mb-3 leading-relaxed">
@@ -674,7 +672,7 @@ const OphthSummaryPage = () => {
 														)}
 														{eye.findings.length === 0 ? (
 															<div className="text-[12px] text-muted-foreground italic">
-																Không có phát hiện bất thường.
+																No abnormal findings.
 															</div>
 														) : (
 															<dl className="space-y-1.5 text-[12px]">
@@ -690,7 +688,7 @@ const OphthSummaryPage = () => {
 																			{f.current}
 																			{f.last_changed && (
 																				<span className="ml-1 text-[10px] text-muted-foreground">
-																					(cập nhật {fmtDate(f.last_changed)})
+																					(updated {fmtDate(f.last_changed)})
 																				</span>
 																			)}
 																		</dd>
@@ -712,14 +710,12 @@ const OphthSummaryPage = () => {
 												return (
 													<div key={status}>
 														<div className="text-[11px] uppercase font-semibold tracking-wider text-muted-foreground mb-2">
-															{status === "active"
-																? "Đang điều trị"
-																: "Đã xử lý"}{" "}
-															({list.length})
+															{status === "active" ? "Active" : "Resolved"} (
+															{list.length})
 														</div>
 														{list.length === 0 ? (
 															<div className="text-[12px] text-muted-foreground italic">
-																Không có
+																None
 															</div>
 														) : (
 															<ul className="space-y-1.5">
@@ -735,19 +731,19 @@ const OphthSummaryPage = () => {
 																			<span>{d.text}</span>
 																			{d.laterality && (
 																				<span className="text-[10px] px-1.5 py-0.5 rounded bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-300">
-																					{d.laterality === "right" && "P"}
-																					{d.laterality === "left" && "T"}
-																					{d.laterality === "both" && "P+T"}
+																					{d.laterality === "right" && "OD"}
+																					{d.laterality === "left" && "OS"}
+																					{d.laterality === "both" && "OU"}
 																				</span>
 																			)}
 																		</div>
 																		{(d.first_seen || d.last_seen) && (
 																			<div className="text-[10px] text-muted-foreground mt-0.5">
 																				{d.first_seen &&
-																					`từ ${fmtDate(d.first_seen)}`}
+																					`since ${fmtDate(d.first_seen)}`}
 																				{d.first_seen && d.last_seen && " · "}
 																				{d.last_seen &&
-																					`gần nhất ${fmtDate(d.last_seen)}`}
+																					`last ${fmtDate(d.last_seen)}`}
 																			</div>
 																		)}
 																	</li>
@@ -768,12 +764,12 @@ const OphthSummaryPage = () => {
 												return (
 													<div key={status}>
 														<div className="text-[11px] uppercase font-semibold tracking-wider text-muted-foreground mb-2">
-															{status === "active" ? "Đang dùng" : "Đã ngưng"} (
-															{list.length})
+															{status === "active" ? "Active" : "Discontinued"}{" "}
+															({list.length})
 														</div>
 														{list.length === 0 ? (
 															<div className="text-[12px] text-muted-foreground italic">
-																Không có
+																None
 															</div>
 														) : (
 															<ul className="space-y-2">
@@ -800,14 +796,14 @@ const OphthSummaryPage = () => {
 																			m.discontinued_at) && (
 																			<div className="text-[10px] text-muted-foreground mt-1">
 																				{m.started_at &&
-																					`bắt đầu ${fmtDate(m.started_at)}`}
+																					`started ${fmtDate(m.started_at)}`}
 																				{m.started_at &&
 																					m.last_prescribed_at &&
 																					" · "}
 																				{m.last_prescribed_at &&
-																					`gần nhất ${fmtDate(m.last_prescribed_at)}`}
+																					`last ${fmtDate(m.last_prescribed_at)}`}
 																				{m.discontinued_at &&
-																					` · ngưng ${fmtDate(m.discontinued_at)}`}
+																					` · stopped ${fmtDate(m.discontinued_at)}`}
 																			</div>
 																		)}
 																	</li>
@@ -825,20 +821,18 @@ const OphthSummaryPage = () => {
 												summary.follow_up.notes) && (
 												<div className="mt-6 rounded-lg border-2 border-amber-300/50 bg-amber-50/40 dark:bg-amber-950/10 p-3 text-[13px]">
 													<div className="text-[11px] uppercase font-semibold tracking-wider text-amber-700 dark:text-amber-300 mb-2">
-														Theo dõi tiếp theo
+														Follow-up
 													</div>
 													{summary.follow_up.next_due && (
 														<div>
-															<span className="font-semibold">
-																Lần khám kế:
-															</span>{" "}
+															<span className="font-semibold">Next visit:</span>{" "}
 															{fmtDate(summary.follow_up.next_due)}
 														</div>
 													)}
 													{summary.follow_up.pending_tests.length > 0 && (
 														<div className="mt-1">
 															<div className="font-semibold">
-																XN/thủ thuật chờ:
+																Pending tests:
 															</div>
 															<ul className="list-disc list-inside text-[12px]">
 																{summary.follow_up.pending_tests.map((t, i) => (
@@ -850,7 +844,7 @@ const OphthSummaryPage = () => {
 													{summary.follow_up.red_flags.length > 0 && (
 														<div className="mt-2">
 															<div className="font-semibold text-red-700 dark:text-red-300">
-																Cảnh báo:
+																Red flags:
 															</div>
 															<ul className="list-disc list-inside text-[12px]">
 																{summary.follow_up.red_flags.map((f, i) => (
@@ -911,12 +905,12 @@ const OphthSummaryPage = () => {
 							<DemoEmptyState
 								description={
 									<>
-										Upload hoặc dán JSON hồ sơ nhãn khoa, rồi nhấn{" "}
-										<strong>Tổng hợp</strong> để xem bản tóm tắt theo cấu trúc
-										per-eye, timeline, thuốc và chẩn đoán.
+										Upload or paste an ophthalmology EHR JSON, then click{" "}
+										<strong>Summarize</strong> to see a structured per-eye
+										snapshot, timeline, meds, and diagnoses.
 									</>
 								}
-								hint="Pipeline: JSON → sort encounters → Vietnamese ophth agent → OphthSummary JSON"
+								hint="Pipeline: JSON → sort encounters → ophthalmology agent → OphthSummary JSON"
 							/>
 						)}
 					</div>

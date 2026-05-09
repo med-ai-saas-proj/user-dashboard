@@ -1,0 +1,25 @@
+{
+  "_comment": "SigMap config for user-dashboard — generates CLAUDE.md for Claude Code indexing.",
+  "outputs": ["claude"],
+  "srcDirs": ["src"],
+  "exclude": [
+    "node_modules", ".git", "dist", "build", "out",
+    "__pycache__", ".next", "coverage", "target", "vendor",
+    ".context",
+    "public", "src/assets"
+  ],
+  "maxDepth": 8,
+  "maxSigsPerFile": 30,
+  "autoMaxTokens": false,
+  "maxTokens": 20000,
+  "coverageTarget": 0.95,
+  "modelContextLimit": 200000,
+  "maxTokensHeadroom": 0.30,
+  "secretScan": true,
+  "diffPriority": true,
+  "strategy": "full",
+  "depMap": true,
+  "todos": false,
+  "changes": true,
+  "changesCommits": 5
+}

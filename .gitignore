@@ -44,3 +44,7 @@ coverage/
 *.swo
 
 build-output/
+
+# Sigmap byproducts (we only commit CLAUDE.md, not the copilot variant)
+.github/copilot-instructions.md
+.context/

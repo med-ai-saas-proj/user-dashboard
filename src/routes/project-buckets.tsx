@@ -76,6 +76,13 @@ const MOCK_FILES: UploadedFile[] = [
 	},
 ];
 
+const ACCEPTED_TYPES = [
+	"application/pdf",
+	"text/plain",
+	"application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+	"application/msword",
+];
+
 export default function ProjectBucketsPage() {
 	const { t } = useTranslation(["sidebar", "common", "bucket"]);
 	const [files, setFiles] = useState<UploadedFile[]>(MOCK_FILES);
@@ -105,6 +112,16 @@ export default function ProjectBucketsPage() {
 	};
 
 	const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+		// If not in list of accepted formats, ignore
+		if (e.target.files) {
+			const validFiles = Array.from(e.target.files).filter((file) =>
+				ACCEPTED_TYPES.includes(file.type)
+			);
+			if (validFiles.length > 0) {
+				handleFiles(new DataTransfer().files);
+			}
+		}
+
 		if (e.target.files && e.target.files.length > 0) {
 			handleFiles(e.target.files);
 		}
@@ -216,11 +233,12 @@ export default function ProjectBucketsPage() {
 											{t("bucket:action.upload")}
 										</p>
 										<p className="text-xs text-muted-foreground mt-1">
-											PDF, TXT, DOCX, PPTX (max 50MB)
+											TXT, PDF, WORD (max 50MB)
 										</p>
 									</div>
 								</div>
 								<input
+									accept={ACCEPTED_TYPES.join(",")}
 									title="Upload documents"
 									type="file"
 									className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"

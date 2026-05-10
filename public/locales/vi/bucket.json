@@ -2,6 +2,7 @@
   "title": "Dữ liệu RAG",
   "description": "Quản lý và xem các tệp RAG của bạn.",
   "action": {
+    "uploadTitle": "Thêm tệp RAG",
     "upload": "Nhấp để tải lên hoặc kéo và thả"
   },
   "tagDialog": {

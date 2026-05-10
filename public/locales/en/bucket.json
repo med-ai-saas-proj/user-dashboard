@@ -2,11 +2,12 @@
   "title": "RAG Data",
   "description": "Manage and view your RAG files.",
   "action": {
+    "uploadTitle": "Add RAG File",
     "upload": "Click to upload or drag and drop"
   },
   "tagDialog": {
     "title": "Edit tags",
-    "description": "Manage tags for {fileName}. Press enter to add a tag.",
+    "description": "Manage tags for {{fileName}}. Press enter to add a tag.",
     "inputPlaceholder": "Enter a tag and press Enter"
   },
   "table": {

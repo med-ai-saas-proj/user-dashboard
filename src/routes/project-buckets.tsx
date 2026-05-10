@@ -192,10 +192,8 @@ export default function ProjectBucketsPage() {
 					{/* Upload Area */}
 					<Card className="col-span-1 md:col-span-3">
 						<CardHeader>
-							<CardTitle>Upload Documents</CardTitle>
-							<CardDescription>
-								Drag and drop your files here or click to browse.
-							</CardDescription>
+							<CardTitle>{t("bucket:action.uploadTitle")}</CardTitle>
+							<CardDescription>{t("bucket:action.upload")}</CardDescription>
 						</CardHeader>
 						<CardContent>
 							<button

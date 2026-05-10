@@ -89,18 +89,13 @@ export const API_ROUTES = {
 			`service/api/${API_VERSION}/bhxh_validator/validate_bundle`,
 			BASE_API_URL
 		).toString(),
-		VOICE_TRANSCRIBE: new URL(
-			`service/api/${API_VERSION}/voice_transcribe`,
-			BASE_API_URL
-		).toString(),
-		VOICE_TRANSCRIBE_STREAM: new URL(
-			`service/api/${API_VERSION}/voice_transcribe/stream`,
-			BASE_API_URL
-		).toString(),
-		VOICE_TRANSCRIBE_WS: new URL(
-			`service/api/${API_VERSION}/voice_transcribe/ws`,
+		// Voice Agent — bidirectional WebSocket. Lives on a sibling FastAPI
+		// service at /backend/voice-agent/, not under /service/api/v1/.
+		VOICE_AGENT_WS: new URL(
+			`voice-agent/ws/agent`,
 			BASE_API_URL.replace("https://", "wss://").replace("http://", "ws://")
 		).toString(),
+		VOICE_AGENT_HEALTH: new URL(`voice-agent/healthz`, BASE_API_URL).toString(),
 		MEDICAL_IMAGE: new URL(
 			`service/api/${API_VERSION}/medical_image/describe`,
 			BASE_API_URL

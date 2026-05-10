@@ -51,7 +51,7 @@ import RxAdvisorPage from "@/routes/rx-advisor";
 import SettingsPage from "@/routes/settings";
 import SymptomCheckerPage from "@/routes/symptom-checker";
 import UpgradePage from "@/routes/upgrade";
-import VoiceTranscribePage from "@/routes/voice-transcribe";
+import VoiceAgentPage from "@/routes/voice-transcribe";
 import WearableDataPage from "@/routes/wearable-data";
 import PlaygroundChatPage from "./routes/playground-chat";
 
@@ -215,7 +215,7 @@ function AppRoutes() {
 					path="/voice-transcribe"
 					element={
 						<ProtectedRoute>
-							<VoiceTranscribePage />
+							<VoiceAgentPage />
 						</ProtectedRoute>
 					}
 				/>

@@ -1,59 +1,62 @@
 {
-    "playground": {
-        "title": "Sân chơi",
-        "ehrSummary": {
-            "title": "Tóm tắt EHR"
-        },
-        "rxAdvisor": {
-            "title": "Cố vấn Rx"
-        },
-        "chatBot": {
-            "title": "Chatbot"
-        },
-        "aiSearch": {
-            "title": "Tìm kiếm AI"
-        }
+  "playground": {
+    "title": "Sân chơi",
+    "ehrSummary": {
+      "title": "Tóm tắt EHR"
     },
-    "management": {
-        "title": "Quản lý",
-        "dashboard": {
-            "title": "Tổng quan"
-        },
-        "apiKeys": {
-            "title": "Khóa API"
-        },
-        "apiReference": {
-            "title": "Tham chiếu API"
-        },
-        "settings": {
-            "title": "Cài đặt"
-        }
+    "rxAdvisor": {
+      "title": "Cố vấn Rx"
     },
-    "organization": {
-        "title": "Tổ chức",
-        "general": {
-            "title": "Chung"
-        },
-        "people": {
-            "title": "Người dùng"
-        },
-        "project": {
-            "title": "Dự án"
-        },
-        "billing": {
-            "title": "Thanh toán"
-        }
+    "chatBot": {
+      "title": "Chatbot"
+    },
+    "aiSearch": {
+      "title": "Tìm kiếm AI"
+    }
+  },
+  "management": {
+    "title": "Quản lý",
+    "dashboard": {
+      "title": "Tổng quan"
+    },
+    "apiKeys": {
+      "title": "Khóa API"
+    },
+    "apiReference": {
+      "title": "Tham chiếu API"
+    },
+    "settings": {
+      "title": "Cài đặt"
+    }
+  },
+  "organization": {
+    "title": "Tổ chức",
+    "general": {
+      "title": "Chung"
+    },
+    "people": {
+      "title": "Người dùng"
     },
     "project": {
-        "title": "Dự án",
-        "general": {
-            "title": "Chung"
-        },
-        "apiKeys": {
-            "title": "Khóa API"
-        },
-        "people": {
-            "title": "Người dùng"
-        }
+      "title": "Dự án"
+    },
+    "billing": {
+      "title": "Thanh toán"
     }
+  },
+  "project": {
+    "title": "Dự án",
+    "general": {
+      "title": "Chung"
+    },
+    "apiKeys": {
+      "title": "Khóa API"
+    },
+    "people": {
+      "title": "Người dùng"
+    },
+    "buckets": {
+      "title": "Dữ liệu RAG"
+    }
+  }
 }

@@ -1,59 +1,62 @@
 {
-    "playground": {
-        "title": "Playground",
-        "ehrSummary": {
-            "title": "EHR Summary"
-        },
-        "rxAdvisor": {
-            "title": "Rx Advisor"
-        },
-        "chatBot": {
-            "title": "Chatbot"
-        },
-        "aiSearch": {
-            "title": "AI Search"
-        }
+  "playground": {
+    "title": "Playground",
+    "ehrSummary": {
+      "title": "EHR Summary"
     },
-    "management": {
-        "title": "Management",
-        "dashboard": {
-            "title": "Dashboard"
-        },
-        "apiKeys": {
-            "title": "API Keys"
-        },
-        "apiReference": {
-            "title": "API Reference"
-        },
-        "settings": {
-            "title": "Settings"
-        }
+    "rxAdvisor": {
+      "title": "Rx Advisor"
     },
-    "organization": {
-        "title": "Organization",
-        "general": {
-            "title": "General"
-        },
-        "people": {
-            "title": "People"
-        },
-        "project": {
-            "title": "Project"
-        },
-        "billing": {
-            "title": "Billing"
-        }
+    "chatBot": {
+      "title": "Chatbot"
+    },
+    "aiSearch": {
+      "title": "AI Search"
+    }
+  },
+  "management": {
+    "title": "Management",
+    "dashboard": {
+      "title": "Dashboard"
+    },
+    "apiKeys": {
+      "title": "API Keys"
+    },
+    "apiReference": {
+      "title": "API Reference"
+    },
+    "settings": {
+      "title": "Settings"
+    }
+  },
+  "organization": {
+    "title": "Organization",
+    "general": {
+      "title": "General"
+    },
+    "people": {
+      "title": "People"
     },
     "project": {
-        "title": "Project",
-        "general": {
-            "title": "General"
-        },
-        "apiKeys": {
-            "title": "API Keys"
-        },
-        "people": {
-            "title": "People"
-        }
+      "title": "Project"
+    },
+    "billing": {
+      "title": "Billing"
     }
+  },
+  "project": {
+    "title": "Project",
+    "general": {
+      "title": "General"
+    },
+    "apiKeys": {
+      "title": "API Keys"
+    },
+    "people": {
+      "title": "People"
+    },
+    "buckets": {
+      "title": "RAG Files"
+    }
+  }
 }

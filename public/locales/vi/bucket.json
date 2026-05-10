@@ -1,0 +1,24 @@
+{
+  "title": "Dữ liệu RAG",
+  "description": "Quản lý và xem các tệp RAG của bạn.",
+  "action": {
+    "uploadTitle": "Thêm tệp RAG",
+    "upload": "Nhấp để tải lên hoặc kéo và thả"
+  },
+  "tagDialog": {
+    "title": "Chỉnh sửa tags",
+    "description": "Quản lý tags cho {fileName}. Nhấn enter để thêm một tag.",
+    "inputPlaceholder": "Nhập một tag và nhấn Enter"
+  },
+  "table": {
+    "fileName": "Tên tệp",
+    "fileSize": "Kích thước tệp",
+    "uploadDate": "Ngày tải lên",
+    "actions": "Hành động"
+  },
+  "emptyState": {
+    "title": "Không có tệp RAG nào",
+    "description": "Bạn chưa có tệp RAG nào. Hãy thêm một tệp để bắt đầu.",
+    "buttonText": "Thêm Tệp RAG"
+  }
+}

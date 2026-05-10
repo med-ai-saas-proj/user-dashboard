@@ -78,14 +78,6 @@ interface OphthFollowUp {
 	notes?: string | null;
 }
 
-type ComparisonMetric =
-	| "visual_acuity"
-	| "intraocular_pressure"
-	| "cup_disc_ratio"
-	| "lens_status"
-	| "refraction"
-	| "other";
-
 type ComparisonTrend =
 	| "improved"
 	| "worsened"
@@ -95,7 +87,11 @@ type ComparisonTrend =
 	| "unknown";
 
 interface OphthComparisonRow {
-	metric: ComparisonMetric;
+	// Free-text on purpose — backend used to be a Literal, but the LLM
+	// occasionally emits clinically valid metrics outside the canonical
+	// list (corneal_health, fundus, anterior_segment, ...). The label is
+	// what we render; metric is just a stable key for grouping.
+	metric: string;
 	label: string;
 	laterality?: "right" | "left" | "both" | "" | null;
 	baseline?: string | null;
@@ -451,10 +447,12 @@ const ReportView = ({ summary }: { summary: OphthSummary }) => {
 											)}
 										</td>
 										<td
-											className={`px-3 py-2 text-center font-semibold ${TREND_TEXT_COLOR[row.trend] ?? ""}`}
+											className={`px-3 py-2 text-center font-semibold ${TREND_TEXT_COLOR[row.trend] ?? "text-muted-foreground"}`}
 										>
-											<span className="mr-1">{TREND_ARROW[row.trend]}</span>
-											{row.note ?? row.trend}
+											<span className="mr-1">
+												{TREND_ARROW[row.trend] ?? "—"}
+											</span>
+											{row.note ?? row.trend ?? ""}
 										</td>
 									</tr>
 								))}

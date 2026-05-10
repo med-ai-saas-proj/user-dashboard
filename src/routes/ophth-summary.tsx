@@ -233,8 +233,41 @@ const ReportView = ({ summary }: { summary: OphthSummary }) => {
 			/phaco|phẫu thuật|mổ|iol|laser/i.test(t.description)
 	);
 
+	const handlePrint = () => {
+		// Defer one frame so the active tab has finished painting before the
+		// print dialog snapshots the DOM.
+		requestAnimationFrame(() => window.print());
+	};
+
 	return (
-		<div className="space-y-4 text-[13px] text-foreground">
+		<div data-print-area className="space-y-4 text-[13px] text-foreground">
+			{/* Export button (hidden on print) */}
+			<div data-print-hide className="flex justify-end -mb-2">
+				<Button
+					size="sm"
+					variant="outline"
+					className="h-8 text-xs gap-1.5"
+					onClick={handlePrint}
+				>
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						viewBox="0 0 24 24"
+						fill="none"
+						stroke="currentColor"
+						strokeWidth="2"
+						strokeLinecap="round"
+						strokeLinejoin="round"
+						className="w-3.5 h-3.5"
+						aria-hidden="true"
+					>
+						<polyline points="6 9 6 2 18 2 18 9" />
+						<path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
+						<rect x="6" y="14" width="12" height="8" />
+					</svg>
+					Export PDF
+				</Button>
+			</div>
+
 			{/* Title bar */}
 			<div className="flex items-center justify-between border-b-2 border-primary/30 pb-3">
 				<div className="text-xs font-extrabold tracking-wide text-teal-600 dark:text-teal-400">

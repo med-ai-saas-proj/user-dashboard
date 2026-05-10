@@ -224,3 +224,57 @@
 		scroll-behavior: auto !important;
 	}
 }
+
+/* Print: isolate elements marked data-print-area so window.print() produces
+   a clean PDF without the dashboard chrome. The report itself sets the
+   data-print-area attribute on its outer wrapper. */
+@media print {
+	@page {
+		size: A4;
+		margin: 16mm 14mm;
+	}
+	html,
+	body {
+		background: white !important;
+		color: black !important;
+		height: auto !important;
+		overflow: visible !important;
+	}
+	body * {
+		visibility: hidden !important;
+	}
+	[data-print-area],
+	[data-print-area] * {
+		visibility: visible !important;
+	}
+	[data-print-area] {
+		position: absolute !important;
+		top: 0;
+		left: 0;
+		right: 0;
+		width: 100% !important;
+		max-width: none !important;
+		padding: 0 !important;
+		margin: 0 !important;
+		background: white !important;
+		color: black !important;
+		font-size: 11pt;
+	}
+	/* Hide elements explicitly marked as no-print (e.g., the export button) */
+	[data-print-hide] {
+		display: none !important;
+	}
+	/* Avoid awkward page breaks inside report sections */
+	[data-print-area] section,
+	[data-print-area] table,
+	[data-print-area] ol,
+	[data-print-area] ul {
+		break-inside: avoid;
+	}
+	[data-print-area] table {
+		page-break-inside: auto;
+	}
+	[data-print-area] tr {
+		page-break-inside: avoid;
+	}
+}

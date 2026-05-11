@@ -121,13 +121,78 @@ const LIPID_PRESET: MarkerInput[] = [
 	{ id: "4", name: "Triglycerides", value: "180", unit: "mg/dL" },
 ];
 
+type Language = "en" | "vi";
+
+const T = {
+	en: {
+		description:
+			"CBC/BMP/CMP/Lipid panel analysis with critical-value flagging, age/sex-adjusted reference ranges, and clinical interpretation guidelines.",
+		age: "Age",
+		gender: "Gender",
+		male: "Male",
+		female: "Female",
+		marker: "Marker",
+		value: "Value",
+		unit: "Unit",
+		addMarker: "+ Add Marker",
+		analyzing: "Analyzing...",
+		analyzeBtn: "Analyze Blood Panel",
+		summary: "Summary",
+		flags: "Flags",
+		markerDetails: "Marker Details",
+		ref: "Ref",
+		recommendations: "Recommendations",
+		emptyHint: (
+			<>
+				Select a panel preset or enter markers manually, then click{" "}
+				<strong>Analyze</strong>.
+			</>
+		),
+		addAtLeastOne: "Add at least one marker",
+		analyzed: (n: number) => `Analyzed ${n} markers`,
+		analysisFailed: "Analysis failed",
+		language: "Language",
+	},
+	vi: {
+		description:
+			"Phân tích xét nghiệm CBC/BMP/CMP/Lipid với cảnh báo giá trị nguy hiểm, khoảng tham chiếu theo tuổi/giới, và diễn giải lâm sàng.",
+		age: "Tuổi",
+		gender: "Giới tính",
+		male: "Nam",
+		female: "Nữ",
+		marker: "Chỉ số",
+		value: "Giá trị",
+		unit: "Đơn vị",
+		addMarker: "+ Thêm chỉ số",
+		analyzing: "Đang phân tích...",
+		analyzeBtn: "Phân tích kết quả xét nghiệm",
+		summary: "Tóm tắt",
+		flags: "Cảnh báo",
+		markerDetails: "Chi tiết chỉ số",
+		ref: "Tham chiếu",
+		recommendations: "Khuyến nghị",
+		emptyHint: (
+			<>
+				Chọn một bộ xét nghiệm có sẵn hoặc nhập chỉ số thủ công, sau đó nhấn{" "}
+				<strong>Phân tích</strong>.
+			</>
+		),
+		addAtLeastOne: "Hãy thêm ít nhất một chỉ số",
+		analyzed: (n: number) => `Đã phân tích ${n} chỉ số`,
+		analysisFailed: "Phân tích thất bại",
+		language: "Ngôn ngữ",
+	},
+} as const;
+
 const BloodPanelPage = () => {
 	const [markers, setMarkers] = useState<MarkerInput[]>([...CBC_PRESET]);
 	const [panelType, setPanelType] = useState("CBC");
 	const [age, setAge] = useState("45");
 	const [gender, setGender] = useState("male");
+	const [language, setLanguage] = useState<Language>("en");
 	const [isLoading, setIsLoading] = useState(false);
 	const [result, setResult] = useState<AnalysisResult | null>(null);
+	const t = T[language];
 
 	const loadPreset = (preset: MarkerInput[], type: string) => {
 		setMarkers([...preset]);
@@ -155,7 +220,7 @@ const BloodPanelPage = () => {
 	const handleAnalyze = async () => {
 		const valid = markers.filter((m) => m.name && m.value);
 		if (valid.length === 0) {
-			toast.error("Add at least one marker");
+			toast.error(t.addAtLeastOne);
 			return;
 		}
 		setIsLoading(true);
@@ -176,14 +241,15 @@ const BloodPanelPage = () => {
 					patient_age: age ? Number.parseInt(age, 10) : null,
 					patient_gender: gender || null,
 					panel_type: panelType,
+					language,
 				}),
 			});
 			if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
 			const data: AnalysisResult = await resp.json();
 			setResult(data);
-			toast.success(`Analyzed ${data.markers_analyzed} markers`);
+			toast.success(t.analyzed(data.markers_analyzed));
 		} catch (err) {
-			toast.error(err instanceof Error ? err.message : "Analysis failed");
+			toast.error(err instanceof Error ? err.message : t.analysisFailed);
 		} finally {
 			setIsLoading(false);
 		}
@@ -192,11 +258,7 @@ const BloodPanelPage = () => {
 	return (
 		<DashboardLayout pageTitle="Blood Panel Analyzer">
 			<DemoPageShell>
-				<DemoPageDescription>
-					CBC/BMP/CMP/Lipid panel analysis with critical-value flagging,
-					age/sex-adjusted reference ranges, and clinical interpretation
-					guidelines.
-				</DemoPageDescription>
+				<DemoPageDescription>{t.description}</DemoPageDescription>
 				<DemoToolbar
 					start={
 						<div className="flex items-center gap-1.5">
@@ -219,15 +281,27 @@ const BloodPanelPage = () => {
 						</div>
 					}
 					end={
-						<ViewCodeDialog
-							endpoint={API_ROUTES.SERVICES.BLOOD_PANEL_ANALYZE}
-							method="POST"
-							body={{
-								markers: [{ name: "Hemoglobin", value: 14.2, unit: "g/dL" }],
-								panel_type: "CBC",
-							}}
-							description="Analyze blood panel markers with AI-powered interpretation"
-						/>
+						<div className="flex items-center gap-2">
+							<select
+								aria-label={t.language}
+								value={language}
+								onChange={(e) => setLanguage(e.target.value as Language)}
+								className="rounded-md border px-2 py-1 text-xs bg-background h-8"
+							>
+								<option value="en">EN</option>
+								<option value="vi">VI</option>
+							</select>
+							<ViewCodeDialog
+								endpoint={API_ROUTES.SERVICES.BLOOD_PANEL_ANALYZE}
+								method="POST"
+								body={{
+									markers: [{ name: "Hemoglobin", value: 14.2, unit: "g/dL" }],
+									panel_type: "CBC",
+									language,
+								}}
+								description="Analyze blood panel markers with AI-powered interpretation"
+							/>
+						</div>
 					}
 				/>
 
@@ -241,7 +315,7 @@ const BloodPanelPage = () => {
 											className="text-xs text-muted-foreground"
 											htmlFor="bp-age"
 										>
-											Age
+											{t.age}
 										</label>
 										<input
 											id="bp-age"
@@ -256,7 +330,7 @@ const BloodPanelPage = () => {
 											className="text-xs text-muted-foreground"
 											htmlFor="bp-gender"
 										>
-											Gender
+											{t.gender}
 										</label>
 										<select
 											id="bp-gender"
@@ -264,8 +338,8 @@ const BloodPanelPage = () => {
 											onChange={(e) => setGender(e.target.value)}
 											className="w-full rounded-md border px-3 py-1.5 text-sm bg-background"
 										>
-											<option value="male">Male</option>
-											<option value="female">Female</option>
+											<option value="male">{t.male}</option>
+											<option value="female">{t.female}</option>
 										</select>
 									</div>
 								</div>
@@ -282,7 +356,7 @@ const BloodPanelPage = () => {
 											onChange={(e) =>
 												updateMarker(m.id, "name", e.target.value)
 											}
-											placeholder="Marker"
+											placeholder={t.marker}
 											className="rounded-md border px-2 py-1.5 text-sm bg-background"
 										/>
 										<input
@@ -290,7 +364,7 @@ const BloodPanelPage = () => {
 											onChange={(e) =>
 												updateMarker(m.id, "value", e.target.value)
 											}
-											placeholder="Value"
+											placeholder={t.value}
 											className="rounded-md border px-2 py-1.5 text-sm bg-background text-right"
 										/>
 										<input
@@ -298,7 +372,7 @@ const BloodPanelPage = () => {
 											onChange={(e) =>
 												updateMarker(m.id, "unit", e.target.value)
 											}
-											placeholder="Unit"
+											placeholder={t.unit}
 											className="rounded-md border px-2 py-1.5 text-sm bg-background"
 										/>
 										<button
@@ -316,7 +390,7 @@ const BloodPanelPage = () => {
 									onClick={addMarker}
 									className="w-full"
 								>
-									+ Add Marker
+									{t.addMarker}
 								</Button>
 							</div>
 
@@ -326,7 +400,7 @@ const BloodPanelPage = () => {
 									disabled={isLoading}
 									className="w-full"
 								>
-									{isLoading ? "Analyzing..." : "Analyze Blood Panel"}
+									{isLoading ? t.analyzing : t.analyzeBtn}
 								</Button>
 							</div>
 						</>
@@ -336,7 +410,7 @@ const BloodPanelPage = () => {
 							<div className="flex-1 overflow-y-auto p-4 space-y-4">
 								{/* Summary */}
 								<div className="rounded-md border p-4">
-									<span className="text-sm font-medium">Summary</span>
+									<span className="text-sm font-medium">{t.summary}</span>
 									<p className="text-sm mt-1 text-muted-foreground leading-relaxed">
 										{result.summary}
 									</p>
@@ -346,7 +420,7 @@ const BloodPanelPage = () => {
 								{result.flags.length > 0 && (
 									<div className="rounded-md border border-amber-500/30 bg-amber-500/5 p-4">
 										<span className="text-sm font-medium text-amber-500">
-											Flags ({result.flags.length})
+											{t.flags} ({result.flags.length})
 										</span>
 										<ul className="mt-1 space-y-1">
 											{result.flags.map((f, i) => (
@@ -360,7 +434,7 @@ const BloodPanelPage = () => {
 
 								{/* Marker results */}
 								<div className="space-y-2">
-									<span className="text-sm font-medium">Marker Details</span>
+									<span className="text-sm font-medium">{t.markerDetails}</span>
 									{result.results.map((r, i) => (
 										<div
 											key={i}
@@ -380,7 +454,7 @@ const BloodPanelPage = () => {
 												</div>
 											</div>
 											<div className="text-xs text-muted-foreground mt-1">
-												Ref: {r.reference_range}
+												{t.ref}: {r.reference_range}
 											</div>
 											<div className="text-xs mt-1">{r.interpretation}</div>
 											{r.status !== "NORMAL" && (
@@ -395,7 +469,9 @@ const BloodPanelPage = () => {
 								{/* Recommendations */}
 								{result.recommendations.length > 0 && (
 									<div className="rounded-md border p-4">
-										<span className="text-sm font-medium">Recommendations</span>
+										<span className="text-sm font-medium">
+											{t.recommendations}
+										</span>
 										<ul className="mt-2 space-y-1">
 											{result.recommendations.map((r, i) => (
 												<li key={i} className="text-xs text-muted-foreground">
@@ -408,15 +484,7 @@ const BloodPanelPage = () => {
 								<RawResponseViewer data={result} />
 							</div>
 						) : (
-							<DemoEmptyState
-								icon={DropletIcon}
-								description={
-									<>
-										Select a panel preset or enter markers manually, then click{" "}
-										<strong>Analyze</strong>.
-									</>
-								}
-							/>
+							<DemoEmptyState icon={DropletIcon} description={t.emptyHint} />
 						)
 					}
 				/>

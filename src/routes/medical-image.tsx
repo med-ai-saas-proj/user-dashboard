@@ -40,30 +40,94 @@ const findingLocation = (f: Finding): string | undefined =>
 const findingSeverity = (f: Finding): string | undefined =>
 	typeof f === "string" ? undefined : f.severity;
 
-const SAMPLE_IMAGES: { label: string; modality: string; src: string }[] = [
-	{
-		label: "Chest X-ray",
-		modality: "X-Ray",
-		src: "/sample-images/chest-xray.jpg",
+type Language = "en" | "vi";
+
+const T = {
+	en: {
+		description:
+			"AI-powered image analysis using Qwen3.5-4B (self-hosted GGUF on Cloud Run L4 GPU). Extract findings, body parts, and differential diagnoses from radiology, dermatology, and ophthalmology images.",
+		uploadTitle: "Upload Medical Image",
+		clickToSelect: "Click to select a medical image",
+		acceptedFormats: "JPEG, PNG, DICOM",
+		changeImage: "Change image",
+		analyze: "Analyze Image",
+		analyzing: "Analyzing...",
+		analysisErrors: "Analysis errors",
+		descriptionLabel: "Description",
+		emptyDescription:
+			"(No description returned. The model may have returned an unexpected JSON shape — try a different image.)",
+		findings: "Findings",
+		location: "Location",
+		severity: "Severity",
+		confidence: "Confidence",
+		suggestedDiagnoses: "Suggested Diagnoses",
+		emptyHint: (
+			<>
+				Upload a medical image on the left and click{" "}
+				<strong>Analyze Image</strong> to see findings here.
+			</>
+		),
+		analysisComplete: "Image analysis complete",
+		analysisFailed: "Analysis failed",
+		sampleHeader: "Or try a sample",
+		samples: {
+			"Chest X-ray": { label: "Chest X-ray", modality: "X-Ray" },
+			"Skin lesion": { label: "Skin lesion", modality: "Dermatology" },
+			"Retinal scan": { label: "Retinal scan", modality: "Fundus" },
+		},
+		loadSampleError: (label: string) => `Could not load sample: ${label}`,
 	},
-	{
-		label: "Skin lesion",
-		modality: "Dermatology",
-		src: "/sample-images/skin-lesion.jpg",
+	vi: {
+		description:
+			"Phân tích hình ảnh bằng AI dùng Qwen3.5-4B (GGUF tự lưu trữ trên Cloud Run L4 GPU). Trích xuất phát hiện, vùng cơ thể và chẩn đoán phân biệt từ ảnh X-quang, da liễu và nhãn khoa.",
+		uploadTitle: "Tải lên hình ảnh y khoa",
+		clickToSelect: "Nhấn để chọn hình ảnh y khoa",
+		acceptedFormats: "JPEG, PNG, DICOM",
+		changeImage: "Đổi hình",
+		analyze: "Phân tích hình ảnh",
+		analyzing: "Đang phân tích...",
+		analysisErrors: "Lỗi phân tích",
+		descriptionLabel: "Mô tả",
+		emptyDescription:
+			"(Không có mô tả. Mô hình có thể trả về định dạng JSON không mong đợi — hãy thử ảnh khác.)",
+		findings: "Phát hiện",
+		location: "Vị trí",
+		severity: "Mức độ",
+		confidence: "Độ tin cậy",
+		suggestedDiagnoses: "Chẩn đoán đề xuất",
+		emptyHint: (
+			<>
+				Tải lên hình ảnh y khoa ở bên trái và nhấn{" "}
+				<strong>Phân tích hình ảnh</strong> để xem kết quả ở đây.
+			</>
+		),
+		analysisComplete: "Phân tích hình ảnh hoàn tất",
+		analysisFailed: "Phân tích thất bại",
+		sampleHeader: "Hoặc thử ảnh mẫu",
+		samples: {
+			"Chest X-ray": { label: "X-quang ngực", modality: "X-Quang" },
+			"Skin lesion": { label: "Tổn thương da", modality: "Da liễu" },
+			"Retinal scan": { label: "Soi đáy mắt", modality: "Nhãn khoa" },
+		},
+		loadSampleError: (label: string) => `Không thể tải mẫu: ${label}`,
 	},
-	{
-		label: "Retinal scan",
-		modality: "Fundus",
-		src: "/sample-images/retinal-scan.jpg",
-	},
-];
+} as const;
+
+const SAMPLE_IMAGES: { key: keyof (typeof T)["en"]["samples"]; src: string }[] =
+	[
+		{ key: "Chest X-ray", src: "/sample-images/chest-xray.jpg" },
+		{ key: "Skin lesion", src: "/sample-images/skin-lesion.jpg" },
+		{ key: "Retinal scan", src: "/sample-images/retinal-scan.jpg" },
+	];
 
 const MedicalImagePage = () => {
 	const [isLoading, setIsLoading] = useState(false);
 	const [file, setFile] = useState<File | null>(null);
 	const [preview, setPreview] = useState<string | null>(null);
 	const [result, setResult] = useState<ImageDescribeResponse | null>(null);
+	const [language, setLanguage] = useState<Language>("en");
 	const fileInputRef = useRef<HTMLInputElement>(null);
+	const t = T[language];
 
 	const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const f = e.target.files?.[0] ?? null;
@@ -93,7 +157,7 @@ const MedicalImagePage = () => {
 			reader.onload = (ev) => setPreview(ev.target?.result as string);
 			reader.readAsDataURL(sampleFile);
 		} catch {
-			toast.error(`Could not load sample: ${sample.label}`);
+			toast.error(t.loadSampleError(t.samples[sample.key].label));
 		}
 	};
 
@@ -105,6 +169,7 @@ const MedicalImagePage = () => {
 		try {
 			const formData = new FormData();
 			formData.append("file", file);
+			formData.append("language", language);
 
 			const headers = await getAuthHeaders(API_ROUTES.SERVICES.MEDICAL_IMAGE);
 			delete headers["Content-Type"];
@@ -117,9 +182,9 @@ const MedicalImagePage = () => {
 				throw new Error(`HTTP ${resp.status}: ${await resp.text()}`);
 			const json: ImageDescribeResponse = await resp.json();
 			setResult(json);
-			toast.success("Image analysis complete");
+			toast.success(t.analysisComplete);
 		} catch (err) {
-			toast.error(err instanceof Error ? err.message : "Analysis failed");
+			toast.error(err instanceof Error ? err.message : t.analysisFailed);
 		} finally {
 			setIsLoading(false);
 		}
@@ -128,25 +193,32 @@ const MedicalImagePage = () => {
 	return (
 		<DashboardLayout pageTitle="Medical Image">
 			<DemoPageShell>
-				<DemoPageDescription>
-					AI-powered image analysis using Qwen3.5-4B (self-hosted GGUF on Cloud
-					Run L4 GPU). Extract findings, body parts, and differential diagnoses
-					from radiology, dermatology, and ophthalmology images.
-				</DemoPageDescription>
+				<DemoPageDescription>{t.description}</DemoPageDescription>
 				<DemoToolbar
 					end={
-						<ViewCodeDialog
-							endpoint={API_ROUTES.SERVICES.MEDICAL_IMAGE}
-							method="POST"
-							contentType="multipart/form-data"
-							description="Analyze medical image and extract findings"
-						/>
+						<div className="flex items-center gap-2">
+							<select
+								aria-label="Language"
+								value={language}
+								onChange={(e) => setLanguage(e.target.value as Language)}
+								className="rounded-md border px-2 py-1 text-xs bg-background h-8"
+							>
+								<option value="en">EN</option>
+								<option value="vi">VI</option>
+							</select>
+							<ViewCodeDialog
+								endpoint={API_ROUTES.SERVICES.MEDICAL_IMAGE}
+								method="POST"
+								contentType="multipart/form-data"
+								description="Analyze medical image and extract findings"
+							/>
+						</div>
 					}
 				/>
 				<DemoSplitLayout
 					left={
 						<div className="flex flex-col overflow-hidden p-4 space-y-4 h-full">
-							<span className="text-sm font-medium">Upload Medical Image</span>
+							<span className="text-sm font-medium">{t.uploadTitle}</span>
 							<button
 								type="button"
 								className="w-full border-2 border-dashed rounded-lg p-6 text-center cursor-pointer hover:border-primary/50 transition-colors"
@@ -182,10 +254,10 @@ const MedicalImagePage = () => {
 											<path d="M36 28l-8-8-16 16" />
 										</svg>
 										<p className="text-sm text-muted-foreground">
-											Click to select a medical image
+											{t.clickToSelect}
 										</p>
 										<p className="text-xs text-muted-foreground mt-1">
-											JPEG, PNG, DICOM
+											{t.acceptedFormats}
 										</p>
 									</>
 								)}
@@ -208,7 +280,7 @@ const MedicalImagePage = () => {
 										}}
 									>
 										<ImageIcon className="h-3 w-3 mr-1" />
-										Change image
+										{t.changeImage}
 									</Button>
 								</div>
 							)}
@@ -217,40 +289,44 @@ const MedicalImagePage = () => {
 								onClick={handleDescribe}
 								disabled={isLoading || !file}
 							>
-								{isLoading ? "Analyzing..." : "Analyze Image"}
+								{isLoading ? t.analyzing : t.analyze}
 							</Button>
 							<div>
 								<div className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground mb-2">
-									Or try a sample
+									{t.sampleHeader}
 								</div>
 								<div className="grid grid-cols-3 gap-2">
-									{SAMPLE_IMAGES.map((s) => (
-										<button
-											key={s.label}
-											type="button"
-											onClick={() => loadSample(s)}
-											className="group relative aspect-square rounded-md border overflow-hidden hover:border-primary transition-colors bg-muted"
-											title={`Load ${s.label}`}
-										>
-											<img
-												src={s.src}
-												alt={s.label}
-												className="w-full h-full object-cover"
-												onError={(e) => {
-													(e.currentTarget as HTMLImageElement).style.display =
-														"none";
-												}}
-											/>
-											<div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent p-1.5">
-												<div className="text-[10px] font-medium text-white leading-tight">
-													{s.label}
+									{SAMPLE_IMAGES.map((s) => {
+										const sampleT = t.samples[s.key];
+										return (
+											<button
+												key={s.key}
+												type="button"
+												onClick={() => loadSample(s)}
+												className="group relative aspect-square rounded-md border overflow-hidden hover:border-primary transition-colors bg-muted"
+												title={sampleT.label}
+											>
+												<img
+													src={s.src}
+													alt={sampleT.label}
+													className="w-full h-full object-cover"
+													onError={(e) => {
+														(
+															e.currentTarget as HTMLImageElement
+														).style.display = "none";
+													}}
+												/>
+												<div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent p-1.5">
+													<div className="text-[10px] font-medium text-white leading-tight">
+														{sampleT.label}
+													</div>
+													<div className="text-[9px] text-white/70 leading-tight">
+														{sampleT.modality}
+													</div>
 												</div>
-												<div className="text-[9px] text-white/70 leading-tight">
-													{s.modality}
-												</div>
-											</div>
-										</button>
-									))}
+											</button>
+										);
+									})}
 								</div>
 							</div>
 						</div>
@@ -276,7 +352,7 @@ const MedicalImagePage = () => {
 								{result.errors && result.errors.length > 0 && (
 									<div className="rounded-md border border-red-300 bg-red-50 dark:bg-red-950/30 dark:border-red-800/50 p-3 text-sm">
 										<p className="font-medium text-red-900 dark:text-red-200">
-											Analysis errors
+											{t.analysisErrors}
 										</p>
 										<ul className="mt-1 text-xs text-red-800 dark:text-red-300 list-disc list-inside">
 											{result.errors.map((e, i) => (
@@ -287,16 +363,17 @@ const MedicalImagePage = () => {
 								)}
 
 								<div>
-									<span className="text-sm font-medium">Description</span>
+									<span className="text-sm font-medium">
+										{t.descriptionLabel}
+									</span>
 									<p className="text-sm mt-1 leading-relaxed whitespace-pre-wrap">
-										{result.description?.trim() ||
-											"(No description returned. The model may have returned an unexpected JSON shape — try a different image.)"}
+										{result.description?.trim() || t.emptyDescription}
 									</p>
 								</div>
 
 								{result.findings && result.findings.length > 0 && (
 									<div>
-										<span className="text-sm font-medium">Findings</span>
+										<span className="text-sm font-medium">{t.findings}</span>
 										<div className="mt-2 space-y-2">
 											{result.findings.map((f, i) => {
 												const text = findingText(f);
@@ -310,8 +387,16 @@ const MedicalImagePage = () => {
 														<p>{text}</p>
 														{(loc || sev) && (
 															<div className="flex gap-2 mt-1 text-xs text-muted-foreground">
-																{loc && <span>Location: {loc}</span>}
-																{sev && <span>Severity: {sev}</span>}
+																{loc && (
+																	<span>
+																		{t.location}: {loc}
+																	</span>
+																)}
+																{sev && (
+																	<span>
+																		{t.severity}: {sev}
+																	</span>
+																)}
 															</div>
 														)}
 													</div>
@@ -323,7 +408,7 @@ const MedicalImagePage = () => {
 
 								{result.confidence && (
 									<div className="text-xs text-muted-foreground">
-										Confidence:{" "}
+										{t.confidence}:{" "}
 										<span className="font-medium">{result.confidence}</span>
 									</div>
 								)}
@@ -332,7 +417,7 @@ const MedicalImagePage = () => {
 									result.suggested_diagnoses.length > 0 && (
 										<div>
 											<span className="text-sm font-medium">
-												Suggested Diagnoses
+												{t.suggestedDiagnoses}
 											</span>
 											<ul className="mt-2 space-y-1">
 												{result.suggested_diagnoses.map((d, i) => (
@@ -351,15 +436,7 @@ const MedicalImagePage = () => {
 								<RawResponseViewer data={result} />
 							</div>
 						) : (
-							<DemoEmptyState
-								icon={ImageIcon}
-								description={
-									<>
-										Upload a medical image on the left and click{" "}
-										<strong>Analyze Image</strong> to see findings here.
-									</>
-								}
-							/>
+							<DemoEmptyState icon={ImageIcon} description={t.emptyHint} />
 						)
 					}
 				/>

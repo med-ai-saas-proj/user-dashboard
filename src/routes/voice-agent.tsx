@@ -116,7 +116,11 @@ const VoiceAgentPage = () => {
 				playbackTimeRef.current = ctx.currentTime;
 			}
 			const buf = ctx.createBuffer(1, pcmFloat32.length, sampleRate);
-			buf.copyToChannel(pcmFloat32, 0);
+			// `copyToChannel` expects a Float32Array<ArrayBuffer> specifically;
+			// the view we get from the WS frame is typed as ArrayBufferLike
+			// (could be SharedArrayBuffer in theory). A fresh copy normalizes
+			// the type and decouples our buffer from the WS receive buffer.
+			buf.copyToChannel(new Float32Array(pcmFloat32), 0);
 			const src = ctx.createBufferSource();
 			src.buffer = buf;
 			src.connect(ctx.destination);

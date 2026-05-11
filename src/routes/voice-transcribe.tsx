@@ -284,10 +284,12 @@ const VoiceTranscribePage = () => {
 	return (
 		<DashboardLayout>
 			<div className="flex flex-col h-[calc(100vh-3.5rem)]">
-				<DemoPageDescription
-					title="Voice Transcribe"
-					hint="ASR: offline Vietnamese Zipformer · No LLM, no agent — transcript only"
-				/>
+				<DemoPageDescription>
+					Speech-to-text only — offline Vietnamese Zipformer ASR, no LLM, no
+					agent. Choose <strong>Dictation</strong> to record a clip and get the
+					full transcript, or <strong>Live captions</strong> to stream PCM
+					frames and see captions appear utterance by utterance.
+				</DemoPageDescription>
 
 				<div className="px-4 pb-2 flex items-center gap-3 border-b">
 					<span className="text-xs font-medium text-muted-foreground">

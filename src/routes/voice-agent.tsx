@@ -40,7 +40,14 @@ const VoiceAgentPage = () => {
 	const [interimUser, setInterimUser] = useState<string>("");
 	const [interimAssistant, setInterimAssistant] = useState<string>("");
 	const [turns, setTurns] = useState<AgentTurn[]>([]);
-	const [ttsMode, setTtsMode] = useState<TtsMode>("server");
+	// Default to Browser TTS: server-side VieNeu on CPU is 6-18s per
+	// sentence which feels broken in conversation. Users can opt into
+	// the higher-quality Server (VieNeu) mode when they want to compare.
+	const [ttsMode, setTtsMode] = useState<TtsMode>("browser");
+	// True between the LLM reply finishing and the last audio_chunk
+	// arriving when server TTS is selected. Used to show a status hint
+	// and guard against the user clicking Disconnect mid-synthesis.
+	const [serverAudioPending, setServerAudioPending] = useState(false);
 
 	const wsRef = useRef<WebSocket | null>(null);
 	const audioCtxRef = useRef<AudioContext | null>(null);
@@ -59,7 +66,11 @@ const VoiceAgentPage = () => {
 	const interimAssistantRef = useRef<string>("");
 	// Same reason for ttsMode — handlers bound at connect time would
 	// otherwise see a stale value if the user toggles the radio mid-session.
-	const ttsModeRef = useRef<TtsMode>("server");
+	const ttsModeRef = useRef<TtsMode>("browser");
+	// Track how many audio_chunk frames are still expected. Incremented
+	// whenever a turn ends in server mode (we don't know the count a priori,
+	// so we just clear it when no chunks have arrived for ~5s — see effect).
+	const lastServerChunkAtRef = useRef<number>(0);
 
 	const log = useCallback((msg: string) => {
 		console.log("[voice-agent]", msg);
@@ -139,6 +150,7 @@ const VoiceAgentPage = () => {
 			const headerBytes = new Uint8Array(data, 4, headerLen);
 			const header = JSON.parse(new TextDecoder().decode(headerBytes));
 			if (header.type === "audio_chunk") {
+				lastServerChunkAtRef.current = Date.now();
 				const pcmStart = 4 + headerLen;
 				const pcm = new Float32Array(data, pcmStart);
 				playAudioChunk(pcm, header.sample_rate ?? 24000);
@@ -200,6 +212,17 @@ const VoiceAgentPage = () => {
 								at: Date.now(),
 							},
 						]);
+						// Server-side TTS keeps streaming audio_chunk frames for
+						// many seconds after turn_end. Mark a pending state so
+						// the UI can show a "synthesizing audio…" hint and warn
+						// before tearing the WS down.
+						if (
+							ttsModeRef.current === "server" &&
+							assistantText.trim().length > 0
+						) {
+							lastServerChunkAtRef.current = Date.now();
+							setServerAudioPending(true);
+						}
 					}
 					interimUserRef.current = "";
 					interimAssistantRef.current = "";
@@ -258,13 +281,23 @@ const VoiceAgentPage = () => {
 	}, [handleBinaryFrame, handleTextEvent, log]);
 
 	const disconnect = useCallback(() => {
+		// Server VieNeu can still be streaming audio_chunk frames for many
+		// seconds after the LLM reply finished. Warn before tearing the WS
+		// down so the user doesn't accidentally cut off their own audio.
+		if (serverAudioPending) {
+			const ok = window.confirm(
+				"Server (VieNeu) audio is still streaming. Disconnect now will cut off the rest of the spoken reply. Continue?"
+			);
+			if (!ok) return;
+		}
+		setServerAudioPending(false);
 		try {
 			wsRef.current?.send(JSON.stringify({ type: "stop" }));
 		} catch {}
 		wsRef.current?.close();
 		wsRef.current = null;
 		teardown();
-	}, [teardown]);
+	}, [teardown, serverAudioPending]);
 
 	const startMic = useCallback(async () => {
 		if (!wsRef.current || wsRef.current.readyState !== WebSocket.OPEN) {
@@ -335,7 +368,21 @@ const VoiceAgentPage = () => {
 		// don't have browser TTS speaking after the user moves to server TTS
 		// (or vice versa).
 		cancelBrowserTts();
+		if (ttsMode !== "server") setServerAudioPending(false);
 	}, [ttsMode, cancelBrowserTts]);
+
+	// Clear the "server audio pending" hint after ~5s of audio_chunk silence.
+	// The server doesn't tell us how many chunks are coming, so we just watch
+	// for the gap.
+	useEffect(() => {
+		if (!serverAudioPending) return;
+		const id = window.setInterval(() => {
+			if (Date.now() - lastServerChunkAtRef.current > 5000) {
+				setServerAudioPending(false);
+			}
+		}, 500);
+		return () => window.clearInterval(id);
+	}, [serverAudioPending]);
 
 	useEffect(() => {
 		return () => {
@@ -366,8 +413,9 @@ const VoiceAgentPage = () => {
 					Bidirectional Vietnamese voice agent — Zipformer ASR (offline), Azure
 					OpenAI LLM (streaming), optional VieNeu TTS. Click{" "}
 					<strong>Connect</strong>, then <strong>Start mic</strong> and speak.
-					The agent responds with streaming text and (when TTS is on)
-					synthesized audio.
+					Pick <strong>Browser</strong> TTS for instant low-quality playback, or{" "}
+					<strong>Server (VieNeu)</strong> for higher quality (note: ~5-15s per
+					sentence on CPU — keep the tab open while it synthesizes).
 				</DemoPageDescription>
 
 				<div className="flex items-center justify-between px-4 py-3 border-b bg-muted/30 flex-wrap gap-2">
@@ -439,19 +487,22 @@ const VoiceAgentPage = () => {
 								<input
 									type="radio"
 									name="tts-mode"
-									checked={ttsMode === "server"}
-									onChange={() => setTtsMode("server")}
-								/>
-								Server (VieNeu)
-							</label>
-							<label className="flex items-center gap-1">
-								<input
-									type="radio"
-									name="tts-mode"
 									checked={ttsMode === "browser"}
 									onChange={() => setTtsMode("browser")}
 								/>
-								Browser
+								Browser (instant)
+							</label>
+							<label
+								className="flex items-center gap-1"
+								title="Higher quality but 6-18s per sentence on CPU; not real-time"
+							>
+								<input
+									type="radio"
+									name="tts-mode"
+									checked={ttsMode === "server"}
+									onChange={() => setTtsMode("server")}
+								/>
+								Server (VieNeu, slow)
 							</label>
 							<label className="flex items-center gap-1">
 								<input
@@ -462,6 +513,15 @@ const VoiceAgentPage = () => {
 								/>
 								Off
 							</label>
+							{serverAudioPending && (
+								<span className="ml-2 inline-flex items-center gap-1 text-amber-700 dark:text-amber-300">
+									<span className="relative flex h-2 w-2">
+										<span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-amber-400 opacity-75" />
+										<span className="relative inline-flex h-2 w-2 rounded-full bg-amber-500" />
+									</span>
+									Synthesizing audio…
+								</span>
+							)}
 						</div>
 					</div>
 				</div>

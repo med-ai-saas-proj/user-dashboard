@@ -8,6 +8,7 @@
 // Both reuse the same offline Vietnamese Zipformer ASR that powers Voice Agent,
 // but neither talks to the LLM. Output is pure transcript text.
 
+import type React from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { DemoEmptyState, DemoPageDescription } from "@/components/demo";
@@ -86,6 +87,46 @@ const VoiceTranscribePage = () => {
 		}
 	}, []);
 
+	// Upload a Blob (from a live recording) or a File (from a file picker) to
+	// the /transcribe endpoint and stash the result. Filename is only used by
+	// the server for content-type sniffing and error messages.
+	const sendForTranscription = useCallback(
+		async (blob: Blob | File, filename: string) => {
+			if (blob.size === 0) {
+				toast.error("Empty audio");
+				return;
+			}
+			setIsTranscribing(true);
+			setDictationText("");
+			setDictationDuration(null);
+			try {
+				const fd = new FormData();
+				fd.append("file", blob, filename);
+				const resp = await fetch(API_ROUTES.SERVICES.VOICE_TRANSCRIBE_UPLOAD, {
+					method: "POST",
+					body: fd,
+				});
+				if (!resp.ok) {
+					const txt = await resp.text();
+					toast.error(`Transcribe failed: ${resp.status} ${txt.slice(0, 200)}`);
+					return;
+				}
+				const j = (await resp.json()) as {
+					success: boolean;
+					text: string;
+					duration_seconds: number;
+				};
+				setDictationText(j.text || "");
+				setDictationDuration(j.duration_seconds);
+			} catch (err) {
+				toast.error(`Transcribe error: ${String(err)}`);
+			} finally {
+				setIsTranscribing(false);
+			}
+		},
+		[]
+	);
+
 	const stopDictation = useCallback(async () => {
 		const rec = mediaRecorderRef.current;
 		if (!rec) return;
@@ -103,39 +144,22 @@ const VoiceTranscribePage = () => {
 		const blob = new Blob(recordedChunksRef.current, {
 			type: rec.mimeType || "audio/webm",
 		});
-		if (blob.size === 0) {
-			toast.error("Empty recording");
-			return;
-		}
-		setIsTranscribing(true);
-		try {
-			const filename = blob.type.includes("mp4")
-				? "dictation.m4a"
-				: "dictation.webm";
-			const fd = new FormData();
-			fd.append("file", blob, filename);
-			const resp = await fetch(API_ROUTES.SERVICES.VOICE_TRANSCRIBE_UPLOAD, {
-				method: "POST",
-				body: fd,
-			});
-			if (!resp.ok) {
-				const txt = await resp.text();
-				toast.error(`Transcribe failed: ${resp.status} ${txt.slice(0, 120)}`);
-				return;
-			}
-			const j = (await resp.json()) as {
-				success: boolean;
-				text: string;
-				duration_seconds: number;
-			};
-			setDictationText(j.text || "");
-			setDictationDuration(j.duration_seconds);
-		} catch (err) {
-			toast.error(`Transcribe error: ${String(err)}`);
-		} finally {
-			setIsTranscribing(false);
-		}
-	}, []);
+		const filename = blob.type.includes("mp4")
+			? "dictation.m4a"
+			: "dictation.webm";
+		await sendForTranscription(blob, filename);
+	}, [sendForTranscription]);
+
+	const handleFileUpload = useCallback(
+		async (e: React.ChangeEvent<HTMLInputElement>) => {
+			const file = e.target.files?.[0];
+			// Allow re-selecting the same file on a subsequent click.
+			e.target.value = "";
+			if (!file) return;
+			await sendForTranscription(file, file.name);
+		},
+		[sendForTranscription]
+	);
 
 	// Update the elapsed-time counter while recording.
 	useEffect(() => {
@@ -337,6 +361,29 @@ const VoiceTranscribePage = () => {
 									Stop & transcribe
 								</Button>
 							)}
+							{!isRecording && (
+								<>
+									<span className="text-[11px] text-muted-foreground">or</span>
+									<label className="inline-flex">
+										<input
+											type="file"
+											accept="audio/*,video/webm,video/mp4"
+											className="hidden"
+											onChange={handleFileUpload}
+											disabled={isTranscribing}
+										/>
+										<span
+											className={`inline-flex items-center h-8 px-3 text-xs rounded-md border bg-background hover:bg-accent transition-colors ${
+												isTranscribing
+													? "opacity-50 cursor-not-allowed"
+													: "cursor-pointer"
+											}`}
+										>
+											Upload audio file
+										</span>
+									</label>
+								</>
+							)}
 							{isRecording && (
 								<span className="text-[12px] text-amber-700 dark:text-amber-300">
 									• Recording {recordElapsed.toFixed(1)}s
@@ -364,8 +411,10 @@ const VoiceTranscribePage = () => {
 								description={
 									<>
 										Click <strong>Start recording</strong>, speak in Vietnamese,
-										then <strong>Stop & transcribe</strong>. The full transcript
-										will appear below.
+										then <strong>Stop & transcribe</strong> — or{" "}
+										<strong>Upload audio file</strong> (WAV, MP3, M4A, WebM,
+										OGG) to transcribe an existing recording. The full
+										transcript will appear below.
 									</>
 								}
 								hint="Best for short notes, dictation, or single-take recordings."

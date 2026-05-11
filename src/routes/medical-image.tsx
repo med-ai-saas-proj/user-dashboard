@@ -1,5 +1,6 @@
 import { ImageIcon } from "lucide-react";
 import { useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { ApiTopology, TOPOLOGIES } from "@/components/api-topology";
 import {
@@ -121,11 +122,12 @@ const SAMPLE_IMAGES: { key: keyof (typeof T)["en"]["samples"]; src: string }[] =
 	];
 
 const MedicalImagePage = () => {
+	const { i18n } = useTranslation();
+	const language: Language = i18n.language?.startsWith("vi") ? "vi" : "en";
 	const [isLoading, setIsLoading] = useState(false);
 	const [file, setFile] = useState<File | null>(null);
 	const [preview, setPreview] = useState<string | null>(null);
 	const [result, setResult] = useState<ImageDescribeResponse | null>(null);
-	const [language, setLanguage] = useState<Language>("en");
 	const fileInputRef = useRef<HTMLInputElement>(null);
 	const t = T[language];
 
@@ -196,23 +198,12 @@ const MedicalImagePage = () => {
 				<DemoPageDescription>{t.description}</DemoPageDescription>
 				<DemoToolbar
 					end={
-						<div className="flex items-center gap-2">
-							<select
-								aria-label="Language"
-								value={language}
-								onChange={(e) => setLanguage(e.target.value as Language)}
-								className="rounded-md border px-2 py-1 text-xs bg-background h-8"
-							>
-								<option value="en">EN</option>
-								<option value="vi">VI</option>
-							</select>
-							<ViewCodeDialog
-								endpoint={API_ROUTES.SERVICES.MEDICAL_IMAGE}
-								method="POST"
-								contentType="multipart/form-data"
-								description="Analyze medical image and extract findings"
-							/>
-						</div>
+						<ViewCodeDialog
+							endpoint={API_ROUTES.SERVICES.MEDICAL_IMAGE}
+							method="POST"
+							contentType="multipart/form-data"
+							description="Analyze medical image and extract findings"
+						/>
 					}
 				/>
 				<DemoSplitLayout

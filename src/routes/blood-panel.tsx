@@ -1,5 +1,6 @@
 import { DropletIcon } from "lucide-react";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { toast } from "sonner";
 import { ApiTopology, TOPOLOGIES } from "@/components/api-topology";
 import {
@@ -185,11 +186,12 @@ const T = {
 } as const;
 
 const BloodPanelPage = () => {
+	const { i18n } = useTranslation();
+	const language: Language = i18n.language?.startsWith("vi") ? "vi" : "en";
 	const [markers, setMarkers] = useState<MarkerInput[]>([...CBC_PRESET]);
 	const [panelType, setPanelType] = useState("CBC");
 	const [age, setAge] = useState("45");
 	const [gender, setGender] = useState("male");
-	const [language, setLanguage] = useState<Language>("en");
 	const [isLoading, setIsLoading] = useState(false);
 	const [result, setResult] = useState<AnalysisResult | null>(null);
 	const t = T[language];
@@ -281,27 +283,16 @@ const BloodPanelPage = () => {
 						</div>
 					}
 					end={
-						<div className="flex items-center gap-2">
-							<select
-								aria-label={t.language}
-								value={language}
-								onChange={(e) => setLanguage(e.target.value as Language)}
-								className="rounded-md border px-2 py-1 text-xs bg-background h-8"
-							>
-								<option value="en">EN</option>
-								<option value="vi">VI</option>
-							</select>
-							<ViewCodeDialog
-								endpoint={API_ROUTES.SERVICES.BLOOD_PANEL_ANALYZE}
-								method="POST"
-								body={{
-									markers: [{ name: "Hemoglobin", value: 14.2, unit: "g/dL" }],
-									panel_type: "CBC",
-									language,
-								}}
-								description="Analyze blood panel markers with AI-powered interpretation"
-							/>
-						</div>
+						<ViewCodeDialog
+							endpoint={API_ROUTES.SERVICES.BLOOD_PANEL_ANALYZE}
+							method="POST"
+							body={{
+								markers: [{ name: "Hemoglobin", value: 14.2, unit: "g/dL" }],
+								panel_type: "CBC",
+								language,
+							}}
+							description="Analyze blood panel markers with AI-powered interpretation"
+						/>
 					}
 				/>
 

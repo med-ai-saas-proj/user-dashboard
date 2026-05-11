@@ -31,7 +31,9 @@ interface MarkerAnalysis {
 	status: string;
 	reference_range: string;
 	interpretation: string;
+	interpretation_vi?: string;
 	clinical_significance: string;
+	clinical_significance_vi?: string;
 }
 
 interface AnalysisResult {
@@ -40,9 +42,18 @@ interface AnalysisResult {
 	markers_analyzed: number;
 	results: MarkerAnalysis[];
 	summary: string;
+	summary_vi?: string;
 	flags: string[];
+	flags_vi?: string[];
 	recommendations: string[];
+	recommendations_vi?: string[];
 }
+
+const pickLocalized = (
+	en: string,
+	vi: string | undefined,
+	lang: "en" | "vi"
+) => (lang === "vi" && vi ? vi : en);
 
 const statusColor = (s: string) => {
 	const upper = s.toUpperCase();
@@ -243,7 +254,6 @@ const BloodPanelPage = () => {
 					patient_age: age ? Number.parseInt(age, 10) : null,
 					patient_gender: gender || null,
 					panel_type: panelType,
-					language,
 				}),
 			});
 			if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
@@ -289,9 +299,8 @@ const BloodPanelPage = () => {
 							body={{
 								markers: [{ name: "Hemoglobin", value: 14.2, unit: "g/dL" }],
 								panel_type: "CBC",
-								language,
 							}}
-							description="Analyze blood panel markers with AI-powered interpretation"
+							description="Bilingual response: summary/summary_vi, flags/flags_vi, recommendations/recommendations_vi, plus interpretation_vi & clinical_significance_vi per marker"
 						/>
 					}
 				/>
@@ -398,82 +407,121 @@ const BloodPanelPage = () => {
 					}
 					right={
 						result ? (
-							<div className="flex-1 overflow-y-auto p-4 space-y-4">
-								{/* Summary */}
-								<div className="rounded-md border p-4">
-									<span className="text-sm font-medium">{t.summary}</span>
-									<p className="text-sm mt-1 text-muted-foreground leading-relaxed">
-										{result.summary}
-									</p>
-								</div>
-
-								{/* Flags */}
-								{result.flags.length > 0 && (
-									<div className="rounded-md border border-amber-500/30 bg-amber-500/5 p-4">
-										<span className="text-sm font-medium text-amber-500">
-											{t.flags} ({result.flags.length})
-										</span>
-										<ul className="mt-1 space-y-1">
-											{result.flags.map((f, i) => (
-												<li key={i} className="text-xs text-muted-foreground">
-													{f}
-												</li>
-											))}
-										</ul>
-									</div>
-								)}
-
-								{/* Marker results */}
-								<div className="space-y-2">
-									<span className="text-sm font-medium">{t.markerDetails}</span>
-									{result.results.map((r, i) => (
-										<div
-											key={i}
-											className={`rounded-md border p-3 ${rowAccent(r.status)}`}
-										>
-											<div className="flex items-center justify-between">
-												<span className="text-sm font-medium">{r.name}</span>
-												<div className="flex items-center gap-2">
-													<span className="text-sm font-mono">
-														{r.value} {r.unit}
-													</span>
-													<span
-														className={`text-xs px-2 py-0.5 rounded-full font-medium ${statusColor(r.status)}`}
-													>
-														{r.status}
-													</span>
-												</div>
-											</div>
-											<div className="text-xs text-muted-foreground mt-1">
-												{t.ref}: {r.reference_range}
-											</div>
-											<div className="text-xs mt-1">{r.interpretation}</div>
-											{r.status !== "NORMAL" && (
-												<div className="text-xs text-muted-foreground mt-0.5 italic">
-													{r.clinical_significance}
-												</div>
-											)}
+							(() => {
+								const summary = pickLocalized(
+									result.summary,
+									result.summary_vi,
+									language
+								);
+								const flagList =
+									language === "vi" && result.flags_vi
+										? result.flags_vi
+										: result.flags;
+								const recList =
+									language === "vi" && result.recommendations_vi
+										? result.recommendations_vi
+										: result.recommendations;
+								return (
+									<div className="flex-1 overflow-y-auto p-4 space-y-4">
+										{/* Summary */}
+										<div className="rounded-md border p-4">
+											<span className="text-sm font-medium">{t.summary}</span>
+											<p className="text-sm mt-1 text-muted-foreground leading-relaxed">
+												{summary}
+											</p>
 										</div>
-									))}
-								</div>
 
-								{/* Recommendations */}
-								{result.recommendations.length > 0 && (
-									<div className="rounded-md border p-4">
-										<span className="text-sm font-medium">
-											{t.recommendations}
-										</span>
-										<ul className="mt-2 space-y-1">
-											{result.recommendations.map((r, i) => (
-												<li key={i} className="text-xs text-muted-foreground">
-													{r}
-												</li>
-											))}
-										</ul>
+										{/* Flags */}
+										{flagList.length > 0 && (
+											<div className="rounded-md border border-amber-500/30 bg-amber-500/5 p-4">
+												<span className="text-sm font-medium text-amber-500">
+													{t.flags} ({flagList.length})
+												</span>
+												<ul className="mt-1 space-y-1">
+													{flagList.map((f, i) => (
+														<li
+															key={i}
+															className="text-xs text-muted-foreground"
+														>
+															{f}
+														</li>
+													))}
+												</ul>
+											</div>
+										)}
+
+										{/* Marker results */}
+										<div className="space-y-2">
+											<span className="text-sm font-medium">
+												{t.markerDetails}
+											</span>
+											{result.results.map((r, i) => {
+												const interp = pickLocalized(
+													r.interpretation,
+													r.interpretation_vi,
+													language
+												);
+												const sig = pickLocalized(
+													r.clinical_significance,
+													r.clinical_significance_vi,
+													language
+												);
+												return (
+													<div
+														key={i}
+														className={`rounded-md border p-3 ${rowAccent(r.status)}`}
+													>
+														<div className="flex items-center justify-between">
+															<span className="text-sm font-medium">
+																{r.name}
+															</span>
+															<div className="flex items-center gap-2">
+																<span className="text-sm font-mono">
+																	{r.value} {r.unit}
+																</span>
+																<span
+																	className={`text-xs px-2 py-0.5 rounded-full font-medium ${statusColor(r.status)}`}
+																>
+																	{r.status}
+																</span>
+															</div>
+														</div>
+														<div className="text-xs text-muted-foreground mt-1">
+															{t.ref}: {r.reference_range}
+														</div>
+														<div className="text-xs mt-1">{interp}</div>
+														{r.status !== "NORMAL" && (
+															<div className="text-xs text-muted-foreground mt-0.5 italic">
+																{sig}
+															</div>
+														)}
+													</div>
+												);
+											})}
+										</div>
+
+										{/* Recommendations */}
+										{recList.length > 0 && (
+											<div className="rounded-md border p-4">
+												<span className="text-sm font-medium">
+													{t.recommendations}
+												</span>
+												<ul className="mt-2 space-y-1">
+													{recList.map((r, i) => (
+														<li
+															key={i}
+															className="text-xs text-muted-foreground"
+														>
+															{r}
+														</li>
+													))}
+												</ul>
+											</div>
+										)}
+										<RawResponseViewer data={result} />
 									</div>
-								)}
-								<RawResponseViewer data={result} />
-							</div>
+								);
+							})()
 						) : (
 							<DemoEmptyState icon={DropletIcon} description={t.emptyHint} />
 						)

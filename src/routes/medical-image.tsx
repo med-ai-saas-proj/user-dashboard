@@ -26,8 +26,11 @@ type Finding =
 interface ImageDescribeResponse {
 	success?: boolean;
 	description: string;
+	description_vi?: string;
 	findings: Finding[];
+	findings_vi?: Finding[];
 	suggested_diagnoses?: string[];
+	suggested_diagnoses_vi?: string[];
 	confidence?: string;
 	modality?: string;
 	body_part?: string;
@@ -171,7 +174,6 @@ const MedicalImagePage = () => {
 		try {
 			const formData = new FormData();
 			formData.append("file", file);
-			formData.append("language", language);
 
 			const headers = await getAuthHeaders(API_ROUTES.SERVICES.MEDICAL_IMAGE);
 			delete headers["Content-Type"];
@@ -324,108 +326,130 @@ const MedicalImagePage = () => {
 					}
 					right={
 						result ? (
-							<div className="flex-1 overflow-y-auto p-4 space-y-4">
-								{(result.modality || result.body_part) && (
-									<div className="flex gap-2 text-xs">
-										{result.modality && (
-											<span className="px-2 py-0.5 rounded bg-muted font-medium">
-												{result.modality}
-											</span>
+							(() => {
+								const useVi = language === "vi";
+								const descriptionText =
+									(useVi
+										? result.description_vi?.trim()
+										: result.description?.trim()) ||
+									result.description?.trim() ||
+									"";
+								const findingsList =
+									useVi && result.findings_vi && result.findings_vi.length > 0
+										? result.findings_vi
+										: result.findings;
+								const diagnosesList =
+									useVi &&
+									result.suggested_diagnoses_vi &&
+									result.suggested_diagnoses_vi.length > 0
+										? result.suggested_diagnoses_vi
+										: result.suggested_diagnoses;
+								return (
+									<div className="flex-1 overflow-y-auto p-4 space-y-4">
+										{(result.modality || result.body_part) && (
+											<div className="flex gap-2 text-xs">
+												{result.modality && (
+													<span className="px-2 py-0.5 rounded bg-muted font-medium">
+														{result.modality}
+													</span>
+												)}
+												{result.body_part && (
+													<span className="px-2 py-0.5 rounded bg-muted font-medium">
+														{result.body_part}
+													</span>
+												)}
+											</div>
 										)}
-										{result.body_part && (
-											<span className="px-2 py-0.5 rounded bg-muted font-medium">
-												{result.body_part}
-											</span>
+
+										{result.errors && result.errors.length > 0 && (
+											<div className="rounded-md border border-red-300 bg-red-50 dark:bg-red-950/30 dark:border-red-800/50 p-3 text-sm">
+												<p className="font-medium text-red-900 dark:text-red-200">
+													{t.analysisErrors}
+												</p>
+												<ul className="mt-1 text-xs text-red-800 dark:text-red-300 list-disc list-inside">
+													{result.errors.map((e, i) => (
+														<li key={`err-${i}`}>{e}</li>
+													))}
+												</ul>
+											</div>
 										)}
-									</div>
-								)}
 
-								{result.errors && result.errors.length > 0 && (
-									<div className="rounded-md border border-red-300 bg-red-50 dark:bg-red-950/30 dark:border-red-800/50 p-3 text-sm">
-										<p className="font-medium text-red-900 dark:text-red-200">
-											{t.analysisErrors}
-										</p>
-										<ul className="mt-1 text-xs text-red-800 dark:text-red-300 list-disc list-inside">
-											{result.errors.map((e, i) => (
-												<li key={`err-${i}`}>{e}</li>
-											))}
-										</ul>
-									</div>
-								)}
-
-								<div>
-									<span className="text-sm font-medium">
-										{t.descriptionLabel}
-									</span>
-									<p className="text-sm mt-1 leading-relaxed whitespace-pre-wrap">
-										{result.description?.trim() || t.emptyDescription}
-									</p>
-								</div>
-
-								{result.findings && result.findings.length > 0 && (
-									<div>
-										<span className="text-sm font-medium">{t.findings}</span>
-										<div className="mt-2 space-y-2">
-											{result.findings.map((f, i) => {
-												const text = findingText(f);
-												const loc = findingLocation(f);
-												const sev = findingSeverity(f);
-												return (
-													<div
-														key={`finding-${i}`}
-														className="p-3 rounded-md border text-sm"
-													>
-														<p>{text}</p>
-														{(loc || sev) && (
-															<div className="flex gap-2 mt-1 text-xs text-muted-foreground">
-																{loc && (
-																	<span>
-																		{t.location}: {loc}
-																	</span>
-																)}
-																{sev && (
-																	<span>
-																		{t.severity}: {sev}
-																	</span>
-																)}
-															</div>
-														)}
-													</div>
-												);
-											})}
-										</div>
-									</div>
-								)}
-
-								{result.confidence && (
-									<div className="text-xs text-muted-foreground">
-										{t.confidence}:{" "}
-										<span className="font-medium">{result.confidence}</span>
-									</div>
-								)}
-
-								{result.suggested_diagnoses &&
-									result.suggested_diagnoses.length > 0 && (
 										<div>
 											<span className="text-sm font-medium">
-												{t.suggestedDiagnoses}
+												{t.descriptionLabel}
 											</span>
-											<ul className="mt-2 space-y-1">
-												{result.suggested_diagnoses.map((d, i) => (
-													<li
-														key={`diag-${i}`}
-														className="text-sm flex items-start gap-2"
-													>
-														<span className="text-muted-foreground">•</span>
-														{d}
-													</li>
-												))}
-											</ul>
+											<p className="text-sm mt-1 leading-relaxed whitespace-pre-wrap">
+												{descriptionText || t.emptyDescription}
+											</p>
 										</div>
-									)}
 
-								<RawResponseViewer data={result} />
-							</div>
+										{findingsList && findingsList.length > 0 && (
+											<div>
+												<span className="text-sm font-medium">
+													{t.findings}
+												</span>
+												<div className="mt-2 space-y-2">
+													{findingsList.map((f, i) => {
+														const text = findingText(f);
+														const loc = findingLocation(f);
+														const sev = findingSeverity(f);
+														return (
+															<div
+																key={`finding-${i}`}
+																className="p-3 rounded-md border text-sm"
+															>
+																<p>{text}</p>
+																{(loc || sev) && (
+																	<div className="flex gap-2 mt-1 text-xs text-muted-foreground">
+																		{loc && (
+																			<span>
+																				{t.location}: {loc}
+																			</span>
+																		)}
+																		{sev && (
+																			<span>
+																				{t.severity}: {sev}
+																			</span>
+																		)}
+																	</div>
+																)}
+															</div>
+														);
+													})}
+												</div>
+											</div>
+										)}
+
+										{result.confidence && (
+											<div className="text-xs text-muted-foreground">
+												{t.confidence}:{" "}
+												<span className="font-medium">{result.confidence}</span>
+											</div>
+										)}
+
+										{diagnosesList && diagnosesList.length > 0 && (
+											<div>
+												<span className="text-sm font-medium">
+													{t.suggestedDiagnoses}
+												</span>
+												<ul className="mt-2 space-y-1">
+													{diagnosesList.map((d, i) => (
+														<li
+															key={`diag-${i}`}
+															className="text-sm flex items-start gap-2"
+														>
+															<span className="text-muted-foreground">•</span>
+															{d}
+														</li>
+													))}
+												</ul>
+											</div>
+										)}
+
+										<RawResponseViewer data={result} />
+									</div>
+								);
+							})()
 						) : (
 							<DemoEmptyState icon={ImageIcon} description={t.emptyHint} />
 						)

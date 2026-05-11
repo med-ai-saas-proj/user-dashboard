@@ -45,6 +45,13 @@ const VoiceAgentPage = () => {
 	const playbackCtxRef = useRef<AudioContext | null>(null);
 	const playbackTimeRef = useRef<number>(0);
 	const turnIdRef = useRef<string>("");
+	// Mirror interim state in refs so the WS message handler — which is
+	// bound once at connect time — always reads the latest values instead
+	// of a stale closure. Without this, a `turn_end` arriving immediately
+	// after the first `final_transcript`/`assistant_token` would commit
+	// empty strings to `turns`, producing phantom "(no transcript)" rows.
+	const interimUserRef = useRef<string>("");
+	const interimAssistantRef = useRef<string>("");
 
 	const log = useCallback((msg: string) => {
 		console.log("[voice-agent]", msg);
@@ -115,30 +122,46 @@ const VoiceAgentPage = () => {
 					break;
 				case "final_transcript": {
 					const text = String(evt.text ?? "");
+					interimUserRef.current = text;
+					interimAssistantRef.current = "";
 					setInterimUser(text);
 					turnIdRef.current = `t-${Date.now()}`;
 					setInterimAssistant("");
 					break;
 				}
-				case "assistant_token":
-					setInterimAssistant((prev) => prev + String(evt.text ?? ""));
+				case "assistant_token": {
+					const tok = String(evt.text ?? "");
+					interimAssistantRef.current += tok;
+					setInterimAssistant((prev) => prev + tok);
 					break;
+				}
 				case "assistant_sentence":
 					break;
 				case "barge_in":
 					log("barge-in");
 					break;
 				case "turn_end": {
-					const id = turnIdRef.current || `t-${Date.now()}`;
-					setTurns((prev) => [
-						...prev,
-						{
-							id,
-							user: interimUser,
-							assistant: interimAssistant,
-							at: Date.now(),
-						},
-					]);
+					const userText = interimUserRef.current;
+					const assistantText = interimAssistantRef.current;
+					// Suppress phantom turns: the server emits `turn_end` only
+					// inside the LLM worker, but an empty ASR result followed by
+					// a cancelled LLM stream can still produce a turn_end with
+					// neither user nor assistant content. Skip those — they
+					// would otherwise render as "(no transcript)/(no response)".
+					if (userText || assistantText) {
+						const id = turnIdRef.current || `t-${Date.now()}`;
+						setTurns((prev) => [
+							...prev,
+							{
+								id,
+								user: userText,
+								assistant: assistantText,
+								at: Date.now(),
+							},
+						]);
+					}
+					interimUserRef.current = "";
+					interimAssistantRef.current = "";
 					setInterimUser("");
 					setInterimAssistant("");
 					turnIdRef.current = "";
@@ -152,7 +175,7 @@ const VoiceAgentPage = () => {
 					log(`unknown event: ${evt.type}`);
 			}
 		},
-		[interimAssistant, interimUser, log]
+		[log]
 	);
 
 	const connect = useCallback(async () => {
@@ -248,6 +271,10 @@ const VoiceAgentPage = () => {
 		try {
 			wsRef.current?.send(JSON.stringify({ type: "clear_memory" }));
 			setTurns([]);
+			interimUserRef.current = "";
+			interimAssistantRef.current = "";
+			setInterimUser("");
+			setInterimAssistant("");
 			toast.success("Memory cleared");
 		} catch {
 			toast.error("Not connected");

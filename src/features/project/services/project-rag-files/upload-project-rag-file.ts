@@ -19,12 +19,13 @@ const sleep = (ms: number) =>
 	new Promise((resolve) => window.setTimeout(resolve, ms));
 
 const waitForProjectRagFileTaskCompletion = async (
+	projectId: string,
 	taskId: string
 ): Promise<ProjectRagFileTaskResponse> => {
 	const startedAt = Date.now();
 
 	while (true) {
-		const task = await getProjectRagFileTaskStatus(taskId);
+		const task = await getProjectRagFileTaskStatus(projectId, taskId);
 
 		if (task.status !== "processing") {
 			return task;
@@ -46,13 +47,8 @@ const uploadProjectRagFileToStorage = async ({
 	formData.append("file", file);
 
 	const { data } = await apiClient.post<ProjectRagFileUploadResponse>(
-		API_ROUTES.FILE_STORAGE.USER,
-		formData,
-		{
-			params: {
-				project_uuid: projectId,
-			},
-		}
+		`${API_ROUTES.FILE_STORAGE.USER}${projectId}/`,
+		formData
 	);
 
 	return data.file_id;
@@ -66,17 +62,12 @@ const createProjectRagFileTask = async ({
 	chunkOverlap = DEFAULT_CHUNK_OVERLAP,
 }: ProjectRagFileCreateInput): Promise<ProjectRagFileTaskResponse> => {
 	const { data } = await apiClient.post<ProjectRagFileTaskResponse>(
-		API_ROUTES.RAG.USER_FILES,
+		`${API_ROUTES.RAG.USER_FILES}/${projectId}`,
 		{
 			file_uid: fileId,
 			chunk_splitter: chunkSplitter,
 			chunk_size: chunkSize,
 			chunk_overlap: chunkOverlap,
-		},
-		{
-			params: {
-				project_uuid: projectId,
-			},
 		}
 	);
 
@@ -90,5 +81,5 @@ export const uploadProjectRagFile = async ({
 	const fileId = await uploadProjectRagFileToStorage({ projectId, file });
 	const task = await createProjectRagFileTask({ projectId, fileId });
 
-	return waitForProjectRagFileTaskCompletion(task.task_id);
+	return waitForProjectRagFileTaskCompletion(projectId, task.task_id);
 };

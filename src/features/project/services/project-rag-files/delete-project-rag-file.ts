@@ -6,9 +6,7 @@ export const deleteProjectRagFile = async ({
 	projectId,
 	fileId,
 }: ProjectRagFileDeleteInput): Promise<void> => {
-	await apiClient.delete(`${API_ROUTES.FILE_STORAGE.USER}${fileId}`, {
-		params: {
-			project_uuid: projectId,
-		},
-	});
+	await apiClient.delete(
+		`${API_ROUTES.FILE_STORAGE.USER}${projectId}/${fileId}`
+	);
 };

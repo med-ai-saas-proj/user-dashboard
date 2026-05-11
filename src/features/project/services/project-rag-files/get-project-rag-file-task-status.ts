@@ -3,10 +3,11 @@ import apiClient from "@/query/api-client";
 import type { ProjectRagFileTaskResponse } from "./project-rag-file.dto";
 
 export const getProjectRagFileTaskStatus = async (
+	projectId: string,
 	taskId: string
 ): Promise<ProjectRagFileTaskResponse> => {
 	const { data } = await apiClient.get<ProjectRagFileTaskResponse>(
-		`${API_ROUTES.RAG.USER_FILE_TASK}${taskId}`
+		`${API_ROUTES.RAG.USER_FILE_TASK}${projectId}/${taskId}`
 	);
 
 	return data;

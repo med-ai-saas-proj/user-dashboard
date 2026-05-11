@@ -29,13 +29,18 @@ interface AgentTurn {
 
 type ConnState = "idle" | "connecting" | "connected" | "closed" | "error";
 
+// "server"  → play audio_chunk binary frames from VieNeu (high quality, slower)
+// "browser" → speak each assistant_sentence via Web SpeechSynthesis (snappy)
+// "off"     → text-only
+type TtsMode = "server" | "browser" | "off";
+
 const VoiceAgentPage = () => {
 	const [connState, setConnState] = useState<ConnState>("idle");
 	const [isMicOn, setIsMicOn] = useState(false);
 	const [interimUser, setInterimUser] = useState<string>("");
 	const [interimAssistant, setInterimAssistant] = useState<string>("");
 	const [turns, setTurns] = useState<AgentTurn[]>([]);
-	const [audioEnabled, setAudioEnabled] = useState(true);
+	const [ttsMode, setTtsMode] = useState<TtsMode>("server");
 
 	const wsRef = useRef<WebSocket | null>(null);
 	const audioCtxRef = useRef<AudioContext | null>(null);
@@ -52,6 +57,9 @@ const VoiceAgentPage = () => {
 	// empty strings to `turns`, producing phantom "(no transcript)" rows.
 	const interimUserRef = useRef<string>("");
 	const interimAssistantRef = useRef<string>("");
+	// Same reason for ttsMode — handlers bound at connect time would
+	// otherwise see a stale value if the user toggles the radio mid-session.
+	const ttsModeRef = useRef<TtsMode>("server");
 
 	const log = useCallback((msg: string) => {
 		console.log("[voice-agent]", msg);
@@ -77,9 +85,30 @@ const VoiceAgentPage = () => {
 		setIsMicOn(false);
 	}, []);
 
+	// Speak Vietnamese text via the browser's built-in SpeechSynthesis.
+	// Only fires when ttsMode === "browser". We pick the first vi-* voice
+	// available; if none is installed, browsers usually fall back to a
+	// default voice that still vocalizes the Latin characters acceptably.
+	const speakBrowserTts = useCallback((text: string) => {
+		if (typeof window === "undefined" || !window.speechSynthesis) return;
+		const trimmed = text.trim();
+		if (!trimmed) return;
+		const u = new SpeechSynthesisUtterance(trimmed);
+		u.lang = "vi-VN";
+		const voices = window.speechSynthesis.getVoices();
+		const viVoice = voices.find((v) => v.lang.toLowerCase().startsWith("vi"));
+		if (viVoice) u.voice = viVoice;
+		window.speechSynthesis.speak(u);
+	}, []);
+
+	const cancelBrowserTts = useCallback(() => {
+		if (typeof window === "undefined" || !window.speechSynthesis) return;
+		window.speechSynthesis.cancel();
+	}, []);
+
 	const playAudioChunk = useCallback(
 		(pcmFloat32: Float32Array, sampleRate: number) => {
-			if (!audioEnabled) return;
+			if (ttsMode !== "server") return;
 			let ctx = playbackCtxRef.current;
 			if (!ctx || ctx.state === "closed") {
 				ctx = new AudioContext({ sampleRate });
@@ -96,7 +125,7 @@ const VoiceAgentPage = () => {
 			src.start(start);
 			playbackTimeRef.current = start + buf.duration;
 		},
-		[audioEnabled]
+		[ttsMode]
 	);
 
 	const handleBinaryFrame = useCallback(
@@ -135,10 +164,18 @@ const VoiceAgentPage = () => {
 					setInterimAssistant((prev) => prev + tok);
 					break;
 				}
-				case "assistant_sentence":
+				case "assistant_sentence": {
+					// Browser-TTS path: speak each completed sentence as it
+					// arrives. Server-TTS path ignores this and waits for
+					// audio_chunk binary frames instead.
+					if (ttsModeRef.current === "browser") {
+						speakBrowserTts(String(evt.text ?? ""));
+					}
 					break;
+				}
 				case "barge_in":
 					log("barge-in");
+					cancelBrowserTts();
 					break;
 				case "turn_end": {
 					const userText = interimUserRef.current;
@@ -175,7 +212,7 @@ const VoiceAgentPage = () => {
 					log(`unknown event: ${evt.type}`);
 			}
 		},
-		[log]
+		[log, speakBrowserTts, cancelBrowserTts]
 	);
 
 	const connect = useCallback(async () => {
@@ -285,7 +322,16 @@ const VoiceAgentPage = () => {
 		try {
 			wsRef.current?.send(JSON.stringify({ type: "barge_in" }));
 		} catch {}
-	}, []);
+		cancelBrowserTts();
+	}, [cancelBrowserTts]);
+
+	useEffect(() => {
+		ttsModeRef.current = ttsMode;
+		// Switching mode mid-session: silence any in-flight speech so we
+		// don't have browser TTS speaking after the user moves to server TTS
+		// (or vice versa).
+		cancelBrowserTts();
+	}, [ttsMode, cancelBrowserTts]);
 
 	useEffect(() => {
 		return () => {
@@ -383,14 +429,36 @@ const VoiceAgentPage = () => {
 								</Button>
 							</>
 						)}
-						<label className="flex items-center gap-1 text-[11px] text-muted-foreground ml-2">
-							<input
-								type="checkbox"
-								checked={audioEnabled}
-								onChange={(e) => setAudioEnabled(e.target.checked)}
-							/>
-							Play TTS
-						</label>
+						<div className="flex items-center gap-2 text-[11px] text-muted-foreground ml-2">
+							<span className="font-medium text-foreground">TTS:</span>
+							<label className="flex items-center gap-1">
+								<input
+									type="radio"
+									name="tts-mode"
+									checked={ttsMode === "server"}
+									onChange={() => setTtsMode("server")}
+								/>
+								Server (VieNeu)
+							</label>
+							<label className="flex items-center gap-1">
+								<input
+									type="radio"
+									name="tts-mode"
+									checked={ttsMode === "browser"}
+									onChange={() => setTtsMode("browser")}
+								/>
+								Browser
+							</label>
+							<label className="flex items-center gap-1">
+								<input
+									type="radio"
+									name="tts-mode"
+									checked={ttsMode === "off"}
+									onChange={() => setTtsMode("off")}
+								/>
+								Off
+							</label>
+						</div>
 					</div>
 				</div>
 

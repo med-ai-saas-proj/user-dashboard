@@ -22,6 +22,22 @@ export const API_ROUTES = {
 			BASE_API_URL
 		).toString(),
 	},
+	RAG: {
+		USER_FILES: new URL(
+			`service/${API_VERSION}/rag/user/files`,
+			BASE_API_URL
+		).toString(),
+		USER_FILE_TASK: new URL(
+			`service/${API_VERSION}/rag/user/files/`,
+			BASE_API_URL
+		).toString(),
+	},
+	FILE_STORAGE: {
+		USER: new URL(
+			`service/${API_VERSION}/file-storage/user/`,
+			BASE_API_URL
+		).toString(),
+	},
 	MANAGEMENT: {
 		API_KEYS: new URL(
 			`management/${API_VERSION}/api-keys`,

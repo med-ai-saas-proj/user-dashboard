@@ -1,33 +1,16 @@
-import { useState } from "react";
-import DashboardLayout from "@/layouts/dashboard-layout";
+import type { ChangeEvent, DragEvent, KeyboardEvent } from "react";
+import { useMemo, useRef, useState } from "react";
+import { useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import {
-	Table,
-	TableBody,
-	TableCell,
-	TableHead,
-	TableHeader,
-	TableRow,
-} from "@/components/shadcn/table";
+import DashboardLayout from "@/layouts/dashboard-layout";
 import { Button } from "@/components/shadcn/button";
 import {
 	Card,
 	CardContent,
+	CardDescription,
 	CardHeader,
 	CardTitle,
-	CardDescription,
 } from "@/components/shadcn/card";
-import {
-	UploadCloud,
-	Search,
-	X,
-	FileIcon,
-	Trash2Icon,
-	TagIcon,
-	DownloadIcon,
-	FileTextIcon,
-} from "lucide-react";
-import { Input } from "@/components/shadcn/input";
 import {
 	Dialog,
 	DialogClose,
@@ -37,44 +20,38 @@ import {
 	DialogHeader,
 	DialogTitle,
 } from "@/components/shadcn/dialog";
+import { Input } from "@/components/shadcn/input";
 import { Label } from "@/components/shadcn/label";
-
-// Mock data for files
-type UploadedFile = {
-	id: string;
-	name: string;
-	size: string;
-	uploadDate: string;
-	tags: string[];
-	file: File;
-};
-
-const MOCK_FILES: UploadedFile[] = [
-	{
-		id: "1",
-		name: "Q1_Financial_Report.pdf",
-		size: "2.4 MB",
-		uploadDate: "2026-05-01",
-		tags: ["finance", "report"],
-		file: new File([], "Q1_Financial_Report.pdf"),
-	},
-	{
-		id: "2",
-		name: "Employee_Handbook_2026.docx",
-		size: "1.1 MB",
-		uploadDate: "2026-05-02",
-		tags: ["hr", "handbook"],
-		file: new File([], "Employee_Handbook_2026.docx"),
-	},
-	{
-		id: "3",
-		name: "Product_Roadmap_Q2.pptx",
-		size: "3.5 MB",
-		uploadDate: "2026-05-05",
-		tags: ["product"],
-		file: new File([], "Product_Roadmap_Q2.pptx"),
-	},
-];
+import {
+	Table,
+	TableBody,
+	TableCell,
+	TableHead,
+	TableHeader,
+	TableRow,
+} from "@/components/shadcn/table";
+import { Spinner } from "@/components/shadcn/spinner";
+import { cn } from "@/lib/utils";
+import { useProjectStore } from "@/features/project/store/project";
+import { useGetProjectRagFiles } from "@/features/project/hooks/project-rag-files/use-get-project-rag-files";
+import { useUploadProjectRagFile } from "@/features/project/hooks/project-rag-files/use-upload-project-rag-file";
+import { useDeleteProjectRagFile } from "@/features/project/hooks/project-rag-files/use-delete-project-rag-file";
+import { useUpdateProjectRagFileMetadata } from "@/features/project/hooks/project-rag-files/use-update-project-rag-file-metadata";
+import type { ProjectRagFile } from "@/features/project/services/project-rag-files/project-rag-file.dto";
+import { getProjectRagFileDownloadUrl } from "@/features/project/services/project-rag-files/get-project-rag-file-download-url";
+import {
+	DownloadIcon,
+	FileIcon,
+	FileTextIcon,
+	FolderSearch,
+	LoaderCircle,
+	Search,
+	TagIcon,
+	Trash2Icon,
+	UploadCloud,
+	X,
+} from "lucide-react";
+import { toast } from "sonner";
 
 const ACCEPTED_TYPES = [
 	"application/pdf",
@@ -83,19 +60,156 @@ const ACCEPTED_TYPES = [
 	"application/msword",
 ];
 
-export default function ProjectBucketsPage() {
-	const { t } = useTranslation(["sidebar", "common", "bucket"]);
-	const [files, setFiles] = useState<UploadedFile[]>(MOCK_FILES);
-	const [isDragging, setIsDragging] = useState(false);
-	const [searchQuery, setSearchQuery] = useState("");
+const MAX_FILE_SIZE_BYTES = 50 * 1024 * 1024;
 
+const isSupportedFile = (file: File) => {
+	if (ACCEPTED_TYPES.includes(file.type)) {
+		return true;
+	}
+
+	return /\.(pdf|txt|doc|docx)$/i.test(file.name);
+};
+
+const getFileTypeLabel = (mimeType: string, filename: string) => {
+	if (mimeType.includes("pdf") || filename.toLowerCase().endsWith(".pdf")) {
+		return "PDF";
+	}
+
+	if (
+		mimeType.includes("wordprocessingml") ||
+		filename.toLowerCase().endsWith(".docx")
+	) {
+		return "DOCX";
+	}
+
+	if (mimeType.includes("msword") || filename.toLowerCase().endsWith(".doc")) {
+		return "DOC";
+	}
+
+	if (mimeType.startsWith("text/")) {
+		return "TXT";
+	}
+
+	return mimeType || "FILE";
+};
+
+const formatFileSize = (sizeInBytes: number) => {
+	if (sizeInBytes < 1024) {
+		return `${sizeInBytes} B`;
+	}
+
+	const units = ["KB", "MB", "GB", "TB"];
+	let size = sizeInBytes / 1024;
+	let unitIndex = 0;
+
+	while (size >= 1024 && unitIndex < units.length - 1) {
+		size /= 1024;
+		unitIndex += 1;
+	}
+
+	return `${size.toFixed(size >= 10 ? 0 : 1)} ${units[unitIndex]}`;
+};
+
+export default function ProjectBucketsPage() {
+	const params = useParams();
+	const projectId =
+		useProjectStore((state) => state.projectId) || params.projectId || "";
+	const { t } = useTranslation(["sidebar", "common", "bucket"]);
+	const inputRef = useRef<HTMLInputElement>(null);
+	const [searchQuery, setSearchQuery] = useState("");
+	const [isDragging, setIsDragging] = useState(false);
 	const [tagDialogOpen, setTagDialogOpen] = useState(false);
-	const [selectedFile, setSelectedFile] = useState<UploadedFile | null>(null);
+	const [selectedFile, setSelectedFile] = useState<ProjectRagFile | null>(null);
 	const [tagInput, setTagInput] = useState("");
 	const [tempTags, setTempTags] = useState<string[]>([]);
 
-	const handleDragOver = (e: React.DragEvent) => {
-		e.preventDefault();
+	const {
+		data: files = [],
+		isLoading,
+		isFetching,
+	} = useGetProjectRagFiles(projectId);
+	const uploadMutation = useUploadProjectRagFile();
+	const deleteMutation = useDeleteProjectRagFile();
+	const updateMetadataMutation = useUpdateProjectRagFileMetadata();
+
+	const filteredFiles = useMemo(() => {
+		const normalizedSearch = searchQuery.trim().toLowerCase();
+
+		if (!normalizedSearch) {
+			return files;
+		}
+
+		return files.filter((file) => {
+			const filenameMatch = file.filename
+				.toLowerCase()
+				.includes(normalizedSearch);
+			const tagMatch = file.tags.some((tag) =>
+				tag.toLowerCase().includes(normalizedSearch)
+			);
+
+			return filenameMatch || tagMatch;
+		});
+	}, [files, searchQuery]);
+
+	const isBusy =
+		uploadMutation.isPending ||
+		deleteMutation.isPending ||
+		updateMetadataMutation.isPending;
+
+	const openFilePicker = () => {
+		inputRef.current?.click();
+	};
+
+	const resetFilePicker = () => {
+		if (inputRef.current) {
+			inputRef.current.value = "";
+		}
+	};
+
+	const handleFiles = async (uploadedFiles: File[]) => {
+		if (!projectId) {
+			toast.error(t("bucket:messages.missingProject"));
+			return;
+		}
+
+		const validFiles = uploadedFiles.filter(
+			(file) => isSupportedFile(file) && file.size <= MAX_FILE_SIZE_BYTES
+		);
+
+		const rejectedFiles = uploadedFiles.length - validFiles.length;
+		if (rejectedFiles > 0) {
+			toast.info(
+				t("bucket:messages.partialRejected", { count: rejectedFiles })
+			);
+		}
+
+		if (validFiles.length === 0) {
+			toast.error(t("bucket:validation.noValidFiles"));
+			return;
+		}
+
+		try {
+			for (const file of validFiles) {
+				await uploadMutation.mutateAsync({
+					projectId,
+					file,
+				});
+			}
+
+			toast.success(
+				t("bucket:messages.uploadSuccess", { count: validFiles.length })
+			);
+		} catch (error) {
+			toast.error(
+				error instanceof Error
+					? error.message
+					: t("bucket:messages.uploadError")
+			);
+		}
+	};
+
+	const handleDragOver = (event: DragEvent<HTMLButtonElement>) => {
+		event.preventDefault();
 		setIsDragging(true);
 	};
 
@@ -103,281 +217,368 @@ export default function ProjectBucketsPage() {
 		setIsDragging(false);
 	};
 
-	const handleDrop = (e: React.DragEvent) => {
-		e.preventDefault();
+	const handleDrop = async (event: DragEvent<HTMLButtonElement>) => {
+		event.preventDefault();
 		setIsDragging(false);
-		if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-			handleFiles(e.dataTransfer.files);
-		}
+		await handleFiles(Array.from(event.dataTransfer.files));
+	};
+	const handleFileInput = async (event: ChangeEvent<HTMLInputElement>) => {
+		const uploadedFiles = Array.from(event.target.files || []);
+		resetFilePicker();
+		await handleFiles(uploadedFiles);
 	};
 
-	const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-		// If not in list of accepted formats, ignore
-		if (e.target.files) {
-			const validFiles = Array.from(e.target.files).filter((file) =>
-				ACCEPTED_TYPES.includes(file.type)
-			);
-			if (validFiles.length > 0) {
-				handleFiles(new DataTransfer().files);
-			}
-		}
-
-		if (e.target.files && e.target.files.length > 0) {
-			handleFiles(e.target.files);
-		}
-	};
-
-	const handleFiles = (uploadedFiles: FileList) => {
-		const newFiles = Array.from(uploadedFiles).map((file) => ({
-			id: Math.random().toString(36).substring(7),
-			name: file.name,
-			size: (file.size / (1024 * 1024)).toFixed(2) + " MB",
-			uploadDate: new Date().toISOString().split("T")[0],
-			tags: [],
-			file,
-		}));
-
-		setFiles((prev) => [...newFiles, ...prev]);
-	};
-
-	const deleteFile = (id: string) => {
-		setFiles((prev) => prev.filter((file) => file.id !== id));
-	};
-
-	const downloadFile = (file: UploadedFile) => {
-		const url = URL.createObjectURL(file.file);
-
-		const link = document.createElement("a");
-		link.href = url;
-		link.download = file.name;
-
-		document.body.appendChild(link);
-		link.click();
-
-		document.body.removeChild(link);
-		URL.revokeObjectURL(url);
-	};
-
-	const openTagDialog = (file: UploadedFile) => {
+	const openTagDialog = (file: ProjectRagFile) => {
 		setSelectedFile(file);
-		setTempTags(file.tags || []);
+		setTempTags(file.tags);
 		setTagInput("");
 		setTagDialogOpen(true);
 	};
 
-	const saveTags = () => {
-		if (selectedFile) {
-			setFiles((prev) =>
-				prev.map((f) =>
-					f.id === selectedFile.id ? { ...f, tags: tempTags } : f
-				)
+	const saveTags = async () => {
+		if (!selectedFile || !projectId) {
+			return;
+		}
+
+		try {
+			await updateMetadataMutation.mutateAsync({
+				projectId,
+				fileId: selectedFile.id,
+				extraMetadata: {
+					...(selectedFile.extraMetadata || {}),
+					tags: tempTags,
+				},
+			});
+			toast.success(t("bucket:messages.tagsUpdated"));
+			setTagDialogOpen(false);
+			setSelectedFile(null);
+		} catch (error) {
+			toast.error(
+				error instanceof Error
+					? error.message
+					: t("bucket:messages.tagsUpdateError")
 			);
 		}
-		setTagDialogOpen(false);
 	};
 
-	const addTempTag = (e: React.KeyboardEvent<HTMLInputElement>) => {
-		if (e.key === "Enter" && tagInput.trim()) {
-			e.preventDefault();
-			const newTag = tagInput.trim();
-			if (!tempTags.includes(newTag)) {
-				setTempTags([...tempTags, newTag]);
-			}
-			setTagInput("");
+	const addTempTag = (event: KeyboardEvent<HTMLInputElement>) => {
+		if (event.key !== "Enter" || !tagInput.trim()) {
+			return;
 		}
+
+		event.preventDefault();
+		const newTag = tagInput.trim();
+		if (!tempTags.includes(newTag)) {
+			setTempTags([...tempTags, newTag]);
+		}
+		setTagInput("");
 	};
 
 	const removeTempTag = (tagToRemove: string) => {
 		setTempTags(tempTags.filter((tag) => tag !== tagToRemove));
 	};
 
-	const filteredFiles = files.filter((file) =>
-		file.name.toLowerCase().includes(searchQuery.toLowerCase())
-	);
+	const downloadFile = async (file: ProjectRagFile) => {
+		try {
+			const downloadUrl = await getProjectRagFileDownloadUrl({
+				projectId,
+				fileId: file.id,
+			});
+
+			const link = document.createElement("a");
+			link.href = downloadUrl;
+			link.download = file.filename;
+			link.rel = "noreferrer";
+
+			document.body.appendChild(link);
+			link.click();
+			document.body.removeChild(link);
+		} catch (error) {
+			toast.error(
+				error instanceof Error
+					? error.message
+					: t("bucket:messages.downloadError")
+			);
+		}
+	};
+
+	const deleteFile = async (file: ProjectRagFile) => {
+		const isConfirmed = window.confirm(
+			t("bucket:messages.deleteConfirm", { fileName: file.filename })
+		);
+
+		if (!isConfirmed) {
+			return;
+		}
+
+		try {
+			await deleteMutation.mutateAsync({
+				projectId,
+				fileId: file.id,
+			});
+			toast.success(t("bucket:messages.deleted"));
+		} catch (error) {
+			toast.error(
+				error instanceof Error
+					? error.message
+					: t("bucket:messages.deleteError")
+			);
+		}
+	};
+
+	if (!projectId) {
+		return (
+			<DashboardLayout
+				pageTitle={t("sidebar:project.buckets.title", "Buckets")}
+			>
+				<Card>
+					<CardContent className="flex flex-col items-center justify-center gap-3 py-16 text-center">
+						<FolderSearch className="size-10 text-muted-foreground" />
+						<div className="space-y-1">
+							<p className="font-medium text-foreground">
+								{t("bucket:emptyState.missingProjectTitle")}
+							</p>
+							<p className="max-w-md text-sm text-muted-foreground">
+								{t("bucket:emptyState.missingProjectDescription")}
+							</p>
+						</div>
+					</CardContent>
+				</Card>
+			</DashboardLayout>
+		);
+	}
 
 	return (
 		<DashboardLayout pageTitle={t("sidebar:project.buckets.title", "Buckets")}>
 			<div className="flex flex-col gap-6">
-				<div>
+				<div className="space-y-1.5">
 					<h2 className="text-2xl font-bold tracking-tight">
 						{t("bucket:title")}
 					</h2>
 					<p className="text-muted-foreground">{t("bucket:description")}</p>
 				</div>
 
-				<div className="grid gap-6 md:grid-cols-3">
-					{/* Upload Area */}
-					<Card className="col-span-1 md:col-span-3">
-						<CardHeader>
-							<CardTitle>{t("bucket:action.uploadTitle")}</CardTitle>
-							<CardDescription>{t("bucket:action.upload")}</CardDescription>
-						</CardHeader>
-						<CardContent>
-							<button
-								type="button"
-								onDragOver={handleDragOver}
-								onDragLeave={handleDragLeave}
-								onDrop={handleDrop}
-								className={`relative flex flex-col items-center justify-center p-12 border-2 border-dashed rounded-lg transition-colors w-full ${
-									isDragging
-										? "border-primary bg-primary/5"
-										: "border-muted-foreground/25 hover:border-primary/50 hover:bg-muted/50"
-								}`}
-							>
-								<div className="flex flex-col items-center gap-4 text-center">
-									<div className="p-4 bg-primary/10 rounded-full">
-										<UploadCloud className="w-8 h-8 text-primary" />
-									</div>
-									<div>
-										<p className="text-sm font-medium">
-											{t("bucket:action.upload")}
-										</p>
-										<p className="text-xs text-muted-foreground mt-1">
-											TXT, PDF, WORD (max 50MB)
-										</p>
-									</div>
+				<Card className="w-full">
+					<CardHeader>
+						<CardTitle>{t("bucket:action.uploadTitle")}</CardTitle>
+						<CardDescription>{t("bucket:action.upload")}</CardDescription>
+					</CardHeader>
+					<CardContent>
+						<button
+							type="button"
+							onDragOver={handleDragOver}
+							onDragLeave={handleDragLeave}
+							onDrop={handleDrop}
+							className={cn(
+								"flex mx-auto cursor-pointer flex-col items-center justify-center gap-4 rounded-lg border border-dashed px-6 py-12 text-center transition-colors",
+								isDragging
+									? "border-primary bg-accent"
+									: "border-border bg-background hover:bg-accent/50"
+							)}
+							onClick={openFilePicker}
+						>
+							<div className="flex flex-col items-center gap-3">
+								<div className="flex size-14 items-center justify-center rounded-full border border-border bg-muted">
+									{uploadMutation.isPending ? (
+										<Spinner className="size-6" />
+									) : (
+										<UploadCloud className="size-6 text-foreground" />
+									)}
 								</div>
-								<input
-									accept={ACCEPTED_TYPES.join(",")}
-									title="Upload documents"
-									type="file"
-									className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-									multiple
-									onChange={handleFileInput}
-								/>
-							</button>
-						</CardContent>
-					</Card>
+								<div className="space-y-1">
+									<p className="text-sm font-medium text-foreground">
+										{uploadMutation.isPending
+											? t("bucket:upload.processing")
+											: t("bucket:action.upload")}
+									</p>
+									<p className="text-sm text-muted-foreground">
+										{t("bucket:upload.hint")}
+									</p>
+									<p className="text-xs text-muted-foreground">
+										{t("bucket:upload.supportedTypes")}
+									</p>
+								</div>
+							</div>
+							<input
+								ref={inputRef}
+								accept={ACCEPTED_TYPES.join(",")}
+								title={t("bucket:upload.browse")}
+								type="file"
+								className="hidden"
+								multiple
+								onChange={handleFileInput}
+								disabled={isBusy}
+							/>
+						</button>
+					</CardContent>
+				</Card>
 
-					{/* File Explorer / List */}
-					<Card className="col-span-1 md:col-span-3">
-						<CardHeader className="flex flex-row items-center justify-between">
-							<div>
-								<CardTitle>Uploaded Files</CardTitle>
-								<CardDescription>
-									Browse and manage documents in this bucket
-								</CardDescription>
-							</div>
-							<div className="relative w-64">
-								<Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-								<Input
-									type="search"
-									placeholder="Search files..."
-									className="pl-8"
-									value={searchQuery}
-									onChange={(e) => setSearchQuery(e.target.value)}
-								/>
-							</div>
-						</CardHeader>
-						<CardContent>
-							<div className="border rounded-md">
-								<Table>
-									<TableHeader>
+				<Card>
+					<CardHeader className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+						<div>
+							<CardTitle>{t("bucket:table.title")}</CardTitle>
+							<CardDescription>{t("bucket:table.description")}</CardDescription>
+						</div>
+						<div className="relative w-full sm:max-w-xs">
+							<Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+							<Input
+								type="search"
+								placeholder={t("bucket:table.searchPlaceholder")}
+								className="pl-9"
+								value={searchQuery}
+								onChange={(event) => setSearchQuery(event.target.value)}
+							/>
+						</div>
+					</CardHeader>
+					<CardContent>
+						<div className="rounded-lg border border-border">
+							<Table>
+								<TableHeader>
+									<TableRow>
+										<TableHead className="w-[34%]">
+											{t("bucket:table.fileName")}
+										</TableHead>
+										<TableHead>{t("bucket:table.fileType")}</TableHead>
+										<TableHead>{t("bucket:table.fileSize")}</TableHead>
+										<TableHead>{t("bucket:table.uploadDate")}</TableHead>
+										<TableHead>{t("bucket:table.tags")}</TableHead>
+										<TableHead className="text-right">
+											{t("bucket:table.actions")}
+										</TableHead>
+									</TableRow>
+								</TableHeader>
+								<TableBody>
+									{isLoading ? (
 										<TableRow>
-											<TableHead className="w-[400px]">
-												{t("bucket:table.fileName")}
-											</TableHead>
-											<TableHead>{t("bucket:table.fileSize")}</TableHead>
-											<TableHead>{t("bucket:table.uploadDate")}</TableHead>
-											<TableHead>Tags</TableHead>
-											<TableHead className="text-right">
-												{t("bucket:table.actions")}
-											</TableHead>
+											<TableCell
+												colSpan={6}
+												className="py-16 text-center text-muted-foreground"
+											>
+												<div className="flex items-center justify-center gap-2">
+													<Spinner />
+													<span>{t("bucket:table.loading")}</span>
+												</div>
+											</TableCell>
 										</TableRow>
-									</TableHeader>
-									<TableBody>
-										{filteredFiles.length > 0 ? (
-											filteredFiles.map((file) => (
-												<TableRow key={file.id}>
-													<TableCell className="font-medium">
-														<div className="flex items-center gap-2">
-															<FileTextIcon className="w-4 h-4 text-primary/70" />
-															<span className="truncate max-w-[300px]">
-																{file.name}
+									) : filteredFiles.length > 0 ? (
+										filteredFiles.map((file) => (
+											<TableRow key={file.id}>
+												<TableCell className="font-medium">
+													<div className="flex items-center gap-3">
+														<div className="flex size-9 items-center justify-center rounded-md border border-border bg-muted">
+															<FileTextIcon className="size-4 text-foreground" />
+														</div>
+														<div className="min-w-0">
+															<p className="truncate font-medium text-foreground">
+																{file.filename}
+															</p>
+															<p className="truncate text-xs text-muted-foreground">
+																{file.id}
+															</p>
+														</div>
+													</div>
+												</TableCell>
+												<TableCell className="text-muted-foreground">
+													{getFileTypeLabel(file.mimeType, file.filename)}
+												</TableCell>
+												<TableCell className="text-muted-foreground">
+													{formatFileSize(file.size)}
+												</TableCell>
+												<TableCell className="text-muted-foreground">
+													{file.createdAt.toLocaleDateString()}
+												</TableCell>
+												<TableCell>
+													<div className="flex flex-wrap gap-1.5">
+														{file.tags.length > 0 ? (
+															file.tags.slice(0, 3).map((tag) => (
+																<span
+																	key={`${file.id}-${tag}`}
+																	className="inline-flex items-center rounded-md border border-border bg-muted px-2 py-0.5 text-xs font-medium text-foreground"
+																>
+																	{tag}
+																</span>
+															))
+														) : (
+															<span className="text-xs text-muted-foreground">
+																{t("bucket:table.noTags")}
 															</span>
-														</div>
-													</TableCell>
-													<TableCell className="text-muted-foreground">
-														{file.size}
-													</TableCell>
-													<TableCell className="text-muted-foreground">
-														{file.uploadDate}
-													</TableCell>
-													<TableCell>
-														<div className="flex flex-wrap gap-1">
-															{file.tags && file.tags.length > 0 ? (
-																file.tags.slice(0, 2).map((tag, i) => (
-																	<span
-																		key={i}
-																		className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-secondary text-secondary-foreground"
-																	>
-																		{tag}
-																	</span>
-																))
-															) : (
-																<span className="text-xs text-muted-foreground">
-																	No tags
-																</span>
-															)}
-															{file.tags && file.tags.length > 2 && (
-																<span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-secondary text-secondary-foreground">
-																	+{file.tags.length - 2}
-																</span>
-															)}
-														</div>
-													</TableCell>
-													<TableCell className="text-right">
-														<div className="flex justify-end gap-1">
-															<Button
-																variant="ghost"
-																size="icon"
-																className="text-muted-foreground hover:text-foreground"
-																onClick={() => downloadFile(file)}
-																title="Download file"
-															>
-																<DownloadIcon className="w-4 h-4" />
-															</Button>
-															<Button
-																variant="ghost"
-																size="icon"
-																className="text-muted-foreground hover:text-foreground"
-																onClick={() => openTagDialog(file)}
-																title="Edit tags"
-															>
-																<TagIcon className="w-4 h-4" />
-															</Button>
-															<Button
-																variant="ghost"
-																size="icon"
-																className="text-destructive hover:text-destructive hover:bg-destructive/10"
-																onClick={() => deleteFile(file.id)}
-																title="Delete file"
-															>
-																<Trash2Icon className="w-4 h-4" />
-															</Button>
-														</div>
-													</TableCell>
-												</TableRow>
-											))
-										) : (
-											<TableRow>
-												<TableCell
-													colSpan={5}
-													className="h-32 text-center text-muted-foreground"
-												>
-													<div className="flex flex-col items-center justify-center gap-2">
-														<FileIcon className="w-8 h-8 opacity-20" />
-														<p>{t("bucket:emptyState.title")}</p>
+														)}
+														{file.tags.length > 3 && (
+															<span className="inline-flex items-center rounded-md border border-border bg-muted px-2 py-0.5 text-xs font-medium text-foreground">
+																+{file.tags.length - 3}
+															</span>
+														)}
+													</div>
+												</TableCell>
+												<TableCell className="text-right">
+													<div className="flex justify-end gap-1">
+														<Button
+															variant="ghost"
+															size="icon"
+															onClick={() => void downloadFile(file)}
+															title={t("bucket:actions.download")}
+														>
+															<DownloadIcon className="size-4" />
+														</Button>
+														<Button
+															variant="ghost"
+															size="icon"
+															onClick={() => openTagDialog(file)}
+															title={t("bucket:actions.editTags")}
+														>
+															<TagIcon className="size-4" />
+														</Button>
+														<Button
+															variant="ghost"
+															size="icon"
+															className="text-destructive hover:text-destructive"
+															onClick={() => void deleteFile(file)}
+															title={t("bucket:actions.delete")}
+														>
+															<Trash2Icon className="size-4" />
+														</Button>
 													</div>
 												</TableCell>
 											</TableRow>
-										)}
-									</TableBody>
-								</Table>
-							</div>
-						</CardContent>
-					</Card>
-				</div>
+										))
+									) : (
+										<TableRow>
+											<TableCell
+												colSpan={6}
+												className="py-16 text-center text-muted-foreground"
+											>
+												<div className="flex flex-col items-center justify-center gap-3">
+													<FileIcon className="size-10 text-muted-foreground" />
+													<div className="space-y-1">
+														<p className="font-medium text-foreground">
+															{t("bucket:emptyState.title")}
+														</p>
+														<p className="max-w-sm text-sm text-muted-foreground">
+															{t("bucket:emptyState.description")}
+														</p>
+													</div>
+													<Button
+														variant="outline"
+														onClick={openFilePicker}
+														disabled={isBusy}
+													>
+														{t("bucket:emptyState.buttonText")}
+													</Button>
+												</div>
+											</TableCell>
+										</TableRow>
+									)}
+								</TableBody>
+							</Table>
+						</div>
+						{isFetching && !isLoading && (
+							<p className="mt-3 flex items-center gap-2 text-sm text-muted-foreground">
+								<LoaderCircle className="size-4 animate-spin" />
+								{t("bucket:table.refreshing")}
+							</p>
+						)}
+					</CardContent>
+				</Card>
 			</div>
 
 			<Dialog open={tagDialogOpen} onOpenChange={setTagDialogOpen}>
@@ -386,44 +587,57 @@ export default function ProjectBucketsPage() {
 						<DialogTitle>{t("bucket:tagDialog.title")}</DialogTitle>
 						<DialogDescription>
 							{t("bucket:tagDialog.description", {
-								fileName: selectedFile?.name || "this file",
+								fileName:
+									selectedFile?.filename ||
+									t("bucket:tagDialog.fallbackFileName"),
 							})}
 						</DialogDescription>
 					</DialogHeader>
 					<div className="grid gap-4 py-4">
 						<div className="space-y-2">
-							<Label htmlFor="tags">Tags</Label>
-							<div className="flex flex-wrap gap-2 mb-2">
+							<Label htmlFor="tags">{t("bucket:tagDialog.label")}</Label>
+							<div className="mb-2 flex flex-wrap gap-2">
 								{tempTags.map((tag) => (
 									<span
 										key={tag}
-										className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-sm font-medium bg-primary/10 text-primary"
+										className="inline-flex items-center gap-1.5 rounded-md border border-border bg-muted px-2.5 py-1 text-sm font-medium text-foreground"
 									>
 										{tag}
 										<button
 											type="button"
 											onClick={() => removeTempTag(tag)}
-											className="text-primary/70 hover:text-primary rounded-full focus:outline-none"
+											className="rounded-full text-muted-foreground hover:text-foreground focus:outline-none"
 										>
-											<X className="w-3 h-3" />
+											<X className="size-3" />
 										</button>
 									</span>
 								))}
 							</div>
 							<Input
 								id="tags"
-								placeholder="Add a new tag and press Enter..."
+								placeholder={t("bucket:tagDialog.inputPlaceholder")}
 								value={tagInput}
-								onChange={(e) => setTagInput(e.target.value)}
+								onChange={(event) => setTagInput(event.target.value)}
 								onKeyDown={addTempTag}
 							/>
+							<p className="text-xs text-muted-foreground">
+								{t("bucket:tagDialog.helper")}
+							</p>
 						</div>
 					</div>
 					<DialogFooter>
 						<DialogClose asChild>
 							<Button variant="outline">{t("common:action.cancel")}</Button>
 						</DialogClose>
-						<Button onClick={saveTags}>{t("common:action.save")}</Button>
+						<Button
+							onClick={saveTags}
+							disabled={updateMetadataMutation.isPending}
+						>
+							{updateMetadataMutation.isPending ? (
+								<Spinner className="size-4" />
+							) : null}
+							{t("common:action.save")}
+						</Button>
 					</DialogFooter>
 				</DialogContent>
 			</Dialog>

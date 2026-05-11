@@ -5,20 +5,59 @@
     "uploadTitle": "Add RAG File",
     "upload": "Click to upload or drag and drop"
   },
+  "upload": {
+    "browse": "Browse files",
+    "hint": "Drop files here or choose from your device. Uploads are processed into the selected project's RAG store.",
+    "processing": "Processing upload...",
+    "supportedTypes": "Supported: PDF, DOC, DOCX, TXT up to 50 MB each"
+  },
+  "actions": {
+    "download": "Download file",
+    "editTags": "Edit tags",
+    "delete": "Delete file"
+  },
   "tagDialog": {
     "title": "Edit tags",
     "description": "Manage tags for {{fileName}}. Press enter to add a tag.",
-    "inputPlaceholder": "Enter a tag and press Enter"
+    "inputPlaceholder": "Enter a tag and press Enter",
+    "helper": "Tags are saved in file metadata.",
+    "label": "Tags",
+    "fallbackFileName": "this file"
   },
   "table": {
     "fileName": "File Name",
+    "fileType": "Type",
     "fileSize": "Size",
     "uploadDate": "Upload Date",
-    "actions": "Actions"
+    "tags": "Tags",
+    "actions": "Actions",
+    "title": "Uploaded Files",
+    "description": "Browse and manage files stored in this project.",
+    "searchPlaceholder": "Search files or tags...",
+    "noTags": "No tags",
+    "loading": "Loading files...",
+    "refreshing": "Refreshing file list..."
   },
   "emptyState": {
     "title": "No files found.",
     "description": "You don't have any RAG files yet. Add a file to get started.",
-    "buttonText": "Add RAG File"
+    "buttonText": "Add RAG File",
+    "missingProjectTitle": "Choose a project first",
+    "missingProjectDescription": "This screen needs an active project context before it can load RAG files."
+  },
+  "validation": {
+    "noValidFiles": "None of the selected files are supported."
+  },
+  "messages": {
+    "missingProject": "No project is selected.",
+    "partialRejected": "{{count}} file(s) were skipped because they are not supported or exceed the size limit.",
+    "uploadSuccess": "{{count}} file(s) were queued for processing.",
+    "uploadError": "Failed to upload the selected file(s).",
+    "downloadError": "Unable to prepare the download link.",
+    "deleteConfirm": "Delete {{fileName}} from the project?",
+    "deleteError": "Failed to delete the file.",
+    "deleted": "File deleted.",
+    "tagsUpdated": "Tags updated.",
+    "tagsUpdateError": "Failed to update tags."
   }
 }

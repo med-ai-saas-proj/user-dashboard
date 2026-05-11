@@ -5,20 +5,59 @@
     "uploadTitle": "Thêm tệp RAG",
     "upload": "Nhấp để tải lên hoặc kéo và thả"
   },
+  "upload": {
+    "browse": "Duyệt tệp",
+    "hint": "Thả tệp vào đây hoặc chọn từ thiết bị của bạn. Tệp sẽ được xử lý vào kho RAG của dự án hiện tại.",
+    "processing": "Đang xử lý tải lên...",
+    "supportedTypes": "Hỗ trợ: PDF, DOC, DOCX, TXT, tối đa 50 MB mỗi tệp"
+  },
+  "actions": {
+    "download": "Tải tệp xuống",
+    "editTags": "Sửa tags",
+    "delete": "Xóa tệp"
+  },
   "tagDialog": {
     "title": "Chỉnh sửa tags",
-    "description": "Quản lý tags cho {fileName}. Nhấn enter để thêm một tag.",
-    "inputPlaceholder": "Nhập một tag và nhấn Enter"
+    "description": "Quản lý tags cho {{fileName}}. Nhấn enter để thêm một tag.",
+    "inputPlaceholder": "Nhập một tag và nhấn Enter",
+    "helper": "Tags sẽ được lưu trong metadata của tệp.",
+    "label": "Tags",
+    "fallbackFileName": "tệp này"
   },
   "table": {
     "fileName": "Tên tệp",
+    "fileType": "Loại",
     "fileSize": "Kích thước tệp",
     "uploadDate": "Ngày tải lên",
-    "actions": "Hành động"
+    "tags": "Tags",
+    "actions": "Hành động",
+    "title": "Các tệp đã tải lên",
+    "description": "Duyệt và quản lý các tệp được lưu trong dự án này.",
+    "searchPlaceholder": "Tìm theo tên tệp hoặc tags...",
+    "noTags": "Không có tags",
+    "loading": "Đang tải tệp...",
+    "refreshing": "Đang làm mới danh sách tệp..."
   },
   "emptyState": {
     "title": "Không có tệp RAG nào",
     "description": "Bạn chưa có tệp RAG nào. Hãy thêm một tệp để bắt đầu.",
-    "buttonText": "Thêm Tệp RAG"
+    "buttonText": "Thêm Tệp RAG",
+    "missingProjectTitle": "Hãy chọn một dự án trước",
+    "missingProjectDescription": "Màn hình này cần dự án hiện tại để tải danh sách tệp RAG."
+  },
+  "validation": {
+    "noValidFiles": "Không có tệp nào được chọn phù hợp."
+  },
+  "messages": {
+    "missingProject": "Chưa có dự án nào được chọn.",
+    "partialRejected": "Đã bỏ qua {{count}} tệp vì không được hỗ trợ hoặc vượt quá giới hạn kích thước.",
+    "uploadSuccess": "{{count}} tệp đã được đưa vào hàng đợi xử lý.",
+    "uploadError": "Không thể tải lên các tệp đã chọn.",
+    "downloadError": "Không thể chuẩn bị liên kết tải xuống.",
+    "deleteConfirm": "Xóa {{fileName}} khỏi dự án?",
+    "deleteError": "Không thể xóa tệp.",
+    "deleted": "Đã xóa tệp.",
+    "tagsUpdated": "Đã cập nhật tags.",
+    "tagsUpdateError": "Không thể cập nhật tags."
   }
 }

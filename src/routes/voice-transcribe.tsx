@@ -1,17 +1,12 @@
-// Voice Agent page — bidirectional voice conversation client.
+// Voice Transcribe page — speech-to-text only.
 //
-// Speaks the conv_agent WebSocket protocol from
-// /home/minh/Desktop/api-hub-deployment/voice-agent/conv_agent/web/app.py:
+// Two sub-modes:
+//   - Dictation:    record → stop → upload to POST /transcribe → see full text
+//   - Live captions: stream PCM frames over WS /ws/transcribe and append each
+//                    detected utterance as a new caption line
 //
-//   client → server:
-//     binary frames: int16 little-endian mono @ 16 kHz PCM (any size; we send 30 ms frames)
-//     text frames:   {type: "stop"|"clear_memory"|"barge_in"}
-//
-//   server → client:
-//     text frames:   {type, ...} where type ∈ {ready, final_transcript,
-//                    assistant_token, assistant_sentence, barge_in, turn_end, error}
-//     binary frames: 4-byte BE header length || JSON header || float32 LE PCM mono
-//                    where header = {type:"audio_chunk", seq:int, sample_rate:24000}
+// Both reuse the same offline Vietnamese Zipformer ASR that powers Voice Agent,
+// but neither talks to the LLM. Output is pure transcript text.
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
@@ -20,263 +15,213 @@ import { Button } from "@/components/shadcn/button";
 import { API_ROUTES } from "@/config/api-routes";
 import DashboardLayout from "@/layouts/dashboard-layout";
 
-interface AgentTurn {
+type Mode = "dictation" | "live";
+type ConnState = "idle" | "connecting" | "connected" | "closed" | "error";
+
+interface CaptionLine {
 	id: string;
-	user: string;
-	assistant: string;
+	text: string;
 	at: number;
 }
 
-type ConnState = "idle" | "connecting" | "connected" | "closed" | "error";
+const VoiceTranscribePage = () => {
+	const [mode, setMode] = useState<Mode>("dictation");
 
-// "server"  → play audio_chunk binary frames from VieNeu (high quality, slower)
-// "browser" → speak each assistant_sentence via Web SpeechSynthesis (snappy)
-// "off"     → text-only
-type TtsMode = "server" | "browser" | "off";
+	// Dictation state.
+	const [isRecording, setIsRecording] = useState(false);
+	const [isTranscribing, setIsTranscribing] = useState(false);
+	const [dictationText, setDictationText] = useState("");
+	const [dictationDuration, setDictationDuration] = useState<number | null>(
+		null
+	);
+	const mediaRecorderRef = useRef<MediaRecorder | null>(null);
+	const recordedChunksRef = useRef<Blob[]>([]);
+	const dictationStreamRef = useRef<MediaStream | null>(null);
+	const recordStartRef = useRef<number>(0);
+	const [recordElapsed, setRecordElapsed] = useState(0);
 
-const VoiceAgentPage = () => {
+	// Live captions state.
 	const [connState, setConnState] = useState<ConnState>("idle");
-	const [isMicOn, setIsMicOn] = useState(false);
-	const [interimUser, setInterimUser] = useState<string>("");
-	const [interimAssistant, setInterimAssistant] = useState<string>("");
-	const [turns, setTurns] = useState<AgentTurn[]>([]);
-	const [ttsMode, setTtsMode] = useState<TtsMode>("server");
-
+	const [isLiveMicOn, setIsLiveMicOn] = useState(false);
+	const [captions, setCaptions] = useState<CaptionLine[]>([]);
 	const wsRef = useRef<WebSocket | null>(null);
 	const audioCtxRef = useRef<AudioContext | null>(null);
 	const sourceNodeRef = useRef<MediaStreamAudioSourceNode | null>(null);
 	const workletNodeRef = useRef<AudioWorkletNode | null>(null);
-	const micStreamRef = useRef<MediaStream | null>(null);
-	const playbackCtxRef = useRef<AudioContext | null>(null);
-	const playbackTimeRef = useRef<number>(0);
-	const turnIdRef = useRef<string>("");
-	// Mirror interim state in refs so the WS message handler — which is
-	// bound once at connect time — always reads the latest values instead
-	// of a stale closure. Without this, a `turn_end` arriving immediately
-	// after the first `final_transcript`/`assistant_token` would commit
-	// empty strings to `turns`, producing phantom "(no transcript)" rows.
-	const interimUserRef = useRef<string>("");
-	const interimAssistantRef = useRef<string>("");
-	// Same reason for ttsMode — handlers bound at connect time would
-	// otherwise see a stale value if the user toggles the radio mid-session.
-	const ttsModeRef = useRef<TtsMode>("server");
+	const liveStreamRef = useRef<MediaStream | null>(null);
 
-	const log = useCallback((msg: string) => {
-		console.log("[voice-agent]", msg);
+	// ---------------- Dictation mode ----------------
+
+	const startDictation = useCallback(async () => {
+		try {
+			const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+			dictationStreamRef.current = stream;
+			recordedChunksRef.current = [];
+			// Prefer webm/opus where available (Chrome/Edge); Safari may need mp4/aac.
+			let mimeType = "";
+			for (const t of ["audio/webm;codecs=opus", "audio/webm", "audio/mp4"]) {
+				if (
+					typeof MediaRecorder !== "undefined" &&
+					MediaRecorder.isTypeSupported(t)
+				) {
+					mimeType = t;
+					break;
+				}
+			}
+			const rec = mimeType
+				? new MediaRecorder(stream, { mimeType })
+				: new MediaRecorder(stream);
+			rec.ondataavailable = (e) => {
+				if (e.data && e.data.size > 0) recordedChunksRef.current.push(e.data);
+			};
+			rec.start();
+			mediaRecorderRef.current = rec;
+			recordStartRef.current = Date.now();
+			setRecordElapsed(0);
+			setIsRecording(true);
+			setDictationText("");
+			setDictationDuration(null);
+		} catch (err) {
+			toast.error(`Microphone error: ${String(err)}`);
+		}
 	}, []);
 
-	const teardown = useCallback(() => {
+	const stopDictation = useCallback(async () => {
+		const rec = mediaRecorderRef.current;
+		if (!rec) return;
+		setIsRecording(false);
+		await new Promise<void>((resolve) => {
+			rec.onstop = () => resolve();
+			rec.stop();
+		});
+		dictationStreamRef.current?.getTracks().forEach((t) => {
+			t.stop();
+		});
+		dictationStreamRef.current = null;
+		mediaRecorderRef.current = null;
+
+		const blob = new Blob(recordedChunksRef.current, {
+			type: rec.mimeType || "audio/webm",
+		});
+		if (blob.size === 0) {
+			toast.error("Empty recording");
+			return;
+		}
+		setIsTranscribing(true);
+		try {
+			const filename = blob.type.includes("mp4")
+				? "dictation.m4a"
+				: "dictation.webm";
+			const fd = new FormData();
+			fd.append("file", blob, filename);
+			const resp = await fetch(API_ROUTES.SERVICES.VOICE_TRANSCRIBE_UPLOAD, {
+				method: "POST",
+				body: fd,
+			});
+			if (!resp.ok) {
+				const txt = await resp.text();
+				toast.error(`Transcribe failed: ${resp.status} ${txt.slice(0, 120)}`);
+				return;
+			}
+			const j = (await resp.json()) as {
+				success: boolean;
+				text: string;
+				duration_seconds: number;
+			};
+			setDictationText(j.text || "");
+			setDictationDuration(j.duration_seconds);
+		} catch (err) {
+			toast.error(`Transcribe error: ${String(err)}`);
+		} finally {
+			setIsTranscribing(false);
+		}
+	}, []);
+
+	// Update the elapsed-time counter while recording.
+	useEffect(() => {
+		if (!isRecording) return;
+		const id = window.setInterval(() => {
+			setRecordElapsed((Date.now() - recordStartRef.current) / 1000);
+		}, 200);
+		return () => window.clearInterval(id);
+	}, [isRecording]);
+
+	const copyDictation = useCallback(async () => {
+		try {
+			await navigator.clipboard.writeText(dictationText);
+			toast.success("Copied to clipboard");
+		} catch {
+			toast.error("Clipboard not available");
+		}
+	}, [dictationText]);
+
+	// ---------------- Live captions mode ----------------
+
+	const teardownLive = useCallback(() => {
 		try {
 			workletNodeRef.current?.disconnect();
 		} catch {}
 		try {
 			sourceNodeRef.current?.disconnect();
 		} catch {}
-		micStreamRef.current?.getTracks().forEach((t) => {
+		liveStreamRef.current?.getTracks().forEach((t) => {
 			t.stop();
 		});
 		workletNodeRef.current = null;
 		sourceNodeRef.current = null;
-		micStreamRef.current = null;
+		liveStreamRef.current = null;
 		if (audioCtxRef.current && audioCtxRef.current.state !== "closed") {
 			audioCtxRef.current.close().catch(() => {});
 		}
 		audioCtxRef.current = null;
-		setIsMicOn(false);
+		setIsLiveMicOn(false);
 	}, []);
 
-	// Speak Vietnamese text via the browser's built-in SpeechSynthesis.
-	// Only fires when ttsMode === "browser". We pick the first vi-* voice
-	// available; if none is installed, browsers usually fall back to a
-	// default voice that still vocalizes the Latin characters acceptably.
-	const speakBrowserTts = useCallback((text: string) => {
-		if (typeof window === "undefined" || !window.speechSynthesis) return;
-		const trimmed = text.trim();
-		if (!trimmed) return;
-		const u = new SpeechSynthesisUtterance(trimmed);
-		u.lang = "vi-VN";
-		const voices = window.speechSynthesis.getVoices();
-		const viVoice = voices.find((v) => v.lang.toLowerCase().startsWith("vi"));
-		if (viVoice) u.voice = viVoice;
-		window.speechSynthesis.speak(u);
-	}, []);
-
-	const cancelBrowserTts = useCallback(() => {
-		if (typeof window === "undefined" || !window.speechSynthesis) return;
-		window.speechSynthesis.cancel();
-	}, []);
-
-	const playAudioChunk = useCallback(
-		(pcmFloat32: Float32Array, sampleRate: number) => {
-			if (ttsMode !== "server") return;
-			let ctx = playbackCtxRef.current;
-			if (!ctx || ctx.state === "closed") {
-				ctx = new AudioContext({ sampleRate });
-				playbackCtxRef.current = ctx;
-				playbackTimeRef.current = ctx.currentTime;
-			}
-			const buf = ctx.createBuffer(1, pcmFloat32.length, sampleRate);
-			buf.copyToChannel(pcmFloat32, 0);
-			const src = ctx.createBufferSource();
-			src.buffer = buf;
-			src.connect(ctx.destination);
-			const now = ctx.currentTime;
-			const start = Math.max(now, playbackTimeRef.current);
-			src.start(start);
-			playbackTimeRef.current = start + buf.duration;
-		},
-		[ttsMode]
-	);
-
-	const handleBinaryFrame = useCallback(
-		(data: ArrayBuffer) => {
-			const view = new DataView(data);
-			const headerLen = view.getUint32(0, false);
-			const headerBytes = new Uint8Array(data, 4, headerLen);
-			const header = JSON.parse(new TextDecoder().decode(headerBytes));
-			if (header.type === "audio_chunk") {
-				const pcmStart = 4 + headerLen;
-				const pcm = new Float32Array(data, pcmStart);
-				playAudioChunk(pcm, header.sample_rate ?? 24000);
-			}
-		},
-		[playAudioChunk]
-	);
-
-	const handleTextEvent = useCallback(
-		(evt: { type: string; [k: string]: unknown }) => {
-			switch (evt.type) {
-				case "ready":
-					log(`ready: user_id=${String(evt.user_id ?? "")}`);
-					break;
-				case "final_transcript": {
-					const text = String(evt.text ?? "");
-					interimUserRef.current = text;
-					interimAssistantRef.current = "";
-					setInterimUser(text);
-					turnIdRef.current = `t-${Date.now()}`;
-					setInterimAssistant("");
-					break;
-				}
-				case "assistant_token": {
-					const tok = String(evt.text ?? "");
-					interimAssistantRef.current += tok;
-					setInterimAssistant((prev) => prev + tok);
-					break;
-				}
-				case "assistant_sentence": {
-					// Browser-TTS path: speak each completed sentence as it
-					// arrives. Server-TTS path ignores this and waits for
-					// audio_chunk binary frames instead.
-					if (ttsModeRef.current === "browser") {
-						speakBrowserTts(String(evt.text ?? ""));
-					}
-					break;
-				}
-				case "barge_in":
-					log("barge-in");
-					cancelBrowserTts();
-					break;
-				case "turn_end": {
-					const userText = interimUserRef.current;
-					const assistantText = interimAssistantRef.current;
-					// Suppress phantom turns: the server emits `turn_end` only
-					// inside the LLM worker, but an empty ASR result followed by
-					// a cancelled LLM stream can still produce a turn_end with
-					// neither user nor assistant content. Skip those — they
-					// would otherwise render as "(no transcript)/(no response)".
-					if (userText || assistantText) {
-						const id = turnIdRef.current || `t-${Date.now()}`;
-						setTurns((prev) => [
-							...prev,
-							{
-								id,
-								user: userText,
-								assistant: assistantText,
-								at: Date.now(),
-							},
-						]);
-					}
-					interimUserRef.current = "";
-					interimAssistantRef.current = "";
-					setInterimUser("");
-					setInterimAssistant("");
-					turnIdRef.current = "";
-					break;
-				}
-				case "error":
-					toast.error(String(evt.message ?? "agent error"));
-					log(`error: ${JSON.stringify(evt)}`);
-					break;
-				default:
-					log(`unknown event: ${evt.type}`);
-			}
-		},
-		[log, speakBrowserTts, cancelBrowserTts]
-	);
-
-	const connect = useCallback(async () => {
+	const connectLive = useCallback(async () => {
 		if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) return;
 		setConnState("connecting");
-		const userId = (() => {
-			try {
-				return localStorage.getItem("auth.userId") || "demo-user";
-			} catch {
-				return "demo-user";
-			}
-		})();
-		const url = `${API_ROUTES.SERVICES.VOICE_AGENT_WS}?user_id=${encodeURIComponent(userId)}`;
-		const ws = new WebSocket(url);
+		const ws = new WebSocket(API_ROUTES.SERVICES.VOICE_TRANSCRIBE_WS);
 		ws.binaryType = "arraybuffer";
 		wsRef.current = ws;
-
 		ws.onopen = () => {
 			setConnState("connected");
-			toast.success("Voice agent connected");
+			toast.success("Transcribe stream connected");
 		};
 		ws.onmessage = (e) => {
-			if (typeof e.data === "string") {
-				try {
-					handleTextEvent(JSON.parse(e.data));
-				} catch (err) {
-					log(`bad json: ${String(err)}`);
+			if (typeof e.data !== "string") return;
+			try {
+				const evt = JSON.parse(e.data) as { type: string; text?: string };
+				if (evt.type === "final_transcript" && evt.text) {
+					const text = evt.text;
+					setCaptions((prev) => [
+						...prev,
+						{ id: `c-${Date.now()}-${prev.length}`, text, at: Date.now() },
+					]);
 				}
-			} else if (e.data instanceof ArrayBuffer) {
-				handleBinaryFrame(e.data);
-			}
+			} catch {}
 		};
-		ws.onerror = () => {
-			setConnState("error");
-		};
-		ws.onclose = () => {
-			setConnState("closed");
-		};
-	}, [handleBinaryFrame, handleTextEvent, log]);
+		ws.onerror = () => setConnState("error");
+		ws.onclose = () => setConnState("closed");
+	}, []);
 
-	const disconnect = useCallback(() => {
+	const disconnectLive = useCallback(() => {
 		try {
 			wsRef.current?.send(JSON.stringify({ type: "stop" }));
 		} catch {}
 		wsRef.current?.close();
 		wsRef.current = null;
-		teardown();
-	}, [teardown]);
+		teardownLive();
+		setConnState("idle");
+	}, [teardownLive]);
 
-	const startMic = useCallback(async () => {
+	const startLiveMic = useCallback(async () => {
 		if (!wsRef.current || wsRef.current.readyState !== WebSocket.OPEN) {
-			toast.error("Connect first");
+			toast.error("Not connected");
 			return;
 		}
 		try {
-			const stream = await navigator.mediaDevices.getUserMedia({
-				audio: {
-					echoCancellation: true,
-					noiseSuppression: true,
-					autoGainControl: true,
-					channelCount: 1,
-				},
-			});
-			micStreamRef.current = stream;
+			const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+			liveStreamRef.current = stream;
 			const ctx = new AudioContext();
 			audioCtxRef.current = ctx;
 			await ctx.audioWorklet.addModule("/worklets/pcm-worklet.js");
@@ -288,50 +233,20 @@ const VoiceAgentPage = () => {
 			workletNodeRef.current = node;
 			node.port.onmessage = (e: MessageEvent<ArrayBuffer>) => {
 				const ws = wsRef.current;
-				if (ws && ws.readyState === WebSocket.OPEN) {
-					ws.send(e.data);
-				}
+				if (ws && ws.readyState === WebSocket.OPEN) ws.send(e.data);
 			};
 			source.connect(node);
-			setIsMicOn(true);
+			setIsLiveMicOn(true);
 		} catch (err) {
-			const msg = err instanceof Error ? err.message : String(err);
-			toast.error(`Mic error: ${msg}`);
+			toast.error(`Microphone error: ${String(err)}`);
 		}
 	}, []);
 
-	const stopMic = useCallback(() => {
-		teardown();
-	}, [teardown]);
+	const stopLiveMic = useCallback(() => {
+		teardownLive();
+	}, [teardownLive]);
 
-	const clearMemory = useCallback(() => {
-		try {
-			wsRef.current?.send(JSON.stringify({ type: "clear_memory" }));
-			setTurns([]);
-			interimUserRef.current = "";
-			interimAssistantRef.current = "";
-			setInterimUser("");
-			setInterimAssistant("");
-			toast.success("Memory cleared");
-		} catch {
-			toast.error("Not connected");
-		}
-	}, []);
-
-	const bargeIn = useCallback(() => {
-		try {
-			wsRef.current?.send(JSON.stringify({ type: "barge_in" }));
-		} catch {}
-		cancelBrowserTts();
-	}, [cancelBrowserTts]);
-
-	useEffect(() => {
-		ttsModeRef.current = ttsMode;
-		// Switching mode mid-session: silence any in-flight speech so we
-		// don't have browser TTS speaking after the user moves to server TTS
-		// (or vice versa).
-		cancelBrowserTts();
-	}, [ttsMode, cancelBrowserTts]);
+	const clearCaptions = useCallback(() => setCaptions([]), []);
 
 	useEffect(() => {
 		return () => {
@@ -339,201 +254,222 @@ const VoiceAgentPage = () => {
 				wsRef.current?.close();
 			} catch {}
 			wsRef.current = null;
-			teardown();
-			playbackCtxRef.current?.close().catch(() => {});
-			playbackCtxRef.current = null;
+			teardownLive();
+			mediaRecorderRef.current?.stop?.();
+			dictationStreamRef.current?.getTracks().forEach((t) => {
+				t.stop();
+			});
 		};
-	}, [teardown]);
+	}, [teardownLive]);
 
-	const stateColor: Record<ConnState, string> = {
-		idle: "bg-muted text-muted-foreground",
-		connecting:
-			"bg-amber-100 text-amber-800 dark:bg-amber-950/40 dark:text-amber-200",
-		connected:
-			"bg-emerald-100 text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-200",
-		closed: "bg-muted text-muted-foreground",
-		error: "bg-rose-100 text-rose-800 dark:bg-rose-950/40 dark:text-rose-200",
-	};
+	// Switching mode silences any active capture/recording from the other mode.
+	const switchMode = useCallback(
+		(next: Mode) => {
+			if (next === mode) return;
+			if (mode === "dictation" && isRecording) {
+				mediaRecorderRef.current?.stop?.();
+				dictationStreamRef.current?.getTracks().forEach((t) => {
+					t.stop();
+				});
+				setIsRecording(false);
+			}
+			if (mode === "live") {
+				disconnectLive();
+			}
+			setMode(next);
+		},
+		[mode, isRecording, disconnectLive]
+	);
 
 	return (
-		<DashboardLayout pageTitle="Voice Agent">
-			<div className="flex flex-col h-[calc(100vh-4rem)] overflow-hidden">
-				<DemoPageDescription>
-					Bidirectional Vietnamese voice agent — Zipformer ASR (offline), Azure
-					OpenAI LLM (streaming), optional VieNeu TTS. Click{" "}
-					<strong>Connect</strong>, then <strong>Start mic</strong> and speak.
-					The agent responds with streaming text and (when TTS is on)
-					synthesized audio.
-				</DemoPageDescription>
+		<DashboardLayout>
+			<div className="flex flex-col h-[calc(100vh-3.5rem)]">
+				<DemoPageDescription
+					title="Voice Transcribe"
+					hint="ASR: offline Vietnamese Zipformer · No LLM, no agent — transcript only"
+				/>
 
-				<div className="flex items-center justify-between px-4 py-3 border-b bg-muted/30 flex-wrap gap-2">
-					<div className="flex items-center gap-2">
-						<span
-							className={`text-[11px] font-semibold uppercase tracking-wider px-2 py-1 rounded ${stateColor[connState]}`}
-						>
-							{connState}
-						</span>
-						{isMicOn && (
-							<span className="text-[11px] font-semibold uppercase tracking-wider px-2 py-1 rounded bg-rose-100 text-rose-800 dark:bg-rose-950/40 dark:text-rose-200 animate-pulse">
-								● mic on
-							</span>
-						)}
-					</div>
-					<div className="flex items-center gap-1.5 flex-wrap">
-						{connState !== "connected" ? (
-							<Button size="sm" className="h-8 text-xs" onClick={connect}>
-								Connect
-							</Button>
-						) : (
-							<Button
-								size="sm"
-								variant="outline"
-								className="h-8 text-xs"
-								onClick={disconnect}
-							>
-								Disconnect
-							</Button>
-						)}
-						{connState === "connected" && !isMicOn && (
-							<Button size="sm" className="h-8 text-xs" onClick={startMic}>
-								Start mic
-							</Button>
-						)}
-						{isMicOn && (
-							<Button
-								size="sm"
-								variant="outline"
-								className="h-8 text-xs"
-								onClick={stopMic}
-							>
-								Stop mic
-							</Button>
-						)}
-						{connState === "connected" && (
-							<>
-								<Button
-									size="sm"
-									variant="ghost"
-									className="h-8 text-xs"
-									onClick={bargeIn}
-								>
-									Barge-in
-								</Button>
-								<Button
-									size="sm"
-									variant="ghost"
-									className="h-8 text-xs"
-									onClick={clearMemory}
-								>
-									Clear memory
-								</Button>
-							</>
-						)}
-						<div className="flex items-center gap-2 text-[11px] text-muted-foreground ml-2">
-							<span className="font-medium text-foreground">TTS:</span>
-							<label className="flex items-center gap-1">
-								<input
-									type="radio"
-									name="tts-mode"
-									checked={ttsMode === "server"}
-									onChange={() => setTtsMode("server")}
-								/>
-								Server (VieNeu)
-							</label>
-							<label className="flex items-center gap-1">
-								<input
-									type="radio"
-									name="tts-mode"
-									checked={ttsMode === "browser"}
-									onChange={() => setTtsMode("browser")}
-								/>
-								Browser
-							</label>
-							<label className="flex items-center gap-1">
-								<input
-									type="radio"
-									name="tts-mode"
-									checked={ttsMode === "off"}
-									onChange={() => setTtsMode("off")}
-								/>
-								Off
-							</label>
-						</div>
-					</div>
-				</div>
-
-				<div className="flex-1 overflow-auto p-4 space-y-4">
-					{turns.length === 0 && !interimUser && !interimAssistant ? (
-						<DemoEmptyState
-							description={
-								<>
-									Click <strong>Connect</strong> then <strong>Start mic</strong>{" "}
-									and speak. Vietnamese only — the LLM is configured for
-									Vietnamese clinical conversation.
-								</>
-							}
-							hint="ASR: offline Zipformer · LLM: Azure OpenAI gpt-5-mini · TTS: VieNeu (when enabled)"
+				<div className="px-4 pb-2 flex items-center gap-3 border-b">
+					<span className="text-xs font-medium text-muted-foreground">
+						Mode:
+					</span>
+					<label className="flex items-center gap-1 text-[12px]">
+						<input
+							type="radio"
+							name="transcribe-mode"
+							checked={mode === "dictation"}
+							onChange={() => switchMode("dictation")}
 						/>
-					) : (
-						<>
-							{turns.map((t) => (
-								<TurnCard key={t.id} turn={t} />
-							))}
-							{(interimUser || interimAssistant) && (
-								<InterimCard user={interimUser} assistant={interimAssistant} />
-							)}
-						</>
-					)}
+						Dictation (record then transcribe)
+					</label>
+					<label className="flex items-center gap-1 text-[12px]">
+						<input
+							type="radio"
+							name="transcribe-mode"
+							checked={mode === "live"}
+							onChange={() => switchMode("live")}
+						/>
+						Live captions (streaming)
+					</label>
 				</div>
+
+				{mode === "dictation" ? (
+					<div className="flex-1 overflow-auto p-4 space-y-3">
+						<div className="flex items-center gap-2">
+							{!isRecording ? (
+								<Button
+									size="sm"
+									className="h-8 text-xs"
+									onClick={startDictation}
+									disabled={isTranscribing}
+								>
+									Start recording
+								</Button>
+							) : (
+								<Button
+									size="sm"
+									variant="destructive"
+									className="h-8 text-xs"
+									onClick={stopDictation}
+								>
+									Stop & transcribe
+								</Button>
+							)}
+							{isRecording && (
+								<span className="text-[12px] text-amber-700 dark:text-amber-300">
+									• Recording {recordElapsed.toFixed(1)}s
+								</span>
+							)}
+							{isTranscribing && (
+								<span className="text-[12px] text-muted-foreground">
+									Transcribing…
+								</span>
+							)}
+							{dictationText && (
+								<Button
+									size="sm"
+									variant="ghost"
+									className="h-8 text-xs ml-auto"
+									onClick={copyDictation}
+								>
+									Copy
+								</Button>
+							)}
+						</div>
+
+						{!isRecording && !isTranscribing && !dictationText ? (
+							<DemoEmptyState
+								description={
+									<>
+										Click <strong>Start recording</strong>, speak in Vietnamese,
+										then <strong>Stop & transcribe</strong>. The full transcript
+										will appear below.
+									</>
+								}
+								hint="Best for short notes, dictation, or single-take recordings."
+							/>
+						) : (
+							<div className="rounded-lg border bg-card px-4 py-3 min-h-[120px]">
+								<div className="text-[10px] uppercase font-semibold tracking-wider text-muted-foreground mb-2">
+									Transcript
+									{dictationDuration !== null && (
+										<span className="ml-2 normal-case font-normal text-[11px]">
+											· {dictationDuration.toFixed(2)}s audio
+										</span>
+									)}
+								</div>
+								<div className="text-[14px] whitespace-pre-wrap">
+									{dictationText || (
+										<span className="text-muted-foreground italic">
+											(no transcript yet)
+										</span>
+									)}
+								</div>
+							</div>
+						)}
+					</div>
+				) : (
+					<div className="flex-1 overflow-auto p-4 space-y-3">
+						<div className="flex items-center gap-2 flex-wrap">
+							{connState === "idle" ||
+							connState === "closed" ||
+							connState === "error" ? (
+								<Button size="sm" className="h-8 text-xs" onClick={connectLive}>
+									Connect
+								</Button>
+							) : (
+								<Button
+									size="sm"
+									variant="outline"
+									className="h-8 text-xs"
+									onClick={disconnectLive}
+								>
+									Disconnect
+								</Button>
+							)}
+							{connState === "connected" && !isLiveMicOn && (
+								<Button
+									size="sm"
+									className="h-8 text-xs"
+									onClick={startLiveMic}
+								>
+									Start mic
+								</Button>
+							)}
+							{isLiveMicOn && (
+								<Button
+									size="sm"
+									variant="outline"
+									className="h-8 text-xs"
+									onClick={stopLiveMic}
+								>
+									Stop mic
+								</Button>
+							)}
+							{captions.length > 0 && (
+								<Button
+									size="sm"
+									variant="ghost"
+									className="h-8 text-xs ml-auto"
+									onClick={clearCaptions}
+								>
+									Clear captions
+								</Button>
+							)}
+							<span className="text-[11px] text-muted-foreground">
+								status: {connState}
+								{isLiveMicOn ? " · mic on" : ""}
+							</span>
+						</div>
+
+						{captions.length === 0 ? (
+							<DemoEmptyState
+								description={
+									<>
+										Click <strong>Connect</strong> then{" "}
+										<strong>Start mic</strong> and speak. Each detected
+										utterance appears as a new caption line. No LLM is invoked.
+									</>
+								}
+								hint="Good for live captioning of meetings or lectures."
+							/>
+						) : (
+							<div className="space-y-2">
+								{captions.map((c) => (
+									<div
+										key={c.id}
+										className="rounded-md border bg-card px-3 py-2 text-[13px]"
+									>
+										{c.text}
+									</div>
+								))}
+							</div>
+						)}
+					</div>
+				)}
 			</div>
 		</DashboardLayout>
 	);
 };
 
-const TurnCard = ({ turn }: { turn: AgentTurn }) => (
-	<div className="space-y-2">
-		<div className="rounded-lg border bg-card px-3 py-2">
-			<div className="text-[10px] uppercase font-semibold tracking-wider text-muted-foreground mb-1">
-				You
-			</div>
-			<div className="text-[13px]">{turn.user || "(no transcript)"}</div>
-		</div>
-		<div className="rounded-lg border bg-primary/5 px-3 py-2">
-			<div className="text-[10px] uppercase font-semibold tracking-wider text-primary mb-1">
-				Assistant
-			</div>
-			<div className="text-[13px] whitespace-pre-wrap">
-				{turn.assistant || "(no response)"}
-			</div>
-		</div>
-	</div>
-);
-
-const InterimCard = ({
-	user,
-	assistant,
-}: {
-	user: string;
-	assistant: string;
-}) => (
-	<div className="space-y-2">
-		{user && (
-			<div className="rounded-lg border-2 border-dashed border-amber-300/60 bg-amber-50/40 dark:bg-amber-950/10 px-3 py-2">
-				<div className="text-[10px] uppercase font-semibold tracking-wider text-amber-700 dark:text-amber-300 mb-1">
-					You (transcribing)
-				</div>
-				<div className="text-[13px]">{user}</div>
-			</div>
-		)}
-		{assistant && (
-			<div className="rounded-lg border-2 border-dashed border-primary/40 bg-primary/5 px-3 py-2">
-				<div className="text-[10px] uppercase font-semibold tracking-wider text-primary mb-1">
-					Assistant (streaming)
-				</div>
-				<div className="text-[13px] whitespace-pre-wrap">{assistant}</div>
-			</div>
-		)}
-	</div>
-);
-
-export default VoiceAgentPage;
+export default VoiceTranscribePage;

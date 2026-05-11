@@ -48,8 +48,15 @@ const QUICK_LINKS = [
 	},
 	{
 		title: "Voice Transcribe",
-		description: "Convert medical audio to text",
+		description: "Convert speech to text (Vietnamese ASR)",
 		url: "/voice-transcribe",
+		icon: MicIcon,
+		color: "text-amber-500",
+	},
+	{
+		title: "Voice Agent",
+		description: "Bidirectional voice conversation with the AI",
+		url: "/voice-agent",
 		icon: MicIcon,
 		color: "text-amber-500",
 	},

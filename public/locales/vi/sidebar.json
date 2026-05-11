@@ -53,6 +53,9 @@
       "title": "Tìm kiếm AI"
     },
     "voiceTranscribe": {
+      "title": "Chép lời nói"
+    },
+    "voiceAgent": {
       "title": "Trợ lý giọng nói"
     },
     "medicalImage": {

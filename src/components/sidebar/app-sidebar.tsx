@@ -203,6 +203,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 				icon: MicIcon,
 			},
 			{
+				name: t("operation.voiceAgent.title"),
+				url: "/voice-agent",
+				icon: MicIcon,
+			},
+			{
 				name: t("operation.medicalImage.title"),
 				url: "/medical-image",
 				icon: ImageIcon,

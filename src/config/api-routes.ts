@@ -96,6 +96,17 @@ export const API_ROUTES = {
 			BASE_API_URL.replace("https://", "wss://").replace("http://", "ws://")
 		).toString(),
 		VOICE_AGENT_HEALTH: new URL(`voice-agent/healthz`, BASE_API_URL).toString(),
+		// Voice Transcribe (STT-only). Two endpoints share the voice-agent service:
+		//   POST /transcribe    — dictation: upload a WAV, get text back
+		//   WS   /ws/transcribe — live captions: stream PCM frames
+		VOICE_TRANSCRIBE_UPLOAD: new URL(
+			`voice-agent/transcribe`,
+			BASE_API_URL
+		).toString(),
+		VOICE_TRANSCRIBE_WS: new URL(
+			`voice-agent/ws/transcribe`,
+			BASE_API_URL.replace("https://", "wss://").replace("http://", "ws://")
+		).toString(),
 		MEDICAL_IMAGE: new URL(
 			`service/api/${API_VERSION}/medical_image/describe`,
 			BASE_API_URL

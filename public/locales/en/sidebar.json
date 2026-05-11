@@ -53,6 +53,9 @@
       "title": "AI Search"
     },
     "voiceTranscribe": {
+      "title": "Voice Transcribe"
+    },
+    "voiceAgent": {
       "title": "Voice Agent"
     },
     "medicalImage": {

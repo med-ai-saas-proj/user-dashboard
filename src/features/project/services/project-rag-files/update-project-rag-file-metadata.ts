@@ -3,11 +3,19 @@ import apiClient from "@/query/api-client";
 import type { ProjectRagFileMetadataInput } from "./project-rag-file.dto";
 
 export const updateProjectRagFileMetadata = async ({
-	projectId: _projectId,
+	projectId,
 	fileId,
 	extraMetadata,
 }: ProjectRagFileMetadataInput): Promise<void> => {
-	await apiClient.put(`${API_ROUTES.FILE_STORAGE.SERVICE}${fileId}/metadata`, {
-		extra_metadata: extraMetadata,
-	});
+	await apiClient.put(
+		`${API_ROUTES.FILE_STORAGE.USER}${fileId}/metadata`,
+		{
+			extra_metadata: extraMetadata,
+		},
+		{
+			params: {
+				project_uuid: projectId,
+			},
+		}
+	);
 };

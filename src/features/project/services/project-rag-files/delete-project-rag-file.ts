@@ -3,8 +3,12 @@ import apiClient from "@/query/api-client";
 import type { ProjectRagFileDeleteInput } from "./project-rag-file.dto";
 
 export const deleteProjectRagFile = async ({
-	projectId: _projectId,
+	projectId,
 	fileId,
 }: ProjectRagFileDeleteInput): Promise<void> => {
-	await apiClient.delete(`${API_ROUTES.FILE_STORAGE.SERVICE}${fileId}`);
+	await apiClient.delete(`${API_ROUTES.FILE_STORAGE.USER}${fileId}`, {
+		params: {
+			project_uuid: projectId,
+		},
+	});
 };

@@ -40,16 +40,21 @@ const waitForProjectRagFileTaskCompletion = async (
 };
 
 const uploadProjectRagFileToStorage = async ({
-	projectId: _projectId,
+	projectId,
 	file,
 }: ProjectRagFileUploadInput): Promise<string> => {
 	const formData = new FormData();
 	formData.append("file", file);
 
-	// Upload to the service-level file-storage endpoint (requires X-Api-Key)
+	// Upload uses the user file-storage POST endpoint.
 	const { data } = await apiClient.post<ProjectRagFileUploadResponse>(
-		API_ROUTES.FILE_STORAGE.SERVICE,
-		formData
+		API_ROUTES.FILE_STORAGE.USER,
+		formData,
+		{
+			params: {
+				project_uuid: projectId,
+			},
+		}
 	);
 
 	return data.file_id;
@@ -63,12 +68,17 @@ const createProjectRagFileTask = async ({
 	chunkOverlap = DEFAULT_CHUNK_OVERLAP,
 }: ProjectRagFileCreateInput): Promise<ProjectRagFileTaskResponse> => {
 	const { data } = await apiClient.post<ProjectRagFileTaskResponse>(
-		`${API_ROUTES.RAG.USER_BASE}/${projectId}/files`,
+		API_ROUTES.RAG.USER_FILES,
 		{
 			file_uid: fileId,
 			chunk_splitter: chunkSplitter,
 			chunk_size: chunkSize,
 			chunk_overlap: chunkOverlap,
+		},
+		{
+			params: {
+				project_uuid: projectId,
+			},
 		}
 	);
 

@@ -32,19 +32,19 @@ const buildMockProjects = (organizationId: string) => {
 	const seed = Mock.mock({
 		"results|40": [
 			{
-				id: "@id",
+				project_uuid: "@id",
 				name: "@title(2,4)",
 				description: "@sentence(6,12)",
 				archived: "@boolean(30, 70, true)", // 30% chance to be archived, 70% chance to be active
 			},
 		],
 	}).results as Array<
-		Pick<MockProject, "id" | "name" | "description" | "archived">
+		Pick<MockProject, "project_uuid" | "name" | "description" | "archived">
 	>;
 
 	defaultProjectIds.forEach((projectId, index) => {
 		if (seed[index]) {
-			seed[index].id = projectId;
+			seed[index].project_uuid = projectId;
 		}
 	});
 
@@ -69,7 +69,7 @@ const getProjects = (organizationId: string) => {
 
 const findProjectById = (projectId: string) => {
 	for (const projects of projectsByOrganization.values()) {
-		const project = projects.find((item) => item.id === projectId);
+		const project = projects.find((item) => item.project_uuid === projectId);
 		if (project) {
 			return project;
 		}
@@ -101,7 +101,7 @@ Mock.mock(
 		const project =
 			findProjectById(projectId) ||
 			getProjects(fallbackOrganizationId).find(
-				(item) => item.id === projectId
+				(item) => item.project_uuid === projectId
 			) ||
 			null;
 
@@ -111,7 +111,7 @@ Mock.mock(
 
 		// Keep both snake_case and camelCase keys for compatibility across callers.
 		return {
-			project_uuid: project.id,
+			project_uuid: project.project_uuid,
 			organization_id: project.organization_id,
 			archived: project.archived,
 			name: project.name,
@@ -207,7 +207,7 @@ Mock.mock(
 			typeof body?.description === "string" ? body.description.trim() : "";
 
 		const createdProject: OrganizationProject = {
-			id: Mock.mock("@id") as string,
+			project_uuid: Mock.mock("@id") as string,
 			name: projectName,
 			description: projectDescription,
 			organization_id: organizationId,

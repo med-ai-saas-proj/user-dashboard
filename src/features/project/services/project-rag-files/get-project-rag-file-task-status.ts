@@ -7,7 +7,7 @@ export const getProjectRagFileTaskStatus = async (
 	taskId: string
 ): Promise<ProjectRagFileTaskResponse> => {
 	const { data } = await apiClient.get<ProjectRagFileTaskResponse>(
-		`${API_ROUTES.RAG.USER_FILE_TASK}${projectId}/${taskId}`
+		`${API_ROUTES.RAG.USER_BASE}/${projectId}/files/${taskId}`
 	);
 
 	return data;

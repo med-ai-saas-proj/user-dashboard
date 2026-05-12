@@ -7,10 +7,7 @@ export const updateProjectRagFileMetadata = async ({
 	fileId,
 	extraMetadata,
 }: ProjectRagFileMetadataInput): Promise<void> => {
-	await apiClient.put(
-		`${API_ROUTES.FILE_STORAGE.USER}${projectId}/${fileId}/metadata`,
-		{
-			extra_metadata: extraMetadata,
-		}
-	);
+	await apiClient.put(`${API_ROUTES.FILE_STORAGE.SERVICE}${fileId}/metadata`, {
+		extra_metadata: extraMetadata,
+	});
 };

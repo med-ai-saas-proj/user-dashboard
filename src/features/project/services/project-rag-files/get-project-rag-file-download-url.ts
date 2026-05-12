@@ -11,7 +11,7 @@ export const getProjectRagFileDownloadUrl = async ({
 	fileId,
 }: ProjectRagFileDownloadUrlInput): Promise<string> => {
 	const { data } = await apiClient.get<ProjectRagFileDownloadUrlResponse>(
-		`${API_ROUTES.FILE_STORAGE.USER}${projectId}/${fileId}/presigned-url`
+		`${API_ROUTES.FILE_STORAGE.SERVICE}${fileId}/presigned-url`
 	);
 
 	return data.url;

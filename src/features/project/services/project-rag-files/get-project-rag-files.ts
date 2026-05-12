@@ -10,7 +10,12 @@ export const getProjectRagFiles = async (
 	projectId: string
 ): Promise<ProjectRagFile[]> => {
 	const { data } = await apiClient.get<ProjectRagFileInfoResponse[]>(
-		`${API_ROUTES.RAG.USER_BASE}/files/${projectId}`
+		API_ROUTES.FILE_STORAGE.SERVICE,
+		{
+			params: {
+				project_uuid: projectId,
+			},
+		}
 	);
 
 	return data

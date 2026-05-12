@@ -111,7 +111,7 @@ Mock.mock(
 
 		// Keep both snake_case and camelCase keys for compatibility across callers.
 		return {
-			id: project.id,
+			project_uuid: project.id,
 			organization_id: project.organization_id,
 			archived: project.archived,
 			name: project.name,

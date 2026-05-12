@@ -38,7 +38,7 @@ const DashboardAggregateProjects = () => {
 	const projectUids = useMemo(
 		() =>
 			(projectsData?.results as OrganizationProject[] | undefined)?.map(
-				(project) => project.id
+				(project) => project.project_uuid
 			) ?? [],
 		[projectsData?.results]
 	);

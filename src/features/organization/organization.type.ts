@@ -26,7 +26,7 @@ export type OrganizationPermissions = {
 };
 
 export type OrganizationProject = {
-	id: string;
+	project_uuid: string;
 	name: string;
 	description: string;
 	organization_id: string;

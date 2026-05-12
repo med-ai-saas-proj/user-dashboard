@@ -94,7 +94,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 			},
 			projects: projectList?.results.map((project) => ({
 				name: project.name,
-				id: project.id,
+				project_uuid: project.project_uuid,
 			})),
 		},
 		user: userInfo,

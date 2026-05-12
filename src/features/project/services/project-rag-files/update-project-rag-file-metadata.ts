@@ -3,7 +3,7 @@ import apiClient from "@/query/api-client";
 import type { ProjectRagFileMetadataInput } from "./project-rag-file.dto";
 
 export const updateProjectRagFileMetadata = async ({
-	projectId,
+	projectId: _projectId,
 	fileId,
 	extraMetadata,
 }: ProjectRagFileMetadataInput): Promise<void> => {

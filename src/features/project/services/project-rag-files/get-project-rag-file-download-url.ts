@@ -7,7 +7,7 @@ type ProjectRagFileDownloadUrlResponse = {
 };
 
 export const getProjectRagFileDownloadUrl = async ({
-	projectId,
+	projectId: _projectId,
 	fileId,
 }: ProjectRagFileDownloadUrlInput): Promise<string> => {
 	const { data } = await apiClient.get<ProjectRagFileDownloadUrlResponse>(

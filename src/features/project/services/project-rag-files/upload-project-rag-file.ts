@@ -40,7 +40,7 @@ const waitForProjectRagFileTaskCompletion = async (
 };
 
 const uploadProjectRagFileToStorage = async ({
-	projectId,
+	projectId: _projectId,
 	file,
 }: ProjectRagFileUploadInput): Promise<string> => {
 	const formData = new FormData();

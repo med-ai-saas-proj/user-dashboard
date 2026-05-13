@@ -257,13 +257,26 @@ export default function ProjectBucketsPage() {
 		}
 
 		try {
+			const extraMetadata: Record<string, unknown> = {};
+			for (const tag of tempTags) {
+				const separatorIndex = tag.indexOf(":");
+				if (separatorIndex === -1) {
+					extraMetadata[tag.trim()] = true;
+				} else {
+					const key = tag.substring(0, separatorIndex).trim();
+					const val = tag.substring(separatorIndex + 1).trim();
+					if (val === "true") extraMetadata[key] = true;
+					else if (val === "false") extraMetadata[key] = false;
+					else if (!isNaN(Number(val)) && val !== "")
+						extraMetadata[key] = Number(val);
+					else extraMetadata[key] = val;
+				}
+			}
+
 			await updateMetadataMutation.mutateAsync({
 				projectId,
 				fileId: selectedFile.id,
-				extraMetadata: {
-					...(selectedFile.extraMetadata || {}),
-					tags: tempTags.join(","),
-				},
+				extraMetadata,
 			});
 			toast.success(t("bucket:messages.tagsUpdated"));
 			setTagDialogOpen(false);
@@ -734,7 +747,7 @@ export default function ProjectBucketsPage() {
 							</div>
 							<Input
 								id="tags"
-								placeholder={t("bucket:tagDialog.inputPlaceholder")}
+								placeholder="e.g. project_name: ENreco Archive"
 								value={tagInput}
 								onChange={(event) => setTagInput(event.target.value)}
 								onKeyDown={addTempTag}

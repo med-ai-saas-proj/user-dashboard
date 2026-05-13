@@ -44,7 +44,7 @@ export const addProjectRagFile = async ({
 	chunkSize = DEFAULT_CHUNK_SIZE,
 	chunkOverlap = DEFAULT_CHUNK_OVERLAP,
 }: ProjectRagFileCreateInput): Promise<ProjectRagFileTaskResponse> => {
-	const { data } = await apiClient.post<ProjectRagFileTaskResponse>(
+	const { data } = await apiClient.post<string>(
 		API_ROUTES.RAG.USER_FILES,
 		{
 			file_uid: fileId,
@@ -59,5 +59,5 @@ export const addProjectRagFile = async ({
 		}
 	);
 
-	return waitForProjectRagFileTaskCompletion(projectId, data.task_id);
+	return waitForProjectRagFileTaskCompletion(projectId, data);
 };

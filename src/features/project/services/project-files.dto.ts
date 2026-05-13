@@ -70,12 +70,6 @@ export type ProjectRagFileMetadataInput = {
 	extraMetadata: Record<string, unknown>;
 };
 
-const isStringArray = (value: unknown): value is string[] => {
-	return (
-		Array.isArray(value) && value.every((item) => typeof item === "string")
-	);
-};
-
 export const getProjectRagFileTags = (
 	extraMetadata: ProjectRagFileMetadata
 ): string[] => {
@@ -83,14 +77,12 @@ export const getProjectRagFileTags = (
 		return [];
 	}
 
-	const tags = (extraMetadata as { tags?: unknown }).tags;
-	if (typeof tags === "string") {
-		return tags
-			.split(",")
-			.map((tag) => tag.trim())
-			.filter(Boolean);
-	}
-	return isStringArray(tags) ? tags : [];
+	return Object.entries(extraMetadata).map(([key, value]) => {
+		if (typeof value === "object") {
+			return `${key}: ${JSON.stringify(value)}`;
+		}
+		return `${key}: ${value}`;
+	});
 };
 
 export const mapProjectRagFileResponse = (

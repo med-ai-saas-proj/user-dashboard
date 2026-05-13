@@ -1,6 +1,6 @@
 import { API_ROUTES } from "@/config/api-routes";
 import apiClient from "@/query/api-client";
-import type { ProjectRagFileTaskResponse } from "./project-rag-file.dto";
+import type { ProjectRagFileTaskResponse } from "../project-files.dto";
 
 export const getProjectRagFileTaskStatus = async (
 	projectId: string,

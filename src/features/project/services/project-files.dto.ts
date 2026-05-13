@@ -84,6 +84,12 @@ export const getProjectRagFileTags = (
 	}
 
 	const tags = (extraMetadata as { tags?: unknown }).tags;
+	if (typeof tags === "string") {
+		return tags
+			.split(",")
+			.map((tag) => tag.trim())
+			.filter(Boolean);
+	}
 	return isStringArray(tags) ? tags : [];
 };
 

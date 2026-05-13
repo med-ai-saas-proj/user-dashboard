@@ -1,12 +1,12 @@
 import { API_ROUTES } from "@/config/api-routes";
 import apiClient from "@/query/api-client";
-import type { ProjectRagFileDownloadUrlInput } from "./project-rag-file.dto";
+import type { ProjectRagFileDownloadUrlInput } from "../project-files.dto";
 
 type ProjectRagFileDownloadUrlResponse = {
 	url: string;
 };
 
-export const getProjectRagFileDownloadUrl = async ({
+export const getProjectStorageFileDownloadUrl = async ({
 	projectId,
 	fileId,
 }: ProjectRagFileDownloadUrlInput): Promise<string> => {

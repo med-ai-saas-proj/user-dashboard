@@ -1,8 +1,8 @@
 import { API_ROUTES } from "@/config/api-routes";
 import apiClient from "@/query/api-client";
-import type { ProjectRagFileDeleteInput } from "./project-rag-file.dto";
+import type { ProjectRagFileDeleteInput } from "../project-files.dto";
 
-export const deleteProjectRagFile = async ({
+export const deleteProjectStorageFile = async ({
 	projectId,
 	fileId,
 }: ProjectRagFileDeleteInput): Promise<void> => {

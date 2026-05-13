@@ -4,9 +4,7 @@ import { getProjectRagFileTaskStatus } from "./get-project-rag-file-task-status"
 import type {
 	ProjectRagFileCreateInput,
 	ProjectRagFileTaskResponse,
-	ProjectRagFileUploadInput,
-	ProjectRagFileUploadResponse,
-} from "./project-rag-file.dto";
+} from "../project-files.dto";
 
 const DEFAULT_CHUNK_SPLITTER: ProjectRagFileCreateInput["chunkSplitter"] =
 	"recursive";
@@ -39,28 +37,7 @@ const waitForProjectRagFileTaskCompletion = async (
 	}
 };
 
-const uploadProjectRagFileToStorage = async ({
-	projectId,
-	file,
-}: ProjectRagFileUploadInput): Promise<string> => {
-	const formData = new FormData();
-	formData.append("file", file);
-
-	// Upload uses the user file-storage POST endpoint.
-	const { data } = await apiClient.post<ProjectRagFileUploadResponse>(
-		API_ROUTES.FILE_STORAGE.USER,
-		formData,
-		{
-			params: {
-				project_uuid: projectId,
-			},
-		}
-	);
-
-	return data.file_id;
-};
-
-const createProjectRagFileTask = async ({
+export const addProjectRagFile = async ({
 	projectId,
 	fileId,
 	chunkSplitter = DEFAULT_CHUNK_SPLITTER,
@@ -82,15 +59,5 @@ const createProjectRagFileTask = async ({
 		}
 	);
 
-	return data;
-};
-
-export const uploadProjectRagFile = async ({
-	projectId,
-	file,
-}: ProjectRagFileUploadInput): Promise<ProjectRagFileTaskResponse> => {
-	const fileId = await uploadProjectRagFileToStorage({ projectId, file });
-	const task = await createProjectRagFileTask({ projectId, fileId });
-
-	return waitForProjectRagFileTaskCompletion(projectId, task.task_id);
+	return waitForProjectRagFileTaskCompletion(projectId, data.task_id);
 };

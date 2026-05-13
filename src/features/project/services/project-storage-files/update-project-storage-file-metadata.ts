@@ -1,8 +1,8 @@
 import { API_ROUTES } from "@/config/api-routes";
 import apiClient from "@/query/api-client";
-import type { ProjectRagFileMetadataInput } from "./project-rag-file.dto";
+import type { ProjectRagFileMetadataInput } from "../project-files.dto";
 
-export const updateProjectRagFileMetadata = async ({
+export const updateProjectStorageFileMetadata = async ({
 	projectId,
 	fileId,
 	extraMetadata,

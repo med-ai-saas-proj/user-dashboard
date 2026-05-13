@@ -6,11 +6,11 @@ import {
 	type ProjectRagFileInfoResponse,
 } from "../project-files.dto";
 
-export const getProjectRagFiles = async (
+export const getProjectStorageFiles = async (
 	projectId: string
 ): Promise<ProjectRagFile[]> => {
 	const { data } = await apiClient.get<ProjectRagFileInfoResponse[]>(
-		API_ROUTES.RAG.USER_FILES,
+		API_ROUTES.FILE_STORAGE.USER,
 		{
 			params: {
 				project_uuid: projectId,

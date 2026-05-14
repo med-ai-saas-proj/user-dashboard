@@ -13,6 +13,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { DemoEmptyState, DemoPageDescription } from "@/components/demo";
 import { Button } from "@/components/shadcn/button";
+import { ViewCodeDialog } from "@/components/view-code-dialog";
 import { API_ROUTES } from "@/config/api-routes";
 import DashboardLayout from "@/layouts/dashboard-layout";
 
@@ -308,12 +309,20 @@ const VoiceTranscribePage = () => {
 	return (
 		<DashboardLayout>
 			<div className="flex flex-col h-[calc(100vh-3.5rem)]">
-				<DemoPageDescription>
-					Speech-to-text only — offline Vietnamese Zipformer ASR, no LLM, no
-					agent. Choose <strong>Dictation</strong> to record a clip and get the
-					full transcript, or <strong>Live captions</strong> to stream PCM
-					frames and see captions appear utterance by utterance.
-				</DemoPageDescription>
+				<div className="flex items-start justify-between gap-4 px-4 pt-2">
+					<DemoPageDescription>
+						Speech-to-text only — offline Vietnamese Zipformer ASR, no LLM, no
+						agent. Choose <strong>Dictation</strong> to record a clip and get
+						the full transcript, or <strong>Live captions</strong> to stream PCM
+						frames and see captions appear utterance by utterance.
+					</DemoPageDescription>
+					<ViewCodeDialog
+						endpoint={API_ROUTES.SERVICES.VOICE_TRANSCRIBE_UPLOAD}
+						method="POST"
+						contentType="multipart/form-data"
+						description="Dictation — upload an audio file (WAV, MP3, M4A, MP4, WebM, etc.), get the full Vietnamese transcript back. For live captions, open a WebSocket to /ws/transcribe and stream 16 kHz int16 mono PCM frames."
+					/>
+				</div>
 
 				<div className="px-4 pb-2 flex items-center gap-3 border-b">
 					<span className="text-xs font-medium text-muted-foreground">

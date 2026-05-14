@@ -1,14 +1,14 @@
+import { BookOpenIcon, SearchIcon, Trash2Icon } from "lucide-react";
+import { ApiTopology, TOPOLOGIES } from "@/components/api-topology";
+import { Button } from "@/components/shadcn/button";
+import { ViewCodeDialog } from "@/components/view-code-dialog";
 import { API_ROUTES } from "@/config/api-routes";
 import type { AISearchRequest } from "@/features/pg-ai-search/services/ai-search.dto";
 import { useAISearchStore } from "@/features/pg-ai-search/store/ai-search.store";
 import ChatContent from "@/features/pg-chat/components/ChatContent";
 import ChatInput from "@/features/pg-chat/components/ChatInput";
-import { ApiTopology, TOPOLOGIES } from "@/components/api-topology";
-import { useStream } from "@/lib/streaming/use-stream";
-import { ViewCodeDialog } from "@/components/view-code-dialog";
 import DashboardLayout from "@/layouts/dashboard-layout";
-import { SearchIcon, BookOpenIcon, Trash2Icon } from "lucide-react";
-import { Button } from "@/components/shadcn/button";
+import { useStream } from "@/lib/streaming/use-stream";
 
 export default function PlaygroundAISearchPage() {
 	const {
@@ -98,15 +98,16 @@ export default function PlaygroundAISearchPage() {
 						endpoint={API_ROUTES.SERVICES.AI_SEARCH}
 						method="POST"
 						body={{
-							conversation_id: crypto.randomUUID(),
-							model: "gpt-4o-2",
+							// Omit `conversation_id` on the first call — the server
+							// returns one; reuse it on follow-up calls for memory.
+							...(conversationId ? { conversation_id: conversationId } : {}),
 							query: "search query",
 							mode,
 						}}
 						description={
 							mode === "deep_research"
-								? "Deep research — multi-source comprehensive investigation (streaming SSE)"
-								: "AI-powered medical knowledge search (streaming SSE)"
+								? "Deep research — multi-source comprehensive investigation. Reuse the returned conversation_id on follow-up calls."
+								: "AI-powered medical knowledge search. Reuse the returned conversation_id on follow-up calls."
 						}
 					/>
 				</div>

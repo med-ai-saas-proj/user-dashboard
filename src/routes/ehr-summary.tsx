@@ -543,7 +543,7 @@ const EhrSummaryPage = () => {
 				headers,
 				body: JSON.stringify({
 					input_ehr: { type: "custom_json", custom_json: customJson },
-					model: "qwen-cluster",
+					model: "gpt-4o-2",
 					stream: true,
 				}),
 			});
@@ -966,7 +966,7 @@ const EhrSummaryPage = () => {
 											},
 										},
 									},
-									model: "qwen-cluster",
+									model: "gpt-4o-2",
 									stream: false,
 								}}
 								description="Generate clinical summary from merged FHIR data"

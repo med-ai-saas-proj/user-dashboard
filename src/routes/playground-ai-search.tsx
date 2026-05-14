@@ -98,8 +98,8 @@ export default function PlaygroundAISearchPage() {
 						endpoint={API_ROUTES.SERVICES.AI_SEARCH}
 						method="POST"
 						body={{
-							conversation_id: null,
-							model: "default",
+							conversation_id: crypto.randomUUID(),
+							model: "gpt-4o-2",
 							query: "search query",
 							mode,
 						}}

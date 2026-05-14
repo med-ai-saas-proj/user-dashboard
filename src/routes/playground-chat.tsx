@@ -69,11 +69,12 @@ export default function PlaygroundChatPage() {
 							endpoint={API_ROUTES.SERVICES.CHAT}
 							method="POST"
 							body={{
-								conversation_id: null,
-								model: "default",
+								conversation_id: conversationId ?? crypto.randomUUID(),
+								model: model || "gpt-4o-2",
+								stream: true,
 								input: "Hello, how can you help?",
 							}}
-							description="Chat with AI assistant (streaming SSE)"
+							description="Chat with AI assistant (streaming SSE). Reuse conversation_id across requests to keep session memory."
 						/>
 					}
 				/>

@@ -747,7 +747,7 @@ const OphthSummaryPage = () => {
 				headers,
 				body: JSON.stringify({
 					ehr_json: parsed,
-					model: "qwen-cluster",
+					model: "gpt-4o-2",
 					stream: false,
 				}),
 			});
@@ -930,7 +930,7 @@ const OphthSummaryPage = () => {
 											encounters: [],
 										},
 									},
-									model: "qwen-cluster",
+									model: "gpt-4o-2",
 									stream: false,
 								}}
 								description="Generate structured ophthalmology summary"

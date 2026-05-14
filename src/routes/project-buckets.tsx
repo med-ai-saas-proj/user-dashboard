@@ -128,7 +128,8 @@ export default function ProjectBucketsPage() {
 	const [isDragging, setIsDragging] = useState(false);
 	const [tagDialogOpen, setTagDialogOpen] = useState(false);
 	const [selectedFile, setSelectedFile] = useState<ProjectRagFile | null>(null);
-	const [tagInput, setTagInput] = useState("");
+	const [tagKeyInput, setTagKeyInput] = useState("");
+	const [tagValueInput, setTagValueInput] = useState("");
 	const [tempTags, setTempTags] = useState<string[]>([]);
 
 	const {
@@ -247,7 +248,8 @@ export default function ProjectBucketsPage() {
 	const openTagDialog = (file: ProjectRagFile) => {
 		setSelectedFile(file);
 		setTempTags(file.tags);
-		setTagInput("");
+		setTagKeyInput("");
+		setTagValueInput("");
 		setTagDialogOpen(true);
 	};
 
@@ -290,17 +292,29 @@ export default function ProjectBucketsPage() {
 		}
 	};
 
-	const addTempTag = (event: KeyboardEvent<HTMLInputElement>) => {
-		if (event.key !== "Enter" || !tagInput.trim()) {
+	const addTempTag = (event?: KeyboardEvent<HTMLInputElement>) => {
+		if (event && event.key !== "Enter") {
 			return;
 		}
 
-		event.preventDefault();
-		const newTag = tagInput.trim();
+		if (event) {
+			event.preventDefault();
+		}
+
+		const key = tagKeyInput.trim();
+		const value = tagValueInput.trim();
+		if (!key) return;
+
+		let newTag = key;
+		if (value) {
+			newTag += `: ${value}`;
+		}
+
 		if (!tempTags.includes(newTag)) {
 			setTempTags([...tempTags, newTag]);
 		}
-		setTagInput("");
+		setTagKeyInput("");
+		setTagValueInput("");
 	};
 
 	const removeTempTag = (tagToRemove: string) => {
@@ -745,15 +759,33 @@ export default function ProjectBucketsPage() {
 									</span>
 								))}
 							</div>
-							<Input
-								id="tags"
-								placeholder="e.g. project_name: ENreco Archive"
-								value={tagInput}
-								onChange={(event) => setTagInput(event.target.value)}
-								onKeyDown={addTempTag}
-							/>
+							<div className="flex gap-2">
+								<Input
+									id="tags-key"
+									placeholder="Key (e.g., type)"
+									value={tagKeyInput}
+									onChange={(event) => setTagKeyInput(event.target.value)}
+									onKeyDown={addTempTag}
+									className="flex-1"
+								/>
+								<Input
+									id="tags-value"
+									placeholder="Value (e.g., film)"
+									value={tagValueInput}
+									onChange={(event) => setTagValueInput(event.target.value)}
+									onKeyDown={addTempTag}
+									className="flex-1"
+								/>
+								<Button
+									type="button"
+									onClick={() => addTempTag()}
+									variant="secondary"
+								>
+									Add
+								</Button>
+							</div>
 							<p className="text-xs text-muted-foreground">
-								{t("bucket:tagDialog.helper")}
+								Enter a key and an optional value to add it as metadata.
 							</p>
 						</div>
 					</div>

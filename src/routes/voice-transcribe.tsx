@@ -56,7 +56,16 @@ const VoiceTranscribePage = () => {
 
 	const startDictation = useCallback(async () => {
 		try {
-			const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+			// Turn off Chrome's default audio processing chain. Echo cancellation
+			// + noise suppression + auto-gain can mangle Vietnamese tones and
+			// short clips, leaving the ASR with near-silence to chew on.
+			const stream = await navigator.mediaDevices.getUserMedia({
+				audio: {
+					echoCancellation: false,
+					noiseSuppression: false,
+					autoGainControl: false,
+				},
+			});
 			dictationStreamRef.current = stream;
 			recordedChunksRef.current = [];
 			// Prefer webm/opus where available (Chrome/Edge); Safari may need mp4/aac.
@@ -76,7 +85,10 @@ const VoiceTranscribePage = () => {
 			rec.ondataavailable = (e) => {
 				if (e.data && e.data.size > 0) recordedChunksRef.current.push(e.data);
 			};
-			rec.start();
+			// `timeslice` forces a dataavailable event every second, which has
+			// two benefits: the final cluster always gets flushed on stop() and
+			// a network blip won't lose the whole take.
+			rec.start(1000);
 			mediaRecorderRef.current = rec;
 			recordStartRef.current = Date.now();
 			setRecordElapsed(0);
@@ -132,6 +144,15 @@ const VoiceTranscribePage = () => {
 		const rec = mediaRecorderRef.current;
 		if (!rec) return;
 		setIsRecording(false);
+		// Ask for the final cluster *before* stop() so the trailing audio
+		// (and the cluster cue index) lands in recordedChunks. Without this,
+		// some browsers ship a webm whose duration header points past the
+		// last actual cluster and ffmpeg cuts the decode short.
+		try {
+			rec.requestData();
+		} catch {
+			// Older browsers: requestData may throw on a non-recording state.
+		}
 		await new Promise<void>((resolve) => {
 			rec.onstop = () => resolve();
 			rec.stop();

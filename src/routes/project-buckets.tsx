@@ -268,28 +268,6 @@ export default function ProjectBucketsPage() {
 					onDownloadFile={downloadFile}
 					onOpenTagDialog={openTagDialog}
 					onDeleteFile={promptDeleteFile}
-					tableTitle={t("bucket:table.title")}
-					tableDescription={t("bucket:table.description")}
-					searchPlaceholder={t("bucket:table.searchPlaceholder")}
-					tableLoading={t("bucket:table.loading")}
-					tableRefreshing={t("bucket:table.refreshing")}
-					tableNoTags={t("bucket:table.noTags")}
-					tableActions={t("bucket:table.actions")}
-					tableFileName={t("bucket:table.fileName")}
-					tableFileType={t("bucket:table.fileType")}
-					tableFileSize={t("bucket:table.fileSize")}
-					tableUploadDate={t("bucket:table.uploadDate")}
-					tableTags={t("bucket:table.tags")}
-					emptyStateTitle={t("bucket:emptyState.title")}
-					emptyStateDescription={t("bucket:emptyState.description")}
-					emptyStateButtonText={t("bucket:emptyState.buttonText")}
-					ragTitle={t("bucket:rag.title", "RAG Data")}
-					ragDescription={t(
-						"bucket:rag.description",
-						"Files successfully uploaded and extracted into the Vector search engine."
-					)}
-					ragEmptyState={t("bucket:rag.emptyState", "No files found in RAG.")}
-					ragQueryButton={t("bucket:rag.queryButton", "Query")}
 				/>
 			</div>
 

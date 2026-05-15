@@ -34,6 +34,7 @@ import {
 	TabsList,
 	TabsTrigger,
 } from "@/components/shadcn/tabs";
+import { useTranslation } from "react-i18next";
 
 type ProjectBucketsTabsProps = {
 	files: ProjectRagFile[];
@@ -51,25 +52,6 @@ type ProjectBucketsTabsProps = {
 	onDownloadFile: (file: ProjectRagFile) => void;
 	onOpenTagDialog: (file: ProjectRagFile) => void;
 	onDeleteFile: (file: ProjectRagFile) => void;
-	tableTitle: string;
-	tableDescription: string;
-	searchPlaceholder: string;
-	tableLoading: string;
-	tableRefreshing: string;
-	tableNoTags: string;
-	tableActions: string;
-	tableFileName: string;
-	tableFileType: string;
-	tableFileSize: string;
-	tableUploadDate: string;
-	tableTags: string;
-	emptyStateTitle: string;
-	emptyStateDescription: string;
-	emptyStateButtonText: string;
-	ragTitle: string;
-	ragDescription: string;
-	ragEmptyState: string;
-	ragQueryButton: string;
 };
 
 export default function ProjectBucketsTabs({
@@ -88,31 +70,43 @@ export default function ProjectBucketsTabs({
 	onDownloadFile,
 	onOpenTagDialog,
 	onDeleteFile,
-	tableTitle,
-	tableDescription,
-	searchPlaceholder,
-	tableLoading,
-	tableRefreshing,
-	tableNoTags,
-	tableActions,
-	tableFileName,
-	tableFileType,
-	tableFileSize,
-	tableUploadDate,
-	tableTags,
-	emptyStateTitle,
-	emptyStateDescription,
-	emptyStateButtonText,
-	ragTitle,
-	ragDescription,
-	ragEmptyState,
-	ragQueryButton,
 }: ProjectBucketsTabsProps) {
+	const { t } = useTranslation("bucket");
+
+	const tableTitle = t("table.title");
+	const tableDescription = t("table.description");
+	const searchPlaceholder = t("table.searchPlaceholder");
+	const tableLoading = t("table.loading");
+	const tableRefreshing = t("table.refreshing");
+	const tableNoTags = t("table.noTags");
+	const tableActions = t("table.actions");
+	const tableFileName = t("table.fileName");
+	const tableFileType = t("table.fileType");
+	const tableFileSize = t("table.fileSize");
+	const tableUploadDate = t("table.uploadDate");
+	const tableTags = t("table.tags");
+	const emptyStateTitle = t("emptyState.title");
+	const emptyStateDescription = t("emptyState.description");
+	const emptyStateButtonText = t("emptyState.buttonText");
+	const ragTitle = t("rag.title", { defaultValue: "RAG Data" });
+	const ragDescription = t("rag.description", {
+		defaultValue:
+			"Files successfully uploaded and extracted into the Vector search engine.",
+	});
+	const ragEmptyState = t("rag.emptyState", {
+		defaultValue: "No files found in RAG.",
+	});
+	const ragQueryButton = t("rag.queryButton", { defaultValue: "Query" });
+
 	return (
 		<Tabs defaultValue="storage" className="w-full">
 			<TabsList className="grid w-full grid-cols-2 max-w-[400px]">
-				<TabsTrigger value="storage">Storage Files</TabsTrigger>
-				<TabsTrigger value="rag">RAG Files</TabsTrigger>
+				<TabsTrigger value="storage">
+					{t("tabs.storage", { defaultValue: "Storage Files" })}
+				</TabsTrigger>
+				<TabsTrigger value="rag">
+					{t("tabs.rag", { defaultValue: "RAG Files" })}
+				</TabsTrigger>
 			</TabsList>
 			<TabsContent value="storage">
 				<Card>
@@ -214,7 +208,9 @@ export default function ProjectBucketsTabs({
 															variant="ghost"
 															size="icon"
 															onClick={() => onAddToRag(file)}
-															title="Add to RAG"
+															title={t("rag.actions.add", {
+																defaultValue: "Add to RAG",
+															})}
 															disabled={
 																isAddToRagDisabled ||
 																ragFiles.some(
@@ -228,7 +224,9 @@ export default function ProjectBucketsTabs({
 															variant="ghost"
 															size="icon"
 															onClick={() => onDownloadFile(file)}
-															title="Download"
+															title={t("actions.download", {
+																defaultValue: "Download",
+															})}
 														>
 															<DownloadIcon className="size-4" />
 														</Button>
@@ -236,7 +234,9 @@ export default function ProjectBucketsTabs({
 															variant="ghost"
 															size="icon"
 															onClick={() => onOpenTagDialog(file)}
-															title="Edit tags"
+															title={t("actions.editTags", {
+																defaultValue: "Edit tags",
+															})}
 														>
 															<TagIcon className="size-4" />
 														</Button>
@@ -245,7 +245,9 @@ export default function ProjectBucketsTabs({
 															size="icon"
 															className="text-destructive hover:text-destructive"
 															onClick={() => onDeleteFile(file)}
-															title="Delete"
+															title={t("actions.delete", {
+																defaultValue: "Delete",
+															})}
 														>
 															<Trash2Icon className="size-4" />
 														</Button>

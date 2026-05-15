@@ -58,6 +58,12 @@
     "deleteError": "Không thể xóa tệp.",
     "deleted": "Đã xóa tệp.",
     "tagsUpdated": "Đã cập nhật tags.",
-    "tagsUpdateError": "Không thể cập nhật tags."
+    "tagsUpdateError": "Không thể cập nhật tags.",
+    "downloading": "Downloading {{fileName}}..."
+  },
+  "rag": {
+    "loading": "Adding {{fileName}} to RAG...",
+    "success": "{{fileName}} has been added to RAG.",
+    "error": "Failed to add {{fileName}} to RAG."
   }
 }

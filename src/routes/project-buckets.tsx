@@ -325,9 +325,12 @@ export default function ProjectBucketsPage() {
 
 	const downloadFile = async (file: ProjectRagFile) => {
 		try {
-			toast.loading(t("bucket:messages.downloading", "Downloading..."), {
-				id: "downloading",
-			});
+			toast.loading(
+				t("bucket:messages.downloading", { fileName: file.filename }),
+				{
+					id: "downloading",
+				}
+			);
 			const downloadUrl = await getProjectStorageFileDownloadUrl({
 				projectId,
 				fileId: file.id,
@@ -390,10 +393,12 @@ export default function ProjectBucketsPage() {
 				fileId: file.id,
 			}),
 			{
-				loading: `Adding ${file.filename} to RAG...`,
-				success: "File added to RAG successfully",
+				loading: t("bucket:rag.loading", { fileName: file.filename }),
+				success: t("bucket:rag.success", { fileName: file.filename }),
 				error: (err) =>
-					err instanceof Error ? err.message : "Failed to add file to RAG",
+					err instanceof Error
+						? err.message
+						: t("bucket:rag.error", { fileName: file.filename }),
 			}
 		);
 	};

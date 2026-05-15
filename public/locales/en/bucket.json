@@ -58,6 +58,12 @@
     "deleteError": "Failed to delete the file.",
     "deleted": "File deleted.",
     "tagsUpdated": "Tags updated.",
-    "tagsUpdateError": "Failed to update tags."
+    "tagsUpdateError": "Failed to update tags.",
+    "downloading": "Downloading {{fileName}}..."
+  },
+  "rag": {
+    "loading": "Adding {{fileName}} to RAG...",
+    "success": "{{fileName}} has been added to RAG.",
+    "error": "Failed to add {{fileName}} to RAG."
   }
 }

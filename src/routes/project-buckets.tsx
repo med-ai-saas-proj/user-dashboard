@@ -370,17 +370,18 @@ export default function ProjectBucketsPage() {
 	};
 
 	const addToRag = async (file: ProjectRagFile) => {
-		try {
-			await addRagFileMutation.mutateAsync({
+		toast.promise(
+			addRagFileMutation.mutateAsync({
 				projectId,
 				fileId: file.id,
-			});
-			toast.success("File added to RAG successfully");
-		} catch (error) {
-			toast.error(
-				error instanceof Error ? error.message : "Failed to add file to RAG"
-			);
-		}
+			}),
+			{
+				loading: `Adding ${file.filename} to RAG...`,
+				success: "File added to RAG successfully",
+				error: (err) =>
+					err instanceof Error ? err.message : "Failed to add file to RAG",
+			}
+		);
 	};
 
 	if (!projectId) {

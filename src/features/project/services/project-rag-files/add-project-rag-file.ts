@@ -25,8 +25,15 @@ const waitForProjectRagFileTaskCompletion = async (
 	while (true) {
 		const task = await getProjectRagFileTaskStatus(projectId, taskId);
 
-		if (task.status !== "processing") {
+		if (task.status === "completed") {
 			return task;
+		}
+
+		if (
+			task.status === "failed_and_dropped" ||
+			task.status === "failed_and_retrying"
+		) {
+			throw new Error(`File processing failed with status: ${task.status}`);
 		}
 
 		if (Date.now() - startedAt > TASK_POLL_TIMEOUT_MS) {

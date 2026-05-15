@@ -27,6 +27,20 @@ export type ProjectRagFile = {
 	tags: string[];
 };
 
+export type ProjectRagQueryResponse = {
+	file_info: ProjectRagFileInfoResponse;
+	text: string;
+	embedding: number[];
+	created_at: string;
+};
+
+export type ProjectRagQueryResult = {
+	file: ProjectRagFile;
+	text: string;
+	embedding: number[];
+	createdAt: Date;
+};
+
 export type ProjectRagFileUploadResponse = {
 	file_id: string;
 };
@@ -96,5 +110,16 @@ export const mapProjectRagFileResponse = (
 		createdAt: new Date(file.created_at),
 		extraMetadata: file.extra_metadata,
 		tags: getProjectRagFileTags(file.extra_metadata),
+	};
+};
+
+export const mapProjectRagQueryResponse = (
+	result: ProjectRagQueryResponse
+): ProjectRagQueryResult => {
+	return {
+		file: mapProjectRagFileResponse(result.file_info),
+		text: result.text,
+		embedding: result.embedding,
+		createdAt: new Date(result.created_at),
 	};
 };

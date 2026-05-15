@@ -35,6 +35,10 @@ export const API_ROUTES = {
 			`service/${API_VERSION}/rag/user/files/`,
 			BASE_API_URL
 		).toString(),
+		USER_QUERY_TEXT: new URL(
+			`service/${API_VERSION}/rag/user/query/text`,
+			BASE_API_URL
+		).toString(),
 	},
 	FILE_STORAGE: {
 		USER: new URL(

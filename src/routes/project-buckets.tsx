@@ -131,6 +131,8 @@ export default function ProjectBucketsPage() {
 	const [tagKeyInput, setTagKeyInput] = useState("");
 	const [tagValueInput, setTagValueInput] = useState("");
 	const [tempTags, setTempTags] = useState<string[]>([]);
+	const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+	const [fileToDelete, setFileToDelete] = useState<ProjectRagFile | null>(null);
 
 	const {
 		data: files = [],
@@ -323,20 +325,31 @@ export default function ProjectBucketsPage() {
 
 	const downloadFile = async (file: ProjectRagFile) => {
 		try {
+			toast.loading(t("bucket:messages.downloading", "Downloading..."), {
+				id: "downloading",
+			});
 			const downloadUrl = await getProjectStorageFileDownloadUrl({
 				projectId,
 				fileId: file.id,
 			});
 
+			const response = await fetch(downloadUrl);
+			if (!response.ok) throw new Error("Failed to fetch file content");
+			const blob = await response.blob();
+			const url = window.URL.createObjectURL(blob);
+
 			const link = document.createElement("a");
-			link.href = downloadUrl;
+			link.href = url;
 			link.download = file.filename;
 			link.rel = "noreferrer";
 
 			document.body.appendChild(link);
 			link.click();
 			document.body.removeChild(link);
+			window.URL.revokeObjectURL(url);
+			toast.dismiss("downloading");
 		} catch (error) {
+			toast.dismiss("downloading");
 			toast.error(
 				error instanceof Error
 					? error.message
@@ -345,21 +358,22 @@ export default function ProjectBucketsPage() {
 		}
 	};
 
-	const deleteFile = async (file: ProjectRagFile) => {
-		const isConfirmed = window.confirm(
-			t("bucket:messages.deleteConfirm", { fileName: file.filename })
-		);
+	const promptDeleteFile = (file: ProjectRagFile) => {
+		setFileToDelete(file);
+		setDeleteDialogOpen(true);
+	};
 
-		if (!isConfirmed) {
-			return;
-		}
+	const confirmDeleteFile = async () => {
+		if (!fileToDelete) return;
 
 		try {
 			await deleteMutation.mutateAsync({
 				projectId,
-				fileId: file.id,
+				fileId: fileToDelete.id,
 			});
 			toast.success(t("bucket:messages.deleted"));
+			setDeleteDialogOpen(false);
+			setFileToDelete(null);
 		} catch (error) {
 			toast.error(
 				error instanceof Error
@@ -607,7 +621,7 @@ export default function ProjectBucketsPage() {
 																	variant="ghost"
 																	size="icon"
 																	className="text-destructive hover:text-destructive"
-																	onClick={() => void deleteFile(file)}
+																	onClick={() => promptDeleteFile(file)}
 																	title={t("bucket:actions.delete")}
 																>
 																	<Trash2Icon className="size-4" />
@@ -802,6 +816,34 @@ export default function ProjectBucketsPage() {
 								<Spinner className="size-4" />
 							) : null}
 							{t("common:action.save")}
+						</Button>
+					</DialogFooter>
+				</DialogContent>
+			</Dialog>
+
+			<Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
+				<DialogContent className="sm:max-w-[425px]">
+					<DialogHeader>
+						<DialogTitle>
+							{t("bucket:messages.deleteConfirmTitle", "Delete File")}
+						</DialogTitle>
+						<DialogDescription>
+							{t("bucket:messages.deleteConfirm", {
+								fileName: fileToDelete?.filename,
+							})}
+						</DialogDescription>
+					</DialogHeader>
+					<DialogFooter>
+						<DialogClose asChild>
+							<Button variant="outline">{t("common:action.cancel")}</Button>
+						</DialogClose>
+						<Button
+							variant="destructive"
+							onClick={confirmDeleteFile}
+							disabled={deleteMutation.isPending}
+						>
+							{deleteMutation.isPending ? <Spinner className="size-4" /> : null}
+							{t("common:action.confirm", "Delete")}
 						</Button>
 					</DialogFooter>
 				</DialogContent>

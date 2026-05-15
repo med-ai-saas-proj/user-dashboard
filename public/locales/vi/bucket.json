@@ -59,11 +59,11 @@
     "deleted": "Đã xóa tệp.",
     "tagsUpdated": "Đã cập nhật tags.",
     "tagsUpdateError": "Không thể cập nhật tags.",
-    "downloading": "Downloading {{fileName}}..."
+    "downloading": "Đang tải {{fileName}}..."
   },
   "rag": {
-    "loading": "Adding {{fileName}} to RAG...",
-    "success": "{{fileName}} has been added to RAG.",
-    "error": "Failed to add {{fileName}} to RAG."
+    "loading": "Đang thêm {{fileName}} vào RAG...",
+    "success": "{{fileName}} đã được thêm vào RAG.",
+    "error": "Không thể thêm {{fileName}} vào RAG."
   }
 }

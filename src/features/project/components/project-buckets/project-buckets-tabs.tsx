@@ -303,27 +303,43 @@ export default function ProjectBucketsTabs({
 							<Table>
 								<TableHeader>
 									<TableRow>
-										<TableHead>File Name</TableHead>
-										<TableHead>Type</TableHead>
-										<TableHead>Size</TableHead>
-										<TableHead>Date</TableHead>
+										<TableHead className="w-[34%]">{tableFileName}</TableHead>
+										<TableHead>{tableFileType}</TableHead>
+										<TableHead>{tableFileSize}</TableHead>
+										<TableHead>{tableUploadDate}</TableHead>
+										<TableHead>{tableTags}</TableHead>
 									</TableRow>
 								</TableHeader>
 								<TableBody>
 									{isRagLoading ? (
 										<TableRow>
 											<TableCell
-												colSpan={4}
+												colSpan={5}
 												className="py-16 text-center text-muted-foreground"
 											>
-												<Spinner />
+												<div className="flex items-center justify-center gap-2">
+													<Spinner />
+													<span>{tableLoading}</span>
+												</div>
 											</TableCell>
 										</TableRow>
 									) : ragFiles.length > 0 ? (
 										ragFiles.map((file) => (
 											<TableRow key={file.id}>
 												<TableCell className="font-medium">
-													{file.filename}
+													<div className="flex items-center gap-3">
+														<div className="flex size-9 items-center justify-center rounded-md border border-border bg-muted">
+															<FileTextIcon className="size-4 text-foreground" />
+														</div>
+														<div className="min-w-0">
+															<p className="truncate font-medium text-foreground">
+																{file.filename}
+															</p>
+															<p className="truncate text-xs text-muted-foreground">
+																{file.id}
+															</p>
+														</div>
+													</div>
 												</TableCell>
 												<TableCell className="text-muted-foreground">
 													{getFileTypeLabel(file.mimeType, file.filename)}
@@ -334,15 +350,48 @@ export default function ProjectBucketsTabs({
 												<TableCell className="text-muted-foreground">
 													{file.createdAt.toLocaleDateString()}
 												</TableCell>
+												<TableCell>
+													<div className="flex flex-wrap gap-1.5">
+														{file.tags.length > 0 ? (
+															file.tags.slice(0, 3).map((tag) => (
+																<span
+																	key={`${file.id}-${tag}`}
+																	className="inline-flex items-center rounded-md border border-border bg-muted px-2 py-0.5 text-xs font-medium text-foreground"
+																>
+																	{tag}
+																</span>
+															))
+														) : (
+															<span className="text-xs text-muted-foreground">
+																{tableNoTags}
+															</span>
+														)}
+														{file.tags.length > 3 && (
+															<span className="inline-flex items-center rounded-md border border-border bg-muted px-2 py-0.5 text-xs font-medium text-foreground">
+																+{file.tags.length - 3}
+															</span>
+														)}
+													</div>
+												</TableCell>
 											</TableRow>
 										))
 									) : (
 										<TableRow>
 											<TableCell
-												colSpan={4}
+												colSpan={5}
 												className="py-16 text-center text-muted-foreground"
 											>
-												{ragEmptyState}
+												<div className="flex flex-col items-center justify-center gap-3">
+													<FileIcon className="size-10 text-muted-foreground" />
+													<div className="space-y-1">
+														<p className="font-medium text-foreground">
+															{ragEmptyState}
+														</p>
+														<p className="max-w-sm text-sm text-muted-foreground">
+															{tableDescription}
+														</p>
+													</div>
+												</div>
 											</TableCell>
 										</TableRow>
 									)}

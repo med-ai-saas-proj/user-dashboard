@@ -602,7 +602,12 @@ export default function ProjectBucketsPage() {
 																	size="icon"
 																	onClick={() => void addToRag(file)}
 																	title="Add to RAG"
-																	disabled={addRagFileMutation.isPending}
+																	disabled={
+																		addRagFileMutation.isPending ||
+																		ragFiles.some(
+																			(ragFile) => ragFile.id === file.id
+																		)
+																	}
 																>
 																	<UploadCloud className="size-4" />
 																</Button>

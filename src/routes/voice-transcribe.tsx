@@ -19,11 +19,38 @@ import DashboardLayout from "@/layouts/dashboard-layout";
 
 type Mode = "dictation" | "live";
 type ConnState = "idle" | "connecting" | "connected" | "closed" | "error";
+// Engine choice for the dictation upload. v1 = raw Zipformer (fast, ALL CAPS,
+// no punctuation). v2 = full industrial pipeline (denoise + Azure
+// gpt-4o-transcribe with Zipformer fallback + LLM post-edit) — slower but
+// cleaner output with diarization and per-turn segmentation.
+type Engine = "v1" | "v2";
 
 interface CaptionLine {
 	id: string;
 	text: string;
 	at: number;
+}
+
+interface V2Turn {
+	speaker: string;
+	start: number;
+	end: number;
+	raw: string;
+	text: string;
+	edited: boolean;
+	engine: string;
+	confidence: number | null;
+}
+
+interface V2Meta {
+	duration_s: number;
+	language: string;
+	denoised: boolean;
+	diarizer: string;
+	asr_engines_used: string[];
+	post_edit_applied: boolean;
+	hotwords_count: number;
+	elapsed_s: number;
 }
 
 const VoiceTranscribePage = () => {
@@ -42,6 +69,10 @@ const VoiceTranscribePage = () => {
 	const [dictationDuration, setDictationDuration] = useState<number | null>(
 		null
 	);
+	// A/B engine state. Defaults to v2 — v1 stays available for speed.
+	const [engine, setEngine] = useState<Engine>("v2");
+	const [v2Turns, setV2Turns] = useState<V2Turn[] | null>(null);
+	const [v2Meta, setV2Meta] = useState<V2Meta | null>(null);
 	const mediaRecorderRef = useRef<MediaRecorder | null>(null);
 	const recordedChunksRef = useRef<Blob[]>([]);
 	const dictationStreamRef = useRef<MediaStream | null>(null);
@@ -110,8 +141,9 @@ const VoiceTranscribePage = () => {
 	// the /transcribe endpoint and stash the result. We use XHR instead of
 	// fetch because fetch has no upload-progress event — the user needs a real
 	// percentage for large audio files. After upload completes the server
-	// runs Zipformer ASR on the audio (~3 s per 60 s of audio on the GCP
-	// CPU), which is reported as an indeterminate "Transcribing…" state.
+	// runs ASR on the audio, reported as an indeterminate "Transcribing…"
+	// state. Engine selection (`v1` = fast Zipformer, `v2` = industrial
+	// pipeline) chooses the target endpoint + form fields.
 	const sendForTranscription = useCallback(
 		(blob: Blob | File, filename: string) =>
 			new Promise<void>((resolve) => {
@@ -125,12 +157,31 @@ const VoiceTranscribePage = () => {
 				setTranscribeElapsed(0);
 				setDictationText("");
 				setDictationDuration(null);
+				setV2Turns(null);
+				setV2Meta(null);
+
+				const isV2 = engine === "v2";
+				const url = isV2
+					? API_ROUTES.SERVICES.VOICE_TRANSCRIBE_UPLOAD_V2
+					: API_ROUTES.SERVICES.VOICE_TRANSCRIBE_UPLOAD;
 
 				const fd = new FormData();
 				fd.append("file", blob, filename);
+				if (isV2) {
+					// Reasonable defaults: Azure diarization on by default since the
+					// dashboard usually receives multi-speaker consult recordings;
+					// post-edit + denoise on. A future PR can expose these.
+					fd.append("diarize", "azure");
+					fd.append("denoise", "true");
+					fd.append("post_edit", "true");
+					fd.append(
+						"hotwords",
+						"đục thủy tinh thể,phẫu thuật phaco,IOL Master,thị lực,viễn thị,lão thị,tăng huyết áp"
+					);
+				}
 
 				const xhr = new XMLHttpRequest();
-				xhr.open("POST", API_ROUTES.SERVICES.VOICE_TRANSCRIBE_UPLOAD, true);
+				xhr.open("POST", url, true);
 				xhr.responseType = "text";
 
 				xhr.upload.onprogress = (e) => {
@@ -164,13 +215,26 @@ const VoiceTranscribePage = () => {
 						return;
 					}
 					try {
-						const j = JSON.parse(xhr.responseText) as {
-							success: boolean;
-							text: string;
-							duration_seconds: number;
-						};
+						const j = JSON.parse(xhr.responseText) as
+							| {
+									success: boolean;
+									text: string;
+									duration_seconds: number;
+							  }
+							| {
+									success: boolean;
+									text: string;
+									turns: V2Turn[];
+									meta: V2Meta;
+							  };
 						setDictationText(j.text || "");
-						setDictationDuration(j.duration_seconds);
+						if ("meta" in j && j.meta) {
+							setV2Meta(j.meta);
+							setV2Turns(j.turns ?? []);
+							setDictationDuration(j.meta.duration_s);
+						} else if ("duration_seconds" in j) {
+							setDictationDuration(j.duration_seconds);
+						}
 					} catch (err) {
 						toast.error(`Transcribe error: ${String(err)}`);
 					} finally {
@@ -180,7 +244,7 @@ const VoiceTranscribePage = () => {
 				};
 				xhr.send(fd);
 			}),
-		[]
+		[engine]
 	);
 
 	const stopDictation = useCallback(async () => {
@@ -486,6 +550,53 @@ const VoiceTranscribePage = () => {
 							)}
 						</div>
 
+						{/* Engine A/B selector. v1 is the legacy Zipformer-only path
+						    (fast, ALL CAPS, no punctuation). v2 is the industrial
+						    pipeline (denoise + diarize + cascade + LLM post-edit) —
+						    slower but produces a punctuated, per-speaker transcript. */}
+						<div className="flex items-center gap-2 flex-wrap">
+							<span className="text-[11px] font-medium text-muted-foreground">
+								Engine:
+							</span>
+							<div
+								className="inline-flex rounded-md border bg-background p-0.5"
+								role="radiogroup"
+								aria-label="Transcription engine"
+							>
+								{(["v1", "v2"] as const).map((opt) => {
+									const checked = engine === opt;
+									const disabled = isTranscribing || isRecording;
+									const label = opt === "v1" ? "v1 · fast" : "v2 · clean";
+									return (
+										<label
+											key={opt}
+											className={`h-7 px-3 text-[11px] rounded transition-colors inline-flex items-center select-none ${
+												checked
+													? "bg-primary text-primary-foreground"
+													: "text-muted-foreground hover:text-foreground"
+											} ${disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
+										>
+											<input
+												type="radio"
+												name="engine"
+												value={opt}
+												checked={checked}
+												onChange={() => setEngine(opt)}
+												disabled={disabled}
+												className="sr-only"
+											/>
+											{label}
+										</label>
+									);
+								})}
+							</div>
+							<span className="text-[11px] text-muted-foreground">
+								{engine === "v1"
+									? "Raw Zipformer — fastest, ALL CAPS, no punctuation."
+									: "Denoise + diarize + LLM cleanup — slower, punctuated, per-speaker."}
+							</span>
+						</div>
+
 						{isTranscribing && (
 							<div className="rounded-md border bg-card px-3 py-2">
 								<div className="flex items-center justify-between mb-1">
@@ -530,23 +641,76 @@ const VoiceTranscribePage = () => {
 								hint="Best for short notes, dictation, or single-take recordings."
 							/>
 						) : (
-							<div className="rounded-lg border bg-card px-4 py-3 min-h-[120px]">
-								<div className="text-[10px] uppercase font-semibold tracking-wider text-muted-foreground mb-2">
-									Transcript
-									{dictationDuration !== null && (
-										<span className="ml-2 normal-case font-normal text-[11px]">
-											· {dictationDuration.toFixed(2)}s audio
-										</span>
-									)}
+							<>
+								<div className="rounded-lg border bg-card px-4 py-3 min-h-[120px]">
+									<div className="text-[10px] uppercase font-semibold tracking-wider text-muted-foreground mb-2 flex items-center gap-2 flex-wrap">
+										<span>Transcript</span>
+										{dictationDuration !== null && (
+											<span className="normal-case font-normal text-[11px]">
+												· {dictationDuration.toFixed(2)}s audio
+											</span>
+										)}
+										{v2Meta && (
+											<span className="normal-case font-normal text-[11px] text-muted-foreground">
+												· {v2Meta.elapsed_s.toFixed(1)}s pipeline ·{" "}
+												{v2Meta.denoised ? "denoised" : "no-denoise"} · diarize=
+												{v2Meta.diarizer} · ASR=
+												{v2Meta.asr_engines_used.join("+") || "—"} · post-edit=
+												{v2Meta.post_edit_applied ? "on" : "off"}
+											</span>
+										)}
+									</div>
+									<div className="text-[14px] whitespace-pre-wrap">
+										{dictationText || (
+											<span className="text-muted-foreground italic">
+												(no transcript yet)
+											</span>
+										)}
+									</div>
 								</div>
-								<div className="text-[14px] whitespace-pre-wrap">
-									{dictationText || (
-										<span className="text-muted-foreground italic">
-											(no transcript yet)
-										</span>
-									)}
-								</div>
-							</div>
+
+								{v2Turns && v2Turns.length > 1 && (
+									<div className="rounded-lg border bg-card px-4 py-3">
+										<div className="text-[10px] uppercase font-semibold tracking-wider text-muted-foreground mb-2">
+											Per-speaker turns ({v2Turns.length})
+										</div>
+										<div className="space-y-2">
+											{v2Turns.map((t, i) => (
+												<div
+													key={`turn-${i}-${t.start}`}
+													className="border-l-2 pl-3 py-1 text-[13px]"
+													style={{
+														borderColor:
+															t.speaker === "S0"
+																? "var(--primary)"
+																: t.speaker === "S1"
+																	? "#f59e0b"
+																	: "var(--muted-foreground)",
+													}}
+												>
+													<div className="flex items-center gap-2 text-[10px] text-muted-foreground tabular-nums">
+														<span className="font-mono font-semibold">
+															{t.speaker}
+														</span>
+														<span>
+															{t.start.toFixed(1)}–{t.end.toFixed(1)}s
+														</span>
+														<span>· engine: {t.engine}</span>
+														{t.edited ? (
+															<span className="text-emerald-600 dark:text-emerald-400">
+																· post-edited
+															</span>
+														) : (
+															<span>· raw</span>
+														)}
+													</div>
+													<div className="mt-0.5">{t.text}</div>
+												</div>
+											))}
+										</div>
+									</div>
+								)}
+							</>
 						)}
 					</div>
 				) : (

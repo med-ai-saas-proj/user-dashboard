@@ -103,6 +103,13 @@ export const API_ROUTES = {
 			`voice-agent/transcribe`,
 			BASE_API_URL
 		).toString(),
+		// /transcribe/v2 — opt-in industrial pipeline (ffmpeg loudnorm +
+		// DeepFilterNet denoise + diarization + ASR cascade + LLM post-edit +
+		// hallucination guard). Same /backend/voice-agent service.
+		VOICE_TRANSCRIBE_UPLOAD_V2: new URL(
+			`voice-agent/transcribe/v2`,
+			BASE_API_URL
+		).toString(),
 		VOICE_TRANSCRIBE_WS: new URL(
 			`voice-agent/ws/transcribe`,
 			BASE_API_URL.replace("https://", "wss://").replace("http://", "ws://")

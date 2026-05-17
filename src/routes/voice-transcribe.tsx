@@ -73,9 +73,17 @@ const VoiceTranscribePage = () => {
 	const [engine, setEngine] = useState<Engine>("v2");
 	const [v2Turns, setV2Turns] = useState<V2Turn[] | null>(null);
 	const [v2Meta, setV2Meta] = useState<V2Meta | null>(null);
-	const mediaRecorderRef = useRef<MediaRecorder | null>(null);
-	const recordedChunksRef = useRef<Blob[]>([]);
+	// Dictation no longer uses MediaRecorder — that path produces webm/opus,
+	// which ships broken cluster indices on some browsers and forces the
+	// server to ffmpeg-decode every upload. Instead, we capture raw PCM
+	// directly via AudioContext + the existing /worklets/pcm-worklet.js
+	// (already used by live captions), collect the 16-kHz int16 frames
+	// in memory, and wrap them as a 16-bit mono WAV at stop time.
+	const dictationCtxRef = useRef<AudioContext | null>(null);
+	const dictationSourceRef = useRef<MediaStreamAudioSourceNode | null>(null);
+	const dictationWorkletRef = useRef<AudioWorkletNode | null>(null);
 	const dictationStreamRef = useRef<MediaStream | null>(null);
+	const dictationFramesRef = useRef<Int16Array[]>([]);
 	const recordStartRef = useRef<number>(0);
 	const [recordElapsed, setRecordElapsed] = useState(0);
 
@@ -93,40 +101,39 @@ const VoiceTranscribePage = () => {
 
 	const startDictation = useCallback(async () => {
 		try {
-			// Turn off Chrome's default audio processing chain. Echo cancellation
-			// + noise suppression + auto-gain can mangle Vietnamese tones and
-			// short clips, leaving the ASR with near-silence to chew on.
+			// We leave Chrome's voice-tuning chain ON for dictation: echo
+			// cancellation and noise suppression dramatically improve gpt-4o-
+			// transcribe accuracy on real-world phone audio, and they don't
+			// hurt Zipformer at conversational volume. Auto-gain stays on too
+			// — quiet clinical recordings were the #1 cause of the empty/
+			// English-hallucinated transcripts we saw earlier.
 			const stream = await navigator.mediaDevices.getUserMedia({
 				audio: {
-					echoCancellation: false,
-					noiseSuppression: false,
-					autoGainControl: false,
+					echoCancellation: true,
+					noiseSuppression: true,
+					autoGainControl: true,
 				},
 			});
 			dictationStreamRef.current = stream;
-			recordedChunksRef.current = [];
-			// Prefer webm/opus where available (Chrome/Edge); Safari may need mp4/aac.
-			let mimeType = "";
-			for (const t of ["audio/webm;codecs=opus", "audio/webm", "audio/mp4"]) {
-				if (
-					typeof MediaRecorder !== "undefined" &&
-					MediaRecorder.isTypeSupported(t)
-				) {
-					mimeType = t;
-					break;
-				}
-			}
-			const rec = mimeType
-				? new MediaRecorder(stream, { mimeType })
-				: new MediaRecorder(stream);
-			rec.ondataavailable = (e) => {
-				if (e.data && e.data.size > 0) recordedChunksRef.current.push(e.data);
+			dictationFramesRef.current = [];
+
+			const ctx = new AudioContext();
+			dictationCtxRef.current = ctx;
+			await ctx.audioWorklet.addModule("/worklets/pcm-worklet.js");
+			const source = ctx.createMediaStreamSource(stream);
+			dictationSourceRef.current = source;
+			const node = new AudioWorkletNode(ctx, "pcm-worklet", {
+				processorOptions: { targetRate: 16000 },
+			});
+			dictationWorkletRef.current = node;
+			// The worklet posts an ArrayBuffer of int16 PCM every 30 ms.
+			// Copy into a fresh Int16Array so the underlying ArrayBuffer can
+			// be reused by the worklet (we receive a transferred reference).
+			node.port.onmessage = (e: MessageEvent<ArrayBuffer>) => {
+				dictationFramesRef.current.push(new Int16Array(e.data));
 			};
-			// `timeslice` forces a dataavailable event every second, which has
-			// two benefits: the final cluster always gets flushed on stop() and
-			// a network blip won't lose the whole take.
-			rec.start(1000);
-			mediaRecorderRef.current = rec;
+			source.connect(node);
+
 			recordStartRef.current = Date.now();
 			setRecordElapsed(0);
 			setIsRecording(true);
@@ -248,35 +255,68 @@ const VoiceTranscribePage = () => {
 	);
 
 	const stopDictation = useCallback(async () => {
-		const rec = mediaRecorderRef.current;
-		if (!rec) return;
 		setIsRecording(false);
-		// Ask for the final cluster *before* stop() so the trailing audio
-		// (and the cluster cue index) lands in recordedChunks. Without this,
-		// some browsers ship a webm whose duration header points past the
-		// last actual cluster and ffmpeg cuts the decode short.
+
+		// Tear down the audio graph FIRST so no more frames arrive while we
+		// concatenate. We deliberately don't await ctx.close() — it's slow
+		// and we don't need it to finish before building the WAV.
 		try {
-			rec.requestData();
-		} catch {
-			// Older browsers: requestData may throw on a non-recording state.
-		}
-		await new Promise<void>((resolve) => {
-			rec.onstop = () => resolve();
-			rec.stop();
-		});
+			dictationWorkletRef.current?.disconnect();
+		} catch {}
+		try {
+			dictationSourceRef.current?.disconnect();
+		} catch {}
 		dictationStreamRef.current?.getTracks().forEach((t) => {
 			t.stop();
 		});
+		const ctxToClose = dictationCtxRef.current;
+		dictationWorkletRef.current = null;
+		dictationSourceRef.current = null;
 		dictationStreamRef.current = null;
-		mediaRecorderRef.current = null;
+		dictationCtxRef.current = null;
+		if (ctxToClose && ctxToClose.state !== "closed") {
+			ctxToClose.close().catch(() => {});
+		}
 
-		const blob = new Blob(recordedChunksRef.current, {
-			type: rec.mimeType || "audio/webm",
-		});
-		const filename = blob.type.includes("mp4")
-			? "dictation.m4a"
-			: "dictation.webm";
-		await sendForTranscription(blob, filename);
+		// Build a 16 kHz mono 16-bit PCM WAV from the collected frames.
+		const frames = dictationFramesRef.current;
+		dictationFramesRef.current = [];
+		const totalSamples = frames.reduce((n, f) => n + f.length, 0);
+		if (totalSamples === 0) {
+			toast.error("No audio captured — check the microphone permission.");
+			return;
+		}
+		const bytesPerSample = 2;
+		const dataBytes = totalSamples * bytesPerSample;
+		const wav = new ArrayBuffer(44 + dataBytes);
+		const dv = new DataView(wav);
+		// RIFF header
+		const writeString = (offset: number, s: string) => {
+			for (let i = 0; i < s.length; i++)
+				dv.setUint8(offset + i, s.charCodeAt(i));
+		};
+		writeString(0, "RIFF");
+		dv.setUint32(4, 36 + dataBytes, true);
+		writeString(8, "WAVE");
+		writeString(12, "fmt ");
+		dv.setUint32(16, 16, true); // PCM chunk size
+		dv.setUint16(20, 1, true); // PCM
+		dv.setUint16(22, 1, true); // mono
+		dv.setUint32(24, 16000, true); // sample rate
+		dv.setUint32(28, 16000 * bytesPerSample, true); // byte rate
+		dv.setUint16(32, bytesPerSample, true); // block align
+		dv.setUint16(34, 16, true); // bits per sample
+		writeString(36, "data");
+		dv.setUint32(40, dataBytes, true);
+		// Copy frame data.
+		let offset = 44;
+		for (const frame of frames) {
+			const view = new Int16Array(wav, offset, frame.length);
+			view.set(frame);
+			offset += frame.length * bytesPerSample;
+		}
+		const blob = new Blob([wav], { type: "audio/wav" });
+		await sendForTranscription(blob, "dictation.wav");
 	}, [sendForTranscription]);
 
 	const handleFileUpload = useCallback(
@@ -413,6 +453,27 @@ const VoiceTranscribePage = () => {
 
 	const clearCaptions = useCallback(() => setCaptions([]), []);
 
+	// Tear down both modes' audio resources on unmount. We don't await the
+	// AudioContext close because component teardown runs synchronously.
+	const teardownDictation = useCallback(() => {
+		try {
+			dictationWorkletRef.current?.disconnect();
+		} catch {}
+		try {
+			dictationSourceRef.current?.disconnect();
+		} catch {}
+		dictationStreamRef.current?.getTracks().forEach((t) => {
+			t.stop();
+		});
+		if (dictationCtxRef.current && dictationCtxRef.current.state !== "closed") {
+			dictationCtxRef.current.close().catch(() => {});
+		}
+		dictationWorkletRef.current = null;
+		dictationSourceRef.current = null;
+		dictationStreamRef.current = null;
+		dictationCtxRef.current = null;
+	}, []);
+
 	useEffect(() => {
 		return () => {
 			try {
@@ -420,22 +481,16 @@ const VoiceTranscribePage = () => {
 			} catch {}
 			wsRef.current = null;
 			teardownLive();
-			mediaRecorderRef.current?.stop?.();
-			dictationStreamRef.current?.getTracks().forEach((t) => {
-				t.stop();
-			});
+			teardownDictation();
 		};
-	}, [teardownLive]);
+	}, [teardownLive, teardownDictation]);
 
 	// Switching mode silences any active capture/recording from the other mode.
 	const switchMode = useCallback(
 		(next: Mode) => {
 			if (next === mode) return;
 			if (mode === "dictation" && isRecording) {
-				mediaRecorderRef.current?.stop?.();
-				dictationStreamRef.current?.getTracks().forEach((t) => {
-					t.stop();
-				});
+				teardownDictation();
 				setIsRecording(false);
 			}
 			if (mode === "live") {
@@ -443,7 +498,7 @@ const VoiceTranscribePage = () => {
 			}
 			setMode(next);
 		},
-		[mode, isRecording, disconnectLive]
+		[mode, isRecording, disconnectLive, teardownDictation]
 	);
 
 	return (

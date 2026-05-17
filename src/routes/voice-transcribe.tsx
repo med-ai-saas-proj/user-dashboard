@@ -32,6 +32,12 @@ const VoiceTranscribePage = () => {
 	// Dictation state.
 	const [isRecording, setIsRecording] = useState(false);
 	const [isTranscribing, setIsTranscribing] = useState(false);
+	// uploadPct is a real percentage during the upload phase (XHR `progress`
+	// event), then null once the bytes are in flight and we're waiting on the
+	// server. The progress bar switches to an indeterminate state at that
+	// point — server-side ASR has no incremental progress events today.
+	const [uploadPct, setUploadPct] = useState<number | null>(null);
+	const [transcribeElapsed, setTranscribeElapsed] = useState(0);
 	const [dictationText, setDictationText] = useState("");
 	const [dictationDuration, setDictationDuration] = useState<number | null>(
 		null
@@ -101,42 +107,79 @@ const VoiceTranscribePage = () => {
 	}, []);
 
 	// Upload a Blob (from a live recording) or a File (from a file picker) to
-	// the /transcribe endpoint and stash the result. Filename is only used by
-	// the server for content-type sniffing and error messages.
+	// the /transcribe endpoint and stash the result. We use XHR instead of
+	// fetch because fetch has no upload-progress event — the user needs a real
+	// percentage for large audio files. After upload completes the server
+	// runs Zipformer ASR on the audio (~3 s per 60 s of audio on the GCP
+	// CPU), which is reported as an indeterminate "Transcribing…" state.
 	const sendForTranscription = useCallback(
-		async (blob: Blob | File, filename: string) => {
-			if (blob.size === 0) {
-				toast.error("Empty audio");
-				return;
-			}
-			setIsTranscribing(true);
-			setDictationText("");
-			setDictationDuration(null);
-			try {
-				const fd = new FormData();
-				fd.append("file", blob, filename);
-				const resp = await fetch(API_ROUTES.SERVICES.VOICE_TRANSCRIBE_UPLOAD, {
-					method: "POST",
-					body: fd,
-				});
-				if (!resp.ok) {
-					const txt = await resp.text();
-					toast.error(`Transcribe failed: ${resp.status} ${txt.slice(0, 200)}`);
+		(blob: Blob | File, filename: string) =>
+			new Promise<void>((resolve) => {
+				if (blob.size === 0) {
+					toast.error("Empty audio");
+					resolve();
 					return;
 				}
-				const j = (await resp.json()) as {
-					success: boolean;
-					text: string;
-					duration_seconds: number;
+				setIsTranscribing(true);
+				setUploadPct(0);
+				setTranscribeElapsed(0);
+				setDictationText("");
+				setDictationDuration(null);
+
+				const fd = new FormData();
+				fd.append("file", blob, filename);
+
+				const xhr = new XMLHttpRequest();
+				xhr.open("POST", API_ROUTES.SERVICES.VOICE_TRANSCRIBE_UPLOAD, true);
+				xhr.responseType = "text";
+
+				xhr.upload.onprogress = (e) => {
+					if (e.lengthComputable) {
+						setUploadPct(Math.min(99, Math.round((e.loaded / e.total) * 100)));
+					}
 				};
-				setDictationText(j.text || "");
-				setDictationDuration(j.duration_seconds);
-			} catch (err) {
-				toast.error(`Transcribe error: ${String(err)}`);
-			} finally {
-				setIsTranscribing(false);
-			}
-		},
+				xhr.upload.onload = () => {
+					// Bytes are in flight — flip to indeterminate.
+					setUploadPct(null);
+				};
+				xhr.onerror = () => {
+					toast.error("Transcribe error: network failure");
+					setIsTranscribing(false);
+					setUploadPct(null);
+					resolve();
+				};
+				xhr.onabort = () => {
+					setIsTranscribing(false);
+					setUploadPct(null);
+					resolve();
+				};
+				xhr.onload = () => {
+					setUploadPct(null);
+					if (xhr.status < 200 || xhr.status >= 300) {
+						toast.error(
+							`Transcribe failed: ${xhr.status} ${(xhr.responseText || "").slice(0, 200)}`
+						);
+						setIsTranscribing(false);
+						resolve();
+						return;
+					}
+					try {
+						const j = JSON.parse(xhr.responseText) as {
+							success: boolean;
+							text: string;
+							duration_seconds: number;
+						};
+						setDictationText(j.text || "");
+						setDictationDuration(j.duration_seconds);
+					} catch (err) {
+						toast.error(`Transcribe error: ${String(err)}`);
+					} finally {
+						setIsTranscribing(false);
+						resolve();
+					}
+				};
+				xhr.send(fd);
+			}),
 		[]
 	);
 
@@ -191,6 +234,18 @@ const VoiceTranscribePage = () => {
 		}, 200);
 		return () => window.clearInterval(id);
 	}, [isRecording]);
+
+	// While the upload+ASR round-trip is in flight, tick an elapsed counter so
+	// the user can see something is happening during the indeterminate phase.
+	useEffect(() => {
+		if (!isTranscribing) return;
+		const start = Date.now();
+		setTranscribeElapsed(0);
+		const id = window.setInterval(() => {
+			setTranscribeElapsed((Date.now() - start) / 1000);
+		}, 200);
+		return () => window.clearInterval(id);
+	}, [isTranscribing]);
 
 	const copyDictation = useCallback(async () => {
 		try {
@@ -419,11 +474,6 @@ const VoiceTranscribePage = () => {
 									• Recording {recordElapsed.toFixed(1)}s
 								</span>
 							)}
-							{isTranscribing && (
-								<span className="text-[12px] text-muted-foreground">
-									Transcribing…
-								</span>
-							)}
 							{dictationText && (
 								<Button
 									size="sm"
@@ -435,6 +485,36 @@ const VoiceTranscribePage = () => {
 								</Button>
 							)}
 						</div>
+
+						{isTranscribing && (
+							<div className="rounded-md border bg-card px-3 py-2">
+								<div className="flex items-center justify-between mb-1">
+									<span className="text-[11px] font-medium text-muted-foreground">
+										{uploadPct !== null
+											? `Uploading… ${uploadPct}%`
+											: "Transcribing on server…"}
+									</span>
+									<span className="text-[11px] text-muted-foreground tabular-nums">
+										{transcribeElapsed.toFixed(1)}s
+									</span>
+								</div>
+								<div className="h-1.5 rounded-full bg-muted overflow-hidden">
+									{uploadPct !== null ? (
+										<div
+											className="h-full bg-primary transition-[width] duration-150"
+											style={{ width: `${uploadPct}%` }}
+										/>
+									) : (
+										<div
+											className="h-full w-1/3 bg-primary/70"
+											style={{
+												animation: "indeterminate 1.6s linear infinite",
+											}}
+										/>
+									)}
+								</div>
+							</div>
+						)}
 
 						{!isRecording && !isTranscribing && !dictationText ? (
 							<DemoEmptyState

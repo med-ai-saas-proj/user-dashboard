@@ -212,6 +212,18 @@
 	}
 }
 
+/* Indeterminate progress bar — used by the Voice Transcribe page while the
+   server is running ASR and we have no incremental progress events to drive
+   a real percentage. A 1/3-wide bar slides left → right indefinitely. */
+@keyframes indeterminate {
+	0% {
+		transform: translateX(-100%);
+	}
+	100% {
+		transform: translateX(400%);
+	}
+}
+
 /* Respect reduced-motion preference globally. Disables long-running
    decorative animations and shortens transitions to near-instant. */
 @media (prefers-reduced-motion: reduce) {

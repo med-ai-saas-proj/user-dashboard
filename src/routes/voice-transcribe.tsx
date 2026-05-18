@@ -651,7 +651,16 @@ const VoiceTranscribePage = () => {
 												name="engine"
 												value={opt}
 												checked={checked}
-												onChange={() => setEngine(opt)}
+												onChange={() => {
+													setEngine(opt);
+													// Clear previous results so v1↔v2 toggle doesn't
+													// leave stale per-turn cards or transcripts on
+													// screen from the other engine.
+													setDictationText("");
+													setDictationDuration(null);
+													setV2Turns(null);
+													setV2Meta(null);
+												}}
 												disabled={disabled}
 												className="sr-only"
 											/>

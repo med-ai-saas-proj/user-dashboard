@@ -19,6 +19,7 @@
     "@hookform/resolvers": "^5.2.2",
     "@huggingface/transformers": "^3.8.1",
     "@microsoft/fetch-event-source": "^2.0.1",
+    "@mintplex-labs/piper-tts-web": "^1.0.4",
     "@radix-ui/react-accordion": "^1.2.12",
     "@radix-ui/react-avatar": "^1.1.11",
     "@radix-ui/react-collapsible": "^1.1.12",

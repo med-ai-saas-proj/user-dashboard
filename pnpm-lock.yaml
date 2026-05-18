@@ -17,6 +17,9 @@ importers:
       '@microsoft/fetch-event-source':
         specifier: ^2.0.1
         version: 2.0.1
+      '@mintplex-labs/piper-tts-web':
+        specifier: ^1.0.4
+        version: 1.0.4(onnxruntime-web@1.22.0-dev.20250409-89f8206ba4)
       '@radix-ui/react-accordion':
         specifier: ^1.2.12
         version: 1.2.12(@types/react-dom@19.2.2(@types/react@19.2.2))(@types/react@19.2.2)(react-dom@19.2.0(react@19.2.0))(react@19.2.0)
@@ -827,6 +830,11 @@ packages:
 
   '@microsoft/fetch-event-source@2.0.1':
     resolution: {integrity: sha512-W6CLUJ2eBMw3Rec70qrsEW0jOm/3twwJv21mrmj2yORiaVmVYGS4sSS5yUwvQc1ZlDLYGPnClVWmUUMagKNsfA==}
+
+  '@mintplex-labs/piper-tts-web@1.0.4':
+    resolution: {integrity: sha512-Y24X+CJaGXoY5HFPSstHvJI6408OAtw3Pmq2OIYwpRpcwLLbgadWg8l1ODHNkgpB0Ps5fS9PAAQB60fHA3Bdag==}
+    peerDependencies:
+      onnxruntime-web: ^1.18.0
 
   '@nodelib/fs.scandir@2.1.5':
     resolution: {integrity: sha512-vq24Bq3ym5HEQm2NKCr3yXDwjc7vTsEThRDnkp2DK9p1uqLR+DHurm/NOTo0KG7HYHU7eppKZj3MyqYuMBf62g==}
@@ -4721,6 +4729,10 @@ snapshots:
       langium: 4.2.1
 
   '@microsoft/fetch-event-source@2.0.1': {}
+
+  '@mintplex-labs/piper-tts-web@1.0.4(onnxruntime-web@1.22.0-dev.20250409-89f8206ba4)':
+    dependencies:
+      onnxruntime-web: 1.22.0-dev.20250409-89f8206ba4
 
   '@nodelib/fs.scandir@2.1.5':
     dependencies:

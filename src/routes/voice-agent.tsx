@@ -16,10 +16,11 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { DemoEmptyState, DemoPageDescription } from "@/components/demo";
-import { ViewCodeDialog } from "@/components/view-code-dialog";
 import { Button } from "@/components/shadcn/button";
+import { ViewCodeDialog } from "@/components/view-code-dialog";
 import { API_ROUTES } from "@/config/api-routes";
 import { useServiceApiKeyStore } from "@/features/api-keys/store/service-api-key.store";
+import { usePiperTts } from "@/features/voice-agent/use-piper-tts";
 import DashboardLayout from "@/layouts/dashboard-layout";
 
 interface AgentTurn {
@@ -32,9 +33,13 @@ interface AgentTurn {
 type ConnState = "idle" | "connecting" | "connected" | "closed" | "error";
 
 // "server"  → play audio_chunk binary frames from VieNeu (high quality, slower)
-// "browser" → speak each assistant_sentence via Web SpeechSynthesis (snappy)
+// "browser" → speak each assistant_sentence via Web SpeechSynthesis (snappy,
+//             quality depends on the OS's Vietnamese voice)
+// "piper"   → in-browser Piper VITS model (vi_VN-vais1000-medium) via
+//             onnxruntime-web; ~63 MB one-time download, ~1-3s/sentence on
+//             WebGPU, higher quality than Web SpeechSynthesis
 // "off"     → text-only
-type TtsMode = "server" | "browser" | "off";
+type TtsMode = "server" | "browser" | "piper" | "off";
 
 const VoiceAgentPage = () => {
 	const apiKey = useServiceApiKeyStore((s) => s.selectedApiKey);
@@ -70,6 +75,18 @@ const VoiceAgentPage = () => {
 	// Same reason for ttsMode — handlers bound at connect time would
 	// otherwise see a stale value if the user toggles the radio mid-session.
 	const ttsModeRef = useRef<TtsMode>("browser");
+
+	// In-browser Piper TTS (vi_VN-vais1000-medium). Lazy-loaded so the
+	// ~3 MB of WASM/JS only ships when this option is selected.
+	const piperTts = usePiperTts();
+	// Stash a stable ref so the WS handler bound at connect time doesn't go
+	// stale across re-renders (same pattern as ttsModeRef above).
+	const piperSpeakRef = useRef(piperTts.speak);
+	const piperCancelRef = useRef(piperTts.cancel);
+	useEffect(() => {
+		piperSpeakRef.current = piperTts.speak;
+		piperCancelRef.current = piperTts.cancel;
+	}, [piperTts.speak, piperTts.cancel]);
 	// Track how many audio_chunk frames are still expected. Incremented
 	// whenever a turn ends in server mode (we don't know the count a priori,
 	// so we just clear it when no chunks have arrived for ~5s — see effect).
@@ -185,16 +202,22 @@ const VoiceAgentPage = () => {
 				}
 				case "assistant_sentence": {
 					// Browser-TTS path: speak each completed sentence as it
-					// arrives. Server-TTS path ignores this and waits for
-					// audio_chunk binary frames instead.
+					// arrives. Piper-TTS path: same, but runs the VITS model in
+					// the browser (higher quality, ~1-3s latency). Server-TTS
+					// path ignores this and waits for audio_chunk binary frames
+					// instead.
+					const sentence = String(evt.text ?? "");
 					if (ttsModeRef.current === "browser") {
-						speakBrowserTts(String(evt.text ?? ""));
+						speakBrowserTts(sentence);
+					} else if (ttsModeRef.current === "piper") {
+						void piperSpeakRef.current(sentence);
 					}
 					break;
 				}
 				case "barge_in":
 					log("barge-in");
 					cancelBrowserTts();
+					piperCancelRef.current();
 					break;
 				case "turn_end": {
 					const userText = interimUserRef.current;
@@ -366,6 +389,7 @@ const VoiceAgentPage = () => {
 			wsRef.current?.send(JSON.stringify({ type: "barge_in" }));
 		} catch {}
 		cancelBrowserTts();
+		piperCancelRef.current();
 	}, [cancelBrowserTts]);
 
 	useEffect(() => {
@@ -374,6 +398,7 @@ const VoiceAgentPage = () => {
 		// don't have browser TTS speaking after the user moves to server TTS
 		// (or vice versa).
 		cancelBrowserTts();
+		piperCancelRef.current();
 		if (ttsMode !== "server") setServerAudioPending(false);
 	}, [ttsMode, cancelBrowserTts]);
 
@@ -517,6 +542,30 @@ const VoiceAgentPage = () => {
 								/>
 								Server (VieNeu, slow)
 							</label>
+							<label
+								className={`flex items-center gap-1 ${
+									piperTts.state.phase === "unsupported"
+										? "opacity-50 cursor-not-allowed"
+										: ""
+								}`}
+								title={
+									piperTts.state.phase === "unsupported"
+										? piperTts.state.message
+										: "In-browser Vietnamese TTS via Piper (~63 MB one-time download, ~1-3s/sentence on WebGPU)"
+								}
+							>
+								<input
+									type="radio"
+									name="tts-mode"
+									checked={ttsMode === "piper"}
+									disabled={piperTts.state.phase === "unsupported"}
+									onChange={() => {
+										setTtsMode("piper");
+										void piperTts.prepare();
+									}}
+								/>
+								In-browser (Piper)
+							</label>
 							<label className="flex items-center gap-1">
 								<input
 									type="radio"
@@ -526,6 +575,25 @@ const VoiceAgentPage = () => {
 								/>
 								Off
 							</label>
+							{piperTts.state.phase === "downloading" && (
+								<span className="ml-2 inline-flex items-center gap-1 text-sky-700 dark:text-sky-300">
+									Downloading Piper voice… {piperTts.state.pct}%
+								</span>
+							)}
+							{piperTts.state.phase === "speaking" && ttsMode === "piper" && (
+								<span className="ml-2 inline-flex items-center gap-1 text-emerald-700 dark:text-emerald-300">
+									<span className="relative flex h-2 w-2">
+										<span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+										<span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-500" />
+									</span>
+									Speaking…
+								</span>
+							)}
+							{piperTts.state.phase === "error" && (
+								<span className="ml-2 inline-flex items-center gap-1 text-rose-700 dark:text-rose-300">
+									Piper error: {piperTts.state.message}
+								</span>
+							)}
 							{serverAudioPending && (
 								<span className="ml-2 inline-flex items-center gap-1 text-amber-700 dark:text-amber-300">
 									<span className="relative flex h-2 w-2">

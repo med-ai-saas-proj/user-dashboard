@@ -560,6 +560,11 @@ const VoiceTranscribePage = () => {
 
 				{mode === "dictation" ? (
 					<div className="flex-1 overflow-auto p-4 space-y-3">
+						<p className="text-[11px] text-muted-foreground">
+							Tip: make sure your microphone input level isn't muted or set to 0
+							in your OS settings — a silent recording produces an empty or
+							garbage transcript.
+						</p>
 						<div className="flex items-center gap-2">
 							{!isRecording ? (
 								<Button

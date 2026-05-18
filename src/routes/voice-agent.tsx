@@ -16,6 +16,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import { DemoEmptyState, DemoPageDescription } from "@/components/demo";
+import { ViewCodeDialog } from "@/components/view-code-dialog";
 import { Button } from "@/components/shadcn/button";
 import { API_ROUTES } from "@/config/api-routes";
 import { useServiceApiKeyStore } from "@/features/api-keys/store/service-api-key.store";
@@ -414,14 +415,21 @@ const VoiceAgentPage = () => {
 	return (
 		<DashboardLayout pageTitle="Voice Agent">
 			<div className="flex flex-col h-[calc(100vh-4rem)] overflow-hidden">
-				<DemoPageDescription>
-					Bidirectional Vietnamese voice agent — Zipformer ASR (offline), Azure
-					OpenAI LLM (streaming), optional VieNeu TTS. Click{" "}
-					<strong>Connect</strong>, then <strong>Start mic</strong> and speak.
-					Pick <strong>Browser</strong> TTS for instant low-quality playback, or{" "}
-					<strong>Server (VieNeu)</strong> for higher quality (note: ~5-15s per
-					sentence on CPU — keep the tab open while it synthesizes).
-				</DemoPageDescription>
+				<div className="flex items-start justify-between gap-4 px-4 pt-2">
+					<DemoPageDescription>
+						Bidirectional Vietnamese voice agent — Zipformer ASR (offline),
+						Azure OpenAI LLM (streaming), optional VieNeu TTS. Click{" "}
+						<strong>Connect</strong>, then <strong>Start mic</strong> and speak.
+						Pick <strong>Browser</strong> TTS for instant low-quality playback,
+						or <strong>Server (VieNeu)</strong> for higher quality (note: ~5-15s
+						per sentence on CPU — keep the tab open while it synthesizes).
+					</DemoPageDescription>
+					<ViewCodeDialog
+						endpoint={API_ROUTES.SERVICES.VOICE_AGENT_WS}
+						method="WS"
+						description="Bidirectional voice agent over a single WebSocket. Open the socket with ?user_id=<id>&api_key=<key>, then send binary frames (16 kHz int16 mono PCM) as the user speaks. Receive JSON events: partial/final transcript, LLM-streamed assistant text, and (optionally) audio frames if server-side TTS is enabled. Browsers can't set custom WS headers, so pass the key as the api_key query param."
+					/>
+				</div>
 
 				<div className="flex items-center justify-between px-4 py-3 border-b bg-muted/30 flex-wrap gap-2">
 					<div className="flex items-center gap-2">

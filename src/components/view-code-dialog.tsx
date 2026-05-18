@@ -128,6 +128,76 @@ function buildSingleSnippets({
 	contentType?: string;
 	apiKey: string;
 }): CodeSnippet[] {
+	const isWS = method === "WS" || /^wss?:\/\//i.test(endpoint);
+	if (isWS) {
+		// Browser WS can't set custom headers — pass the key as ?api_key=
+		const sep = endpoint.includes("?") ? "&" : "?";
+		const wsUrl = `${endpoint}${sep}api_key=${apiKey}`;
+		return [
+			{
+				label: "JavaScript",
+				language: "javascript",
+				code: `// Open the WebSocket. Browsers can't set custom headers
+// on the WS handshake, so the key is passed as a query param.
+const ws = new WebSocket(
+  "${wsUrl}"
+);
+ws.binaryType = "arraybuffer";
+
+ws.onopen = () => {
+  console.log("connected");
+  // Stream 16 kHz mono int16 PCM frames as binary messages:
+  // ws.send(pcmInt16ArrayBuffer);
+};
+
+ws.onmessage = (event) => {
+  if (typeof event.data === "string") {
+    const evt = JSON.parse(event.data);
+    console.log("event:", evt);
+  } else {
+    // Binary frame (e.g. server-side TTS audio).
+  }
+};
+
+ws.onclose = () => console.log("closed");
+ws.onerror = (e) => console.error(e);`,
+			},
+			{
+				label: "Python (websockets)",
+				language: "python",
+				code: `# pip install websockets
+import asyncio
+import json
+import websockets
+
+URL = "${endpoint}"
+API_KEY = "${apiKey}"
+
+async def main():
+    # The header form works outside the browser.
+    async with websockets.connect(
+        URL,
+        additional_headers={"X-Api-Key": API_KEY},
+    ) as ws:
+        # Send 16 kHz int16 mono PCM frames as bytes:
+        # await ws.send(pcm_bytes)
+        async for msg in ws:
+            if isinstance(msg, (bytes, bytearray)):
+                pass  # binary frame (e.g. TTS audio)
+            else:
+                print(json.loads(msg))
+
+asyncio.run(main())`,
+			},
+			{
+				label: "wscat",
+				language: "bash",
+				code: `# npm i -g wscat
+wscat -c "${wsUrl}"`,
+			},
+		];
+	}
+
 	const isMultipart = contentType === "multipart/form-data";
 	const bodyJson = body ? JSON.stringify(body, null, 2) : "{}";
 	const bodyJsonInline = body ? JSON.stringify(body) : "{}";

@@ -519,10 +519,18 @@ const VoiceTranscribePage = () => {
 						frames and see captions appear utterance by utterance.
 					</DemoPageDescription>
 					<ViewCodeDialog
-						endpoint={API_ROUTES.SERVICES.VOICE_TRANSCRIBE_UPLOAD}
+						endpoint={
+							engine === "v2"
+								? API_ROUTES.SERVICES.VOICE_TRANSCRIBE_UPLOAD_V2
+								: API_ROUTES.SERVICES.VOICE_TRANSCRIBE_UPLOAD
+						}
 						method="POST"
 						contentType="multipart/form-data"
-						description="Dictation — upload an audio file (WAV, MP3, M4A, MP4, WebM, etc.), get the full Vietnamese transcript back. For live captions, open a WebSocket to /ws/transcribe and stream 16 kHz int16 mono PCM frames."
+						description={
+							engine === "v2"
+								? "Dictation v2 — upload an audio file (WAV, MP3, M4A, MP4, WebM, etc.), get a denoised + diarized + LLM-cleaned Vietnamese transcript back. For live captions, open a WebSocket to /ws/transcribe and stream 16 kHz int16 mono PCM frames."
+								: "Dictation — upload an audio file (WAV, MP3, M4A, MP4, WebM, etc.), get the full Vietnamese transcript back. For live captions, open a WebSocket to /ws/transcribe and stream 16 kHz int16 mono PCM frames."
+						}
 					/>
 				</div>
 

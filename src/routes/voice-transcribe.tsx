@@ -15,6 +15,7 @@ import { DemoEmptyState, DemoPageDescription } from "@/components/demo";
 import { Button } from "@/components/shadcn/button";
 import { ViewCodeDialog } from "@/components/view-code-dialog";
 import { API_ROUTES } from "@/config/api-routes";
+import { useServiceApiKeyStore } from "@/features/api-keys/store/service-api-key.store";
 import DashboardLayout from "@/layouts/dashboard-layout";
 
 type Mode = "dictation" | "live";
@@ -55,6 +56,7 @@ interface V2Meta {
 
 const VoiceTranscribePage = () => {
 	const [mode, setMode] = useState<Mode>("dictation");
+	const apiKey = useServiceApiKeyStore((s) => s.selectedApiKey);
 
 	// Dictation state.
 	const [isRecording, setIsRecording] = useState(false);
@@ -190,6 +192,7 @@ const VoiceTranscribePage = () => {
 				const xhr = new XMLHttpRequest();
 				xhr.open("POST", url, true);
 				xhr.responseType = "text";
+				if (apiKey) xhr.setRequestHeader("X-API-Key", apiKey);
 
 				xhr.upload.onprogress = (e) => {
 					if (e.lengthComputable) {
@@ -251,7 +254,7 @@ const VoiceTranscribePage = () => {
 				};
 				xhr.send(fd);
 			}),
-		[engine]
+		[engine, apiKey]
 	);
 
 	const stopDictation = useCallback(async () => {
@@ -385,7 +388,11 @@ const VoiceTranscribePage = () => {
 	const connectLive = useCallback(async () => {
 		if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) return;
 		setConnState("connecting");
-		const ws = new WebSocket(API_ROUTES.SERVICES.VOICE_TRANSCRIBE_WS);
+		const wsBase = API_ROUTES.SERVICES.VOICE_TRANSCRIBE_WS;
+		const wsUrl = apiKey
+			? `${wsBase}${wsBase.includes("?") ? "&" : "?"}api_key=${encodeURIComponent(apiKey)}`
+			: wsBase;
+		const ws = new WebSocket(wsUrl);
 		ws.binaryType = "arraybuffer";
 		wsRef.current = ws;
 		ws.onopen = () => {
@@ -407,7 +414,7 @@ const VoiceTranscribePage = () => {
 		};
 		ws.onerror = () => setConnState("error");
 		ws.onclose = () => setConnState("closed");
-	}, []);
+	}, [apiKey]);
 
 	const disconnectLive = useCallback(() => {
 		try {

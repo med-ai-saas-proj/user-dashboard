@@ -18,6 +18,7 @@ import { toast } from "sonner";
 import { DemoEmptyState, DemoPageDescription } from "@/components/demo";
 import { Button } from "@/components/shadcn/button";
 import { API_ROUTES } from "@/config/api-routes";
+import { useServiceApiKeyStore } from "@/features/api-keys/store/service-api-key.store";
 import DashboardLayout from "@/layouts/dashboard-layout";
 
 interface AgentTurn {
@@ -35,6 +36,7 @@ type ConnState = "idle" | "connecting" | "connected" | "closed" | "error";
 type TtsMode = "server" | "browser" | "off";
 
 const VoiceAgentPage = () => {
+	const apiKey = useServiceApiKeyStore((s) => s.selectedApiKey);
 	const [connState, setConnState] = useState<ConnState>("idle");
 	const [isMicOn, setIsMicOn] = useState(false);
 	const [interimUser, setInterimUser] = useState<string>("");
@@ -252,7 +254,10 @@ const VoiceAgentPage = () => {
 				return "demo-user";
 			}
 		})();
-		const url = `${API_ROUTES.SERVICES.VOICE_AGENT_WS}?user_id=${encodeURIComponent(userId)}`;
+		const baseUrl = `${API_ROUTES.SERVICES.VOICE_AGENT_WS}?user_id=${encodeURIComponent(userId)}`;
+		const url = apiKey
+			? `${baseUrl}&api_key=${encodeURIComponent(apiKey)}`
+			: baseUrl;
 		const ws = new WebSocket(url);
 		ws.binaryType = "arraybuffer";
 		wsRef.current = ws;
@@ -278,7 +283,7 @@ const VoiceAgentPage = () => {
 		ws.onclose = () => {
 			setConnState("closed");
 		};
-	}, [handleBinaryFrame, handleTextEvent, log]);
+	}, [handleBinaryFrame, handleTextEvent, log, apiKey]);
 
 	const disconnect = useCallback(() => {
 		// Server VieNeu can still be streaming audio_chunk frames for many

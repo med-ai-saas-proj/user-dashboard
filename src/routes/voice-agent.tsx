@@ -183,7 +183,14 @@ const VoiceAgentPage = () => {
 			if (header.type === "audio_chunk") {
 				lastServerChunkAtRef.current = Date.now();
 				const pcmStart = 4 + headerLen;
-				const pcm = new Float32Array(data, pcmStart);
+				// `new Float32Array(buffer, byteOffset)` requires byteOffset % 4 === 0.
+				// Our header is 4 (length prefix) + JSON bytes — JSON length is
+				// rarely a multiple of 4, so we can't construct the view directly.
+				// Copy the PCM bytes into a fresh 4-aligned ArrayBuffer first.
+				const pcmByteLen = data.byteLength - pcmStart;
+				const aligned = new ArrayBuffer(pcmByteLen);
+				new Uint8Array(aligned).set(new Uint8Array(data, pcmStart, pcmByteLen));
+				const pcm = new Float32Array(aligned);
 				playAudioChunk(pcm, header.sample_rate ?? 24000);
 			}
 		},

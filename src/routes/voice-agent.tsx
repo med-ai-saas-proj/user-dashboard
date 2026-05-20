@@ -150,6 +150,13 @@ const VoiceAgentPage = () => {
 				playbackCtxRef.current = ctx;
 				playbackTimeRef.current = ctx.currentTime;
 			}
+			// Chrome / Safari autoplay policy: an AudioContext created without
+			// a recent user gesture starts in `suspended`. We try to nudge it
+			// awake; if the page hasn't seen a gesture in 5s the resume() call
+			// will reject silently, which is the correct fail-mode.
+			if (ctx.state === "suspended") {
+				ctx.resume().catch(() => {});
+			}
 			const buf = ctx.createBuffer(1, pcmFloat32.length, sampleRate);
 			// `copyToChannel` expects a Float32Array<ArrayBuffer> specifically;
 			// the view we get from the WS frame is typed as ArrayBufferLike
@@ -275,6 +282,22 @@ const VoiceAgentPage = () => {
 	const connect = useCallback(async () => {
 		if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) return;
 		setConnState("connecting");
+		// Pre-create the playback AudioContext under the user-gesture context
+		// so Chrome/Safari don't park it in `suspended`. The TTS sample rate
+		// is 24 kHz; if the device prefers a different rate the context will
+		// resample on the fly.
+		if (!playbackCtxRef.current || playbackCtxRef.current.state === "closed") {
+			try {
+				const ctx = new AudioContext({ sampleRate: 24000 });
+				playbackCtxRef.current = ctx;
+				playbackTimeRef.current = ctx.currentTime;
+				if (ctx.state === "suspended") {
+					ctx.resume().catch(() => {});
+				}
+			} catch (e) {
+				log(`playback ctx init failed: ${String(e)}`);
+			}
+		}
 		const userId = (() => {
 			try {
 				return localStorage.getItem("auth.userId") || "demo-user";

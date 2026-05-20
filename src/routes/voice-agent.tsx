@@ -139,7 +139,11 @@ const VoiceAgentPage = () => {
 
 	const playAudioChunk = useCallback(
 		(pcmFloat32: Float32Array, sampleRate: number) => {
-			if (ttsMode !== "server") return;
+			// Read the latest mode from the ref so a TTS mode change after
+			// the WS connected is honored without forcing a reconnect (the
+			// onmessage handler is bound once at connect time, so the
+			// captured ttsMode useState here would otherwise be stale).
+			if (ttsModeRef.current !== "server") return;
 			let ctx = playbackCtxRef.current;
 			if (!ctx || ctx.state === "closed") {
 				ctx = new AudioContext({ sampleRate });
@@ -160,7 +164,7 @@ const VoiceAgentPage = () => {
 			src.start(start);
 			playbackTimeRef.current = start + buf.duration;
 		},
-		[ttsMode]
+		[]
 	);
 
 	const handleBinaryFrame = useCallback(

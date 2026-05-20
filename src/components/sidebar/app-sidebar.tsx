@@ -1,16 +1,3 @@
-import type * as React from "react";
-import { useEffect } from "react";
-import {
-	Book,
-	BotIcon,
-	ChartColumnBig,
-	ClipboardPlusIcon,
-	GalleryVerticalEnd,
-	PillIcon,
-	SearchIcon,
-	Settings,
-} from "lucide-react";
-import { useTranslation } from "react-i18next";
 import {
 	Sidebar,
 	SidebarContent,
@@ -24,10 +11,19 @@ import { NavProjects } from "@/components/sidebar/nav-projects";
 import { NavUser } from "@/components/sidebar/nav-user";
 import { TeamSwitcher } from "@/components/sidebar/team-switcher";
 import { useAuthStore } from "@/features/auth/store/auth-store";
-import { useGetProjectDetails } from "@/features/project/hooks/project-general/use-get-project-details";
-import { useParams } from "react-router-dom";
-import { useProjectStore } from "@/features/project/store/project";
 import { useGetOrganizationProjects } from "@/features/organization/hooks/organization-projects/use-get-projects";
+import { useGetProjectDetails } from "@/features/project/hooks/project-general/use-get-project-details";
+import { useProjectStore } from "@/features/project/store/project";
+import {
+	Book,
+	ChartColumnBig,
+	GalleryVerticalEnd,
+	Settings,
+} from "lucide-react";
+import type * as React from "react";
+import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
+import { useParams } from "react-router-dom";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 	const { t } = useTranslation("sidebar");
@@ -115,28 +111,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 				icon: Settings,
 			},
 		],
-		playground: [
-			{
-				name: t("playground.ehrSummary.title"),
-				url: "/ehr-summary",
-				icon: ClipboardPlusIcon,
-			},
-			{
-				name: t("playground.rxAdvisor.title"),
-				url: "/rx-advisor",
-				icon: PillIcon,
-			},
-			{
-				name: t("playground.chatBot.title"),
-				url: "/chat",
-				icon: BotIcon,
-			},
-			{
-				name: t("playground.aiSearch.title"),
-				url: "/ai-search",
-				icon: SearchIcon,
-			},
-		],
+
 		organization: [
 			{
 				name: t("organization.people.title"),
@@ -190,7 +165,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 			</SidebarHeader>
 			<SidebarContent>
 				<NavProjects projects={data.management} label={t("management.title")} />
-				<NavProjects projects={data.playground} label={t("playground.title")} />
 				<NavProjects
 					projects={data.organization}
 					label={t("organization.title")}

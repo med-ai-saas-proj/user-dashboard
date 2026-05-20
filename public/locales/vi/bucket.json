@@ -22,7 +22,11 @@
     "inputPlaceholder": "Nhập một tag và nhấn Enter",
     "helper": "Tags sẽ được lưu trong metadata của tệp.",
     "label": "Tags",
-    "fallbackFileName": "tệp này"
+    "fallbackFileName": "tệp này",
+    "avaliableTags": "Các tags có sẵn",
+    "avaliableTagsDescription": "Chọn từ các tags đã tồn tại trong dự án này.",
+    "searchPlaceholder": "Tìm kiếm tags...",
+    "noTags": "Không tìm thấy tags."
   },
   "table": {
     "fileName": "Tên tệp",

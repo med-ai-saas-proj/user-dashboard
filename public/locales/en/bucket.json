@@ -22,7 +22,11 @@
     "inputPlaceholder": "Enter a tag and press Enter",
     "helper": "Tags are saved in file metadata.",
     "label": "Tags",
-    "fallbackFileName": "this file"
+    "fallbackFileName": "this file",
+    "avaliableTags": "Available tags",
+    "avaliableTagsDescription": "Select from existing tags in this project.",
+    "searchPlaceholder": "Search tags...",
+    "noTags": "No tags found."
   },
   "table": {
     "fileName": "File Name",

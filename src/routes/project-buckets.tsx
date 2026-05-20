@@ -71,6 +71,21 @@ export default function ProjectBucketsPage() {
 		});
 	}, [files, searchQuery]);
 
+	const allTagKeys = useMemo(() => {
+		const keys = new Set<string>();
+		for (const file of files) {
+			for (const tag of file.tags) {
+				const separatorIndex = tag.indexOf(":");
+				if (separatorIndex === -1) {
+					keys.add(tag.trim());
+				} else {
+					keys.add(tag.substring(0, separatorIndex).trim());
+				}
+			}
+		}
+		return Array.from(keys);
+	}, [files]);
+
 	const isBusy = uploadMutation.isPending;
 
 	const openFilePicker = () => {
@@ -276,6 +291,7 @@ export default function ProjectBucketsPage() {
 				onOpenChange={setTagDialogOpen}
 				projectId={projectId}
 				selectedFile={selectedFile}
+				allTagKeys={allTagKeys}
 			/>
 
 			<ProjectBucketsDeleteDialog

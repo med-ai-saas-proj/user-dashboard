@@ -133,33 +133,35 @@ const APIKeyDialog = ({
 										<div className="space-y-2">
 											{apiKeyPermissions?.results?.map((permission) => {
 												const isChecked =
-													field.value?.includes(permission) ?? false;
+													field.value?.includes(permission.id) ?? false;
 
 												return (
 													<div
-														key={permission}
+														key={permission.id}
 														className="flex items-center gap-2"
 													>
 														<Checkbox
-															id={permission}
+															id={permission.id}
 															checked={isChecked}
 															onCheckedChange={(checked) => {
 																if (checked) {
 																	field.onChange([
 																		...(field.value ?? []),
-																		permission,
+																		permission.id,
 																	]);
 																	return;
 																}
 
 																field.onChange(
 																	(field.value ?? []).filter(
-																		(value) => value !== permission
+																		(value) => value !== permission.id
 																	)
 																);
 															}}
 														/>
-														<Label htmlFor={permission}>{permission}</Label>
+														<Label htmlFor={permission.id}>
+															{permission.name}
+														</Label>
 													</div>
 												);
 											})}

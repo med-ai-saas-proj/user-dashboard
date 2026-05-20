@@ -1,40 +1,36 @@
 import "./config/i18n";
 
 import { KeycloakProvider } from "@/features/auth/providers/keycloak-provider";
+import { AppLayout } from "@/layouts/app-layout";
 import { query_client } from "@/query/query-client";
 import APIKeysPage from "@/routes/api-keys";
 import APIReferencePage from "@/routes/api-reference";
-import EHRSummaryPage from "@/routes/ehr-summary";
+import DashboardPage from "@/routes/dashboard";
 import LoginPage from "@/routes/login";
+import OrganizationPeoplePage from "@/routes/organization-people";
 import { ProtectedRoute } from "@/routes/protected-route";
 import { PublicRoute } from "@/routes/public-route";
-import RxAdvisorPage from "@/routes/rx-advisor";
+import SettingPage from "@/routes/setting";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { Toaster } from "sonner";
-import PlaygroundChatPage from "./routes/playground-chat";
-import PlaygroundAISearchPage from "@/routes/playground-ai-search";
-import DashboardPage from "@/routes/dashboard";
-import SettingPage from "@/routes/setting";
-import OrganizationPeoplePage from "@/routes/organization-people";
-import OrganizationPeopleInvitation from "./features/organization/components/organization-people/organization-people-invitation";
-import OrganizationPeopleMember from "./features/organization/components/organization-people/organization-people-member";
-import OrganizationBilling from "./routes/organization-billing";
-import OrganizationBillingOverview from "./features/organization/components/organization-billing/organization-billing-overview";
-import OrganizationBillingPaymentMethods from "./features/organization/components/organization-billing/organization-billing-payment-methods";
-import OrganizationBillingHistory from "./features/organization/components/organization-billing/organization-billing-history";
-import OrganizationBillingCreditGrants from "./features/organization/components/organization-billing/organization-billing-credit-grants";
-import OrganizationProjects from "./routes/organization-projects";
-import ProjectGeneral from "./routes/project-general";
-import ProjectPeople from "./routes/project-people";
-import ProjectPeopleMember from "./features/project/components/project-people/project-people-member";
-import ProjectPeopleRole from "./features/project/components/project-people/project-people-role";
-import ProjectRouteGuard from "./routes/project-route-guard";
-import ProjectBucketsPage from "./routes/project-buckets";
 import DashboardAggregateOrganization from "./features/dashboard/components/dashboard-aggregate-organization";
 import DashboardAggregateProjects from "./features/dashboard/components/dashboard-aggregate-projects";
 import OrganizationBillingActivityLog from "./features/organization/components/organization-billing/organization-billing-activity-log";
-import { AppLayout } from "@/layouts/app-layout";
+import OrganizationBillingCreditGrants from "./features/organization/components/organization-billing/organization-billing-credit-grants";
+import OrganizationBillingHistory from "./features/organization/components/organization-billing/organization-billing-history";
+import OrganizationBillingOverview from "./features/organization/components/organization-billing/organization-billing-overview";
+import OrganizationBillingPaymentMethods from "./features/organization/components/organization-billing/organization-billing-payment-methods";
+import OrganizationPeopleInvitation from "./features/organization/components/organization-people/organization-people-invitation";
+import OrganizationPeopleMember from "./features/organization/components/organization-people/organization-people-member";
+import ProjectPeopleMember from "./features/project/components/project-people/project-people-member";
+import ProjectPeopleRole from "./features/project/components/project-people/project-people-role";
+import OrganizationBilling from "./routes/organization-billing";
+import OrganizationProjects from "./routes/organization-projects";
+import ProjectBucketsPage from "./routes/project-buckets";
+import ProjectGeneral from "./routes/project-general";
+import ProjectPeople from "./routes/project-people";
+import ProjectRouteGuard from "./routes/project-route-guard";
 
 function App() {
 	return (
@@ -51,8 +47,6 @@ function App() {
 								</PublicRoute>
 							}
 						/>
-						{/* TODO: Replace with main home page later, temporarily redirecting to /chat for now */}
-						<Route path="/" element={<Navigate to="/chat" replace />} />
 
 						{/* App layout wraps all protected routes and provides persistent sidebar */}
 						<Route
@@ -75,10 +69,6 @@ function App() {
 							</Route>
 							<Route path="/api-keys" element={<APIKeysPage />} />
 							<Route path="/api-reference" element={<APIReferencePage />} />
-							<Route path="/chat" element={<PlaygroundChatPage />} />
-							<Route path="/ai-search" element={<PlaygroundAISearchPage />} />
-							<Route path="/ehr-summary" element={<EHRSummaryPage />} />
-							<Route path="/rx-advisor" element={<RxAdvisorPage />} />
 							<Route path="/settings" element={<SettingPage />} />
 							<Route path="/organization">
 								<Route path="people" element={<OrganizationPeoplePage />}>

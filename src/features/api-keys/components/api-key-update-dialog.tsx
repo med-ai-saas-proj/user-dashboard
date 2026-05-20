@@ -21,6 +21,7 @@ import type { APIKey } from "@/features/api-keys/api-key.type";
 import { useUpdateApiKey } from "@/features/api-keys/hooks/use-update-api-key";
 import { useGetApiKeyPermissions } from "../hooks/use-get-api-key-permissions";
 import { toast } from "sonner";
+import type { ApiPermission } from "../services/api-key.dto";
 
 const apiUpdateSchema = z.object({
 	name: z.string().min(1, "Name must be at least 1 character long"),
@@ -139,38 +140,42 @@ const APIKeyUpdateDialog = ({
 								control={control}
 								render={({ field }) => (
 									<div className="space-y-2">
-										{apiPermissions?.results?.map((permission) => {
-											const isChecked =
-												field.value?.includes(permission) ?? false;
+										{apiPermissions?.results?.map(
+											(permission: ApiPermission) => {
+												const isChecked =
+													field.value?.includes(permission.id) ?? false;
 
-											return (
-												<div
-													key={permission}
-													className="flex items-center gap-2"
-												>
-													<Checkbox
-														id={permission}
-														checked={isChecked}
-														onCheckedChange={(checked) => {
-															if (checked) {
-																field.onChange([
-																	...(field.value ?? []),
-																	permission,
-																]);
-																return;
-															}
+												return (
+													<div
+														key={permission.id}
+														className="flex items-center gap-2"
+													>
+														<Checkbox
+															id={permission.id}
+															checked={isChecked}
+															onCheckedChange={(checked) => {
+																if (checked) {
+																	field.onChange([
+																		...(field.value ?? []),
+																		permission.id,
+																	]);
+																	return;
+																}
 
-															field.onChange(
-																(field.value ?? []).filter(
-																	(value) => value !== permission
-																)
-															);
-														}}
-													/>
-													<Label htmlFor={permission}>{permission}</Label>
-												</div>
-											);
-										})}
+																field.onChange(
+																	(field.value ?? []).filter(
+																		(value) => value !== permission.id
+																	)
+																);
+															}}
+														/>
+														<Label htmlFor={permission.id}>
+															{permission.name}
+														</Label>
+													</div>
+												);
+											}
+										)}
 									</div>
 								)}
 							/>

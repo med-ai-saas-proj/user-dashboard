@@ -34,7 +34,7 @@ export function TeamSwitcher({
 		};
 		projects?: {
 			name: string;
-			id: string;
+			project_uuid: string;
 		}[];
 	};
 }) {
@@ -47,13 +47,16 @@ export function TeamSwitcher({
 	const projects = info.projects ?? [];
 	const OrganizationLogo = info.organization.logo;
 
-	const handleProjectSelect = (project: { id: string; name: string }) => {
-		setProjectId(project.id);
+	const handleProjectSelect = (project: {
+		project_uuid: string;
+		name: string;
+	}) => {
+		setProjectId(project.project_uuid);
 		setProjectInfo({
 			name: project.name,
 			description: undefined,
 		});
-		navigate(`/project/${project.id}/general`);
+		navigate(`/project/${project.project_uuid}/general`);
 	};
 
 	return (
@@ -91,11 +94,12 @@ export function TeamSwitcher({
 						{projects.length > 0 ? (
 							projects.map((project, index) => (
 								<DropdownMenuItem
-									key={project.id}
+									key={project.project_uuid}
 									onClick={() => handleProjectSelect(project)}
 									className={cn(
 										"gap-2 p-2 flex items-start justify-between",
-										project.id === info.organization.defaultProject?.id &&
+										project.project_uuid ===
+											info.organization.defaultProject?.id &&
 											"bg-sidebar-accent text-sidebar-accent-foreground"
 									)}
 								>
@@ -104,7 +108,7 @@ export function TeamSwitcher({
 											{project.name}
 										</p>
 										<p className="w-full truncate text-xs text-muted-foreground/80">
-											{project.id}
+											{project.project_uuid}
 										</p>
 									</div>
 									<DropdownMenuShortcut className="ml-2 shrink-0">

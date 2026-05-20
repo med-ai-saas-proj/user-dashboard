@@ -30,7 +30,13 @@ export type ApiKeyOutput = {
 
 export type ApiPermissions = {
 	total: number;
-	results: string[];
+	results: ApiPermission[];
+};
+
+export type ApiPermission = {
+	id: string;
+	name: string;
+	description?: string;
 };
 
 export type GetApiKeyResponse = {

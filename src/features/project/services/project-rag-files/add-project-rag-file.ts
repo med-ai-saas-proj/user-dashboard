@@ -1,0 +1,70 @@
+import { API_ROUTES } from "@/config/api-routes";
+import apiClient from "@/query/api-client";
+import { getProjectRagFileTaskStatus } from "./get-project-rag-file-task-status";
+import type {
+	ProjectRagFileCreateInput,
+	ProjectRagFileTaskResponse,
+} from "../project-files.dto";
+
+const DEFAULT_CHUNK_SPLITTER: ProjectRagFileCreateInput["chunkSplitter"] =
+	"recursive";
+const DEFAULT_CHUNK_SIZE = 1000;
+const DEFAULT_CHUNK_OVERLAP = 150;
+const TASK_POLL_INTERVAL_MS = 1500;
+const TASK_POLL_TIMEOUT_MS = 5 * 60 * 1000;
+
+const sleep = (ms: number) =>
+	new Promise((resolve) => window.setTimeout(resolve, ms));
+
+const waitForProjectRagFileTaskCompletion = async (
+	projectId: string,
+	taskId: string
+): Promise<ProjectRagFileTaskResponse> => {
+	const startedAt = Date.now();
+
+	while (true) {
+		const task = await getProjectRagFileTaskStatus(projectId, taskId);
+
+		if (task.status === "completed") {
+			return task;
+		}
+
+		if (
+			task.status === "failed_and_dropped" ||
+			task.status === "failed_and_retrying"
+		) {
+			throw new Error(`File processing failed with status: ${task.status}`);
+		}
+
+		if (Date.now() - startedAt > TASK_POLL_TIMEOUT_MS) {
+			throw new Error("Timed out while processing the RAG file upload.");
+		}
+
+		await sleep(TASK_POLL_INTERVAL_MS);
+	}
+};
+
+export const addProjectRagFile = async ({
+	projectId,
+	fileId,
+	chunkSplitter = DEFAULT_CHUNK_SPLITTER,
+	chunkSize = DEFAULT_CHUNK_SIZE,
+	chunkOverlap = DEFAULT_CHUNK_OVERLAP,
+}: ProjectRagFileCreateInput): Promise<ProjectRagFileTaskResponse> => {
+	const { data } = await apiClient.post<string>(
+		API_ROUTES.RAG.USER_FILES,
+		{
+			file_uid: fileId,
+			chunk_splitter: chunkSplitter,
+			chunk_size: chunkSize,
+			chunk_overlap: chunkOverlap,
+		},
+		{
+			params: {
+				project_uuid: projectId,
+			},
+		}
+	);
+
+	return waitForProjectRagFileTaskCompletion(projectId, data);
+};

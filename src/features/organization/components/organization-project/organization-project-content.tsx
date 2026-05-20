@@ -96,28 +96,30 @@ const OrganizationProjectContent = ({
 				</TableHeader>
 				<TableBody>
 					{filteredProjects.map((project, index) => (
-						<TableRow key={project.id}>
+						<TableRow key={project.project_uuid}>
 							<TableCell>
 								<p className="text-muted-foreground">{index + 1}</p>
 							</TableCell>
 							<TableCell>{project.name}</TableCell>
-							<TableCell>{project.id}</TableCell>
+							<TableCell>{project.project_uuid}</TableCell>
 							<TableCell>{project.description}</TableCell>
 							<TableCell>
 								<div className="flex items-center gap-x-6 justify-end">
 									<Settings
 										size={"16"}
-										onClick={() => handleNavigateToProject(project.id)}
+										onClick={() =>
+											handleNavigateToProject(project.project_uuid)
+										}
 									/>
 									{!project.archived && (
 										<OrganizationProjectArchiveDialog
-											projectId={project.id}
+											projectId={project.project_uuid}
 											projectName={project.name}
 										/>
 									)}
 									{project.archived && (
 										<OrganizationProjectUnarchiveDialog
-											projectId={project.id}
+											projectId={project.project_uuid}
 											projectName={project.name}
 										/>
 									)}

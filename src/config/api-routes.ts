@@ -22,6 +22,34 @@ export const API_ROUTES = {
 			BASE_API_URL
 		).toString(),
 	},
+	RAG: {
+		USER_BASE: new URL(
+			`service/${API_VERSION}/rag/user`,
+			BASE_API_URL
+		).toString(),
+		USER_FILES: new URL(
+			`service/${API_VERSION}/rag/user/files`,
+			BASE_API_URL
+		).toString(),
+		USER_FILE_TASK: new URL(
+			`service/${API_VERSION}/rag/user/files/`,
+			BASE_API_URL
+		).toString(),
+		USER_QUERY_TEXT: new URL(
+			`service/${API_VERSION}/rag/user/query/text`,
+			BASE_API_URL
+		).toString(),
+	},
+	FILE_STORAGE: {
+		USER: new URL(
+			`service/${API_VERSION}/file-storage/user/`,
+			BASE_API_URL
+		).toString(),
+		SERVICE: new URL(
+			`service/${API_VERSION}/file-storage/service/`,
+			BASE_API_URL
+		).toString(),
+	},
 	MANAGEMENT: {
 		API_KEYS: new URL(
 			`management/${API_VERSION}/api-keys`,
@@ -91,5 +119,10 @@ export const isServiceEndpoint = (url?: string): boolean => {
 	if (!url) return false;
 
 	const serviceEndpoints = Object.values(API_ROUTES.SERVICES);
-	return serviceEndpoints.some((endpoint) => url.includes(endpoint));
+	const fileStorageService = API_ROUTES.FILE_STORAGE.SERVICE;
+	// consider service endpoints defined under SERVICES as well as file-storage service
+	return (
+		serviceEndpoints.some((endpoint) => url.includes(endpoint)) ||
+		(Boolean(fileStorageService) && url.includes(fileStorageService))
+	);
 };

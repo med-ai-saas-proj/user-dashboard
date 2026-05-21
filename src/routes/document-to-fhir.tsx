@@ -73,10 +73,12 @@ const DocumentToFhirPage = () => {
 					<ViewCodeDialog
 						endpoint={API_ROUTES.SERVICES.EHR_CONVERTER_DOCUMENT}
 						method="POST"
+						contentType="multipart/form-data"
 						body={{
-							files: "<multipart/form-data: image or PDF files>",
+							files:
+								"<multipart/form-data: image or PDF files (repeat -F files=@... for multiple)>",
 						}}
-						description="Convert scanned medical documents to FHIR R4 via GPT-4o Vision"
+						description="Convert scanned medical documents to FHIR R4 via GPT-4o Vision (multipart upload; backend field name is 'files', repeat for multiple)"
 					/>
 				</div>
 				<div className="flex-1 p-4 max-w-4xl mx-auto w-full">

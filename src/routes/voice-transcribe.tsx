@@ -528,7 +528,7 @@ const VoiceTranscribePage = () => {
 						contentType="multipart/form-data"
 						description={
 							engine === "v2"
-								? "Dictation v2 — upload an audio file (WAV, MP3, M4A, MP4, WebM, etc.), get a denoised + diarized + LLM-cleaned Vietnamese transcript back. For live captions, open a WebSocket to /ws/transcribe and stream 16 kHz int16 mono PCM frames."
+								? "Dictation v2 — upload an audio file (WAV, MP3, M4A, MP4, WebM, etc.). Optional form fields: diarize ('none'|'pyannote'), hotwords (comma-separated), post_edit (bool), denoise (bool). All have server-side defaults so file= alone works. For live captions, open a WebSocket to /ws/transcribe and stream 16 kHz int16 mono PCM frames."
 								: "Dictation — upload an audio file (WAV, MP3, M4A, MP4, WebM, etc.), get the full Vietnamese transcript back. For live captions, open a WebSocket to /ws/transcribe and stream 16 kHz int16 mono PCM frames."
 						}
 					/>

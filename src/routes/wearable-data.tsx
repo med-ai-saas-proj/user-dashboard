@@ -541,7 +541,6 @@ const WearableDataPage = () => {
 							endpoint={wearableUrl("{patient_id}")}
 							method="POST"
 							body={{
-								patient_id: 1,
 								source: "apple_health",
 								device_name: "Apple Watch Series 9",
 								data: [
@@ -553,7 +552,7 @@ const WearableDataPage = () => {
 									},
 								],
 							}}
-							description="Ingest wearable device data into patient timeline"
+							description="Ingest wearable device data into patient timeline (patient_id comes from the URL path)"
 						/>
 					</div>
 				</div>

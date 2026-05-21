@@ -598,8 +598,9 @@ const BhxhValidatorPage = () => {
 			<ViewCodeDialog
 				endpoint={API_ROUTES.SERVICES.BHXH_VALIDATE_BUNDLE}
 				method="POST"
+				contentType="multipart/form-data"
 				body={{ file: "<.xml | .rar bundle, multipart field 'file'>" }}
-				description="Validate a GIAMDINHHS envelope or .rar archive of records"
+				description="Validate a GIAMDINHHS envelope or .rar archive of records (multipart upload; optional fields: strict, summary, max_issues_per_record)"
 			/>
 		);
 

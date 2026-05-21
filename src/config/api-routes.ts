@@ -138,14 +138,11 @@ export const API_ROUTES = {
 			`service/api/${API_VERSION}/data_masking/facility/search`,
 			BASE_API_URL
 		).toString(),
-		PATIENT_HISTORY_CREATE: new URL(
-			`service/api/${API_VERSION}/patient`,
-			BASE_API_URL
-		).toString(),
-		PATIENT_WEARABLE_INGEST: new URL(
-			`service/api/${API_VERSION}/patient`,
-			BASE_API_URL
-		).toString(),
+		// Patient history endpoints are path-parameterized
+		//   POST /patient/{patient_id}/history
+		//   POST /patient/{patient_id}/wearable
+		// Routes build them inline via baseHistoryUrl(pid) / wearableUrl(pid).
+		// No single constant can capture them, so they're omitted here.
 		PUBLIC_HEALTH_STATS: new URL(
 			`service/api/${API_VERSION}/public_health/statistics`,
 			BASE_API_URL

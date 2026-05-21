@@ -85,6 +85,16 @@ function getSDKMethodInfo(endpoint: string): {
 			property: "bhxh_validator",
 			method: "validate",
 		},
+		"bhxh_validator/validate_bundle": {
+			property: "bhxh_validator",
+			method: "validate_bundle",
+			fileArg: true,
+		},
+		"ehr_converter/convert/document": {
+			property: "ehr_converter",
+			method: "convert_document",
+			fileArg: true,
+		},
 		"data_masking/mask": { property: "data_masking", method: "mask" },
 		knowledge_base: { property: "knowledge_base", method: "list" },
 		"knowledge_base/search": { property: "knowledge_base", method: "search" },
@@ -99,10 +109,6 @@ function getSDKMethodInfo(endpoint: string): {
 		"clinic_search/search": { property: "clinic_search", method: "search" },
 		"ehr_converter/convert": { property: "ehr_converter", method: "convert" },
 		ehr_overview: { property: "ehr_overview", method: "get_overview" },
-		"ehr_converter/convert/document": {
-			property: "ehr_converter",
-			method: "convert",
-		},
 		"playground/seed": { property: "playground", method: "seed" },
 		"playground/status": { property: "playground", method: "status" },
 		"a2ui/generate": { property: "a2ui", method: "generate" },
@@ -204,24 +210,46 @@ wscat -c "${wsUrl}"`,
 	const sdkInfo = getSDKMethodInfo(endpoint);
 
 	if (isMultipart) {
+		// Use the first body key as the multipart field name when provided,
+		// so endpoints whose backend field name isn't "file" (e.g. /convert/document
+		// uses "files") render correct cURL / requests examples out of the box.
+		const fieldName = body ? (Object.keys(body)[0] ?? "file") : "file";
+		const isList = fieldName.endsWith("s");
+		const curlFiles = isList
+			? `-F "${fieldName}=@/path/to/file1" \\\n  -F "${fieldName}=@/path/to/file2"`
+			: `-F "${fieldName}=@/path/to/your/file"`;
+		const pyFiles = isList
+			? `[("${fieldName}", open("file1", "rb")), ("${fieldName}", open("file2", "rb"))]`
+			: `{"${fieldName}": f}`;
 		return [
 			{
 				label: "cURL",
 				language: "bash",
 				code: `curl -X ${method} "${endpoint}" \\
   -H "X-Api-Key: ${apiKey}" \\
-  -F "file=@/path/to/your/file"`,
+  ${curlFiles}`,
 			},
 			{
 				label: "Python (requests)",
 				language: "python",
-				code: `import requests
+				code: isList
+					? `import requests
+
+files = ${pyFiles}
+response = requests.${method.toLowerCase()}(
+    "${endpoint}",
+    headers={"X-Api-Key": "${apiKey}"},
+    files=files,
+)
+
+print(response.json())`
+					: `import requests
 
 with open("your_file", "rb") as f:
     response = requests.${method.toLowerCase()}(
         "${endpoint}",
         headers={"X-Api-Key": "${apiKey}"},
-        files={"file": f},
+        files=${pyFiles},
     )
 
 print(response.json())`,
@@ -233,7 +261,7 @@ print(response.json())`,
 from venera_sdk import VeneraClient
 
 client = VeneraClient(api_key="${apiKey}")
-result = client.${sdkInfo.property}.${sdkInfo.method}(file_path="/path/to/your/file")
+result = client.${sdkInfo.property}.${sdkInfo.method}(${isList ? `${fieldName}=["/path/to/file1", "/path/to/file2"]` : `file_path="/path/to/your/file"`})
 
 print(result)`,
 			},

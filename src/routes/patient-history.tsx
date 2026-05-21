@@ -432,7 +432,6 @@ const PatientHistoryPage = () => {
 										label: "Save patient history",
 										endpoint: baseHistoryUrl("1"),
 										body: {
-											patient_id: 1,
 											fhir_bundle: {
 												resourceType: "Bundle",
 												type: "collection",

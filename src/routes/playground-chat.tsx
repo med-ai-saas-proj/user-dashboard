@@ -76,7 +76,7 @@ export default function PlaygroundChatPage() {
 								stream: false,
 								input: "Hello, how can you help?",
 							}}
-							description="Chat with AI assistant. Omit conversation_id on the first call; the server returns one — reuse it on follow-up calls to keep session memory."
+							description="Chat with AI assistant. Authenticates with X-Api-Key (same header as every other service). Omit conversation_id on the first call; the server returns one — reuse it on follow-up calls to keep session memory."
 						/>
 					}
 				/>

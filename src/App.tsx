@@ -48,6 +48,8 @@ function App() {
 							}
 						/>
 
+						<Route path="/" element={<Navigate to="/dashboard" replace />} />
+
 						{/* App layout wraps all protected routes and provides persistent sidebar */}
 						<Route
 							element={

@@ -1,4 +1,4 @@
-import { API_ROUTES } from "@/config/api-routes";
+﻿import { API_ROUTES } from "@/config/api-routes";
 import apiClient from "@/query/api-client";
 import {
 	mapProjectRagQueryResponse,
@@ -11,6 +11,8 @@ export type ProjectRagTextQueryInput = {
 	queryText: string;
 	topK?: number;
 	includeEmbedding?: boolean;
+	hybridSearch?: boolean;
+	rerank?: boolean;
 };
 
 export const queryProjectRagByText = async ({
@@ -18,12 +20,16 @@ export const queryProjectRagByText = async ({
 	queryText,
 	topK = 5,
 	includeEmbedding = false,
+	hybridSearch = false,
+	rerank = false,
 }: ProjectRagTextQueryInput): Promise<ProjectRagQueryResult[]> => {
 	const { data } = await apiClient.post<ProjectRagQueryResponse[]>(
 		API_ROUTES.RAG.USER_QUERY_TEXT,
 		{
 			query_text: queryText,
 			top_k: topK,
+			hybrid_search: hybridSearch,
+			rerank: rerank,
 		},
 		{
 			params: {

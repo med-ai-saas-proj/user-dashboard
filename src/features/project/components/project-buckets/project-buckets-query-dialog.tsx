@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
+﻿import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/shadcn/button";
+import { Switch } from "@/components/shadcn/switch";
 import {
 	Dialog,
 	DialogClose,
@@ -32,11 +33,15 @@ export default function ProjectBucketsQueryDialog({
 	const { t } = useTranslation(["bucket", "common"]);
 	const queryRagMutation = useQueryProjectRagByText();
 	const [queryText, setQueryText] = useState("");
+	const [hybridSearch, setHybridSearch] = useState(false);
+	const [rerank, setRerank] = useState(false);
 	const [queryResults, setQueryResults] = useState<ProjectRagQueryResult[]>([]);
 
 	useEffect(() => {
 		if (!open) {
 			setQueryText("");
+			setHybridSearch(false);
+			setRerank(false);
 			setQueryResults([]);
 		}
 	}, [open]);
@@ -55,6 +60,8 @@ export default function ProjectBucketsQueryDialog({
 			const results = await queryRagMutation.mutateAsync({
 				projectId,
 				queryText: normalizedQuery,
+				hybridSearch,
+				rerank,
 			});
 			setQueryResults(results);
 		} catch (error) {
@@ -113,6 +120,28 @@ export default function ProjectBucketsQueryDialog({
 								{t("bucket:rag.queryAction", "Query")}
 							</Button>
 						</div>
+						<div className="mt-2 flex items-center gap-6">
+							<div className="flex items-center gap-2">
+								<Switch
+									id="rag-hybrid-search"
+									checked={hybridSearch}
+									onCheckedChange={setHybridSearch}
+								/>
+								<Label htmlFor="rag-hybrid-search" className="cursor-pointer">
+									{t("bucket:rag.hybridSearch", "Hybrid Search")}
+								</Label>
+							</div>
+							<div className="flex items-center gap-2">
+								<Switch
+									id="rag-rerank"
+									checked={rerank}
+									onCheckedChange={setRerank}
+								/>
+								<Label htmlFor="rag-rerank" className="cursor-pointer">
+									{t("bucket:rag.rerank", "Rerank")}
+								</Label>
+							</div>
+						</div>
 					</div>
 				</form>
 
@@ -145,7 +174,7 @@ export default function ProjectBucketsQueryDialog({
 											result.file.mimeType,
 											result.file.filename
 										)}
-										{` • ${formatFileSize(result.file.size)} • ${result.createdAt.toLocaleString()}`}
+										{` - ${formatFileSize(result.file.size)} - ${result.createdAt.toLocaleString()}`}
 									</p>
 									<p className="mt-3 text-sm leading-6 text-muted-foreground">
 										{result.text}

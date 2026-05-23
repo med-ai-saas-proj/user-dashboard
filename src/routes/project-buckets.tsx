@@ -1,4 +1,4 @@
-import type { ChangeEvent, DragEvent } from "react";
+﻿import type { ChangeEvent, DragEvent } from "react";
 import { useMemo, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -15,6 +15,7 @@ import type { ProjectRagFile } from "@/features/project/services/project-files.d
 import { getProjectStorageFileDownloadUrl } from "@/features/project/services/project-storage-files/get-project-storage-file-download-url";
 import ProjectBucketsDeleteDialog from "@/features/project/components/project-buckets/project-buckets-delete-dialog";
 import ProjectBucketsQueryDialog from "@/features/project/components/project-buckets/project-buckets-query-dialog";
+import ProjectBucketsAddRagDialog from "@/features/project/components/project-buckets/project-buckets-add-rag-dialog";
 import ProjectBucketsTagDialog from "@/features/project/components/project-buckets/project-buckets-tag-dialog";
 import ProjectBucketsTabs from "@/features/project/components/project-buckets/project-buckets-tabs";
 import ProjectBucketsUploadCard from "@/features/project/components/project-buckets/project-buckets-upload-card";
@@ -32,6 +33,8 @@ export default function ProjectBucketsPage() {
 	const [searchQuery, setSearchQuery] = useState("");
 	const [isDragging, setIsDragging] = useState(false);
 	const [tagDialogOpen, setTagDialogOpen] = useState(false);
+	const [addRagDialogOpen, setAddRagDialogOpen] = useState(false);
+	const [fileToAddRag, setFileToAddRag] = useState<ProjectRagFile | null>(null);
 	const [selectedFile, setSelectedFile] = useState<ProjectRagFile | null>(null);
 	const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 	const [fileToDelete, setFileToDelete] = useState<ProjectRagFile | null>(null);
@@ -207,7 +210,43 @@ export default function ProjectBucketsPage() {
 		setDeleteDialogOpen(true);
 	};
 
-	const addToRag = async (file: ProjectRagFile) => {
+	const confirmAddToRag = async (
+		fileId: string,
+		params: { chunkSplitter: string; chunkSize: number; chunkOverlap: number }
+	) => {
+		await toast.promise(
+			addRagFileMutation.mutateAsync({
+				projectId,
+				fileId,
+				chunkSplitter: params.chunkSplitter as any,
+				chunkSize: params.chunkSize,
+				chunkOverlap: params.chunkOverlap,
+			}),
+			{
+				loading: t("bucket:rag.loading", {
+					fileName: fileToAddRag?.filename || "file",
+				}),
+				success: t("bucket:rag.success", {
+					fileName: fileToAddRag?.filename || "file",
+				}),
+				error: (err) =>
+					err instanceof Error
+						? err.message
+						: t("bucket:rag.error", {
+								fileName: fileToAddRag?.filename || "file",
+							}),
+			}
+		);
+		setAddRagDialogOpen(false);
+		setFileToAddRag(null);
+	};
+
+	const addToRag = (file: ProjectRagFile) => {
+		setFileToAddRag(file);
+		setAddRagDialogOpen(true);
+	};
+
+	const DEPREC_addToRag = async (file: ProjectRagFile) => {
 		toast.promise(
 			addRagFileMutation.mutateAsync({
 				projectId,
@@ -242,6 +281,13 @@ export default function ProjectBucketsPage() {
 						</div>
 					</CardContent>
 				</Card>
+				<ProjectBucketsAddRagDialog
+					open={addRagDialogOpen}
+					onOpenChange={setAddRagDialogOpen}
+					file={fileToAddRag}
+					onConfirm={confirmAddToRag}
+					isPending={addRagFileMutation.isPending}
+				/>
 			</DashboardLayout>
 		);
 	}
@@ -306,6 +352,13 @@ export default function ProjectBucketsPage() {
 				open={queryDialogOpen}
 				onOpenChange={setQueryDialogOpen}
 				projectId={projectId}
+			/>
+			<ProjectBucketsAddRagDialog
+				open={addRagDialogOpen}
+				onOpenChange={setAddRagDialogOpen}
+				file={fileToAddRag}
+				onConfirm={confirmAddToRag}
+				isPending={addRagFileMutation.isPending}
 			/>
 		</DashboardLayout>
 	);

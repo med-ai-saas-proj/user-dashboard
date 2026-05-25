@@ -41,6 +41,7 @@ import KnowledgeBasePage from "@/routes/knowledge-base";
 import LoginPage from "@/routes/login";
 import MedicalImagePage from "@/routes/medical-image";
 import OphthSummaryPage from "@/routes/ophth-summary";
+import PatientAnalyticsPage from "@/routes/patient-analytics";
 import PatientHistoryPage from "@/routes/patient-history";
 import PlaygroundAISearchPage from "@/routes/playground-ai-search";
 import { ProtectedRoute } from "@/routes/protected-route";
@@ -345,6 +346,14 @@ function AppRoutes() {
 					element={
 						<ProtectedRoute>
 							<EHROverviewPage />
+						</ProtectedRoute>
+					}
+				/>
+				<Route
+					path="/patient-analytics"
+					element={
+						<ProtectedRoute>
+							<PatientAnalyticsPage />
 						</ProtectedRoute>
 					}
 				/>

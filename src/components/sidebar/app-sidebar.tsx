@@ -183,6 +183,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 				icon: FileHeartIcon,
 			},
 			{
+				name: "Patient Analytics",
+				url: "/patient-analytics",
+				icon: ActivityIcon,
+			},
+			{
 				name: t("operation.rxAdvisor.title"),
 				url: "/rx-advisor",
 				icon: PillIcon,

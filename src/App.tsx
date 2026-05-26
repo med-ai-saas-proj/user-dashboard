@@ -99,48 +99,48 @@ function PreventScrollReset() {
 	return null;
 }
 
-function AppRoutes() {
-	const dashboardRoutes = [
-		"api-keys",
-		"api-reference",
-		"chat",
-		"ai-search",
-		"ehr-summary",
-		"ophth-summary",
-		"rx-advisor",
-		"ehr-converter",
-		"document-to-fhir",
-		"knowledge-base",
-		"bhxh-validator",
-		"bhxh-error-codes",
-		"voice-agent",
-		"voice-transcribe",
-		"medical-image",
-		"health-score",
-		"data-masking",
-		"patient-history",
-		"wearable-data",
-		"architecture",
-		"integration",
-		"public-health",
-		"api-flow-builder",
-		"dashboard-builder",
-		"symptom-checker",
-		"gene-decoder",
-		"cross-search",
-		"blood-panel",
-		"ehr-overview",
-		"patient-analytics",
-		"clinic-search",
-		"digital-twin",
-		"federated-learning",
-		"healthcare-dashboard",
-		"a2ui",
-		"settings",
-		"billing",
-		"upgrade",
-	] as const;
+const dashboardRoutes = [
+	"api-keys",
+	"api-reference",
+	"chat",
+	"ai-search",
+	"ehr-summary",
+	"ophth-summary",
+	"rx-advisor",
+	"ehr-converter",
+	"document-to-fhir",
+	"knowledge-base",
+	"bhxh-validator",
+	"bhxh-error-codes",
+	"voice-agent",
+	"voice-transcribe",
+	"medical-image",
+	"health-score",
+	"data-masking",
+	"patient-history",
+	"wearable-data",
+	"architecture",
+	"integration",
+	"public-health",
+	"api-flow-builder",
+	"dashboard-builder",
+	"symptom-checker",
+	"gene-decoder",
+	"cross-search",
+	"blood-panel",
+	"ehr-overview",
+	"patient-analytics",
+	"clinic-search",
+	"digital-twin",
+	"federated-learning",
+	"healthcare-dashboard",
+	"a2ui",
+	"settings",
+	"billing",
+	"upgrade",
+] as const;
 
+function AppRoutes() {
 	return (
 		<>
 			<PreventScrollReset />
@@ -217,6 +217,7 @@ function AppRoutes() {
 					<Route path="billing" element={<BillingPage />} />
 					<Route path="upgrade" element={<UpgradePage />} />
 				</Route>
+				{/* Redirect old dashboard routes to new ones under /dashboard for backward compatibility. */}
 				{dashboardRoutes.map((path) => (
 					<Route
 						key={path}

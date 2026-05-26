@@ -219,6 +219,10 @@ export const API_ROUTES = {
 			`service/api/${API_VERSION}/analytics`,
 			BASE_API_URL
 		).toString(),
+		LONGITUDINAL_MODEL: new URL(
+			`service/api/${API_VERSION}/longitudinal`,
+			BASE_API_URL
+		).toString(),
 	},
 } as const;
 

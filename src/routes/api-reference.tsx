@@ -163,6 +163,21 @@ const API_CATEGORIES = [
 				path: "/rx_advisor",
 				desc: "Prescription risk analysis",
 			},
+			{
+				method: "GET",
+				path: "/analytics/{id}",
+				desc: "Patient analytics — patterns, associations, biomarker forecasts, recommendations",
+			},
+			{
+				method: "GET",
+				path: "/longitudinal/{id}",
+				desc: "Longitudinal model — problem-oriented threads, trend series, snapshot",
+			},
+			{
+				method: "GET",
+				path: "/ehr_overview/{id}",
+				desc: "Aggregated patient health overview + clinical scores",
+			},
 			{ method: "POST", path: "/chat", desc: "AI chat (SSE stream)" },
 			{
 				method: "POST",

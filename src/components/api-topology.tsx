@@ -527,6 +527,46 @@ export const TOPOLOGIES: Record<string, TopologyDef> = {
 			},
 		],
 	},
+	longitudinal_model: {
+		title: "Longitudinal Patient Model",
+		description:
+			"Projects accumulated FHIR into problem-oriented threads (LLM concept-clustering), lab/vital trend series, and a current snapshot — the substrate for analytics.",
+		flowId: "longitudinal_model",
+		nodes: [
+			{
+				id: "history",
+				label: "Patient History",
+				endpoint: "/patient/{id}/history",
+				method: "GET",
+			},
+			{
+				id: "longitudinal",
+				label: "Longitudinal Model",
+				endpoint: "/longitudinal/{id}",
+				method: "GET",
+			},
+		],
+	},
+	patient_analytics: {
+		title: "Patient Analytics Engine",
+		description:
+			"Over the longitudinal model: pattern recognition, statistical associations, biomarker forecasting (regression/EWMA), and evidence-linked recommendations (hybrid stats + LLM narrative).",
+		flowId: "patient_analytics",
+		nodes: [
+			{
+				id: "longitudinal",
+				label: "Longitudinal Model",
+				endpoint: "/longitudinal/{id}",
+				method: "GET",
+			},
+			{
+				id: "analytics",
+				label: "Patient Analytics",
+				endpoint: "/analytics/{id}",
+				method: "GET",
+			},
+		],
+	},
 	a2ui: {
 		title: "A2UI: API → UI Generation",
 		description:

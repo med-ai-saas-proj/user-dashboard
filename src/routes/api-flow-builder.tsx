@@ -1,44 +1,44 @@
-import { useState, useCallback, useEffect } from "react";
-import { BASE_API_URL } from "@/config/api-routes";
-import { useSearchParams } from "react-router-dom";
-import DashboardLayout from "@/layouts/dashboard-layout";
-import { Button } from "@/components/shadcn/button";
-import { ViewCodeDialog } from "@/components/view-code-dialog";
-import { toast } from "sonner";
-import { TOPOLOGIES } from "@/components/api-topology";
 import {
-	FileJson2Icon,
-	ClipboardPlusIcon,
-	PillIcon,
-	HeartPulseIcon,
-	EyeOffIcon,
-	ShieldCheckIcon,
-	UserRoundIcon,
+	ActivityIcon,
+	ArrowDownIcon,
+	ArrowRightIcon,
 	BarChart3Icon,
 	BookOpenIcon,
+	BotIcon,
+	BrainIcon,
+	ClipboardPlusIcon,
+	DatabaseIcon,
+	DnaIcon,
+	DropletIcon,
+	EyeOffIcon,
+	FileJson2Icon,
+	FileTextIcon,
 	FlaskConicalIcon,
+	GitBranchIcon,
+	GlobeIcon,
+	HeartPulseIcon,
+	ImageIcon,
+	LayoutDashboardIcon,
+	type LucideIcon,
+	MapPinIcon,
+	MicIcon,
+	NetworkIcon,
+	PillIcon,
 	RefreshCwIcon,
 	SearchIcon,
+	ShieldCheckIcon,
 	StethoscopeIcon,
-	BrainIcon,
-	MapPinIcon,
-	NetworkIcon,
-	ActivityIcon,
-	DropletIcon,
-	LayoutDashboardIcon,
-	GitBranchIcon,
-	ArrowRightIcon,
-	ArrowDownIcon,
-	MicIcon,
-	ImageIcon,
-	DnaIcon,
-	GlobeIcon,
-	FileTextIcon,
+	UserRoundIcon,
 	WatchIcon,
-	BotIcon,
-	DatabaseIcon,
-	type LucideIcon,
 } from "lucide-react";
+import { useCallback, useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
+import { toast } from "sonner";
+import { TOPOLOGIES } from "@/components/api-topology";
+import { Button } from "@/components/shadcn/button";
+import { ViewCodeDialog } from "@/components/view-code-dialog";
+import { BASE_API_URL } from "@/config/api-routes";
+import DashboardLayout from "@/layouts/dashboard-layout";
 
 // --- Available APIs ---
 
@@ -95,6 +95,24 @@ const AVAILABLE_APIS: ApiDef[] = [
 		endpoint: `${BASE_API_URL}service/api/v1/health_score/evaluate`,
 		method: "POST",
 		sampleBody: { ehr_data: {} },
+		layer: "analysis",
+	},
+	{
+		id: "patient_analytics",
+		label: "Patient Analytics",
+		icon: ActivityIcon,
+		endpoint: `${BASE_API_URL}service/api/v1/analytics/1`,
+		method: "GET",
+		sampleBody: {},
+		layer: "analysis",
+	},
+	{
+		id: "longitudinal_model",
+		label: "Longitudinal Model",
+		icon: BrainIcon,
+		endpoint: `${BASE_API_URL}service/api/v1/longitudinal/1`,
+		method: "GET",
+		sampleBody: {},
 		layer: "analysis",
 	},
 	{

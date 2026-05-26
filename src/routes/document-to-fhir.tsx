@@ -1,14 +1,14 @@
 import { useState } from "react";
+import { toast } from "sonner";
+import { ApiTopology, TOPOLOGIES } from "@/components/api-topology";
+import { ViewCodeDialog } from "@/components/view-code-dialog";
 import { API_ROUTES } from "@/config/api-routes";
 import {
-	DocumentPanel,
 	type DocumentConvertResult,
+	DocumentPanel,
 } from "@/features/pg-ehr-converter/components/document-panel";
-import { ViewCodeDialog } from "@/components/view-code-dialog";
-import { ApiTopology, TOPOLOGIES } from "@/components/api-topology";
 import DashboardLayout from "@/layouts/dashboard-layout";
 import { getAuthHeaders } from "@/lib/auth-headers";
-import { toast } from "sonner";
 
 const DocumentToFhirPage = () => {
 	const [docLoading, setDocLoading] = useState(false);
@@ -66,8 +66,8 @@ const DocumentToFhirPage = () => {
 							Document → FHIR R4
 						</h2>
 						<p className="text-[11px] text-muted-foreground mt-0.5">
-							Upload medical record images or PDFs — GPT-4o Vision extracts
-							clinical data and converts to FHIR R4 resources
+							Upload medical record photos (JPEG, PNG, HEIC) — GPT-4o Vision
+							extracts clinical data and converts to FHIR R4 resources
 						</p>
 					</div>
 					<ViewCodeDialog
@@ -76,9 +76,9 @@ const DocumentToFhirPage = () => {
 						contentType="multipart/form-data"
 						body={{
 							files:
-								"<multipart/form-data: image or PDF files (repeat -F files=@... for multiple)>",
+								"<multipart/form-data: image files — JPEG/PNG/HEIC (repeat -F files=@... for multiple)>",
 						}}
-						description="Convert scanned medical documents to FHIR R4 via GPT-4o Vision (multipart upload; backend field name is 'files', repeat for multiple)"
+						description="Convert scanned medical record photos (JPEG/PNG/HEIC; HEIC is transcoded server-side) to FHIR R4 via GPT-4o Vision. Field name is 'files', repeat for multiple pages of one visit."
 					/>
 				</div>
 				<div className="flex-1 p-4 max-w-4xl mx-auto w-full">

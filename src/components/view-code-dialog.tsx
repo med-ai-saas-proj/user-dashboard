@@ -109,6 +109,11 @@ function getSDKMethodInfo(endpoint: string): {
 		"clinic_search/search": { property: "clinic_search", method: "search" },
 		"ehr_converter/convert": { property: "ehr_converter", method: "convert" },
 		ehr_overview: { property: "ehr_overview", method: "get_overview" },
+		analytics: { property: "analytics", method: "get_patient_analytics" },
+		longitudinal: {
+			property: "longitudinal",
+			method: "get_longitudinal_model",
+		},
 		"playground/seed": { property: "playground", method: "seed" },
 		"playground/status": { property: "playground", method: "status" },
 		"a2ui/generate": { property: "a2ui", method: "generate" },

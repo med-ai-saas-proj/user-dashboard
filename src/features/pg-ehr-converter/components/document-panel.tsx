@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useRef, useState } from "react";
 import { Button } from "@/components/shadcn/button";
 
 type DocumentConvertResult = {
@@ -27,20 +27,31 @@ export function DocumentPanel({
 	const fileInputRef = useRef<HTMLInputElement>(null);
 	const dropRef = useRef<HTMLButtonElement>(null);
 
+	const isImageFile = (f: File) => {
+		if (f.type.startsWith("image/")) return true;
+		// Browsers often report HEIC/HEIF with an empty or octet-stream type;
+		// fall back to the extension so phone photos aren't silently rejected.
+		if (!f.type || f.type === "application/octet-stream") {
+			return /\.(heic|heif|avif|tiff?|bmp|jpe?g|png|webp)$/i.test(f.name);
+		}
+		return false;
+	};
+
+	const canPreview = (f: File) => /^image\/(jpeg|png|webp|gif)$/.test(f.type); // browsers can't render HEIC
+
 	const handleFiles = (newFiles: File[]) => {
-		const valid = newFiles.filter(
-			(f) => f.type.startsWith("image/") || f.type === "application/pdf"
-		);
+		// Backend transcodes HEIC/HEIF/etc. to JPEG; it does NOT accept PDFs.
+		const valid = newFiles.filter(isImageFile);
 		setFiles((prev) => [...prev, ...valid]);
 
 		for (const f of valid) {
-			if (f.type.startsWith("image/")) {
+			if (canPreview(f)) {
 				const reader = new FileReader();
 				reader.onload = () =>
 					setPreviews((prev) => [...prev, reader.result as string]);
 				reader.readAsDataURL(f);
 			} else {
-				setPreviews((prev) => [...prev, ""]);
+				setPreviews((prev) => [...prev, ""]); // HEIC etc. — no inline preview
 			}
 		}
 	};
@@ -63,8 +74,8 @@ export function DocumentPanel({
 					Document → FHIR R4 (GPT-4o Vision)
 				</h3>
 				<p className="text-[11px] text-muted-foreground mt-0.5">
-					Upload medical record images or PDFs — GPT-4o extracts clinical data
-					and converts to FHIR R4
+					Upload medical record photos (JPEG, PNG, HEIC) — GPT-4o extracts
+					clinical data and converts to FHIR R4
 				</p>
 			</div>
 
@@ -101,8 +112,8 @@ export function DocumentPanel({
 												className="w-8 h-8 object-cover rounded"
 											/>
 										) : (
-											<span className="w-8 h-8 flex items-center justify-center bg-muted-foreground/10 rounded text-[10px]">
-												PDF
+											<span className="w-8 h-8 flex items-center justify-center bg-muted-foreground/10 rounded text-[9px] uppercase font-medium">
+												{(f.name.split(".").pop() || "img").slice(0, 4)}
 											</span>
 										)}
 										<span className="truncate max-w-[120px]">{f.name}</span>
@@ -112,7 +123,8 @@ export function DocumentPanel({
 						</div>
 					) : (
 						<p className="text-sm text-muted-foreground">
-							Drop medical record images/PDFs here, or click to browse
+							Drop medical record photos (JPEG, PNG, HEIC) here, or click to
+							browse
 						</p>
 					)}
 				</button>
@@ -120,7 +132,7 @@ export function DocumentPanel({
 					ref={fileInputRef}
 					type="file"
 					multiple
-					accept="image/*,application/pdf"
+					accept="image/*,.heic,.heif,.avif"
 					className="hidden"
 					onChange={(e) => {
 						handleFiles(Array.from(e.target.files || []));

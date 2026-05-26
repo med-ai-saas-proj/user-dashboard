@@ -53,7 +53,7 @@ export default function BillingPage() {
 						</div>
 						<Button
 							type="button"
-							onClick={() => navigate("/upgrade")}
+							onClick={() => navigate("/dashboard/upgrade")}
 							className="shrink-0"
 						>
 							<SparklesIcon className="size-4" aria-hidden="true" />
@@ -134,7 +134,7 @@ export default function BillingPage() {
 							<Button
 								type="button"
 								className="w-full"
-								onClick={() => navigate("/upgrade")}
+								onClick={() => navigate("/dashboard/upgrade")}
 							>
 								{t("plans.pro.upgrade")}
 							</Button>

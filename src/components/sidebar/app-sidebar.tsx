@@ -83,192 +83,192 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 		management: [
 			{
 				name: t("management.apiKeys.title"),
-				url: "/api-keys",
+				url: "/dashboard/api-keys",
 				icon: KeyRound,
 			},
 			{
 				name: t("management.apiReference.title"),
-				url: "/api-reference",
+				url: "/dashboard/api-reference",
 				icon: Book,
 			},
 			{
 				name: t("management.architecture.title"),
-				url: "/architecture",
+				url: "/dashboard/architecture",
 				icon: NetworkIcon,
 			},
 		],
 		dataProcessing: [
 			{
 				name: t("dataProcessing.ehrConverter.title"),
-				url: "/ehr-converter",
+				url: "/dashboard/ehr-converter",
 				icon: FileJson2Icon,
 			},
 			{
 				name: t("dataProcessing.documentToFhir.title"),
-				url: "/document-to-fhir",
+				url: "/dashboard/document-to-fhir",
 				icon: FileTextIcon,
 			},
 			{
 				name: t("dataProcessing.bhxhValidator.title"),
-				url: "/bhxh-validator",
+				url: "/dashboard/bhxh-validator",
 				icon: ShieldCheckIcon,
 			},
 			{
 				name: t("dataProcessing.dataMasking.title"),
-				url: "/data-masking",
+				url: "/dashboard/data-masking",
 				icon: EyeOffIcon,
 			},
 			{
 				name: t("dataProcessing.knowledgeBase.title"),
-				url: "/knowledge-base",
+				url: "/dashboard/knowledge-base",
 				icon: DatabaseIcon,
 			},
 			{
 				name: "Gene Decoder",
-				url: "/gene-decoder",
+				url: "/dashboard/gene-decoder",
 				icon: DnaIcon,
 			},
 			{
 				name: "Cross-Provider Search",
-				url: "/cross-search",
+				url: "/dashboard/cross-search",
 				icon: GlobeIcon,
 			},
 		],
 		dataManagement: [
 			{
 				name: t("operation.healthcareDashboard.title"),
-				url: "/healthcare-dashboard",
+				url: "/dashboard/healthcare-dashboard",
 				icon: ActivityIcon,
 			},
 			{
 				name: t("dataManagement.wearableData.title"),
-				url: "/wearable-data",
+				url: "/dashboard/wearable-data",
 				icon: WatchIcon,
 			},
 			{
 				name: t("dataManagement.publicHealth.title"),
-				url: "/public-health",
+				url: "/dashboard/public-health",
 				icon: BarChart3Icon,
 			},
 			{
 				name: t("dataManagement.healthScore.title"),
-				url: "/health-score",
+				url: "/dashboard/health-score",
 				icon: HeartPulseIcon,
 			},
 			{
 				name: t("dataManagement.digitalTwin.title"),
-				url: "/digital-twin",
+				url: "/dashboard/digital-twin",
 				icon: BrainIcon,
 			},
 		],
 		operation: [
 			{
 				name: t("dataManagement.patientHistory.title"),
-				url: "/patient-history",
+				url: "/dashboard/patient-history",
 				icon: UserRoundIcon,
 			},
 			{
 				name: t("operation.ehrSummary.title"),
-				url: "/ehr-summary",
+				url: "/dashboard/ehr-summary",
 				icon: ClipboardPlusIcon,
 			},
 			{
 				name: "Ophthalmology Summary",
-				url: "/ophth-summary",
+				url: "/dashboard/ophth-summary",
 				icon: EyeIcon,
 			},
 			{
 				name: "EHR Overview",
-				url: "/ehr-overview",
+				url: "/dashboard/ehr-overview",
 				icon: FileHeartIcon,
 			},
 			{
 				name: "Patient Analytics",
-				url: "/patient-analytics",
+				url: "/dashboard/patient-analytics",
 				icon: ActivityIcon,
 			},
 			{
 				name: t("operation.rxAdvisor.title"),
-				url: "/rx-advisor",
+				url: "/dashboard/rx-advisor",
 				icon: PillIcon,
 			},
 			{
 				name: t("operation.chatBot.title"),
-				url: "/chat",
+				url: "/dashboard/chat",
 				icon: BotIcon,
 			},
 			{
 				name: t("operation.aiSearch.title"),
-				url: "/ai-search",
+				url: "/dashboard/ai-search",
 				icon: SearchIcon,
 			},
 			{
 				name: t("operation.voiceTranscribe.title"),
-				url: "/voice-transcribe",
+				url: "/dashboard/voice-transcribe",
 				icon: MicIcon,
 			},
 			{
 				name: t("operation.voiceAgent.title"),
-				url: "/voice-agent",
+				url: "/dashboard/voice-agent",
 				icon: MicIcon,
 			},
 			{
 				name: t("operation.medicalImage.title"),
-				url: "/medical-image",
+				url: "/dashboard/medical-image",
 				icon: ImageIcon,
 			},
 			{
 				name: t("operation.symptomChecker.title"),
-				url: "/symptom-checker",
+				url: "/dashboard/symptom-checker",
 				icon: StethoscopeIcon,
 			},
 			{
 				name: t("operation.clinicSearch.title"),
-				url: "/clinic-search",
+				url: "/dashboard/clinic-search",
 				icon: MapPinIcon,
 			},
 			{
 				name: "Blood Panel",
-				url: "/blood-panel",
+				url: "/dashboard/blood-panel",
 				icon: DropletIcon,
 			},
 		],
 		development: [
 			{
 				name: t("development.apiFlowBuilder.title"),
-				url: "/api-flow-builder",
+				url: "/dashboard/api-flow-builder",
 				icon: GitBranchPlusIcon,
 			},
 			{
 				name: t("development.dashboardBuilder.title"),
-				url: "/dashboard-builder",
+				url: "/dashboard/dashboard-builder",
 				icon: LayoutGridIcon,
 			},
 			{
 				name: t("development.federatedLearning.title"),
-				url: "/federated-learning",
+				url: "/dashboard/federated-learning",
 				icon: NetworkIcon,
 			},
 			{
 				name: t("development.integration.title"),
-				url: "/integration",
+				url: "/dashboard/integration",
 				icon: LayoutDashboardIcon,
 			},
 			{
 				name: t("development.a2ui.title"),
-				url: "/a2ui",
+				url: "/dashboard/a2ui",
 				icon: LayoutDashboardIcon,
 			},
 		],
 		settings: [
 			{
 				name: t("settings.settings.title"),
-				url: "/settings",
+				url: "/dashboard/settings",
 				icon: Settings2Icon,
 			},
 			{
 				name: t("settings.billing.title"),
-				url: "/billing",
+				url: "/dashboard/billing",
 				icon: CreditCardIcon,
 			},
 		],
@@ -404,11 +404,14 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 					<SidebarGroupContent>
 						<SidebarMenu>
 							<SidebarMenuItem>
-								<SidebarMenuButton asChild isActive={pathname === "/upgrade"}>
+								<SidebarMenuButton
+									asChild
+									isActive={pathname === "/dashboard/upgrade"}
+								>
 									<NavLink
-										to="/upgrade"
+										to="/dashboard/upgrade"
 										preventScrollReset
-										className="font-medium bg-gradient-to-r from-violet-500 to-indigo-500 bg-clip-text text-transparent"
+										className="font-medium bg-linear-to-r from-violet-500 to-indigo-500 bg-clip-text text-transparent"
 									>
 										<SparklesIcon className="text-violet-500" />
 										<span>{t("settings.upgrade.title")}</span>

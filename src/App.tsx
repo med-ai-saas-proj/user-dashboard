@@ -74,7 +74,7 @@ function PreventScrollReset() {
 
 	useEffect(() => {
 		const original = window.scrollTo;
-		window.scrollTo = (...args: Parameters<typeof window.scrollTo>) => {
+		window.scrollTo = ((...args: [ScrollToOptions?] | [number, number]) => {
 			if (
 				args.length === 1 &&
 				typeof args[0] === "object" &&
@@ -85,8 +85,12 @@ function PreventScrollReset() {
 			if (args.length === 2 && args[0] === 0 && args[1] === 0) {
 				return;
 			}
-			original.apply(window, args);
-		};
+			if (args.length === 1) {
+				Reflect.apply(original, window, [args[0]]);
+				return;
+			}
+			Reflect.apply(original, window, [args[0], args[1]]);
+		}) as typeof window.scrollTo;
 		return () => {
 			window.scrollTo = original;
 		};
@@ -156,7 +160,8 @@ function AppRoutes() {
 				}
 			/>
 			<Route path="/auth/callback" element={<AuthCallbackPage />} />
-			<Route path="/" element={<Navigate to="/dashboard" replace />} />
+
+			<Route index element={<Navigate to="/dashboard" replace />} />
 			<Route
 				path="/dashboard"
 				element={

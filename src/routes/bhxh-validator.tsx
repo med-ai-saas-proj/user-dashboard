@@ -1122,7 +1122,7 @@ const BhxhValidatorPage = () => {
 										Validates against{" "}
 										<strong>745 official BHXH error codes</strong> from TT 4210.{" "}
 										<Link
-											to="/bhxh-error-codes"
+											to="/dashboard/bhxh-error-codes"
 											className="underline font-medium hover:text-blue-700 dark:hover:text-blue-100"
 										>
 											View error code reference →

@@ -242,11 +242,19 @@ function ForecastChart({ f }: { f: Forecast }) {
 	);
 }
 
-const SAMPLE_IDS = [3, 2, 1];
+// Showcase patients (real ingested longitudinal records). Ordered richest-first
+// so the default demo lands on the 8-year grandfather record.
+const SHOWCASE_PATIENTS = [
+	{ id: 6, name: "Ông", sub: "grandfather · 2016–2024" },
+	{ id: 5, name: "Bố", sub: "father · 2022–2025" },
+	{ id: 4, name: "Con", sub: "child · 2025" },
+];
 
 export default function PatientAnalyticsPage() {
 	const [data, setData] = useState<AnalyticsData | null>(null);
-	const [patientIdInput, setPatientIdInput] = useState("3");
+	const [patientIdInput, setPatientIdInput] = useState(
+		String(SHOWCASE_PATIENTS[0].id)
+	);
 	const [isLoading, setIsLoading] = useState(false);
 	const [horizon, setHorizon] = useState(180);
 
@@ -295,7 +303,7 @@ export default function PatientAnalyticsPage() {
 							onChange={(e) => setPatientIdInput(e.target.value)}
 							onKeyDown={(e) => e.key === "Enter" && load()}
 							className="w-24 px-3 py-1.5 rounded-md border bg-background text-sm"
-							placeholder="3"
+							placeholder="6"
 						/>
 					</div>
 					<div>
@@ -316,18 +324,29 @@ export default function PatientAnalyticsPage() {
 						<ActivityIcon className="size-4" />
 						{isLoading ? "Analyzing…" : "Analyze"}
 					</Button>
-					<div className="flex gap-1.5 ml-auto">
-						{SAMPLE_IDS.map((id) => (
+					<div className="flex items-end gap-1.5 ml-auto">
+						<span className="text-[11px] uppercase tracking-wider text-muted-foreground mb-1.5 mr-1">
+							Showcase
+						</span>
+						{SHOWCASE_PATIENTS.map((p) => (
 							<button
 								type="button"
-								key={id}
+								key={p.id}
 								onClick={() => {
-									setPatientIdInput(String(id));
-									fetchAnalytics(id);
+									setPatientIdInput(String(p.id));
+									fetchAnalytics(p.id);
 								}}
-								className="px-2.5 py-1 text-xs rounded-md border hover:bg-muted"
+								title={`${p.name} — ${p.sub}`}
+								className={`px-3 py-1 text-xs rounded-md border hover:bg-muted transition-colors ${
+									patientIdInput === String(p.id)
+										? "border-foreground bg-muted"
+										: ""
+								}`}
 							>
-								Patient {id}
+								<span className="font-medium">{p.name}</span>
+								<span className="text-[10px] text-muted-foreground ml-1.5 hidden sm:inline">
+									{p.sub}
+								</span>
 							</button>
 						))}
 					</div>
@@ -340,7 +359,9 @@ export default function PatientAnalyticsPage() {
 							Load a patient to compute pattern, association, forecast, and
 							recommendation analytics.
 						</p>
-						<p className="text-xs mt-1">Sample patients 1–3 are ingested.</p>
+						<p className="text-xs mt-1">
+							Try a showcase patient — Ông, Bố, or Con — above.
+						</p>
 					</div>
 				)}
 

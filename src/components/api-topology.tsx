@@ -186,6 +186,20 @@ export const TOPOLOGIES: Record<string, TopologyDef> = {
 			},
 		],
 	},
+	ehr_ingest: {
+		title: "EHR Ingestion Orchestrator",
+		description:
+			"Accepts mixed raw inputs (HL7v2, CDA, BHXH, FHIR JSON, image, PDF, audio, text), auto-detects each format, routes to the right converter, and merges results into one FHIR R4 bundle.",
+		flowId: "ehr_ingest",
+		nodes: [
+			{
+				id: "ingest",
+				label: "EHR Ingest",
+				endpoint: "/ehr_converter/ingest",
+				method: "POST",
+			},
+		],
+	},
 	document_to_fhir: {
 		title: "Document → FHIR Pipeline",
 		description:

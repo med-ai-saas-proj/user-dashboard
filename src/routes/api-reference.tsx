@@ -55,6 +55,11 @@ const API_CATEGORIES = [
 		apis: [
 			{
 				method: "POST",
+				path: "/ehr_converter/ingest",
+				desc: "Ingestion orchestrator: auto-route mixed inputs into one merged FHIR R4 bundle",
+			},
+			{
+				method: "POST",
 				path: "/ehr_converter/convert/fhir-to-hl7v2",
 				desc: "FHIR → HL7v2",
 			},

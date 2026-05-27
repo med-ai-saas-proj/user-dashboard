@@ -49,6 +49,10 @@ export const API_ROUTES = {
 			`service/api/${API_VERSION}/ehr_converter/convert`,
 			BASE_API_URL
 		).toString(),
+		EHR_CONVERTER_INGEST: new URL(
+			`service/api/${API_VERSION}/ehr_converter/ingest`,
+			BASE_API_URL
+		).toString(),
 		EHR_CONVERTER_REVERSE: new URL(
 			`service/api/${API_VERSION}/ehr_converter/convert/fhir-to-hl7v2`,
 			BASE_API_URL

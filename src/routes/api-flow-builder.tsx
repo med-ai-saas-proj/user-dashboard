@@ -71,6 +71,16 @@ const AVAILABLE_APIS: ApiDef[] = [
 		layer: "input",
 	},
 	{
+		id: "ehr_ingest",
+		label: "EHR Ingest",
+		icon: FileJson2Icon,
+		endpoint: `${BASE_API_URL}service/api/v1/ehr_converter/ingest`,
+		method: "POST",
+		sampleBody: { items: [{ data: "MSH|^~\\&|..." }] },
+		outputKey: "bundle",
+		layer: "standardization",
+	},
+	{
 		id: "ehr_summarize",
 		label: "EHR Summary",
 		icon: ClipboardPlusIcon,

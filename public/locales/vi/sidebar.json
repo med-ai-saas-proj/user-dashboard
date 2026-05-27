@@ -4,6 +4,9 @@
     "ehrConverter": {
       "title": "Chuyển đổi EHR"
     },
+    "ehrIngest": {
+      "title": "Nhập liệu EHR"
+    },
     "documentToFhir": {
       "title": "Tài liệu → FHIR"
     },

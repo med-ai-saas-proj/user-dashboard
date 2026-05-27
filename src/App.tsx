@@ -31,6 +31,7 @@ import DataMaskingPage from "@/routes/data-masking";
 import DigitalTwinPage from "@/routes/digital-twin";
 import DocumentToFhirPage from "@/routes/document-to-fhir";
 import EhrConverterPage from "@/routes/ehr-converter";
+import EhrIngestPage from "@/routes/ehr-ingest";
 import EHROverviewPage from "@/routes/ehr-overview";
 import EHRSummaryPage from "@/routes/ehr-summary";
 import FederatedLearningPage from "@/routes/federated-learning";
@@ -100,44 +101,45 @@ function PreventScrollReset() {
 }
 
 const dashboardRoutes = [
-	"api-keys",
-	"api-reference",
-	"chat",
-	"ai-search",
-	"ehr-summary",
-	"ophth-summary",
-	"rx-advisor",
-	"ehr-converter",
-	"document-to-fhir",
-	"knowledge-base",
-	"bhxh-validator",
-	"bhxh-error-codes",
-	"voice-agent",
-	"voice-transcribe",
-	"medical-image",
-	"health-score",
-	"data-masking",
-	"patient-history",
-	"wearable-data",
-	"architecture",
-	"integration",
-	"public-health",
-	"api-flow-builder",
-	"dashboard-builder",
-	"symptom-checker",
-	"gene-decoder",
-	"cross-search",
-	"blood-panel",
-	"ehr-overview",
-	"patient-analytics",
-	"clinic-search",
-	"digital-twin",
-	"federated-learning",
-	"healthcare-dashboard",
-	"a2ui",
-	"settings",
-	"billing",
-	"upgrade",
+	{ path: "api-keys", component: APIKeysPage },
+	{ path: "api-reference", component: APIReferencePage },
+	{ path: "chat", component: PlaygroundChatPage },
+	{ path: "ai-search", component: PlaygroundAISearchPage },
+	{ path: "ehr-summary", component: EHRSummaryPage },
+	{ path: "ophth-summary", component: OphthSummaryPage },
+	{ path: "rx-advisor", component: RxAdvisorPage },
+	{ path: "ehr-converter", component: EhrConverterPage },
+	{ path: "document-to-fhir", component: DocumentToFhirPage },
+	{ path: "knowledge-base", component: KnowledgeBasePage },
+	{ path: "bhxh-validator", component: BhxhValidatorPage },
+	{ path: "bhxh-error-codes", component: BhxhErrorCodesPage },
+	{ path: "voice-agent", component: VoiceAgentPage },
+	{ path: "voice-transcribe", component: VoiceTranscribePage },
+	{ path: "medical-image", component: MedicalImagePage },
+	{ path: "health-score", component: HealthScorePage },
+	{ path: "data-masking", component: DataMaskingPage },
+	{ path: "patient-history", component: PatientHistoryPage },
+	{ path: "wearable-data", component: WearableDataPage },
+	{ path: "architecture", component: ArchitecturePage },
+	{ path: "integration", component: IntegrationDashboardPage },
+	{ path: "public-health", component: PublicHealthPage },
+	{ path: "api-flow-builder", component: ApiFlowBuilderPage },
+	{ path: "dashboard-builder", component: DashboardBuilderPage },
+	{ path: "symptom-checker", component: SymptomCheckerPage },
+	{ path: "gene-decoder", component: GeneDecoderPage },
+	{ path: "cross-search", component: CrossSearchPage },
+	{ path: "blood-panel", component: BloodPanelPage },
+	{ path: "ehr-overview", component: EHROverviewPage },
+	{ path: "patient-analytics", component: PatientAnalyticsPage },
+	{ path: "clinic-search", component: ClinicSearchPage },
+	{ path: "digital-twin", component: DigitalTwinPage },
+	{ path: "federated-learning", component: FederatedLearningPage },
+	{ path: "healthcare-dashboard", component: HealthcareDashboardPage },
+	{ path: "a2ui", component: A2UIPlaygroundPage },
+	{ path: "settings", component: SettingsPage },
+	{ path: "billing", component: BillingPage },
+	{ path: "upgrade", component: UpgradePage },
+	{ path: "ehr-ingest", component: EhrIngestPage },
 ] as const;
 
 function AppRoutes() {
@@ -161,7 +163,7 @@ function AppRoutes() {
 			/>
 			<Route path="/auth/callback" element={<AuthCallbackPage />} />
 
-			<Route index element={<Navigate to="/dashboard" replace />} />
+			<Route path="/" element={<Navigate to="/dashboard" replace />} />
 			<Route
 				path="/dashboard"
 				element={
@@ -171,50 +173,12 @@ function AppRoutes() {
 				}
 			>
 				<Route index element={<Navigate to="chat" replace />} />
-				<Route path="api-keys" element={<APIKeysPage />} />
-				<Route path="api-reference" element={<APIReferencePage />} />
-				<Route path="chat" element={<PlaygroundChatPage />} />
-				<Route path="ai-search" element={<PlaygroundAISearchPage />} />
-				<Route path="ehr-summary" element={<EHRSummaryPage />} />
-				<Route path="ophth-summary" element={<OphthSummaryPage />} />
-				<Route path="rx-advisor" element={<RxAdvisorPage />} />
-				<Route path="ehr-converter" element={<EhrConverterPage />} />
-				<Route path="document-to-fhir" element={<DocumentToFhirPage />} />
-				<Route path="knowledge-base" element={<KnowledgeBasePage />} />
-				<Route path="bhxh-validator" element={<BhxhValidatorPage />} />
-				<Route path="bhxh-error-codes" element={<BhxhErrorCodesPage />} />
-				<Route path="voice-agent" element={<VoiceAgentPage />} />
-				<Route path="voice-transcribe" element={<VoiceTranscribePage />} />
-				<Route path="medical-image" element={<MedicalImagePage />} />
-				<Route path="health-score" element={<HealthScorePage />} />
-				<Route path="data-masking" element={<DataMaskingPage />} />
-				<Route path="patient-history" element={<PatientHistoryPage />} />
-				<Route path="wearable-data" element={<WearableDataPage />} />
-				<Route path="architecture" element={<ArchitecturePage />} />
-				<Route path="integration" element={<IntegrationDashboardPage />} />
-				<Route path="public-health" element={<PublicHealthPage />} />
-				<Route path="api-flow-builder" element={<ApiFlowBuilderPage />} />
-				<Route path="dashboard-builder" element={<DashboardBuilderPage />} />
-				<Route path="symptom-checker" element={<SymptomCheckerPage />} />
-				<Route path="gene-decoder" element={<GeneDecoderPage />} />
-				<Route path="cross-search" element={<CrossSearchPage />} />
-				<Route path="blood-panel" element={<BloodPanelPage />} />
-				<Route path="ehr-overview" element={<EHROverviewPage />} />
-				<Route path="patient-analytics" element={<PatientAnalyticsPage />} />
-				<Route path="clinic-search" element={<ClinicSearchPage />} />
-				<Route path="digital-twin" element={<DigitalTwinPage />} />
-				<Route path="federated-learning" element={<FederatedLearningPage />} />
-				<Route
-					path="healthcare-dashboard"
-					element={<HealthcareDashboardPage />}
-				/>
-				<Route path="a2ui" element={<A2UIPlaygroundPage />} />
-				<Route path="settings" element={<SettingsPage />} />
-				<Route path="billing" element={<BillingPage />} />
-				<Route path="upgrade" element={<UpgradePage />} />
+				{dashboardRoutes.map(({ path, component }) => (
+					<Route key={path} path={path} Component={component} />
+				))}
 			</Route>
 			{/* Redirect old dashboard routes to new ones under /dashboard for backward compatibility. */}
-			{dashboardRoutes.map((path) => (
+			{dashboardRoutes.map(({ path }) => (
 				<Route
 					key={path}
 					path={`/${path}`}

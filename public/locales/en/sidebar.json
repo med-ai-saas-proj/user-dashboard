@@ -4,6 +4,9 @@
     "ehrConverter": {
       "title": "EHR Converter"
     },
+    "ehrIngest": {
+      "title": "EHR Ingest"
+    },
     "documentToFhir": {
       "title": "Document → FHIR"
     },

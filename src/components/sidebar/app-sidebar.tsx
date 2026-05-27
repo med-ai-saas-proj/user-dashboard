@@ -104,6 +104,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 				icon: FileJson2Icon,
 			},
 			{
+				name: t("dataProcessing.ehrIngest.title"),
+				url: "/dashboard/ehr-ingest",
+				icon: GitBranchPlusIcon,
+			},
+			{
 				name: t("dataProcessing.documentToFhir.title"),
 				url: "/dashboard/document-to-fhir",
 				icon: FileTextIcon,

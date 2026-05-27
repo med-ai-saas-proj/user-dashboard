@@ -25,6 +25,11 @@ export const API_ROUTES = {
 			`management/api/${API_VERSION}/api-keys`,
 			BASE_API_URL
 		).toString(),
+		// Caller's own API usage summary (IAM cookie auth, not X-Api-Key).
+		USAGE: new URL(
+			`management/api/${API_VERSION}/usage`,
+			BASE_API_URL
+		).toString(),
 		DOCS_OPENAPI: new URL(`service/docs/openapi.json`, BASE_API_URL).toString(),
 	},
 	SERVICES: {
@@ -47,6 +52,10 @@ export const API_ROUTES = {
 		CHAT: new URL(`service/api/${API_VERSION}/chat`, BASE_API_URL).toString(),
 		EHR_CONVERTER_CONVERT: new URL(
 			`service/api/${API_VERSION}/ehr_converter/convert`,
+			BASE_API_URL
+		).toString(),
+		EHR_CONVERTER_INGEST: new URL(
+			`service/api/${API_VERSION}/ehr_converter/ingest`,
 			BASE_API_URL
 		).toString(),
 		EHR_CONVERTER_REVERSE: new URL(

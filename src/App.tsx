@@ -30,6 +30,7 @@ import DataMaskingPage from "@/routes/data-masking";
 import DigitalTwinPage from "@/routes/digital-twin";
 import DocumentToFhirPage from "@/routes/document-to-fhir";
 import EhrConverterPage from "@/routes/ehr-converter";
+import EhrIngestPage from "@/routes/ehr-ingest";
 import EHROverviewPage from "@/routes/ehr-overview";
 import EHRSummaryPage from "@/routes/ehr-summary";
 import FederatedLearningPage from "@/routes/federated-learning";
@@ -178,6 +179,14 @@ function AppRoutes() {
 					element={
 						<ProtectedRoute>
 							<EhrConverterPage />
+						</ProtectedRoute>
+					}
+				/>
+				<Route
+					path="/ehr-ingest"
+					element={
+						<ProtectedRoute>
+							<EhrIngestPage />
 						</ProtectedRoute>
 					}
 				/>

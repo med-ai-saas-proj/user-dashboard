@@ -15,7 +15,20 @@
   },
   "usage": {
     "title": "Sử dụng API",
-    "description": "Mức sử dụng API hiện tại của bạn trong các khoảng thời gian khác nhau."
+    "description": "Mức sử dụng API của bạn trong kỳ thanh toán hiện tại.",
+    "totalCalls": "Tổng lượt gọi",
+    "errorRate": "Tỉ lệ lỗi",
+    "avgLatency": "Độ trễ trung bình",
+    "estimatedCost": "Chi phí ước tính",
+    "costNote": "Mức giá tạm tính — chưa phải biểu phí chính thức.",
+    "noLatency": "Không có",
+    "byEndpoint": "Theo điểm cuối",
+    "endpoint": "Điểm cuối",
+    "method": "Phương thức",
+    "calls": "Lượt gọi",
+    "errors": "Lỗi",
+    "empty": "Chưa ghi nhận lượt sử dụng API nào trong kỳ này.",
+    "error": "Không thể tải dữ liệu sử dụng."
   },
   "danger": {
     "title": "Vùng nguy hiểm",

@@ -15,7 +15,20 @@
   },
   "usage": {
     "title": "API Usage",
-    "description": "Your current API usage across different time periods."
+    "description": "Your API usage for the current billing period.",
+    "totalCalls": "Total Calls",
+    "errorRate": "Error Rate",
+    "avgLatency": "Avg Latency",
+    "estimatedCost": "Estimated Cost",
+    "costNote": "Placeholder rate — not a final tariff.",
+    "noLatency": "N/A",
+    "byEndpoint": "By Endpoint",
+    "endpoint": "Endpoint",
+    "method": "Method",
+    "calls": "Calls",
+    "errors": "Errors",
+    "empty": "No API usage recorded yet for this period.",
+    "error": "Could not load usage data."
   },
   "danger": {
     "title": "Danger Zone",

@@ -20,8 +20,18 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/shadcn/button";
 import { Separator } from "@/components/shadcn/separator";
+import { Skeleton } from "@/components/shadcn/skeleton";
+import {
+	Table,
+	TableBody,
+	TableCell,
+	TableHead,
+	TableHeader,
+	TableRow,
+} from "@/components/shadcn/table";
 import DashboardLayout from "@/layouts/dashboard-layout";
 import { useAuthStore } from "@/features/auth/store/auth-store";
+import { useGetUsage } from "@/features/usage/hooks/use-get-usage";
 import {
 	loadWebGPUModel,
 	getWebGPUState,
@@ -194,15 +204,14 @@ const CLUSTER_PRESET: Record<ApiGroup, GroupFormState> = {
 	},
 };
 
-const MOCK_USAGE = [
-	{ label: "Today", calls: 42, limit: 100 },
-	{ label: "This Week", calls: 287, limit: 700 },
-	{ label: "This Month", calls: 1_024, limit: 3_000 },
-];
-
 export default function SettingsPage() {
 	const { t } = useTranslation("settings");
 	const { userInfo } = useAuthStore();
+	const {
+		data: usage,
+		isLoading: usageLoading,
+		isError: usageError,
+	} = useGetUsage();
 	const [groupConfigs, setGroupConfigs] =
 		useState<Record<ApiGroup, GroupFormState>>(DEFAULT_GROUP_STATE);
 	const [inviteEmail, setInviteEmail] = useState("");
@@ -990,28 +999,121 @@ export default function SettingsPage() {
 					<p className="text-sm text-muted-foreground">
 						{t("usage.description")}
 					</p>
-					<div className="rounded-lg border p-4 space-y-4">
-						{MOCK_USAGE.map((row) => {
-							const pct = Math.round((row.calls / row.limit) * 100);
-							return (
-								<div key={row.label} className="space-y-1.5">
-									<div className="flex items-center justify-between text-sm">
-										<span className="font-medium">{row.label}</span>
-										<span className="text-muted-foreground">
-											{row.calls.toLocaleString()} /{" "}
-											{row.limit.toLocaleString()}
-										</span>
+					{usageLoading && (
+						<div className="space-y-4">
+							<div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+								<Skeleton className="h-20 w-full" />
+								<Skeleton className="h-20 w-full" />
+								<Skeleton className="h-20 w-full" />
+								<Skeleton className="h-20 w-full" />
+							</div>
+							<Skeleton className="h-32 w-full" />
+						</div>
+					)}
+
+					{!usageLoading && usageError && (
+						<div className="rounded-lg border border-destructive/30 bg-destructive/5 p-4 text-sm text-destructive">
+							{t("usage.error")}
+						</div>
+					)}
+
+					{!usageLoading && !usageError && usage && (
+						<div className="space-y-4">
+							{/* Stat cards */}
+							<div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+								<div className="rounded-lg border p-4">
+									<div className="text-xs text-muted-foreground">
+										{t("usage.totalCalls")}
 									</div>
-									<div className="h-2 w-full rounded-full bg-muted">
-										<div
-											className="h-full rounded-full bg-primary transition-all"
-											style={{ width: `${Math.min(pct, 100)}%` }}
-										/>
+									<div className="mt-1 text-2xl font-semibold tabular-nums">
+										{usage.total_calls.toLocaleString()}
 									</div>
 								</div>
-							);
-						})}
-					</div>
+								<div className="rounded-lg border p-4">
+									<div className="text-xs text-muted-foreground">
+										{t("usage.errorRate")}
+									</div>
+									<div className="mt-1 text-2xl font-semibold tabular-nums">
+										{(usage.error_rate * 100).toFixed(1)}%
+									</div>
+								</div>
+								<div className="rounded-lg border p-4">
+									<div className="text-xs text-muted-foreground">
+										{t("usage.avgLatency")}
+									</div>
+									<div className="mt-1 text-2xl font-semibold tabular-nums">
+										{usage.avg_latency_ms === null
+											? t("usage.noLatency")
+											: `${Math.round(usage.avg_latency_ms)} ms`}
+									</div>
+								</div>
+								<div className="rounded-lg border p-4">
+									<div className="text-xs text-muted-foreground">
+										{t("usage.estimatedCost")}
+									</div>
+									<div className="mt-1 text-2xl font-semibold tabular-nums">
+										${usage.estimated_cost_usd.toFixed(4)}
+									</div>
+									<div className="mt-0.5 text-[10px] text-muted-foreground/70">
+										{t("usage.costNote")}
+									</div>
+								</div>
+							</div>
+
+							{/* Per-endpoint breakdown */}
+							{usage.by_endpoint.length === 0 ? (
+								<div className="rounded-lg border p-4 text-sm text-muted-foreground">
+									{t("usage.empty")}
+								</div>
+							) : (
+								<div className="rounded-lg border">
+									<div className="border-b px-4 py-2.5 text-sm font-medium">
+										{t("usage.byEndpoint")}
+									</div>
+									<Table>
+										<TableHeader>
+											<TableRow>
+												<TableHead>{t("usage.endpoint")}</TableHead>
+												<TableHead className="w-24">
+													{t("usage.method")}
+												</TableHead>
+												<TableHead className="w-24 text-right">
+													{t("usage.calls")}
+												</TableHead>
+												<TableHead className="w-24 text-right">
+													{t("usage.errors")}
+												</TableHead>
+											</TableRow>
+										</TableHeader>
+										<TableBody>
+											{usage.by_endpoint.map((row) => (
+												<TableRow key={`${row.method} ${row.path}`}>
+													<TableCell className="font-mono text-xs">
+														{row.path}
+													</TableCell>
+													<TableCell className="text-xs uppercase text-muted-foreground">
+														{row.method}
+													</TableCell>
+													<TableCell className="text-right tabular-nums">
+														{row.calls.toLocaleString()}
+													</TableCell>
+													<TableCell className="text-right tabular-nums">
+														{row.errors > 0 ? (
+															<span className="text-destructive">
+																{row.errors.toLocaleString()}
+															</span>
+														) : (
+															<span className="text-muted-foreground">0</span>
+														)}
+													</TableCell>
+												</TableRow>
+											))}
+										</TableBody>
+									</Table>
+								</div>
+							)}
+						</div>
+					)}
 				</section>
 
 				{/* Danger Zone */}

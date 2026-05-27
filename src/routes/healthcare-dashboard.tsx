@@ -1338,7 +1338,7 @@ export default function HealthcareDashboardPage() {
 						)}
 
 						{/* ─── Bottom CTA ─── */}
-						<div className="rounded-xl border bg-gradient-to-r from-primary/5 to-primary/10 p-5 hover:from-primary/8 hover:to-primary/15 transition-colors">
+						<div className="rounded-xl border bg-linear-to-r from-primary/5 to-primary/10 p-5 hover:from-primary/8 hover:to-primary/15 transition-colors">
 							<div className="flex items-center justify-between flex-wrap gap-3">
 								<div className="flex items-center gap-3">
 									<SparklesIcon className="size-5 text-primary" />
@@ -1353,7 +1353,7 @@ export default function HealthcareDashboardPage() {
 									</div>
 								</div>
 								<NavLink
-									to="/api-flow-builder"
+									to="/dashboard/api-flow-builder"
 									className="inline-flex items-center gap-1.5 text-sm font-medium text-primary hover:underline"
 								>
 									Open Flow Builder <ArrowRightIcon className="size-4" />

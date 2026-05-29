@@ -57,6 +57,7 @@ import UpgradePage from "@/routes/upgrade";
 import VoiceAgentPage from "@/routes/voice-agent";
 import VoiceTranscribePage from "@/routes/voice-transcribe";
 import WearableDataPage from "@/routes/wearable-data";
+import WhitepaperPage from "@/routes/whitepaper";
 import PlaygroundChatPage from "./routes/playground-chat";
 
 function PreventScrollReset() {
@@ -145,6 +146,8 @@ const dashboardRoutes = [
 function AppRoutes() {
 	return (
 		<Routes>
+			<Route path="/" element={<Navigate to="/whitepaper" replace />} />
+			<Route path="/whitepaper" element={<WhitepaperPage />} />
 			<Route
 				path="/login"
 				element={
@@ -163,7 +166,6 @@ function AppRoutes() {
 			/>
 			<Route path="/auth/callback" element={<AuthCallbackPage />} />
 
-			<Route path="/" element={<Navigate to="/dashboard" replace />} />
 			<Route
 				path="/dashboard"
 				element={

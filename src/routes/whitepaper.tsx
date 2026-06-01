@@ -413,17 +413,34 @@ export default function WhitepaperPage() {
 						</div>
 					</Section>
 
-					<Section number={section6.number} title={section6.title}>
-						<div>
-							<label htmlFor="email">{section6.inputLabel}</label>
-							<input
-								type="email"
-								id="email"
-								placeholder={section6.inputPlaceholder}
-							/>
-							<button type="button">{section6.inputButtonLabel}</button>
+					<Section
+						className="hidden"
+						number={section6.number}
+						title={section6.title}
+					>
+						<div className="space-y-6">
+							<label
+								className="text-[#6E6E6E]/60 italic font-fraunces block"
+								htmlFor="email"
+							>
+								{section6.inputLabel}
+							</label>
+							<div className="pb-2 border-b border-black flex flex-row justify-between gap-x-4">
+								<input
+									className="w-full"
+									type="email"
+									id="email"
+									placeholder={section6.inputPlaceholder}
+								/>
+								<button
+									className="rounded-full px-6 py-3 text-sm bg-[#0A0A0A] text-[#f3f3f3]"
+									type="button"
+								>
+									{section6.inputButtonLabel}
+								</button>
+							</div>
 						</div>
-						<p>{section6.disclaimer}</p>
+						<p className="mt-6 text-[#6E6E6E] text-sm">{section6.disclaimer}</p>
 					</Section>
 				</main>
 

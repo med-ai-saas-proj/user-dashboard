@@ -30,20 +30,20 @@ function Section({
 			)}
 		>
 			<div className="hidden md:block">
-				<p className="font-serif text-3xl md:text-8xl leading-none text-zinc-700">
+				<p className="font-fraunces font-light tracking-[-2px] text-3xl md:text-8xl leading-none text-zinc-700">
 					{number}
 				</p>
 			</div>
-			<div>
-				<div className="flex flex-row gap-4 md:gap-10 mb-6">
-					<span className="md:hidden font-serif text-2xl leading-tight text-zinc-900 md:mt-5 md:text-4xl">
+			<div className="space-y-12 md:space-y-20">
+				<div className="flex flex-row gap-4 md:gap-10">
+					<span className="md:hidden font-fraunces text-3xl tracking-[-2px] font-light text-zinc-900 md:mt-5 md:text-4xl">
 						{number}
 					</span>
-					<h2 className="font-serif text-2xl leading-tight text-zinc-900 md:mt-5 md:text-4xl">
+					<h2 className="font-fraunces text-3xl leading-tight tracking-[-1.5px] text-zinc-900 md:text-6xl">
 						{title}
 					</h2>
 				</div>
-				{children}
+				<div>{children}</div>
 			</div>
 		</section>
 	);
@@ -414,7 +414,7 @@ export default function WhitepaperPage() {
 					</Section>
 
 					<Section
-						className="hidden"
+						className="hiddene"
 						number={section6.number}
 						title={section6.title}
 					>

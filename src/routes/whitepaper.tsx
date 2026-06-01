@@ -59,7 +59,7 @@ export default function WhitepaperPage() {
 	const section6 = t("section6", { returnObjects: true });
 
 	return (
-		<div className="min-h-screen bg-white text-zinc-900">
+		<div className="min-h-screen bg-white text-zinc-900 font-inter">
 			<div className="mx-auto max-w-[1470px] bg-white">
 				<header className="z-20 border-b border-zinc-200 bg-white/95 backdrop-blur md:sticky md:top-0">
 					<div className="mx-auto flex max-w-[1300px] items-center gap-5 px-4 py-4 md:px-10 md:py-5">
@@ -354,55 +354,62 @@ export default function WhitepaperPage() {
 					</Section>
 
 					<Section number={section4.number} title={section4.title}>
-						<p className="max-w-[860px] text-base leading-relaxed text-zinc-700">
-							{section4.body1}
-						</p>
-						<p className="max-w-[860px] text-base leading-relaxed text-zinc-700">
-							{section4.body2}
-						</p>
-						<p className="max-w-[860px] text-base leading-relaxed text-zinc-700">
-							{section4.body3}
-						</p>
+						<div className="space-y-6">
+							<p className="text-xl">{section4.body1}</p>
+							<p className="">{section4.body2}</p>
+							<p className="font-semibold">{section4.body3}</p>
+						</div>
 
-						<div>
-							<p>{section4.data.title}</p>
-							<div>
-								<div>
-									<p>{section4.data.box1.title}</p>
-									<p>{section4.data.box1.subtitle}</p>
-									<p>{section4.data.box1.stat}</p>
+						<div className="mt-10 md:mt-16">
+							<p className="text-[#6E6E6E] italic">{section4.data.title}</p>
+							<div className="mt-6 grid grid-flow-row md:grid-flow-col gap-4">
+								<div className="aspect-4/3 px-8 py-10 flex flex-col justify-between bg-[#F3F3F3]">
+									<div>
+										<p className="italic">{section4.data.box1.title}</p>
+										<p>{section4.data.box1.subtitle}</p>
+									</div>
+									<p className="text-8xl md:text-9xl">
+										{section4.data.box1.stat}
+									</p>
 								</div>
-								<div>
-									<p>{section4.data.box2.title}</p>
-									<p>{section4.data.box2.subtitle}</p>
-									<p>{section4.data.box2.stat}</p>
+								<div className="aspect-4/3 px-8 py-10 flex flex-col justify-between bg-[#0A0A0A] text-[#F3F3F3]">
+									<div className="">
+										<p className="">{section4.data.box2.title}</p>
+										<p className="opacity-70">{section4.data.box2.subtitle}</p>
+									</div>
+									<p className="text-8xl md:text-9xl">
+										{section4.data.box2.stat}
+									</p>
 								</div>
 							</div>
-							<p>{section4.data.body}</p>
+							<p className="mt-6 text-[#6E6E6E]">{section4.data.body}</p>
 						</div>
 					</Section>
 
 					<Section number={section5.number} title={section5.title}>
-						<p>{section5.subtitle}</p>
-						<p className="max-w-[860px] text-base leading-relaxed text-zinc-700">
+						<p className="font-fraunces font-medium text-xl">
+							{section5.subtitle}
+						</p>
+						<p className="mt-8 text-[#6E6E6E]/60 italic font-fraunces text-sm">
 							{section5.remark}
 						</p>
-						<p className="max-w-[860px] text-base leading-relaxed text-zinc-700">
-							{section5.body1}
-						</p>
-						<p className="max-w-[860px] text-base leading-relaxed text-zinc-700">
-							{section5.body2}
-						</p>
-						<div>
-							<p className="max-w-[860px] text-base leading-relaxed text-zinc-700">
+						<p className="mt-3">{section5.body1}</p>
+						<p className="mt-5">{section5.body2}</p>
+
+						<div className="bg-[#F3F3F3] mt-8 p-6 md:p-10 flex flex-row gap-x-10">
+							<ArrowRightIcon className="size-10 shrink-0 hidden md:block" />
+							<p className="text-[#0A0A0A] text-xl md:text-2xl font-fraunces font-medium">
 								{section5.body3}
 							</p>
 						</div>
 
-						<p>{section5.body4}</p>
-						<div>
+						<p className="mt-14">{section5.body4}</p>
+
+						<div className="mt-14 md:mt-20">
 							<div></div>
-							<p>{section5.body5}</p>
+							<p className="text-2xl md:text-4xl text-[#0A0A0A] font-fraunces">
+								{section5.body5}
+							</p>
 						</div>
 					</Section>
 

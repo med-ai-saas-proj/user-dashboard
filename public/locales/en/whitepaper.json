@@ -2,15 +2,15 @@
   "title": "The Science of Personalized Healthcare Intelligence",
   "subtitle": "Toward a Unified Clinical Data Layer for Modern Medicine",
   "series": {
-    "label": "SERIES",
+    "label": "Series",
     "text": "Pioneering the Science of Clinical AI"
   },
   "writtenBy": {
-    "label": "WRITTEN BY",
+    "label": "Written by",
     "text": "Venera AI Research Team"
   },
   "published": {
-    "label": "PUBLISHED",
+    "label": "Published",
     "text": "May 13th, 2026"
   },
   "section1": {
@@ -50,7 +50,14 @@
     "coverage": {
       "title": "COVERAGE",
       "subtitle": "What each surface delivers, at each level of clinical need.",
-      "description": "The same core platform handles routine intake, complex multi-specialty cases, and population-level signal detection. Capability scales with the question — not the user."
+      "description": "The same core platform handles routine intake, complex multi-specialty cases, and population-level signal detection. Capability scales with the question — not the user.",
+      "figure": {
+        "title": "Capability coverage across surfaces (Venera AI v1.0)",
+        "note": {
+          "title": "Surface",
+          "body": "Each column corresponds to one of Venera's five product surfaces, ordered roughly from patient-facing to authority-facing."
+        }
+      }
     },
     "surfaces": {
       "title": "SURFACES",
@@ -175,5 +182,16 @@
     "inputPlaceholder": "name@company.com",
     "inputButtonLabel": "Send",
     "disclaimer": "By submitting, you agree to receive product communications from Venera AI. You can unsubscribe at any time."
+  },
+  "footer": {
+    "description": "The future where your loved ones are taken care of.",
+    "contact": {
+      "label": "Contact",
+      "email": "product@venerian.space",
+      "phone": "+1 (541) 908 9436",
+      "location": "Brooklyn, NY"
+    },
+    "copyright": "© 2026 Venera AI, Inc.",
+    "version": "Whitepaper v1.0 · Published May 2026"
   }
 }

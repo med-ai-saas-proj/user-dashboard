@@ -6,6 +6,8 @@ import TimeRangePickerCustom from "@/components/shadcn/timerangepicker-custom";
 import OrganizationBillingActivityLogItem from "@/features/organization/components/organization-billing/organization-billing-activity-log-item";
 import { useGetTransactionList } from "../../hooks/organization-billing/use-get-transaction-list";
 import type { DateRange } from "react-day-picker";
+import { motion } from "framer-motion";
+import { itemVariants } from "@/lib/animations";
 
 function OrganizationBillingActivityLog() {
 	const { t, i18n } = useTranslation("billing");
@@ -54,7 +56,12 @@ function OrganizationBillingActivityLog() {
 	};
 
 	return (
-		<div className="w-full py-10">
+		<motion.div
+			className="w-full py-10"
+			variants={itemVariants}
+			initial="hidden"
+			animate="visible"
+		>
 			<div className="max-w-4xl mx-auto">
 				{billingTransactions?.data.length !== undefined &&
 					billingTransactions.data.length > 0 && (
@@ -114,7 +121,7 @@ function OrganizationBillingActivityLog() {
 					)}
 				</div>
 			</div>
-		</div>
+		</motion.div>
 	);
 }
 

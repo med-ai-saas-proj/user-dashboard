@@ -11,6 +11,8 @@ import { useUpdateProject } from "../../hooks/project-general/use-update-project
 import { useParams } from "react-router-dom";
 import { toast } from "sonner";
 import { useGetProjectDetails } from "../../hooks/project-general/use-get-project-details";
+import { motion } from "framer-motion";
+import { itemVariants } from "@/lib/animations";
 
 const createProjectGeneralSchema = (messages: {
 	projectNameRequired: string;
@@ -85,7 +87,12 @@ const ProjectGeneralForm = () => {
 	}, [projectInfo, projectId, reset]);
 
 	return (
-		<div className="w-full">
+		<motion.div
+			className="w-full"
+			variants={itemVariants}
+			initial="hidden"
+			animate="visible"
+		>
 			<form
 				onSubmit={handleSubmit(onSubmit)}
 				className="space-y-4 max-w-md mx-auto"
@@ -116,7 +123,7 @@ const ProjectGeneralForm = () => {
 					{t("general.form.actions.save")}
 				</Button>
 			</form>
-		</div>
+		</motion.div>
 	);
 };
 

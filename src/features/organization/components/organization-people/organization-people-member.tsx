@@ -16,6 +16,8 @@ import { CustomPagination } from "@/components/pagination/pagination";
 import InvitationDialog from "./invitation-dialog";
 import { useMediaQuery } from "@mantine/hooks";
 import { useAuthStore } from "@/features/auth/store/auth-store";
+import { motion } from "framer-motion";
+import { itemVariants } from "@/lib/animations";
 
 const OrganizationPeopleMember = () => {
 	const organizationId = useAuthStore((state) => state.organization?.id) || "";
@@ -53,7 +55,7 @@ const OrganizationPeopleMember = () => {
 	};
 
 	return (
-		<>
+		<motion.div initial="hidden" animate="visible" variants={itemVariants}>
 			<div className="flex items-center justify-between mb-4 mt-2 gap-2">
 				<InputGroup className="max-w-xs">
 					<InputGroupInput placeholder={t("people.layout.searchPlaceholder")} />
@@ -123,7 +125,7 @@ const OrganizationPeopleMember = () => {
 					onOpenChange={handleDialogClose}
 				/>
 			)}
-		</>
+		</motion.div>
 	);
 };
 

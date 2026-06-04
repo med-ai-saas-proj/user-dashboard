@@ -16,6 +16,8 @@ import { formatIsoToLocaleDateTime } from "@/lib/utils";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/shadcn/button";
 import { Spinner } from "@/components/shadcn/spinner";
+import { motion } from "framer-motion";
+import { itemVariants } from "@/lib/animations";
 
 const OrganizationBillingCreditGrants = () => {
 	const { t, i18n } = useTranslation("billing");
@@ -50,7 +52,12 @@ const OrganizationBillingCreditGrants = () => {
 	};
 
 	return (
-		<div className="w-full py-10">
+		<motion.div
+			className="w-full py-10"
+			variants={itemVariants}
+			initial="hidden"
+			animate="visible"
+		>
 			<div className="max-w-4xl mx-auto">
 				<div className="flex flex-col gap-6">
 					{!haveCredits && (
@@ -137,7 +144,7 @@ const OrganizationBillingCreditGrants = () => {
 					)}
 				</div>
 			</div>
-		</div>
+		</motion.div>
 	);
 };
 

@@ -13,6 +13,8 @@ import {
 } from "@/components/shadcn/input-group";
 import { Plus, Search } from "lucide-react";
 import { useAuthStore } from "@/features/auth/store/auth-store";
+import { motion } from "framer-motion";
+import { itemVariants } from "@/lib/animations";
 
 const OrganizationPeopleInvitation = () => {
 	const { t } = useTranslation("organization");
@@ -24,7 +26,7 @@ const OrganizationPeopleInvitation = () => {
 	});
 
 	return (
-		<>
+		<motion.div initial="hidden" animate="visible" variants={itemVariants}>
 			<div className="flex items-center justify-between mb-4 mt-2">
 				<InputGroup className="max-w-xs">
 					<InputGroupInput placeholder={t("people.layout.searchPlaceholder")} />
@@ -71,7 +73,7 @@ const OrganizationPeopleInvitation = () => {
 					</div>
 				)}
 			</div>
-		</>
+		</motion.div>
 	);
 };
 

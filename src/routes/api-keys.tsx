@@ -8,6 +8,8 @@ import APIKeyTable from "@/features/api-keys/components/api-key-table";
 import { useGetApiKeys } from "@/features/api-keys/hooks/use-get-api-keys";
 import DashboardLayout from "@/layouts/dashboard-layout";
 import { useParams } from "react-router-dom";
+import { motion } from "framer-motion";
+import { blurVariants } from "@/lib/animations";
 
 export default function APIKeysPage() {
 	const { t } = useTranslation("api-keys");
@@ -30,7 +32,7 @@ export default function APIKeysPage() {
 				</Button>
 			}
 		>
-			<div>
+			<motion.div variants={blurVariants} initial="hidden" animate="visible">
 				<p className="mb-4">{t("description.permissions")}</p>
 				<p className="mb-4">{t("description.security")}</p>
 				<p className="mb-4">{t("description.usage")}</p>
@@ -63,7 +65,7 @@ export default function APIKeysPage() {
 				)}
 
 				{!isLoading && !isError && hasKeys && <APIKeyTable apiKeys={apiKeys} />}
-			</div>
+			</motion.div>
 
 			<APIKeyDialog
 				open={openApiKeyDialog}

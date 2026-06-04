@@ -9,6 +9,8 @@ import OrganizationBillingSources from "./organization-billing-sources";
 import StripePayment from "./stripe/stripe-payment";
 import { useTranslation } from "react-i18next";
 import { useGetCredits } from "../../hooks/organization-billing/use-get-credit";
+import { motion } from "framer-motion";
+import { itemVariants } from "@/lib/animations";
 
 const OrganizationBillingOverview = () => {
 	const { t } = useTranslation("billing");
@@ -21,7 +23,12 @@ const OrganizationBillingOverview = () => {
 	const { data: currentCreditsInOrganization } = useGetCredits();
 
 	return (
-		<div className="w-full py-10">
+		<motion.div
+			initial="hidden"
+			animate="visible"
+			variants={itemVariants}
+			className="w-full py-10"
+		>
 			<div className="max-w-4xl mx-auto">
 				<div className="flex flex-col gap-12">
 					<div className="flex flex-col gap-6">
@@ -148,7 +155,7 @@ const OrganizationBillingOverview = () => {
 					</div>
 				</div>
 			</div>
-		</div>
+		</motion.div>
 	);
 };
 

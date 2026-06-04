@@ -23,6 +23,8 @@ import { CustomPagination } from "@/components/pagination/pagination";
 import ProjectPeopleMemberItem from "./project-people-member-item";
 import ProjectPeopleMemberDetails from "./project-people-member-details";
 import AddMemberDialog from "./dialog/add-member-dialog";
+import { motion } from "framer-motion";
+import { itemVariants } from "@/lib/animations";
 
 const ProjectPeopleMember = () => {
 	const params = useParams();
@@ -48,7 +50,7 @@ const ProjectPeopleMember = () => {
 	};
 
 	return (
-		<>
+		<motion.div variants={itemVariants} initial="hidden" animate="visible">
 			<div className="flex items-center justify-between mb-4 mt-2">
 				<InputGroup className="max-w-xs">
 					<InputGroupInput placeholder={t("people.layout.searchPlaceholder")} />
@@ -120,7 +122,7 @@ const ProjectPeopleMember = () => {
 					{selectedUser && <ProjectPeopleMemberDetails user={selectedUser} />}
 				</div>
 			</div>
-		</>
+		</motion.div>
 	);
 };
 

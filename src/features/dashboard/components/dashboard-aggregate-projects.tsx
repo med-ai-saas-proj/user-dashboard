@@ -3,6 +3,12 @@ import DashboardChart from "@/features/dashboard/components/dashboard-chart";
 import DashboardAggregateTimeFilter from "@/features/dashboard/components/dashboard-aggregate-time-filter";
 import KPICard from "@/features/dashboard/components/kpi-card";
 import { useTranslation } from "react-i18next";
+import { motion } from "framer-motion";
+import {
+	containerVariants,
+	itemVariants,
+	blurVariants,
+} from "@/lib/animations";
 
 import { useGetAggregateByProjects } from "../hooks/use-get-aggregate-by-projects";
 import type { ChartConfig } from "@/components/shadcn/chart";
@@ -142,53 +148,89 @@ const DashboardAggregateProjects = () => {
 			<div className="flex flex-col w-full">
 				<div className="flex md:flex-row flex-col items-start justify-between gap-6">
 					{/* Hero/Description Text */}
-					<div className="flex flex-col justify-center max-w-xl">
+					<motion.div
+						variants={blurVariants}
+						initial="hidden"
+						animate="visible"
+						className="flex flex-col justify-center max-w-xl"
+					>
 						<h3 className="text-2xl font-bold mb-2">{t("kpiSection.title")}</h3>
 						<p className="text-muted-foreground">
 							{t("kpiSection.description")}
 						</p>
-					</div>
+					</motion.div>
 					{/* KPI Cards */}
-					<div className="flex gap-4 flex-col md:flex-row w-full md:w-auto">
-						<KPICard
-							data={[
-								{
-									id: "totalSpent",
-									title: "totalSpent",
-									value: totalSpentKPIData,
-									format: "currency",
-								},
-							]}
-						/>
-						<KPICard
-							data={[
-								{
-									id: "totalTransactions",
-									title: "totalTransactions",
-									value: totalTransactionCountKPIData,
-									format: "compact",
-								},
-							]}
-						/>
-					</div>
+					<motion.div
+						variants={containerVariants}
+						initial="hidden"
+						animate="visible"
+						className="flex gap-4 flex-col md:flex-row w-full md:w-auto"
+					>
+						<motion.div
+							variants={itemVariants}
+							initial="hidden"
+							animate="visible"
+						>
+							<KPICard
+								data={[
+									{
+										id: "totalSpent",
+										title: "totalSpent",
+										value: totalSpentKPIData,
+										format: "currency",
+									},
+								]}
+							/>
+						</motion.div>
+						<motion.div
+							variants={itemVariants}
+							initial="hidden"
+							animate="visible"
+						>
+							<KPICard
+								data={[
+									{
+										id: "totalTransactions",
+										title: "totalTransactions",
+										value: totalTransactionCountKPIData,
+										format: "compact",
+									},
+								]}
+							/>
+						</motion.div>
+					</motion.div>
 				</div>
-				<div className="flex items-center justify-end gap-x-4 mt-6">
+				<motion.div
+					className="flex items-center justify-end gap-x-4 mt-6"
+					variants={itemVariants}
+					initial="hidden"
+					animate="visible"
+				>
 					<DashboardAggregateTimeFilter />
-				</div>
+				</motion.div>
 			</div>
 
 			{/* Charts Section */}
-			<div className="flex flex-col gap-4 w-full">
-				<DashboardChart
-					title={t("chart.totalExpenditureTrend")}
-					chartConfig={totalExpenditureTrendChart}
-				/>
-				<DashboardChart
-					title={t("chart.transactionVolumeTrend")}
-					chartConfig={transactionVolumeChart}
-					isTotalOnly={true}
-				/>
-			</div>
+			<motion.div
+				className="flex flex-col gap-4 w-full"
+				variants={containerVariants}
+				initial="hidden"
+				animate="visible"
+			>
+				<motion.div variants={itemVariants} initial="hidden" animate="visible">
+					<DashboardChart
+						title={t("chart.totalExpenditureTrend")}
+						chartConfig={totalExpenditureTrendChart}
+					/>
+				</motion.div>
+				<motion.div variants={itemVariants} initial="hidden" animate="visible">
+					<DashboardChart
+						title={t("chart.transactionVolumeTrend")}
+						chartConfig={transactionVolumeChart}
+						isTotalOnly={true}
+					/>
+				</motion.div>
+			</motion.div>
 		</div>
 	);
 };

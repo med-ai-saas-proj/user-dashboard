@@ -2,15 +2,22 @@ import OrganizationBillingHistoryItem from "./organization-billing-history-item"
 
 import { useGetInvoices } from "../../hooks/organization-billing/use-get-invoices";
 import { useTranslation } from "react-i18next";
+import { motion } from "framer-motion";
+import { itemVariants } from "@/lib/animations";
 
 const OrganizationBillingHistory = () => {
-	const { t } = useTranslation("billing" as any);
+	const { t } = useTranslation("billing");
 	const { data: invoices } = useGetInvoices({
 		paid: true,
 	});
 
 	return (
-		<div className="w-full py-10">
+		<motion.div
+			className="w-full py-10"
+			variants={itemVariants}
+			initial="hidden"
+			animate="visible"
+		>
 			<div className="max-w-4xl mx-auto">
 				{(!invoices?.data || !invoices?.data.length) && (
 					<div className="flex flex-col gap-4">
@@ -29,7 +36,7 @@ const OrganizationBillingHistory = () => {
 					))}
 				</div>
 			</div>
-		</div>
+		</motion.div>
 	);
 };
 

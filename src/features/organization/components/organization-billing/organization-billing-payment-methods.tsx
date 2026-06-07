@@ -18,9 +18,11 @@ import { useGetPaymentMethods } from "../../hooks/organization-billing/use-get-p
 import OrganizationBillingIntentActions from "./organization-billing-intent-actions";
 import DeleteBillingMethodDialog from "./dialogs/delete-billing-method-dialog";
 import { useTranslation } from "react-i18next";
+import { motion } from "framer-motion";
+import { itemVariants } from "@/lib/animations";
 
 const OrganizationBillingPaymentMethods = () => {
-	const { t, i18n } = useTranslation("billing" as any);
+	const { t, i18n } = useTranslation("billing");
 	const { data: paymentMethods, isLoading } = useGetPaymentMethods();
 	const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 	const [selectedPaymentMethodId, setSelectedPaymentMethodId] = useState<
@@ -35,7 +37,12 @@ const OrganizationBillingPaymentMethods = () => {
 	};
 
 	return (
-		<div className="w-full py-10">
+		<motion.div
+			initial="hidden"
+			animate="visible"
+			variants={itemVariants}
+			className="w-full py-10"
+		>
 			<div className="max-w-6xl mx-auto">
 				<div className="flex flex-col gap-6">
 					<div className="flex flex-col gap-2">
@@ -216,7 +223,7 @@ const OrganizationBillingPaymentMethods = () => {
 					}
 				}}
 			/>
-		</div>
+		</motion.div>
 	);
 };
 

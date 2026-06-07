@@ -35,7 +35,8 @@
         "layout": {
             "searchPlaceholder": "Search...",
             "addMember": "Add member",
-            "inviteMember": "Invite member"
+            "inviteMember": "Invite member",
+            "search": "Search"
         },
         "members": {
             "loading": "Loading members...",

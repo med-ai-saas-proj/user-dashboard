@@ -38,7 +38,6 @@ export function TeamSwitcher({
 		}[];
 	};
 }) {
-	console.log(info);
 	const { isMobile } = useSidebar();
 	const navigate = useNavigate();
 

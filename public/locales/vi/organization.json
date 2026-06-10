@@ -13,7 +13,8 @@
         "layout": {
             "searchPlaceholder": "Tìm kiếm...",
             "addMember": "Thêm thành viên",
-            "inviteMember": "Mời thành viên"
+            "inviteMember": "Mời thành viên",
+            "search": "Tìm kiếm"
         },
         "dialog": {
             "title": "Thêm thành viên mới",

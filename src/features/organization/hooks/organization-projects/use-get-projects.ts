@@ -15,6 +15,7 @@ export const useGetOrganizationProjects = (
 			params.organizationId,
 			params.offset,
 			params.limit,
+			params.q,
 		],
 		queryFn: () => getOrganizationProjects(params),
 	});

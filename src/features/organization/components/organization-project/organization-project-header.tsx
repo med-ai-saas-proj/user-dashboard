@@ -13,22 +13,30 @@ import {
 	SelectValue,
 } from "@/components/shadcn/select";
 import { Search } from "lucide-react";
+import { Button } from "@/components/shadcn/button";
 import OrganizationPorjectCreateDialog from "./organization-project-create-dialog";
 import { useTranslation } from "react-i18next";
 
 type OrganizationProjectHeaderProps = {
 	setIsArchived: (value: boolean) => void;
+	onSearch: (value: string) => void;
 };
 
 const OrganizationProjectHeader = ({
 	setIsArchived,
+	onSearch,
 }: OrganizationProjectHeaderProps) => {
 	const { t } = useTranslation("organization");
 	const [filterTerm, setFilterTerm] = useState<"active" | "archived">("active");
+	const [searchValue, setSearchValue] = useState<string>("");
 
 	useEffect(() => {
 		setIsArchived(filterTerm === "archived");
 	}, [filterTerm, setIsArchived]);
+
+	const handleSearch = () => {
+		onSearch(searchValue);
+	};
 
 	return (
 		<div className="flex items-center justify-between mb-4 mt-2 gap-2">
@@ -36,11 +44,21 @@ const OrganizationProjectHeader = ({
 				<InputGroup className="max-w-xs">
 					<InputGroupInput
 						placeholder={t("project.header.searchPlaceholder")}
+						value={searchValue}
+						onChange={(e) => setSearchValue(e.target.value)}
+						onKeyDown={(e) => {
+							if (e.key === "Enter") {
+								handleSearch();
+							}
+						}}
 					/>
-					<InputGroupAddon>
-						<Search />
+					<InputGroupAddon onClick={handleSearch}>
+						<Search className="h-4 w-4" />
 					</InputGroupAddon>
 				</InputGroup>
+				<Button variant="default" onClick={handleSearch}>
+					{t("people.layout.search")}
+				</Button>
 				<Select
 					value={filterTerm}
 					onValueChange={(value) =>

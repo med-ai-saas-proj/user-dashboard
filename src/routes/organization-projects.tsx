@@ -9,6 +9,7 @@ import { itemVariants } from "@/lib/animations";
 const OrganizationProjects = () => {
 	const { t } = useTranslation("organization");
 	const [isArchived, setIsArchived] = useState(false);
+	const [searchQuery, setSearchQuery] = useState("");
 
 	return (
 		<DashboardLayout pageTitle={t("project.pageTitle")}>
@@ -19,8 +20,14 @@ const OrganizationProjects = () => {
 				variants={itemVariants}
 				className="flex flex-col gap-y-6"
 			>
-				<OrganizationProjectHeader setIsArchived={setIsArchived} />
-				<OrganizationProjectContent isArchived={isArchived} />
+				<OrganizationProjectHeader
+					setIsArchived={setIsArchived}
+					onSearch={setSearchQuery}
+				/>
+				<OrganizationProjectContent
+					isArchived={isArchived}
+					searchQuery={searchQuery}
+				/>
 			</motion.div>
 		</DashboardLayout>
 	);

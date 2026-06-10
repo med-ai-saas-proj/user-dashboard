@@ -12,36 +12,35 @@ import { useGetOrganizationProjects } from "../../hooks/organization-projects/us
 import { Settings } from "lucide-react";
 import OrganizationProjectArchiveDialog from "./organization-project-archive-dialog";
 import OrganizationProjectUnarchiveDialog from "./organization-project-unarchive-dialog";
-import { Button } from "@/components/shadcn/button";
 import { Spinner } from "@/components/shadcn/spinner";
 import { useTranslation } from "react-i18next";
 import { useProjectStore } from "@/features/project/store/project";
 import { useAuthStore } from "@/features/auth/store/auth-store";
+import { CustomPagination } from "@/components/pagination/pagination";
 
 type OrganizationProjectContentProps = {
 	isArchived: boolean;
+	searchQuery?: string;
 };
 
 const OrganizationProjectContent = ({
 	isArchived,
+	searchQuery,
 }: OrganizationProjectContentProps) => {
 	const { t } = useTranslation("organization");
 	const organizationId = useAuthStore((state) => state.organization?.id) || "";
 	const setProjectId = useProjectStore((state) => state.setProjectId);
 	const navigate = useNavigate();
 
-	const baseLimit = 10;
+	const limit = 10;
 	const [page, setPage] = useState(1);
 
 	const { data: projectsResponse, isPending } = useGetOrganizationProjects({
 		organizationId,
-		offset: 0,
-		limit: page * baseLimit,
+		offset: (page - 1) * limit,
+		limit,
+		q: searchQuery || undefined,
 	});
-
-	const canLoadMore =
-		projectsResponse !== undefined &&
-		projectsResponse.results.length < projectsResponse.total;
 
 	const filteredProjects = useMemo(() => {
 		if (!projectsResponse) return [];
@@ -50,12 +49,6 @@ const OrganizationProjectContent = ({
 			(project) => project.archived === isArchived
 		);
 	}, [projectsResponse, isArchived]);
-
-	const handleLoadMore = () => {
-		if (canLoadMore) {
-			setPage((prevPage) => prevPage + 1);
-		}
-	};
 
 	const handleNavigateToProject = (projectId: string) => {
 		setProjectId(projectId);
@@ -98,7 +91,9 @@ const OrganizationProjectContent = ({
 					{filteredProjects.map((project, index) => (
 						<TableRow key={project.project_uuid}>
 							<TableCell>
-								<p className="text-muted-foreground">{index + 1}</p>
+								<p className="text-muted-foreground">
+									{(page - 1) * limit + index + 1}
+								</p>
 							</TableCell>
 							<TableCell>{project.name}</TableCell>
 							<TableCell>{project.project_uuid}</TableCell>
@@ -139,15 +134,14 @@ const OrganizationProjectContent = ({
 					</div>
 				</div>
 			)}
-			{canLoadMore && !isPending && (
-				<Button variant={"secondary"} onClick={handleLoadMore}>
-					{t("project.content.actions.loadMore")}
-				</Button>
-			)}
-			{!canLoadMore && !isPending && (
-				<p className="text-sm text-muted-foreground">
-					{t("project.content.endOfList")}
-				</p>
+			{!isPending && (
+				<CustomPagination
+					className="my-4"
+					currentPage={page}
+					limit={limit}
+					totalElements={projectsResponse?.total || 1}
+					onPageChange={setPage}
+				/>
 			)}
 		</div>
 	);

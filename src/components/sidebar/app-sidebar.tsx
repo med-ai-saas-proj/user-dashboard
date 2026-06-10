@@ -1,4 +1,14 @@
 import {
+	Book,
+	ChartColumnBig,
+	GalleryVerticalEnd,
+	Settings,
+} from "lucide-react";
+import type * as React from "react";
+import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
+import { useParams } from "react-router-dom";
+import {
 	Sidebar,
 	SidebarContent,
 	SidebarFooter,
@@ -14,16 +24,6 @@ import { useAuthStore } from "@/features/auth/store/auth-store";
 import { useGetOrganizationProjects } from "@/features/organization/hooks/organization-projects/use-get-projects";
 import { useGetProjectDetails } from "@/features/project/hooks/project-general/use-get-project-details";
 import { useProjectStore } from "@/features/project/store/project";
-import {
-	Book,
-	ChartColumnBig,
-	GalleryVerticalEnd,
-	Settings,
-} from "lucide-react";
-import type * as React from "react";
-import { useEffect } from "react";
-import { useTranslation } from "react-i18next";
-import { useParams } from "react-router-dom";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 	const { t } = useTranslation("sidebar");
@@ -42,9 +42,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 	const projectId = params.projectId ?? storedProjectId ?? "";
 	const { data: projectDetails } = useGetProjectDetails(projectId);
 
-	const selectedProjectName = storedProjectInfo.name ?? projectDetails?.name;
+	const selectedProjectName = projectDetails?.name || storedProjectInfo.name;
 	const selectedProjectDescription =
-		storedProjectInfo.description ?? projectDetails?.description;
+		projectDetails?.description || storedProjectInfo.description;
 
 	useEffect(() => {
 		if (!organization?.id) {

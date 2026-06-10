@@ -1,34 +1,37 @@
+import { useMediaQuery } from "@mantine/hooks";
+import { motion } from "framer-motion";
+import { Plus, Search } from "lucide-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useGetUsers } from "../../hooks/organization-people/use-get-users";
-import OrganizationPeopleMemberItem from "./organization-people-member-item";
-import type { OrganizationUser } from "../../organization.type";
-import OrganizationPeopleMemberDetails from "./organization-people-member-details";
-import { Spinner } from "@/components/shadcn/spinner";
+import { CustomPagination } from "@/components/pagination/pagination";
+import { Button } from "@/components/shadcn/button";
 import {
 	InputGroup,
 	InputGroupAddon,
 	InputGroupInput,
 } from "@/components/shadcn/input-group";
-import { Plus, Search } from "lucide-react";
-import { Button } from "@/components/shadcn/button";
-import { CustomPagination } from "@/components/pagination/pagination";
-import InvitationDialog from "./invitation-dialog";
-import { useMediaQuery } from "@mantine/hooks";
+import { Spinner } from "@/components/shadcn/spinner";
 import { useAuthStore } from "@/features/auth/store/auth-store";
-import { motion } from "framer-motion";
 import { itemVariants } from "@/lib/animations";
+import { useGetUsers } from "../../hooks/organization-people/use-get-users";
+import type { OrganizationUser } from "../../organization.type";
+import InvitationDialog from "./invitation-dialog";
+import OrganizationPeopleMemberDetails from "./organization-people-member-details";
+import OrganizationPeopleMemberItem from "./organization-people-member-item";
 
 const OrganizationPeopleMember = () => {
 	const organizationId = useAuthStore((state) => state.organization?.id) || "";
 	const { t } = useTranslation("organization");
 
+	const [searchValue, setSearchValue] = useState<string>("");
+	const [searchQuery, setSearchQuery] = useState<string>("");
 	const limit = 10;
 	const [page, setPage] = useState<number>(1);
 	const { data: users, isPending } = useGetUsers({
 		organizationId,
 		offset: (page - 1) * limit,
 		limit,
+		q: searchQuery || undefined,
 	});
 
 	const [openAddMemeberDialog, setOpenAddMemberDialog] =
@@ -38,6 +41,11 @@ const OrganizationPeopleMember = () => {
 	);
 	const [isDetailsDialogOpen, setIsDetailsDialogOpen] = useState(false);
 	const isMobile = useMediaQuery("(max-width: 768px)");
+
+	const handleSearch = () => {
+		setPage(1);
+		setSearchQuery(searchValue);
+	};
 
 	const handleSelectUser = (user: OrganizationUser) => {
 		if (!user) return;
@@ -57,12 +65,26 @@ const OrganizationPeopleMember = () => {
 	return (
 		<motion.div initial="hidden" animate="visible" variants={itemVariants}>
 			<div className="flex items-center justify-between mb-4 mt-2 gap-2">
-				<InputGroup className="max-w-xs">
-					<InputGroupInput placeholder={t("people.layout.searchPlaceholder")} />
-					<InputGroupAddon>
-						<Search />
-					</InputGroupAddon>
-				</InputGroup>
+				<div className="flex items-center gap-2 max-w-sm w-full">
+					<InputGroup className="max-w-xs">
+						<InputGroupInput
+							placeholder={t("people.layout.searchPlaceholder")}
+							value={searchValue}
+							onChange={(e) => setSearchValue(e.target.value)}
+							onKeyDown={(e) => {
+								if (e.key === "Enter") {
+									handleSearch();
+								}
+							}}
+						/>
+						<InputGroupAddon onClick={handleSearch}>
+							<Search className="h-4 w-4" />
+						</InputGroupAddon>
+					</InputGroup>
+					<Button variant="default" onClick={handleSearch}>
+						{t("people.layout.search")}
+					</Button>
+				</div>
 				<Button variant="default" onClick={() => setOpenAddMemberDialog(true)}>
 					<Plus />
 					{t("people.layout.addMember")}

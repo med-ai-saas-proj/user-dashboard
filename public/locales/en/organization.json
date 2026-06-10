@@ -13,7 +13,8 @@
         "layout": {
             "searchPlaceholder": "Search...",
             "addMember": "Add member",
-            "inviteMember": "Invite member"
+            "inviteMember": "Invite member",
+            "search": "Search"
         },
         "dialog": {
             "title": "Add new member",

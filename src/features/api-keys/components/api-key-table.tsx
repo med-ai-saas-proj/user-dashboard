@@ -56,8 +56,6 @@ const APIKeyTable = ({ apiKeys }: { apiKeys: APIKey[] }) => {
 						<TableHead>{t("table.header.createdAt")}</TableHead>
 						<TableHead>{t("table.header.permissions")}</TableHead>
 						<TableHead></TableHead>
-						<TableHead></TableHead>
-						<TableHead></TableHead>
 					</TableRow>
 				</TableHeader>
 				<TableBody>
@@ -84,7 +82,7 @@ const APIKeyTable = ({ apiKeys }: { apiKeys: APIKey[] }) => {
 									))}
 								</div>
 							</TableCell>
-							<TableCell>
+							<TableCell className="flex items-center justify-center gap-x-6">
 								{apiKey.disabled ? (
 									<EyeClosed
 										size={16}
@@ -98,8 +96,6 @@ const APIKeyTable = ({ apiKeys }: { apiKeys: APIKey[] }) => {
 										onClick={() => onOpenUpdateStatusDialog(apiKey)}
 									/>
 								)}
-							</TableCell>
-							<TableCell>
 								<SquarePen
 									size={16}
 									className={cn(
@@ -110,8 +106,6 @@ const APIKeyTable = ({ apiKeys }: { apiKeys: APIKey[] }) => {
 										onOpenUpdateAPIKeyDialog(apiKey, apiKey.disabled)
 									}
 								/>
-							</TableCell>
-							<TableCell>
 								<Trash
 									size={16}
 									color="#ce4034"

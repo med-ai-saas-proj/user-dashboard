@@ -14,8 +14,8 @@ export const getApiKeys = async (projectId: string): Promise<APIKey[]> => {
 	);
 
 	return data.results.map((apiKey) => ({
-		id: apiKey.id,
-		projectId: apiKey.project_id,
+		id: apiKey.api_key_uuid,
+		projectId: apiKey.project_uuid,
 		name: apiKey.name,
 		description: apiKey.description,
 		hint: apiKey.hint,

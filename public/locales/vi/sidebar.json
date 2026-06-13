@@ -42,6 +42,9 @@
     },
     "billing": {
       "title": "Thanh toán"
+    },
+    "settings": {
+      "title": "Cài đặt"
     }
   },
   "project": {

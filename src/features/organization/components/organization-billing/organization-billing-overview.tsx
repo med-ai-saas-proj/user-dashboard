@@ -125,17 +125,17 @@ const OrganizationBillingOverview = () => {
 						</Link>
 						<Link
 							className="flex items-center gap-4 hover:cursor-pointer"
-							to="/organization/billing/preferences"
+							to="/organization/dashboard"
 						>
 							<div className="p-4 rounded-md border bg-card-gradient">
 								<CreditCard size={20} />
 							</div>
 							<div>
 								<p className="font-medium">
-									{t("overview.cards.preferences.title")}
+									{t("overview.cards.analytics.title")}
 								</p>
 								<p className="text-sm text-gray-500">
-									{t("overview.cards.preferences.description")}
+									{t("overview.cards.analytics.description")}
 								</p>
 							</div>
 						</Link>

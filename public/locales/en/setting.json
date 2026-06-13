@@ -1,4 +1,12 @@
 {
     "title": "Settings",
-    "description": "Manage your account settings and preferences."
+    "description": "Manage your account settings and preferences.",
+    "organization": {
+        "title": "Organization settings",
+        "description": "Manage your organization settings and preferences."
+    },
+    "project": {
+        "title": "Project settings",
+        "description": "Manage your project settings and preferences."
+    }
 }

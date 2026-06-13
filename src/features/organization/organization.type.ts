@@ -42,3 +42,11 @@ export type OrganizationProjectArchive = {
 	project_id: string;
 	archived: boolean;
 };
+
+export type OrganizationSettings = {
+	rate_limit: number;
+	spending_limit: number;
+	extra: {
+		additionalProperty: string;
+	};
+};

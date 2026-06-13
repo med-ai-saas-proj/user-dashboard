@@ -59,9 +59,9 @@
                 "title": "Billing history",
                 "description": "View your past invoices and payment records"
             },
-            "preferences": {
-                "title": "Preferences",
-                "description": "Manage billing information"
+            "analytics": {
+                "title": "Analytics",
+                "description": "Witness satistics and analytics"
             },
             "usageLimits": {
                 "title": "Usage limits",

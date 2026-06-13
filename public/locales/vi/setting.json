@@ -1,4 +1,12 @@
 {
     "title": "Cài đặt",
-    "description": "Quản lý cài đặt tài khoản và sở thích của bạn."
+    "description": "Quản lý cài đặt tài khoản và sở thích của bạn.",
+    "organization": {
+        "title": "Cài đặt tổ chức",
+        "description": "Quản lý cài đặt tổ chức và sở thích của bạn."
+    },
+    "project": {
+        "title": "Cài đặt dự án",
+        "description": "Quản lý cài đặt dự án và sở thích của bạn."
+    }
 }

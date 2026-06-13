@@ -1,9 +1,4 @@
-import {
-	Book,
-	ChartColumnBig,
-	GalleryVerticalEnd,
-	Settings,
-} from "lucide-react";
+import { Book, ChartColumnBig, GalleryVerticalEnd } from "lucide-react";
 import type * as React from "react";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
@@ -105,11 +100,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 				url: "/api-reference",
 				icon: Book,
 			},
-			{
-				name: t("management.settings.title"),
-				url: "/settings",
-				icon: Settings,
-			},
 		],
 
 		organization: [
@@ -124,6 +114,10 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 			{
 				name: t("organization.billing.title"),
 				url: "/organization/billing",
+			},
+			{
+				name: t("organization.settings.title"),
+				url: "/organization/settings",
 			},
 		],
 		project: [

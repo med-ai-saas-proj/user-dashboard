@@ -59,9 +59,9 @@
                 "title": "Lịch sử thanh toán",
                 "description": "Xem các hóa đơn và lịch sử thanh toán"
             },
-            "preferences": {
-                "title": "Tùy chọn",
-                "description": "Quản lý thông tin thanh toán"
+            "analytics": {
+                "title": "Thống kê",
+                "description": "Xem thống kê và phân tích"
             },
             "usageLimits": {
                 "title": "Giới hạn sử dụng",

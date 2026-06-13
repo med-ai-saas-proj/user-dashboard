@@ -35,7 +35,10 @@ const OrganizationBillingOverview = () => {
 						<div className="flex flex-col gap-2">
 							<p className="font-semibold">{t("overview.creditRemaining")}</p>
 							<p className="text-4xl font-semibold">
-								${currentCreditsInOrganization?.data?.amount ?? "0.00"}
+								$
+								{Number(currentCreditsInOrganization?.data?.amount).toFixed(
+									2
+								) ?? "0.00"}
 							</p>
 						</div>
 						<div className="flex items-center gap-2">

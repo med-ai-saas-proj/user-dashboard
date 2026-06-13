@@ -18,7 +18,7 @@ const OrganizationBillingHistory = () => {
 			initial="hidden"
 			animate="visible"
 		>
-			<div className="max-w-4xl mx-auto">
+			<div className="max-w-3xl mx-auto">
 				{(!invoices?.data || !invoices?.data.length) && (
 					<div className="flex flex-col gap-4">
 						<p className="text-sm">{t("history.period")}</p>

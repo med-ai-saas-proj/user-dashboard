@@ -21,3 +21,11 @@ export type ProjectRole = {
 export type ProjectPermissions = {
 	permissions: string[];
 };
+
+export type ProjectSettings = {
+	rate_limit: number;
+	spending_limit: number;
+	extra: {
+		additionalProperty: string;
+	};
+};

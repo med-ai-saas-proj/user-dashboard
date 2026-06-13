@@ -60,6 +60,9 @@
     },
     "buckets": {
       "title": "Dữ liệu RAG"
+    },
+    "settings": {
+      "title": "Cài đặt"
     }
   }
 }

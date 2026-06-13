@@ -149,6 +149,13 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 					: "/organization/projects",
 				disableActive: !projectId,
 			},
+			{
+				name: t("project.settings.title"),
+				url: projectId
+					? `/project/${projectId}/settings`
+					: "/organization/projects",
+				disableActive: !projectId,
+			},
 		],
 	};
 

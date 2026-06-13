@@ -31,6 +31,7 @@ import ProjectGeneral from "./routes/project-general";
 import ProjectPeople from "./routes/project-people";
 import ProjectRouteGuard from "./routes/project-route-guard";
 import OrganizationSettings from "./features/organization/components/organization-settings/organization-settings";
+import ProjectSettings from "./features/project/components/project-settings/project-settings";
 
 function App() {
 	return (
@@ -121,6 +122,7 @@ function App() {
 									</Route>
 									<Route path="api-keys" element={<APIKeysPage />} />
 									<Route path="buckets" element={<ProjectBucketsPage />} />
+									<Route path="settings" element={<ProjectSettings />} />
 								</Route>
 							</Route>
 						</Route>

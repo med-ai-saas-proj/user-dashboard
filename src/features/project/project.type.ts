@@ -25,7 +25,7 @@ export type ProjectPermissions = {
 export type ProjectSettings = {
 	rate_limit: number;
 	spending_limit: number;
-	extra: {
+	extra?: {
 		additionalProperty: string;
 	};
 };

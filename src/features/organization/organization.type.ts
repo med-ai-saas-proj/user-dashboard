@@ -46,7 +46,7 @@ export type OrganizationProjectArchive = {
 export type OrganizationSettings = {
 	rate_limit: number;
 	spending_limit: number;
-	extra: {
+	extra?: {
 		additionalProperty: string;
 	};
 };

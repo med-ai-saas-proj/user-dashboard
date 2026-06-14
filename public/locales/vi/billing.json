@@ -71,7 +71,12 @@
     },
     "history": {
         "period": "Hiển thị hóa đơn trong 12 tháng qua",
-        "noInvoices": "Không tìm thấy hóa đơn"
+        "noInvoices": "Không tìm thấy hóa đơn",
+        "filter": {
+            "unpaid": "Chưa thanh toán",
+            "paid": "Đã thanh toán"
+        },
+        "filterLabel": "Lọc theo trạng thái"
     },
     "historyItem": {
         "invoiceId": "Mã hóa đơn",

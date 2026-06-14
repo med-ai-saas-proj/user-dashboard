@@ -71,7 +71,12 @@
     },
     "history": {
         "period": "Showing invoices within the past 12 months",
-        "noInvoices": "No invoices found"
+        "noInvoices": "No invoices found",
+        "filter": {
+            "unpaid": "Unpaid",
+            "paid": "Paid"
+        },
+        "filterLabel": "Filter by status"
     },
     "historyItem": {
         "invoiceId": "Invoice ID",

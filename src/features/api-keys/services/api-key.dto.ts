@@ -18,8 +18,8 @@ export type UpdateApiKeyRequest = {
 };
 
 export type ApiKeyOutput = {
-	id: string;
-	project_id: string;
+	api_key_uuid: string;
+	project_uuid: string;
 	name: string;
 	description: string;
 	hint: string;

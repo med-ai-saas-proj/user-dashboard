@@ -59,9 +59,9 @@
                 "title": "Billing history",
                 "description": "View your past invoices and payment records"
             },
-            "preferences": {
-                "title": "Preferences",
-                "description": "Manage billing information"
+            "analytics": {
+                "title": "Analytics",
+                "description": "Witness satistics and analytics"
             },
             "usageLimits": {
                 "title": "Usage limits",
@@ -71,7 +71,12 @@
     },
     "history": {
         "period": "Showing invoices within the past 12 months",
-        "noInvoices": "No invoices found"
+        "noInvoices": "No invoices found",
+        "filter": {
+            "unpaid": "Unpaid",
+            "paid": "Paid"
+        },
+        "filterLabel": "Filter by status"
     },
     "historyItem": {
         "invoiceId": "Invoice ID",

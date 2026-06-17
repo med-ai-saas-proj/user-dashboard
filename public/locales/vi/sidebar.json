@@ -42,6 +42,9 @@
     },
     "billing": {
       "title": "Thanh toán"
+    },
+    "settings": {
+      "title": "Cài đặt"
     }
   },
   "project": {
@@ -57,6 +60,9 @@
     },
     "buckets": {
       "title": "Dữ liệu RAG"
+    },
+    "settings": {
+      "title": "Cài đặt"
     }
   }
 }

@@ -1,4 +1,40 @@
 {
     "title": "Cài đặt",
-    "description": "Quản lý cài đặt tài khoản và sở thích của bạn."
+    "description": "Quản lý cài đặt tài khoản và sở thích của bạn.",
+    "organization": {
+        "title": "Cài đặt tổ chức",
+        "description": "Quản lý cài đặt tổ chức và sở thích của bạn.",
+        "form": {
+            "header": "Chỉnh sửa",
+            "title": "Cập nhật cài đặt tổ chức",
+            "description": "Điều chỉnh giới hạn tốc độ và giới hạn chi tiêu cho tổ chức này.",
+            "rate_limit": "Giới hạn tốc độ",
+            "rate_limit_placeholder": "Ví dụ: 60",
+            "rate_limit_description": "Số lượng yêu cầu mỗi phút",
+            "spending_limit": "Giới hạn chi tiêu",
+            "spending_limit_placeholder": "Ví dụ: 500.00",
+            "spending_limit_description": "Chi tiêu tối đa mỗi tháng",
+            "save_changes": "Lưu thay đổi",
+            "saving": "Đang lưu...",
+            "cancel": "Hủy"
+        }
+    },
+    "project": {
+        "title": "Cài đặt dự án",
+        "description": "Quản lý cài đặt dự án và sở thích của bạn.",
+        "form": {
+            "header": "Chỉnh sửa",
+            "title": "Cập nhật cài đặt dự án",
+            "description": "Điều chỉnh giới hạn tốc độ và giới hạn chi tiêu cho dự án này.",
+            "rate_limit": "Giới hạn tốc độ",
+            "rate_limit_placeholder": "Ví dụ: 60",
+            "rate_limit_description": "Số lượng yêu cầu mỗi phút",
+            "spending_limit": "Giới hạn chi tiêu",
+            "spending_limit_placeholder": "Ví dụ: 500.00",
+            "spending_limit_description": "Chi tiêu tối đa mỗi tháng",
+            "save_changes": "Lưu thay đổi",
+            "saving": "Đang lưu...",
+            "cancel": "Hủy"
+        }
+    }
 }

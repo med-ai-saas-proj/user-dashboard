@@ -1,4 +1,40 @@
 {
     "title": "Settings",
-    "description": "Manage your account settings and preferences."
+    "description": "Manage your account settings and preferences.",
+    "organization": {
+        "title": "Organization settings",
+        "description": "Manage your organization settings and preferences.",
+        "form": {
+            "header": "Edit settings",
+            "title": "Update organization settings",
+            "description": "Adjust the rate limit and spending limit for this organization.",
+            "rate_limit": "Rate limit",
+            "rate_limit_placeholder": "e.g. 60",
+            "rate_limit_description": "Number of requests per minute",
+            "spending_limit": "Spending limit",
+            "spending_limit_placeholder": "e.g. 500.00",
+            "spending_limit_description": "Maximum spending per month",
+            "save_changes": "Save changes",
+            "saving": "Saving...",
+            "cancel": "Cancel"
+        }
+    },
+    "project": {
+        "title": "Project settings",
+        "description": "Manage your project settings and preferences.",
+        "form": {
+            "header": "Edit settings",
+            "title": "Update project settings",
+            "description": "Adjust the rate limit and spending limit for this project.",
+            "rate_limit": "Rate limit",
+            "rate_limit_placeholder": "e.g. 60",
+            "rate_limit_description": "Number of requests per minute",
+            "spending_limit": "Spending limit",
+            "spending_limit_placeholder": "e.g. 500.00",
+            "spending_limit_description": "Maximum spending per month",
+            "save_changes": "Save changes",
+            "saving": "Saving...",
+            "cancel": "Cancel"
+        }
+    }
 }

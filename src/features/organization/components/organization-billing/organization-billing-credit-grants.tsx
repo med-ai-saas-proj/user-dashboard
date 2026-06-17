@@ -23,7 +23,7 @@ const OrganizationBillingCreditGrants = () => {
 	const { t, i18n } = useTranslation("billing");
 	const lang = i18n.language;
 
-	const limit = 1;
+	const limit = 10;
 	const [page, setPage] = useState(1);
 
 	const { data: currentCreditsInOrganization } = useGetCredits();

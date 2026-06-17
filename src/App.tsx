@@ -10,7 +10,6 @@ import LoginPage from "@/routes/login";
 import OrganizationPeoplePage from "@/routes/organization-people";
 import { ProtectedRoute } from "@/routes/protected-route";
 import { PublicRoute } from "@/routes/public-route";
-import SettingPage from "@/routes/setting";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { Toaster } from "sonner";
@@ -31,6 +30,8 @@ import ProjectBucketsPage from "./routes/project-buckets";
 import ProjectGeneral from "./routes/project-general";
 import ProjectPeople from "./routes/project-people";
 import ProjectRouteGuard from "./routes/project-route-guard";
+import OrganizationSettings from "./features/organization/components/organization-settings/organization-settings";
+import ProjectSettings from "./features/project/components/project-settings/project-settings";
 
 function App() {
 	return (
@@ -71,7 +72,6 @@ function App() {
 							</Route>
 							<Route path="/api-keys" element={<APIKeysPage />} />
 							<Route path="/api-reference" element={<APIReferencePage />} />
-							<Route path="/settings" element={<SettingPage />} />
 							<Route path="/organization">
 								<Route path="people" element={<OrganizationPeoplePage />}>
 									<Route index element={<Navigate to="members" replace />} />
@@ -108,6 +108,7 @@ function App() {
 										element={<OrganizationBillingActivityLog />}
 									/>
 								</Route>
+								<Route path="settings" element={<OrganizationSettings />} />
 							</Route>
 
 							<Route path="/project/:projectId">
@@ -121,6 +122,7 @@ function App() {
 									</Route>
 									<Route path="api-keys" element={<APIKeysPage />} />
 									<Route path="buckets" element={<ProjectBucketsPage />} />
+									<Route path="settings" element={<ProjectSettings />} />
 								</Route>
 							</Route>
 						</Route>

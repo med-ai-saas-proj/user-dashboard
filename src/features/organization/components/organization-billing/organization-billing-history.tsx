@@ -4,12 +4,21 @@ import { useGetInvoices } from "../../hooks/organization-billing/use-get-invoice
 import { useTranslation } from "react-i18next";
 import { motion } from "framer-motion";
 import { itemVariants } from "@/lib/animations";
+import { useState } from "react";
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/components/shadcn/select";
+import { Label } from "@/components/shadcn/label";
 
 const OrganizationBillingHistory = () => {
 	const { t } = useTranslation("billing");
-	const { data: invoices } = useGetInvoices({
-		paid: true,
-	});
+	const [paid, setPaid] = useState(false);
+
+	const { data: invoices } = useGetInvoices({ paid });
 
 	return (
 		<motion.div
@@ -18,7 +27,27 @@ const OrganizationBillingHistory = () => {
 			initial="hidden"
 			animate="visible"
 		>
-			<div className="max-w-4xl mx-auto">
+			<div className="max-w-3xl mx-auto">
+				<div className="mb-6 flex items-center justify-start gap-x-4">
+					<Label htmlFor="billing-history-filter">
+						{t("history.filterLabel")}
+					</Label>
+					<Select
+						value={paid ? "paid" : "unpaid"}
+						onValueChange={(value) => setPaid(value === "paid")}
+					>
+						<SelectTrigger className="w-40" id="billing-history-filter">
+							<SelectValue />
+						</SelectTrigger>
+						<SelectContent>
+							<SelectItem value="unpaid">
+								{t("history.filter.unpaid")}
+							</SelectItem>
+							<SelectItem value="paid">{t("history.filter.paid")}</SelectItem>
+						</SelectContent>
+					</Select>
+				</div>
+
 				{(!invoices?.data || !invoices?.data.length) && (
 					<div className="flex flex-col gap-4">
 						<p className="text-sm">{t("history.period")}</p>

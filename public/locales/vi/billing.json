@@ -59,9 +59,9 @@
                 "title": "Lịch sử thanh toán",
                 "description": "Xem các hóa đơn và lịch sử thanh toán"
             },
-            "preferences": {
-                "title": "Tùy chọn",
-                "description": "Quản lý thông tin thanh toán"
+            "analytics": {
+                "title": "Thống kê",
+                "description": "Xem thống kê và phân tích"
             },
             "usageLimits": {
                 "title": "Giới hạn sử dụng",
@@ -71,7 +71,12 @@
     },
     "history": {
         "period": "Hiển thị hóa đơn trong 12 tháng qua",
-        "noInvoices": "Không tìm thấy hóa đơn"
+        "noInvoices": "Không tìm thấy hóa đơn",
+        "filter": {
+            "unpaid": "Chưa thanh toán",
+            "paid": "Đã thanh toán"
+        },
+        "filterLabel": "Lọc theo trạng thái"
     },
     "historyItem": {
         "invoiceId": "Mã hóa đơn",

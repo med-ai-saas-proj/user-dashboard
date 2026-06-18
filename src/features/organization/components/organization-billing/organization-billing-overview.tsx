@@ -14,12 +14,13 @@ import { itemVariants } from "@/lib/animations";
 
 const OrganizationBillingOverview = () => {
 	const { t } = useTranslation("billing");
+
 	const [addPaymentDetailsOpen, setAddPaymentDetailsOpen] = useState(false);
 	const [updatePaymentDetailsOpen, setUpdatePaymentDetailsOpen] =
 		useState(false);
 	const [stripePay, setStripePay] = useState(false);
-	const billingSourceId = useBillingStore((state) => state.billingSourceId);
 
+	const billingSourceId = useBillingStore((state) => state.billingSourceId);
 	const { data: currentCreditsInOrganization } = useGetCredits();
 
 	return (

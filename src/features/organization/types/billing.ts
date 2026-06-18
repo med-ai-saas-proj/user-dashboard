@@ -57,6 +57,7 @@ export type GetBillingSourceResponse = {
 			postal_code: string;
 			country: string;
 		};
+		default_payment_method: string;
 	};
 };
 

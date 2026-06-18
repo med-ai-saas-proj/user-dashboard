@@ -5,12 +5,12 @@ import {
 	Mail,
 	Phone,
 	TriangleAlert,
-	Trash,
 } from "lucide-react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import {
 	Card,
 	CardContent,
+	CardFooter,
 	CardHeader,
 	CardTitle,
 } from "@/components/shadcn/card";
@@ -20,11 +20,24 @@ import DeleteBillingMethodDialog from "./dialogs/delete-billing-method-dialog";
 import { useTranslation } from "react-i18next";
 import { motion } from "framer-motion";
 import { itemVariants } from "@/lib/animations";
+import { Button } from "@/components/shadcn/button";
+import SetDefaultBillingMethodDialog from "./dialogs/set-default-payment-method";
+import { useBillingStore } from "../../store/billing";
+import { cn } from "@/lib/utils";
 
 const OrganizationBillingPaymentMethods = () => {
 	const { t, i18n } = useTranslation("billing");
+
+	const defaultPaymentMethodId = useBillingStore(
+		(state) => state.defaultPaymentMethodId
+	);
+	const setDefaultPaymentMethodId = useBillingStore(
+		(state) => state.setDefaultPaymentMethodId
+	);
+
 	const { data: paymentMethods, isLoading } = useGetPaymentMethods();
 	const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+	const [isSetDefaultDialogOpen, setIsSetDefaultDialogOpen] = useState(false);
 	const [selectedPaymentMethodId, setSelectedPaymentMethodId] = useState<
 		string | null
 	>(null);
@@ -35,6 +48,26 @@ const OrganizationBillingPaymentMethods = () => {
 		setSelectedPaymentMethodId(paymentMethodId);
 		setIsDeleteDialogOpen(true);
 	};
+
+	const openSetDefaultDialog = (paymentMethodId: string) => {
+		setSelectedPaymentMethodId(paymentMethodId);
+		setIsSetDefaultDialogOpen(true);
+	};
+
+	const orderedPaymentMethods = useMemo(() => {
+		if (!paymentMethods || paymentMethods.length === 0) return [];
+
+		const methodsCopy = [...paymentMethods];
+
+		const index = methodsCopy.findIndex((m) => m.id === defaultPaymentMethodId);
+
+		if (index > 0) {
+			const [defaultItem] = methodsCopy.splice(index, 1);
+			methodsCopy.unshift(defaultItem);
+		}
+
+		return methodsCopy;
+	}, [paymentMethods, defaultPaymentMethodId]);
 
 	return (
 		<motion.div
@@ -71,7 +104,7 @@ const OrganizationBillingPaymentMethods = () => {
 						</Card>
 					) : hasPaymentMethods ? (
 						<div className="flex flex-col items-center gap-y-8">
-							{paymentMethods?.map((paymentMethod) => {
+							{orderedPaymentMethods.map((paymentMethod) => {
 								const billingAddress = [
 									paymentMethod.billing_details.address.line1,
 									paymentMethod.billing_details.address.line2,
@@ -87,16 +120,11 @@ const OrganizationBillingPaymentMethods = () => {
 									paymentMethod.created * 1000
 								).toLocaleDateString(i18n.language);
 
+								const isDefault = paymentMethod.id === defaultPaymentMethodId;
+
 								return (
-									<Card key={paymentMethod.id} className="w-full relative">
-										<div className="absolute -top-2 -right-2 p-2 rounded-full border bg-background">
-											<Trash
-												size={16}
-												className="text-destructive cursor-pointer"
-												onClick={() => openDeleteDialog(paymentMethod.id)}
-											/>
-										</div>
-										<CardHeader className="border-b bg-muted/20">
+									<Card key={paymentMethod.id} className="w-full py-0">
+										<CardHeader className="border-b bg-muted/20 pt-6">
 											<CardTitle>
 												<div className="flex items-start justify-between gap-4">
 													<div className="flex items-center gap-3">
@@ -125,8 +153,8 @@ const OrganizationBillingPaymentMethods = () => {
 												</div>
 											</CardTitle>
 										</CardHeader>
-										<CardContent>
-											<div className="grid gap-4 sm:grid-cols-4">
+										<CardContent className={cn(isDefault ? "pb-6" : "pb-3")}>
+											<div className="flex flex-col gap-4 sm:flex-row sm:justify-between sm:items-start">
 												<div className="flex items-start gap-3">
 													<Mail
 														size={16}
@@ -193,6 +221,32 @@ const OrganizationBillingPaymentMethods = () => {
 												</div>
 											</div>
 										</CardContent>
+										{!isDefault && (
+											<CardFooter className="flex items-center justify-end gap-2 pb-6">
+												<Button
+													size="sm"
+													className="text-sm bg-destructive hover:bg-destructive/80"
+													onClick={() => openDeleteDialog(paymentMethod.id)}
+												>
+													{t("paymentMethods.actions.delete")}
+												</Button>
+												<Button
+													size="sm"
+													variant="default"
+													className="text-sm"
+													onClick={() => openSetDefaultDialog(paymentMethod.id)}
+												>
+													{t("paymentMethods.actions.setDefault")}
+												</Button>
+											</CardFooter>
+										)}
+										{isDefault && (
+											<CardFooter className="flex items-center justify-end gap-2 pb-6">
+												<p className="text-sm text-successful font-medium px-4 py-1 rounded-md border border-successful-status bg-successful-status/25">
+													{t("paymentMethods.actions.default")}
+												</p>
+											</CardFooter>
+										)}
 									</Card>
 								);
 							})}
@@ -222,6 +276,17 @@ const OrganizationBillingPaymentMethods = () => {
 						setSelectedPaymentMethodId(null);
 					}
 				}}
+			/>
+			<SetDefaultBillingMethodDialog
+				open={isSetDefaultDialogOpen}
+				paymentMethodId={selectedPaymentMethodId}
+				onOpenChange={(open) => {
+					setIsSetDefaultDialogOpen(open);
+					if (!open) {
+						setSelectedPaymentMethodId(null);
+					}
+				}}
+				setDefaultPaymentMethodId={setDefaultPaymentMethodId}
 			/>
 		</motion.div>
 	);

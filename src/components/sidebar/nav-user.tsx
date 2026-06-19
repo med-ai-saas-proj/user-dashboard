@@ -1,11 +1,4 @@
-import {
-	BadgeCheck,
-	Bell,
-	ChevronsUpDown,
-	CreditCard,
-	LogOut,
-	Sparkles,
-} from "lucide-react";
+import { ChevronsUpDown, Languages, LogOut } from "lucide-react";
 
 import { Avatar, AvatarFallback } from "@/components/shadcn/avatar";
 import {
@@ -25,10 +18,16 @@ import {
 } from "@/components/shadcn/sidebar";
 import { useSignOut } from "@/features/auth/hooks/use-sign-out";
 import type { UserInfo } from "@/features/auth/store/auth-store";
+import { useTranslation } from "react-i18next";
+import { locales } from "@/config/i18n";
+import { cn } from "@/lib/utils";
 
 export function NavUser({ user }: { user: UserInfo }) {
 	const { isMobile } = useSidebar();
 	const { mutate: signOut } = useSignOut();
+	const { i18n } = useTranslation();
+	const currentLocale = i18n.language;
+
 	const avatarText = user.preferred_username
 		? user.preferred_username.substring(0, 2).toUpperCase()
 		: "U";
@@ -75,25 +74,22 @@ export function NavUser({ user }: { user: UserInfo }) {
 						</DropdownMenuLabel>
 						<DropdownMenuSeparator />
 						<DropdownMenuGroup>
-							<DropdownMenuItem>
-								<Sparkles />
-								Upgrade to Pro
-							</DropdownMenuItem>
-						</DropdownMenuGroup>
-						<DropdownMenuSeparator />
-						<DropdownMenuGroup>
-							<DropdownMenuItem>
-								<BadgeCheck />
-								Account
-							</DropdownMenuItem>
-							<DropdownMenuItem>
-								<CreditCard />
-								Billing
-							</DropdownMenuItem>
-							<DropdownMenuItem>
-								<Bell />
-								Notifications
-							</DropdownMenuItem>
+							{locales.map((locale) => (
+								<DropdownMenuItem
+									key={locale.code}
+									onClick={() => i18n.changeLanguage(locale.code)}
+									className={cn(
+										"gap-2",
+										currentLocale === locale.code && "bg-accent font-medium"
+									)}
+								>
+									<Languages className="size-4" />
+									{locale.label === "EN" ? "English" : "Tiếng Việt"}
+									{currentLocale === locale.code && (
+										<span className="ml-auto h-1.5 w-1.5 rounded-full bg-primary" />
+									)}
+								</DropdownMenuItem>
+							))}
 						</DropdownMenuGroup>
 						<DropdownMenuSeparator />
 						<DropdownMenuItem onClick={() => signOut()}>

@@ -20,9 +20,9 @@ import {
 	SidebarFooter,
 	SidebarHeader,
 	SidebarRail,
-	useSidebar,
+	// useSidebar,
 } from "@/components/shadcn/sidebar";
-import { LocaleSwitcher } from "@/components/sidebar/locale-switcher";
+// import { LocaleSwitcher } from "@/components/sidebar/locale-switcher";
 import { NavProjects } from "@/components/sidebar/nav-projects";
 import { NavUser } from "@/components/sidebar/nav-user";
 import { TeamSwitcher } from "@/components/sidebar/team-switcher";
@@ -34,7 +34,7 @@ import { useProjectStore } from "@/features/project/store/project";
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 	const { t } = useTranslation("sidebar");
 	const { userInfo, organization } = useAuthStore();
-	const { state } = useSidebar();
+	// const { state } = useSidebar();
 
 	const params = useParams();
 	const { data: projectList } = useGetOrganizationProjects({
@@ -199,9 +199,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 			</SidebarContent>
 
 			<SidebarFooter>
-				{state === "expanded" && (
+				{/* {state === "expanded" && (
 					<LocaleSwitcher className="mx-auto invisible sm:visible" />
-				)}
+				)} */}
 				{data.user && <NavUser user={data.user} />}
 			</SidebarFooter>
 			<SidebarRail />

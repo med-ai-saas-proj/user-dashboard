@@ -1,18 +1,26 @@
-import { API_ROUTES } from '@/config/api-routes';
-import type { GetApiKeyResponse } from '@/features/api-keys/services/api-key.dto';
-import type { APIKey } from '@/features/api-keys/api-key.type';
-import apiClient from '@/query/api-client';
+import { API_ROUTES } from "@/config/api-routes";
+import type { GetApiKeyResponse } from "@/features/api-keys/services/api-key.dto";
+import apiClient from "@/query/api-client";
+import type { APIKey } from "../api-key.type";
 
-export const getApiKeys = async (): Promise<APIKey[]> => {
+export const getApiKeys = async (projectId: string): Promise<APIKey[]> => {
 	const { data } = await apiClient.get<GetApiKeyResponse>(
-		API_ROUTES.MANAGEMENT.API_KEYS
+		API_ROUTES.MANAGEMENT.API_KEYS,
+		{
+			params: {
+				project_id: projectId,
+			},
+		}
 	);
-	return data.map((apiKey) => ({
-		id: apiKey.id,
+
+	return data.results.map((apiKey) => ({
+		id: apiKey.api_key_uuid,
+		projectId: apiKey.project_uuid,
 		name: apiKey.name,
 		description: apiKey.description,
 		hint: apiKey.hint,
 		createdAt: new Date(apiKey.created_at),
 		permissions: apiKey.permissions,
+		disabled: apiKey.disabled,
 	}));
 };

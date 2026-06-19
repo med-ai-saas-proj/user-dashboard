@@ -5,9 +5,9 @@ import {
 	CreditCard,
 	LogOut,
 	Sparkles,
-} from 'lucide-react';
+} from "lucide-react";
 
-import { Avatar, AvatarFallback } from '@/components/shadcn/avatar';
+import { Avatar, AvatarFallback } from "@/components/shadcn/avatar";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -16,22 +16,22 @@ import {
 	DropdownMenuLabel,
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
-} from '@/components/shadcn/dropdown-menu';
+} from "@/components/shadcn/dropdown-menu";
 import {
 	SidebarMenu,
 	SidebarMenuButton,
 	SidebarMenuItem,
 	useSidebar,
-} from '@/components/shadcn/sidebar';
-import { useSignOut } from '@/features/auth/hooks/use-sign-out';
-import type { UserInfo } from '@/features/auth/store/auth-store';
+} from "@/components/shadcn/sidebar";
+import { useSignOut } from "@/features/auth/hooks/use-sign-out";
+import type { UserInfo } from "@/features/auth/store/auth-store";
 
 export function NavUser({ user }: { user: UserInfo }) {
 	const { isMobile } = useSidebar();
 	const { mutate: signOut } = useSignOut();
 	const avatarText = user.preferred_username
 		? user.preferred_username.substring(0, 2).toUpperCase()
-		: 'U';
+		: "U";
 
 	return (
 		<SidebarMenu>
@@ -56,7 +56,7 @@ export function NavUser({ user }: { user: UserInfo }) {
 					</DropdownMenuTrigger>
 					<DropdownMenuContent
 						className="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
-						side={isMobile ? 'bottom' : 'right'}
+						side={isMobile ? "bottom" : "right"}
 						align="end"
 						sideOffset={4}
 					>

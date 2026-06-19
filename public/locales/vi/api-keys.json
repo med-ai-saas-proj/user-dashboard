@@ -16,6 +16,8 @@
     "form": {
       "nameLabel": "Tên khóa",
       "namePlaceholder": "Khóa API của tôi",
+      "descriptionLabel": "Mô tả",
+      "descriptionPlaceholder": "Nhập mô tả cho khóa API này",
       "action": {
         "create": "Tạo khóa bí mật",
         "creating": "Đang tạo..."
@@ -35,6 +37,10 @@
   "table": {
     "header": {
       "name": "Tên",
+      "status": "Trạng thái",
+      "disabled": "Đã vô hiệu hóa",
+      "enabled": "Đã kích hoạt",
+      "projectId": "ID dự án",
       "description": "Mô tả",
       "secretKey": "Khóa bí mật",
       "permissions": "Quyền",
@@ -61,7 +67,26 @@
     "title": "Chỉnh sửa khóa bí mật",
     "description": "Chỉnh sửa thông tin khóa API của bạn",
     "form": {
-      "nameLabel": "Tên"
+      "nameLabel": "Tên",
+      "descriptionLabel": "Mô tả",
+      "descriptionPlaceholder": "Nhập mô tả cho khóa API này"
+    }
+  },
+
+  "deleteDialog": {
+    "title": "Xóa khóa API",
+    "description": "Bạn có chắc chắn muốn xóa khóa API này không? Hành động này không thể hoàn tác."
+  },
+
+  "statusDialog": {
+    "agree": "Đồng ý",
+    "enable": {
+      "title": "Kích hoạt khóa API",
+      "description": "Bạn có chắc chắn muốn kích hoạt khóa API này không? Khóa sẽ có thể truy cập API trở lại."
+    },
+    "disable": {
+      "title": "Vô hiệu hóa khóa API",
+      "description": "Bạn có chắc chắn muốn vô hiệu hóa khóa API này không? Khóa sẽ không thể truy cập API nữa."
     }
   },
 

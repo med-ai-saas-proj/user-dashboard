@@ -1,0 +1,130 @@
+import { Button } from "@/components/shadcn/button";
+import { Field, FieldLabel } from "@/components/shadcn/field";
+import { Input } from "@/components/shadcn/input";
+import { Textarea } from "@/components/shadcn/textarea";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect, useMemo } from "react";
+import { useTranslation } from "react-i18next";
+import { useForm } from "react-hook-form";
+import z from "zod";
+import { useUpdateProject } from "../../hooks/project-general/use-update-project";
+import { useParams } from "react-router-dom";
+import { toast } from "sonner";
+import { useGetProjectDetails } from "../../hooks/project-general/use-get-project-details";
+import { motion } from "framer-motion";
+import { itemVariants } from "@/lib/animations";
+
+const createProjectGeneralSchema = (messages: {
+	projectNameRequired: string;
+	projectIdRequired: string;
+}) =>
+	z.object({
+		projectName: z.string().min(1, messages.projectNameRequired),
+		projectId: z.string().min(1, messages.projectIdRequired),
+		projectDescription: z.string().optional(),
+		// disableAPIKeys: z.boolean(),
+	});
+
+type ProjectGeneralFormData = z.infer<
+	ReturnType<typeof createProjectGeneralSchema>
+>;
+
+const ProjectGeneralForm = () => {
+	const { t } = useTranslation("project");
+	const { t: tCommon } = useTranslation("common");
+
+	const params = useParams();
+	const projectId = params.projectId || "";
+
+	const validationMessages = useMemo(
+		() => ({
+			projectNameRequired: t("general.form.validation.projectNameRequired"),
+			projectIdRequired: t("general.form.validation.projectIdRequired"),
+		}),
+		[t]
+	);
+
+	const { data: projectInfo } = useGetProjectDetails(projectId);
+	const { mutate: updateProject, isPending } = useUpdateProject();
+
+	const projectGeneralSchema = useMemo(
+		() => createProjectGeneralSchema(validationMessages),
+		[validationMessages]
+	);
+
+	const { register, handleSubmit, reset } = useForm<ProjectGeneralFormData>({
+		resolver: zodResolver(projectGeneralSchema),
+		defaultValues: {
+			projectName: projectInfo?.name || "Default Project",
+			projectId,
+			projectDescription:
+				projectInfo?.description || "Default project description",
+		},
+	});
+
+	const onSubmit = (data: ProjectGeneralFormData) => {
+		updateProject(
+			{
+				projectId: data.projectId,
+				projectName: data.projectName,
+				projectDescription: data.projectDescription || undefined,
+			},
+			{
+				onSuccess: () => {
+					toast.success(tCommon("requestDone"));
+				},
+			}
+		);
+	};
+
+	useEffect(() => {
+		reset({
+			projectName: projectInfo?.name || "Default Project",
+			projectId,
+			projectDescription:
+				projectInfo?.description || "Default project description",
+		});
+	}, [projectInfo, projectId, reset]);
+
+	return (
+		<motion.div
+			className="w-full"
+			variants={itemVariants}
+			initial="hidden"
+			animate="visible"
+		>
+			<form
+				onSubmit={handleSubmit(onSubmit)}
+				className="space-y-4 max-w-md mx-auto"
+			>
+				<Field>
+					<FieldLabel htmlFor="projectName">
+						{t("general.form.fields.projectName")}
+					</FieldLabel>
+					<Input id="projectName" {...register("projectName")} />
+				</Field>
+				<Field>
+					<FieldLabel htmlFor="projectId">
+						{t("general.form.fields.projectId")}
+					</FieldLabel>
+					<Input id="projectId" {...register("projectId")} disabled />
+				</Field>
+				<Field>
+					<FieldLabel htmlFor="projectDescription">
+						{t("general.form.fields.projectDescription")}
+					</FieldLabel>
+					<Textarea
+						id="projectDescription"
+						{...register("projectDescription")}
+						placeholder={t("general.form.fields.projectDescriptionPlaceholder")}
+					/>
+				</Field>
+				<Button type="submit" disabled={isPending}>
+					{t("general.form.actions.save")}
+				</Button>
+			</form>
+		</motion.div>
+	);
+};
+
+export default ProjectGeneralForm;

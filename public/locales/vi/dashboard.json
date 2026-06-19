@@ -1,0 +1,64 @@
+{
+    "title": "Bảng thống kê",
+    "tabs": {
+        "organization": "Tổ chức",
+        "project": "Dự án"
+    },
+    "kpiCard": {
+        "totalRequest": "Tổng số yêu cầu",
+        "totalCost": "Tổng chi phí",
+        "totalSpent": "Tổng chi tiêu",
+        "totalTransactions": "Tổng giao dịch",
+        "change": {
+            "compare": "{{value}}% {{compareLabel}}",
+            "vsLastMonth": "so với tháng trước",
+            "vsLastWeek": "so với tuần trước",
+            "vsLastYear": "so với năm trước"
+        }
+    },
+    "datePicker": {
+        "label": "Chọn ngày",
+        "placeholder": "Chọn ngày"
+    },
+    "monthPicker": {
+        "label": "Chọn tháng",
+        "placeholder": "Chọn tháng"
+    },
+    "yearPicker": {
+        "label": "Chọn năm",
+        "placeholder": "Chọn năm"
+    },
+    "rangePicker": {
+        "label": "Chọn khoảng thời gian",
+        "placeholder": "Chọn khoảng thời gian"
+    },
+    "periodPicker": {
+        "label": "Kỳ",
+        "placeholder": "Chọn kỳ",
+        "options": {
+            "daily": "Hàng ngày",
+            "weekly": "Hàng tuần",
+            "monthly": "Hàng tháng",
+            "yearly": "Hàng năm"
+        }
+    },
+    "timescalePicker": {
+        "label": "Tỷ lệ thời gian",
+        "placeholder": "Chọn tỷ lệ thời gian"
+    },
+    "chart": {
+        "requestVolumeAndCost": "Biểu đồ khối lượng yêu cầu & chi phí",
+        "tokenUsageOverTime": "Biểu đồ sử dụng token theo thời gian",
+        "totalExpenditureTrend": "Xu hướng chi tiêu tổng thể",
+        "transactionVolumeTrend": "Xu hướng khối lượng giao dịch",
+        "series": {
+            "requests": "Yêu cầu",
+            "cost": "Chi phí",
+            "total": "Tổng"
+        }
+    },
+    "kpiSection": {
+        "title": "Chỉ số hiệu suất chính",
+        "description": "Theo dõi hiệu suất hệ thống của bạn với các chỉ số thời gian thực. Giám sát tổng số yêu cầu và chi phí để tối ưu hóa việc sử dụng và phân bổ ngân sách."
+    }
+}

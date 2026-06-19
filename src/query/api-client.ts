@@ -16,6 +16,10 @@ apiClient.interceptors.request.use(
 		Object.entries(headers).forEach(([key, value]) => {
 			config.headers.set(key, value);
 		});
+		if (config.data instanceof FormData) {
+			config.headers.delete("Content-Type");
+			config.headers.delete("content-type");
+		}
 		return config;
 	},
 	(error) => Promise.reject(error)

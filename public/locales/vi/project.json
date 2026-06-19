@@ -1,0 +1,137 @@
+{
+    "general": {
+        "pageTitle": "Cài đặt Dự án",
+        "heading": "Cài đặt Dự án",
+        "archiveButton": "Lưu trữ",
+        "form": {
+            "fields": {
+                "projectName": "Tên dự án",
+                "projectId": "Mã dự án",
+                "projectDescription": "Mô tả",
+                "projectDescriptionPlaceholder": "Nhập mô tả ngắn cho dự án",
+                "disableApiKeys": "Vô hiệu hóa API Keys"
+            },
+            "actions": {
+                "save": "Lưu"
+            },
+            "validation": {
+                "projectNameRequired": "Tên dự án là bắt buộc",
+                "projectIdRequired": "Mã dự án là bắt buộc",
+                "projectDescriptionRequired": "Mô tả là bắt buộc"
+            },
+            "success": {
+                "title": "Thành công",
+                "updated": "Cài đặt dự án đã được cập nhật thành công"
+            }
+        }
+    },
+    "people": {
+        "pageTitle": "Mọi người",
+        "heading": "Mọi người & Quyền hạn",
+        "tabs": {
+            "members": "Thành viên",
+            "roles": "Vai trò"
+        },
+        "layout": {
+            "searchPlaceholder": "Tìm kiếm...",
+            "addMember": "Thêm thành viên",
+            "inviteMember": "Mời thành viên",
+            "search": "Tìm kiếm"
+        },
+        "members": {
+            "loading": "Đang tải thành viên...",
+            "emptySelection": "Chọn một thành viên để xem chi tiết",
+            "item": {
+                "actions": {
+                    "remove": "Xóa",
+                    "permissions": "Quyền hạn",
+                    "close": "Đóng",
+                    "save": "Lưu"
+                },
+                "removeDialog": {
+                    "title": "Xác nhận xóa",
+                    "description": "Bạn có chắc chắn muốn xóa <bold>{{username}}</bold> khỏi dự án này không?"
+                },
+                "permissionsDialog": {
+                    "title": "Quyền hạn"
+                }
+            }
+        },
+        "role": {
+            "loading": "Đang tải vai trò...",
+            "createRole": "Tạo vai trò",
+            "actions": {
+                "assignments": "Phân công",
+                "permissions": "Quyền hạn"
+            },
+            "dropdown": {
+                "edit": "Chỉnh sửa",
+                "delete": "Xóa"
+            },
+            "dialog": {
+                "title": {
+                    "create": "Tạo vai trò",
+                    "edit": "Chỉnh sửa vai trò"
+                },
+                "fields": {
+                    "roleName": "Tên vai trò",
+                    "description": "Mô tả"
+                },
+                "actions": {
+                    "close": "Đóng",
+                    "create": "Tạo",
+                    "saveChanges": "Lưu thay đổi",
+                    "saving": "Đang lưu..."
+                },
+                "validation": {
+                    "roleNameRequired": "Tên vai trò là bắt buộc"
+                }
+            },
+            "deleteDialog": {
+                "title": "Xóa vai trò",
+                "description": "Bạn có chắc chắn muốn xóa vai trò <bold>{{roleName}}</bold> không?",
+                "cancel": "Hủy",
+                "delete": "Xóa"
+            }
+        },
+        "dialog": {
+            "title": "Thêm thành viên mới",
+            "description": "Mời thành viên mới tham gia dự án của bạn qua email.",
+            "submit": "Gửi lời mời",
+            "tabs": {
+                "selectUser": "Chọn người dùng",
+                "enterUserEmail": "Nhập email người dùng"
+            },
+            "actions": {
+                "close": "Đóng",
+                "addMember": "Thêm thành viên"
+            },
+            "roleLabel": "Vai trò",
+            "roleInvalid": "Vai trò là bắt buộc",
+            "roles": {
+                "member": {
+                    "name": "Thành viên",
+                    "description": "Có thể đọc/ghi dữ liệu. Không có quyền quản lý thành viên trực tiếp."
+                },
+                "owner": {
+                    "name": "Chủ sở hữu",
+                    "description": "Toàn quyền kiểm soát: có thể quản lý cài đặt dự án và thành viên."
+                }
+            },
+            "with-email": {
+                "emailLabel": "Email",
+                "emailPlaceholder": "Nhập địa chỉ email",
+                "emailInvalid": "Vui lòng nhập địa chỉ email hợp lệ"
+            },
+            "without-email": {
+                "userLabel": "Người dùng",
+                "userPlaceholder": "Chọn một người dùng",
+                "userInvalid": "Người dùng là bắt buộc",
+                "noUsers": "Không tìm thấy người dùng nào.",
+                "usernameLabel": "Tên người dùng",
+                "usernamePlaceholder": "Nhập tên người dùng",
+                "usernameInvalid": "Vui lòng nhập tên người dùng hợp lệ"
+            }
+        }
+    }
+}

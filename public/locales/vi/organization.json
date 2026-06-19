@@ -1,0 +1,162 @@
+{
+    "people": {
+        "pageTitle": "Thành viên",
+        "heading": "Thành viên & Phân quyền",
+        "tabs": {
+            "members": "Thành viên",
+            "invitations": "Lời mời",
+            "roles": "Vai trò"
+        },
+        "roles": {
+            "description": "Quản lý vai trò và quyền trong tổ chức của bạn tại đây."
+        },
+        "layout": {
+            "searchPlaceholder": "Tìm kiếm...",
+            "addMember": "Thêm thành viên",
+            "inviteMember": "Mời thành viên",
+            "search": "Tìm kiếm"
+        },
+        "dialog": {
+            "title": "Thêm thành viên mới",
+            "description": "Mời thành viên mới tham gia tổ chức của bạn qua email.",
+            "emailLabel": "Email",
+            "emailPlaceholder": "Nhập địa chỉ email",
+            "emailInvalid": "Vui lòng nhập địa chỉ email hợp lệ",
+            "submit": "Gửi lời mời"
+        },
+        "members": {
+            "loading": "Đang tải danh sách thành viên...",
+            "emptySelection": "Chọn một thành viên để xem chi tiết",
+            "item": {
+                "actions": {
+                    "remove": "Xóa",
+                    "permissions": "Quyền hạn",
+                    "close": "Đóng",
+                    "save": "Lưu"
+                },
+                "removeDialog": {
+                    "title": "Xác nhận xóa",
+                    "description": "Bạn có chắc chắn muốn xóa {{username}} khỏi tổ chức này không?"
+                },
+                "permissionsDialog": {
+                    "title": "Quyền hạn"
+                }
+            },
+            "title": "Chi tiết thành viên"
+        },
+        "invitations": {
+            "loading": "Đang tải danh sách lời mời...",
+            "item": {
+                "actions": {
+                    "resend": "Gửi lại",
+                    "remove": "Xóa",
+                    "cancel": "Hủy"
+                },
+                "removeDialog": {
+                    "title": "Xác nhận xóa",
+                    "description": "Bạn có chắc chắn muốn xóa lời mời cho {{email}} không?"
+                }
+            },
+            "noInvitations": "Không có lời mời nào đang chờ xử lý."
+        }
+    },
+    "project": {
+        "pageTitle": "Dự án tổ chức",
+        "heading": "Dự án tổ chức",
+        "header": {
+            "searchPlaceholder": "Tìm kiếm dự án...",
+            "filterPlaceholder": "Lọc theo trạng thái",
+            "filterOptions": {
+                "active": "Đang hoạt động",
+                "archived": "Đã lưu trữ"
+            }
+        },
+        "content": {
+            "tableHeaders": {
+                "name": "TÊN",
+                "id": "ID",
+                "description": "MÔ TẢ"
+            },
+            "loading": "Đang tải dự án...",
+            "endOfList": "Bạn đã đến cuối danh sách. Không còn dự án để tải.",
+            "actions": {
+                "loadMore": "Tải thêm"
+            },
+            "noProjects": "Không tìm thấy dự án nào."
+        },
+        "createDialog": {
+            "title": "Tạo dự án mới",
+            "description": "Dự án là môi trường dùng chung để các nhóm cộng tác và chia sẻ tài nguyên API.",
+            "fields": {
+                "name": {
+                    "label": "Tên",
+                    "description": "Tên hiển thị thân thiện của dự án trong giao diện người dùng.",
+                    "placeholder": "Nhập tên dự án"
+                },
+                "description": {
+                    "label": "Mô tả",
+                    "description": "Mô tả ngắn về dự án của bạn.",
+                    "placeholder": "Nhập mô tả dự án"
+                }
+            },
+            "validation": {
+                "projectNameRequired": "Tên dự án là bắt buộc",
+                "projectDescriptionRequired": "Mô tả dự án là bắt buộc"
+            },
+            "actions": {
+                "trigger": "Tạo dự án",
+                "cancel": "Hủy",
+                "create": "Tạo"
+            }
+        },
+        "archiveDialog": {
+            "title": "Lưu trữ {{projectName}}",
+            "description": "Khi lưu trữ, bạn sẽ xóa quyền truy cập của tất cả thành viên trong dự án, bao gồm cả bạn. Mọi yêu cầu sử dụng API key của dự án sẽ bị từ chối. Dự án đã lưu trữ không thể khôi phục.",
+            "confirmInstruction": "Để xác nhận, nhập \"{{projectName}}\" vào ô bên dưới",
+            "fields": {
+                "projectName": {
+                    "placeholder": "Xác nhận bằng cách nhập tên dự án"
+                }
+            },
+            "validation": {
+                "projectNameRequired": "Tên dự án là bắt buộc",
+                "projectNameMismatch": "Tên dự án không khớp."
+            },
+            "actions": {
+                "cancel": "Hủy",
+                "archive": "Lưu trữ"
+            }
+        },
+        "unarchiveDialog": {
+            "title": "Bỏ lưu trữ {{projectName}}",
+            "description": "Khi bỏ lưu trữ, các thành viên có quyền truy cập dự án sẽ có thể sử dụng lại API key của dự án. Bạn có thể lưu trữ lại dự án bất cứ lúc nào.",
+            "confirmInstruction": "Để xác nhận, nhập \"{{projectName}}\" vào ô bên dưới",
+            "fields": {
+                "projectName": {
+                    "placeholder": "Xác nhận bằng cách nhập tên dự án"
+                }
+            },
+            "validation": {
+                "projectNameRequired": "Tên dự án là bắt buộc",
+                "projectNameMismatch": "Tên dự án không khớp."
+            },
+            "actions": {
+                "cancel": "Hủy",
+                "unarchive": "Bỏ lưu trữ"
+            }
+        }
+    },
+    "billing": {
+        "pageTitle": "Thanh toán",
+        "heading": "Quản lý thanh toán",
+        "tabs": {
+            "overview": "Tổng quan",
+            "payment-methods": "Phương thức thanh toán",
+            "billing-history": "Lịch sử thanh toán",
+            "credit-grants": "Cấp tín dụng",
+            "invoices": "Hóa đơn",
+            "sources": "Nguồn thanh toán",
+            "activity-log": "Nhật ký hoạt động"
+        }
+    }
+}

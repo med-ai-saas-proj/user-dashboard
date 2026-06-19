@@ -1,0 +1,137 @@
+{
+    "general": {
+        "pageTitle": "Project Settings",
+        "heading": "Project Settings",
+        "archiveButton": "Archive",
+        "form": {
+            "fields": {
+                "projectName": "Project Name",
+                "projectId": "Project ID",
+                "projectDescription": "Description",
+                "projectDescriptionPlaceholder": "Enter a short project description",
+                "disableApiKeys": "Disable API Keys"
+            },
+            "actions": {
+                "save": "Save"
+            },
+            "validation": {
+                "projectNameRequired": "Project name is required",
+                "projectIdRequired": "Project ID is required",
+                "projectDescriptionRequired": "Description is required"
+            },
+            "success": {
+                "title": "Success",
+                "updated": "Project settings were updated successfully"
+            }
+        }
+    },
+    "people": {
+        "pageTitle": "People",
+        "heading": "People & Permission",
+        "tabs": {
+            "members": "Members",
+            "roles": "Roles"
+        },
+        "layout": {
+            "searchPlaceholder": "Search...",
+            "addMember": "Add member",
+            "inviteMember": "Invite member",
+            "search": "Search"
+        },
+        "members": {
+            "loading": "Loading members...",
+            "emptySelection": "Select a member to view details",
+            "item": {
+                "actions": {
+                    "remove": "Remove",
+                    "permissions": "Permissions",
+                    "close": "Close",
+                    "save": "Save"
+                },
+                "removeDialog": {
+                    "title": "Confirm removal",
+                    "description": "Are you sure you want to remove <bold>{{username}}</bold> from this project?"
+                },
+                "permissionsDialog": {
+                    "title": "Permissions"
+                }
+            }
+        },
+        "role": {
+            "loading": "Loading roles...",
+            "createRole": "Create role",
+            "actions": {
+                "assignments": "Assignments",
+                "permissions": "Permissions"
+            },
+            "dropdown": {
+                "edit": "Edit",
+                "delete": "Delete"
+            },
+            "dialog": {
+                "title": {
+                    "create": "Create Role",
+                    "edit": "Edit Role"
+                },
+                "fields": {
+                    "roleName": "Role Name",
+                    "description": "Description"
+                },
+                "actions": {
+                    "close": "Close",
+                    "create": "Create",
+                    "saveChanges": "Save Changes",
+                    "saving": "Saving..."
+                },
+                "validation": {
+                    "roleNameRequired": "Role name is required"
+                }
+            },
+            "deleteDialog": {
+                "title": "Delete Role",
+                "description": "Are you sure you want to delete the role <bold>{{roleName}}</bold>?",
+                "cancel": "Cancel",
+                "delete": "Delete"
+            }
+        },
+        "dialog": {
+            "title": "Add new member",
+            "description": "Invite new members to join your project via email.",
+            "submit": "Send invitation",
+            "tabs": {
+                "selectUser": "Select user",
+                "enterUserEmail": "Enter user email"
+            },
+            "actions": {
+                "close": "Close",
+                "addMember": "Add Member"
+            },
+            "roleLabel": "Role",
+            "roleInvalid": "Role is required",
+            "roles": {
+                "member": {
+                    "name": "Member",
+                    "description": "Can read/write data. No direct member-management controls."
+                },
+                "owner": {
+                    "name": "Owner",
+                    "description": "Full control: can manage project settings and members."
+                }
+            },
+            "with-email": {
+                "emailLabel": "Email",
+                "emailPlaceholder": "Enter email address",
+                "emailInvalid": "Please enter a valid email address"
+            },
+            "without-email": {
+                "userLabel": "User",
+                "userPlaceholder": "Select a user",
+                "userInvalid": "User is required",
+                "noUsers": "No users found.",
+                "usernameLabel": "Username",
+                "usernamePlaceholder": "Enter username",
+                "usernameInvalid": "Please enter a valid username"
+            }
+        }
+    }
+}

@@ -1,8 +1,8 @@
-import type { EHRSummaryRequest } from '@/features/pg-ehr-summary/services/ehr-summary.dto';
-import type { ChatStreamEvent } from './stream-chat.dto';
+import type { EHRSummaryRequest } from "@/features/pg-ehr-summary/services/ehr-summary.dto";
+import type { ChatStreamEvent } from "./stream-chat.dto";
 
 export type ChatMessage = {
-	role: 'user' | 'assistant';
+	role: "user" | "assistant";
 	content: string;
 };
 
@@ -17,11 +17,11 @@ export type EHRChatRequest = {
 	conversation_id?: string | null;
 	model: string;
 	stream?: boolean;
-	input_ehr: EHRSummaryRequest['ehr'];
+	input_ehr: EHRSummaryRequest["ehr"];
 };
 
 export type ModelResponseContent = {
-	type: 'text' | 'thinking';
+	type: "text" | "thinking";
 	content: string;
 	citations?: Array<{
 		reference_type: string;
@@ -33,7 +33,7 @@ export type ModelResponseContent = {
 export type ChatResponse = {
 	id: string;
 	conversation_id: string;
-	status: 'completed' | 'failed' | 'processing';
+	status: "completed" | "failed" | "processing";
 	error?: {
 		code: string;
 		message: string;

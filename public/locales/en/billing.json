@@ -1,0 +1,209 @@
+{
+    "creditGrants": {
+        "empty": {
+            "title": "You have not added any credit yet",
+            "description": "Add credits to your organization to pay invoices for your organization",
+            "addCredit": "Add Credit"
+        },
+        "currentCredits": "Current Credits:",
+        "table": {
+            "received": "RECEIVED",
+            "amount": "AMOUNT",
+            "description": "DESCRIPTION"
+        },
+        "loading": "Loading...",
+        "loadMore": "Load More",
+        "noTransactions": "No credit transactions found."
+    },
+    "activityLog": {
+        "empty": "No transactions found.",
+        "loading": "Loading...",
+        "loadMore": "Load More",
+        "noMore": "No more transactions.",
+        "loadingDetails": "Loading transaction details...",
+        "errorDetails": "Unable to load transaction details.",
+        "dateRange": {
+            "label": "Transaction Date Range",
+            "placeholder": "Select start and end date"
+        },
+        "item": {
+            "transactionId": "Transaction ID",
+            "projectId": "Project ID",
+            "capturedAt": "Captured at",
+            "viewDetails": "View details",
+            "hideDetails": "Hide details",
+            "noDescription": "No description"
+        },
+        "details": {
+            "transactionDate": "Transaction date",
+            "capturedAt": "Captured at",
+            "projectId": "Project ID",
+            "status": "Status",
+            "description": "Description"
+        }
+    },
+    "overview": {
+        "creditRemaining": "Credit remaining",
+        "actions": {
+            "payWithStripe": "Pay with Stripe",
+            "updatePaymentDetails": "Update payment details",
+            "addPaymentDetails": "Add payment details",
+            "viewUsage": "View usage"
+        },
+        "cards": {
+            "paymentMethod": {
+                "title": "Payment method",
+                "description": "Add or change payment method"
+            },
+            "billingHistory": {
+                "title": "Billing history",
+                "description": "View your past invoices and payment records"
+            },
+            "analytics": {
+                "title": "Analytics",
+                "description": "Witness satistics and analytics"
+            },
+            "usageLimits": {
+                "title": "Usage limits",
+                "description": "Set limits on your usage to manage costs"
+            }
+        }
+    },
+    "history": {
+        "period": "Showing invoices within the past 12 months",
+        "noInvoices": "No invoices found",
+        "filter": {
+            "unpaid": "Unpaid",
+            "paid": "Paid"
+        },
+        "filterLabel": "Filter by status"
+    },
+    "historyItem": {
+        "invoiceId": "Invoice ID",
+        "billingPeriod": "Billing period",
+        "paid": "Paid",
+        "totalAmount": "Total Amount",
+        "usedCredits": "Used credits"
+    },
+    "paymentMethods": {
+        "title": "Payment methods",
+        "description": "Review the cards linked to your organization billing account.",
+        "added": "Added",
+        "cardDetails": "Card details",
+        "empty": {
+            "title": "You have not added any payment methods yet",
+            "description": "Go to the Billing overview page and select \"Add payment details\" to continue."
+        }
+    },
+    "sources": {
+        "errorLoad": "Unable to load billing source information.",
+        "empty": {
+            "title": "No billing source found",
+            "description": "Add payment details from Billing overview to create one."
+        },
+        "title": "Billing source",
+        "provider": "Provider",
+        "created": "Created"
+    },
+    "intentActions": {
+        "noPending": "You have no pending actions for your payment methods"
+    },
+    "stripe": {
+        "notReady": "Payment system is not ready. Please try again.",
+        "processing": "Processing...",
+        "confirmPayment": "Confirm payment",
+        "loadError": "Failed to load payment form. Please try again.",
+        "paymentFailed": "Payment failed",
+        "setupSuccess": "Setup Intent confirmed successfully",
+        "requiresAction": "Additional action required. Please check your bank.",
+        "genericError": "An error occurred"
+    },
+    "dialogs": {
+        "addCredit": {
+            "title": "Add Credit",
+            "description": "Enter the amount of credit to add and a description.",
+            "fields": {
+                "amount": "Amount (USD)",
+                "amountPlaceholder": "0.00",
+                "scale": "Scale",
+                "finalScaledValue": "Final Scaled Value"
+            },
+            "actions": {
+                "submit": "Add Credit"
+            }
+        },
+        "addPaymentDetails": {
+            "title": "Add Payment Details",
+            "description": "Enter billing contact and address information.",
+            "providerPlaceholder": "Select provider",
+            "actions": {
+                "submit": "Save payment details"
+            }
+        },
+        "updatePaymentDetails": {
+            "title": "Update Payment Details",
+            "description": "Update the billing contact details currently associated with your organization.",
+            "actions": {
+                "submit": "Save changes"
+            }
+        },
+        "deletePaymentMethod": {
+            "title": "Delete payment method",
+            "description": "This action will remove this payment method from your billing account. Are you sure you want to continue?",
+            "actions": {
+                "delete": "Delete"
+            }
+        }
+    },
+    "validation": {
+        "amount": {
+            "min": "Value must be a positive number"
+        },
+        "description": {
+            "max": "Description must be at most 255 characters"
+        },
+        "name": {
+            "required": "Name is required"
+        },
+        "email": {
+            "invalid": "Invalid email address"
+        },
+        "phone": {
+            "required": "Phone is required"
+        },
+        "address": {
+            "line1": {
+                "required": "Address line 1 is required"
+            },
+            "city": {
+                "required": "City is required"
+            },
+            "state": {
+                "required": "State is required"
+            },
+            "postalCode": {
+                "required": "Postal code is required"
+            },
+            "country": {
+                "required": "Country is required"
+            }
+        }
+    },
+    "common": {
+        "name": "Name",
+        "email": "Email",
+        "phone": "Phone",
+        "provider": "Provider",
+        "addressLine1": "Address line 1",
+        "addressLine2": "Address line 2",
+        "city": "City",
+        "state": "State",
+        "postalCode": "Postal code",
+        "country": "Country",
+        "billingAddress": "Billing address",
+        "description": "Description",
+        "notProvided": "Not provided",
+        "method": "method",
+        "cancel": "Cancel"
+    }
+}

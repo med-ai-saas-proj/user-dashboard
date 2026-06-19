@@ -1,0 +1,164 @@
+{
+    "people": {
+        "pageTitle": "People",
+        "heading": "People & Permission",
+        "tabs": {
+            "members": "Members",
+            "invitations": "Invitations",
+            "roles": "Roles"
+        },
+        "roles": {
+            "description": "Manage your organization roles and permissions here."
+        },
+        "layout": {
+            "searchPlaceholder": "Search...",
+            "addMember": "Add member",
+            "inviteMember": "Invite member",
+            "search": "Search"
+        },
+        "dialog": {
+            "title": "Add new member",
+            "description": "Invite new member to join your organization by email.",
+            "emailLabel": "Email",
+            "emailPlaceholder": "Enter email address",
+            "emailInvalid": "Please enter a valid email address",
+            "submit": "Send Invitation"
+        },
+        "members": {
+            "loading": "Loading members...",
+            "emptySelection": "Select a member to view details",
+            "item": {
+                "actions": {
+                    "remove": "Remove",
+                    "permissions": "Permissions",
+                    "close": "Close",
+                    "save": "Save"
+                },
+                "removeDialog": {
+                    "title": "Confirm removal",
+                    "description": "Are you sure you want to remove {{username}} from this organization?"
+                },
+                "permissionsDialog": {
+                    "title": "Permissions"
+                }
+            },
+            "details": {
+                "title": "Member details"
+            }
+        },
+        "invitations": {
+            "loading": "Loading invitations...",
+            "item": {
+                "actions": {
+                    "resend": "Resend",
+                    "remove": "Remove",
+                    "cancel": "Cancel"
+                },
+                "removeDialog": {
+                    "title": "Removal Confirm",
+                    "description": "Are you sure you want to remove the invitation for {{email}}?"
+                }
+            },
+            "noInvitations": "No pending invitations."
+        }
+    },
+    "project": {
+        "pageTitle": "Organization Projects",
+        "heading": "Organization Projects",
+        "header": {
+            "searchPlaceholder": "Search projects...",
+            "filterPlaceholder": "Filter by status",
+            "filterOptions": {
+                "active": "Active",
+                "archived": "Archived"
+            }
+        },
+        "content": {
+            "tableHeaders": {
+                "name": "NAME",
+                "id": "ID",
+                "description": "DESCRIPTION"
+            },
+            "loading": "Loading projects...",
+            "endOfList": "You have reached the end of the list. No more projects to load.",
+            "actions": {
+                "loadMore": "Load More"
+            },
+            "noProjects": "No projects found."
+        },
+        "createDialog": {
+            "title": "Create a new project",
+            "description": "Projects are shared environments where teams can collaborate and share API resources.",
+            "fields": {
+                "name": {
+                    "label": "Name",
+                    "description": "Human-friendly label for your project, shown in user interfaces.",
+                    "placeholder": "Enter project name"
+                },
+                "description": {
+                    "label": "Description",
+                    "description": "A brief description of your project.",
+                    "placeholder": "Enter project description"
+                }
+            },
+            "validation": {
+                "projectNameRequired": "Project name is required",
+                "projectDescriptionRequired": "Project description is required"
+            },
+            "actions": {
+                "trigger": "Create Project",
+                "cancel": "Cancel",
+                "create": "Create"
+            }
+        },
+        "archiveDialog": {
+            "title": "Archive {{projectName}}",
+            "description": "By archiving, you will be removing access to all members of this project including yourself. All requests using project's API keys will be rejected. Archived projects cannot be restored.",
+            "confirmInstruction": "To confirm, type \"{{projectName}}\" in the input box",
+            "fields": {
+                "projectName": {
+                    "placeholder": "Confirm by typing the project's name"
+                }
+            },
+            "validation": {
+                "projectNameRequired": "Project name is required",
+                "projectNameMismatch": "Project name does not match."
+            },
+            "actions": {
+                "cancel": "Cancel",
+                "archive": "Archive"
+            }
+        },
+        "unarchiveDialog": {
+            "title": "Unarchive {{projectName}}",
+            "description": "By unarchiving, members with access to this project will be able to use the project API keys again. You can archive this project again at any time.",
+            "confirmInstruction": "To confirm, type \"{{projectName}}\" in the input box",
+            "fields": {
+                "projectName": {
+                    "placeholder": "Confirm by typing the project's name"
+                }
+            },
+            "validation": {
+                "projectNameRequired": "Project name is required",
+                "projectNameMismatch": "Project name does not match."
+            },
+            "actions": {
+                "cancel": "Cancel",
+                "unarchive": "Unarchive"
+            }
+        }
+    },
+    "billing": {
+        "pageTitle": "Billing",
+        "heading": "Billing Management",
+        "tabs": {
+            "overview": "Overview",
+            "payment-methods": "Payment Methods",
+            "billing-history": "Billing History",
+            "credit-grants": "Credit Grants",
+            "invoices": "Invoices",
+            "sources": "Billing Sources",
+            "activity-log": "Activity Log"
+        }
+    }
+}

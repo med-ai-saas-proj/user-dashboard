@@ -1,4 +1,10 @@
-import { Button } from '@/components/shadcn/button';
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useState } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { useTranslation } from "react-i18next";
+import { z } from "zod";
+import { Button } from "@/components/shadcn/button";
+import { Checkbox } from "@/components/shadcn/checkbox";
 import {
 	Dialog,
 	DialogClose,
@@ -7,20 +13,22 @@ import {
 	DialogFooter,
 	DialogHeader,
 	DialogTitle,
-} from '@/components/shadcn/dialog';
-import { Input } from '@/components/shadcn/input';
-import { Label } from '@/components/shadcn/label';
-import { useCreateApiKey } from '@/features/api-keys/hooks/use-create-api-key';
-import { useServiceApiKeyStore } from '@/features/api-keys/store/service-api-key.store';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { useTranslation } from 'react-i18next';
-import { z } from 'zod';
-import { APIKeySaveDialog } from './api-key-save-dialog';
+} from "@/components/shadcn/dialog";
+import { Input } from "@/components/shadcn/input";
+import { Label } from "@/components/shadcn/label";
+import { Textarea } from "@/components/shadcn/textarea";
+import { useCreateApiKey } from "@/features/api-keys/hooks/use-create-api-key";
+import { useServiceApiKeyStore } from "@/features/api-keys/store/service-api-key.store";
+import { APIKeySaveDialog } from "./api-key-save-dialog";
+import { useParams } from "react-router-dom";
+import { useGetApiKeyPermissions } from "../hooks/use-get-api-key-permissions";
 
 const apiCreationSchema = z.object({
-	name: z.string().min(1, 'Name must be at least 1 character long'),
+	name: z.string().min(1, "Name must be at least 1 character long"),
+	description: z.string().optional(),
+	permissions: z
+		.array(z.string())
+		.min(1, "Please select at least one permission"),
 });
 
 type ApiCreationFormData = z.infer<typeof apiCreationSchema>;
@@ -32,31 +40,41 @@ const APIKeyDialog = ({
 	open: boolean;
 	onOpenChange: (open: boolean) => void;
 }) => {
-	const { t: tApiKeys } = useTranslation('api-keys');
-	const { t: tCommon } = useTranslation('common');
+	const { t: tApiKeys } = useTranslation("api-keys");
+	const { t: tCommon } = useTranslation("common");
+
+	const params = useParams();
+	const projectId = params.projectId;
 
 	const setSelectedApiKey = useServiceApiKeyStore(
 		(state) => state.setSelectedApiKey
 	);
 	const createApiKeyMutation = useCreateApiKey();
+	const { data: apiKeyPermissions } = useGetApiKeyPermissions();
 
 	const [openSave, setOpenSave] = useState(false);
-	const [createdKey, setCreatedKey] = useState<string>('');
+	const [createdKey, setCreatedKey] = useState<string>("");
 
 	const {
+		control,
 		register,
 		handleSubmit,
 		formState: { errors },
 	} = useForm<ApiCreationFormData>({
 		resolver: zodResolver(apiCreationSchema),
+		defaultValues: {
+			name: "",
+			description: "",
+			permissions: [],
+		},
 	});
 
 	const onSubmit = async (data: ApiCreationFormData) => {
 		const response = await createApiKeyMutation.mutateAsync({
 			name: data.name,
-			description: '',
-			project_id: 'default',
-			permissions: ['placeholder'],
+			description: data.description,
+			project_id: projectId || "",
+			permissions: data.permissions,
 		});
 
 		// Automatically set this as the service API key
@@ -72,38 +90,101 @@ const APIKeyDialog = ({
 			<Dialog open={open} onOpenChange={onOpenChange}>
 				<DialogContent className="sm:max-w-[425px]">
 					<DialogHeader>
-						<DialogTitle>{tApiKeys('dialog.title')}</DialogTitle>
+						<DialogTitle>{tApiKeys("dialog.title")}</DialogTitle>
 						<DialogDescription>
-							{tApiKeys('dialog.description')}
+							{tApiKeys("dialog.description")}
 						</DialogDescription>
 					</DialogHeader>
 					<form onSubmit={handleSubmit(onSubmit)}>
 						<div className="grid gap-4">
 							<div className="grid gap-3">
-								<Label>{tApiKeys('dialog.form.nameLabel')}</Label>
+								<Label>{tApiKeys("dialog.form.nameLabel")}</Label>
 								<Input
 									id="name"
-									placeholder={tApiKeys('dialog.form.namePlaceholder')}
+									placeholder={tApiKeys("dialog.form.namePlaceholder")}
 									aria-invalid={!!errors.name}
-									{...register('name')}
+									{...register("name")}
 								/>
-								<div className="h-5 mt-1.5 px-4">
-									{errors.name && (
+								{errors.name && (
+									<div className="h-5 mt-1.5 px-4">
 										<p className="text-destructive text-xs">
 											{errors.name.message}
 										</p>
+									</div>
+								)}
+							</div>
+
+							<div className="grid gap-3">
+								<Label>{tApiKeys("dialog.form.descriptionLabel")}</Label>
+								<Textarea
+									id="description"
+									placeholder={tApiKeys("dialog.form.descriptionPlaceholder")}
+									aria-invalid={!!errors.description}
+									{...register("description")}
+								/>
+							</div>
+
+							<div className="grid gap-3">
+								<Label>{tApiKeys("table.header.permissions")}</Label>
+								<Controller
+									name="permissions"
+									control={control}
+									render={({ field }) => (
+										<div className="space-y-2">
+											{apiKeyPermissions?.results?.map((permission) => {
+												const isChecked =
+													field.value?.includes(permission.id) ?? false;
+
+												return (
+													<div
+														key={permission.id}
+														className="flex items-center gap-2"
+													>
+														<Checkbox
+															id={permission.id}
+															checked={isChecked}
+															onCheckedChange={(checked) => {
+																if (checked) {
+																	field.onChange([
+																		...(field.value ?? []),
+																		permission.id,
+																	]);
+																	return;
+																}
+
+																field.onChange(
+																	(field.value ?? []).filter(
+																		(value) => value !== permission.id
+																	)
+																);
+															}}
+														/>
+														<Label htmlFor={permission.id}>
+															{permission.name}
+														</Label>
+													</div>
+												);
+											})}
+										</div>
 									)}
-								</div>
+								/>
+								{errors.permissions && (
+									<div className="h-5 mt-1.5 px-4">
+										<p className="text-destructive text-xs">
+											{errors.permissions.message}
+										</p>
+									</div>
+								)}
 							</div>
 						</div>
 						<DialogFooter>
 							<DialogClose asChild>
-								<Button variant="outline">{tCommon('action.cancel')}</Button>
+								<Button variant="outline">{tCommon("action.cancel")}</Button>
 							</DialogClose>
 							<Button type="submit" disabled={createApiKeyMutation.isPending}>
 								{createApiKeyMutation.isPending
-									? tApiKeys('dialog.form.action.creating')
-									: tApiKeys('dialog.form.action.create')}
+									? tApiKeys("dialog.form.action.creating")
+									: tApiKeys("dialog.form.action.create")}
 							</Button>
 						</DialogFooter>
 					</form>

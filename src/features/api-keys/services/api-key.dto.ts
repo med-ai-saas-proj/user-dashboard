@@ -13,16 +13,33 @@ export type CreateApiKeyResponse = {
 export type UpdateApiKeyRequest = {
 	apikeyId: string;
 	name?: string;
+	description?: string;
 	permissions?: string[];
 };
 
 export type ApiKeyOutput = {
-	id: string;
+	api_key_uuid: string;
+	project_uuid: string;
 	name: string;
 	description: string;
 	hint: string;
 	created_at: string;
 	permissions: string[];
+	disabled: boolean;
 };
 
-export type GetApiKeyResponse = ApiKeyOutput[];
+export type ApiPermissions = {
+	total: number;
+	results: ApiPermission[];
+};
+
+export type ApiPermission = {
+	id: string;
+	name: string;
+	description?: string;
+};
+
+export type GetApiKeyResponse = {
+	total: number;
+	results: ApiKeyOutput[];
+};

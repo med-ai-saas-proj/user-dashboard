@@ -44,3 +44,5 @@ coverage/
 *.swo
 
 build-output/
+todo.md
+api-1.yaml

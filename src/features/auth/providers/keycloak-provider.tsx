@@ -4,9 +4,13 @@ import {
 	useContext,
 	useEffect,
 	useState,
-} from 'react';
-import keycloak, { initKeycloak } from '@/config/keycloak';
-import { useAuthStore, type UserInfo } from '@/features/auth/store/auth-store';
+} from "react";
+import keycloak, { initKeycloak } from "@/config/keycloak";
+import {
+	type OrganizationInfo,
+	type UserInfo,
+	useAuthStore,
+} from "@/features/auth/store/auth-store";
 
 interface KeycloakContextType {
 	keycloak: typeof keycloak;
@@ -18,10 +22,40 @@ const KeycloakContext = createContext<KeycloakContextType | undefined>(
 	undefined
 );
 
+const extractOrganizationFromToken = (
+	tokenParsed: UserInfo | undefined
+): OrganizationInfo | null => {
+	if (!tokenParsed) return null;
+
+	const organizationClaim = (tokenParsed as Record<string, unknown>)
+		.organization;
+
+	if (!organizationClaim || typeof organizationClaim !== "object") {
+		return null;
+	}
+
+	const entries = Object.entries(organizationClaim as Record<string, unknown>);
+	if (entries.length === 0) {
+		return null;
+	}
+
+	const [name, details] = entries[0];
+	if (!details || typeof details !== "object") {
+		return null;
+	}
+
+	const id = (details as { id?: unknown }).id;
+	if (typeof id !== "string" || id.length === 0) {
+		return null;
+	}
+
+	return { id, name };
+};
+
 export const KeycloakProvider = ({ children }: { children: ReactNode }) => {
 	const [initialized, setInitialized] = useState(false);
 	const [authenticated, setAuthenticated] = useState(false);
-	const { setAuth, setUserInfo, logout } = useAuthStore();
+	const { setAuth, setUserInfo, setOrganization, logout } = useAuthStore();
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: This is intended to run only once on mount
 	useEffect(() => {
@@ -40,6 +74,7 @@ export const KeycloakProvider = ({ children }: { children: ReactNode }) => {
 					if (keycloak.tokenParsed) {
 						const tokenParsed = keycloak.tokenParsed as UserInfo;
 						setUserInfo(tokenParsed);
+						setOrganization(extractOrganizationFromToken(tokenParsed));
 					}
 				}
 
@@ -58,6 +93,7 @@ export const KeycloakProvider = ({ children }: { children: ReactNode }) => {
 								if (keycloak.tokenParsed) {
 									const tokenParsed = keycloak.tokenParsed as UserInfo;
 									setUserInfo(tokenParsed);
+									setOrganization(extractOrganizationFromToken(tokenParsed));
 								}
 							}
 						})
@@ -68,7 +104,7 @@ export const KeycloakProvider = ({ children }: { children: ReactNode }) => {
 				};
 			})
 			.catch((error) => {
-				console.error('Keycloak initialization failed', error);
+				console.error("Keycloak initialization failed", error);
 				setInitialized(true);
 			});
 	}, []);
@@ -83,7 +119,7 @@ export const KeycloakProvider = ({ children }: { children: ReactNode }) => {
 export const useKeycloak = () => {
 	const context = useContext(KeycloakContext);
 	if (!context) {
-		throw new Error('useKeycloak must be used within KeycloakProvider');
+		throw new Error("useKeycloak must be used within KeycloakProvider");
 	}
 	return context;
 };

@@ -82,7 +82,10 @@
             "actions": {
                 "loadMore": "Tải thêm"
             },
-            "noProjects": "Không tìm thấy dự án nào."
+            "noProjects": "Không tìm thấy dự án nào.",
+            "settings": "Cài đặt dự án",
+            "archive": "Lưu trữ",
+            "unarchive": "Bỏ lưu trữ"
         },
         "createDialog": {
             "title": "Tạo dự án mới",

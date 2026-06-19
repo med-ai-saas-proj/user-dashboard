@@ -84,7 +84,10 @@
             "actions": {
                 "loadMore": "Load More"
             },
-            "noProjects": "No projects found."
+            "noProjects": "No projects found.",
+            "settings": "Project Settings",
+            "archive": "Archive",
+            "unarchive": "Unarchive"
         },
         "createDialog": {
             "title": "Create a new project",

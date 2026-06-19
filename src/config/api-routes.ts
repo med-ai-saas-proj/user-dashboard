@@ -3,10 +3,8 @@
  * This file contains all API routes used throughout the application
  */
 const API_VERSION = "v1";
-if (!import.meta.env.VITE_BASE_API_URL) {
-	throw new Error("VITE_BASE_API_URL is not defined in environment variables");
-}
-export let BASE_API_URL = import.meta.env.VITE_BASE_API_URL;
+
+export let BASE_API_URL = window.env.gantryUrl;
 // Ensure BASE_API_URL ends with a slash, since URL constructor requires it for relative paths
 // See: https://developer.mozilla.org/en-US/docs/Web/API/URL_API/Resolving_relative_references
 if (!BASE_API_URL.endsWith("/")) {

@@ -4,11 +4,7 @@ import { useState, useEffect, type ReactNode } from "react";
 import { useCreateSetupIntent } from "../hooks/organization-billing/use-create-setup-intent";
 import { Skeleton } from "@/components/shadcn/skeleton";
 
-const stripePublishableKey = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY;
-
-if (!stripePublishableKey) {
-	throw new Error("Missing VITE_STRIPE_PUBLISHABLE_KEY environment variable");
-}
+const stripePublishableKey = window.env.stripePublishableKey;
 
 const stripePromise = loadStripe(stripePublishableKey);
 

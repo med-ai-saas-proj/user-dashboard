@@ -3,6 +3,7 @@ interface Env {
 	keycloakUrl: string;
 	keycloakRealm: string;
 	keycloakClientId: string;
+	stripePublishableKey: string;
 }
 
 interface Window {

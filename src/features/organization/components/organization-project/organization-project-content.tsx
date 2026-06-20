@@ -17,6 +17,8 @@ import { useTranslation } from "react-i18next";
 import { useProjectStore } from "@/features/project/store/project";
 import { useAuthStore } from "@/features/auth/store/auth-store";
 import { CustomPagination } from "@/components/pagination/pagination";
+import { Tooltip, TooltipContent } from "@/components/shadcn/tooltip";
+import { TooltipTrigger } from "@radix-ui/react-tooltip";
 
 type OrganizationProjectContentProps = {
 	isArchived: boolean;
@@ -100,12 +102,19 @@ const OrganizationProjectContent = ({
 							<TableCell>{project.description}</TableCell>
 							<TableCell>
 								<div className="flex items-center gap-x-6 justify-end">
-									<Settings
-										size={"16"}
-										onClick={() =>
-											handleNavigateToProject(project.project_uuid)
-										}
-									/>
+									<Tooltip>
+										<TooltipTrigger asChild>
+											<Settings
+												size={"16"}
+												onClick={() =>
+													handleNavigateToProject(project.project_uuid)
+												}
+											/>
+										</TooltipTrigger>
+										<TooltipContent>
+											<p>{t("project.content.settings")}</p>
+										</TooltipContent>
+									</Tooltip>
 									{!project.archived && (
 										<OrganizationProjectArchiveDialog
 											projectId={project.project_uuid}

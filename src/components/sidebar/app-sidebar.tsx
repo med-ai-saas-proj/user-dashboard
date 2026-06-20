@@ -1,4 +1,15 @@
-import { Book, ChartColumnBig, GalleryVerticalEnd } from "lucide-react";
+import {
+	Book,
+	ChartColumnBig,
+	GalleryVerticalEnd,
+	Users,
+	Folder,
+	CreditCard,
+	Settings,
+	UserRound,
+	KeyRound,
+	Database,
+} from "lucide-react";
 import type * as React from "react";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
@@ -9,9 +20,9 @@ import {
 	SidebarFooter,
 	SidebarHeader,
 	SidebarRail,
-	useSidebar,
+	// useSidebar,
 } from "@/components/shadcn/sidebar";
-import { LocaleSwitcher } from "@/components/sidebar/locale-switcher";
+// import { LocaleSwitcher } from "@/components/sidebar/locale-switcher";
 import { NavProjects } from "@/components/sidebar/nav-projects";
 import { NavUser } from "@/components/sidebar/nav-user";
 import { TeamSwitcher } from "@/components/sidebar/team-switcher";
@@ -23,7 +34,7 @@ import { useProjectStore } from "@/features/project/store/project";
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 	const { t } = useTranslation("sidebar");
 	const { userInfo, organization } = useAuthStore();
-	const { state } = useSidebar();
+	// const { state } = useSidebar();
 
 	const params = useParams();
 	const { data: projectList } = useGetOrganizationProjects({
@@ -89,6 +100,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 			})),
 		},
 		user: userInfo,
+
 		management: [
 			{
 				name: t("management.dashboard.title"),
@@ -106,20 +118,25 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 			{
 				name: t("organization.people.title"),
 				url: "/organization/people",
+				icon: Users,
 			},
 			{
 				name: t("organization.project.title"),
 				url: "/organization/projects",
+				icon: Folder,
 			},
 			{
 				name: t("organization.billing.title"),
 				url: "/organization/billing",
+				icon: CreditCard,
 			},
 			{
 				name: t("organization.settings.title"),
 				url: "/organization/settings",
+				icon: Settings,
 			},
 		],
+
 		project: [
 			{
 				name: t("project.general.title"),
@@ -127,6 +144,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 					? `/project/${projectId}/general`
 					: "/organization/projects",
 				disableActive: !projectId,
+				icon: Folder,
 			},
 			{
 				name: t("project.people.title"),
@@ -134,6 +152,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 					? `/project/${projectId}/people`
 					: "/organization/projects",
 				disableActive: !projectId,
+				icon: UserRound,
 			},
 			{
 				name: t("project.apiKeys.title"),
@@ -141,6 +160,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 					? `/project/${projectId}/api-keys`
 					: "/organization/projects",
 				disableActive: !projectId,
+				icon: KeyRound,
 			},
 			{
 				name: t("project.buckets.title"),
@@ -148,6 +168,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 					? `/project/${projectId}/buckets`
 					: "/organization/projects",
 				disableActive: !projectId,
+				icon: Database,
 			},
 			{
 				name: t("project.settings.title"),
@@ -155,6 +176,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 					? `/project/${projectId}/settings`
 					: "/organization/projects",
 				disableActive: !projectId,
+				icon: Settings,
 			},
 		],
 	};
@@ -177,9 +199,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 			</SidebarContent>
 
 			<SidebarFooter>
-				{state === "expanded" && (
+				{/* {state === "expanded" && (
 					<LocaleSwitcher className="mx-auto invisible sm:visible" />
-				)}
+				)} */}
 				{data.user && <NavUser user={data.user} />}
 			</SidebarFooter>
 			<SidebarRail />

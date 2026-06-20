@@ -1,3 +1,4 @@
+import { useBillingStore } from "@/features/organization/store/billing";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
@@ -49,6 +50,8 @@ export const useAuthStore = create<AuthState>()(
 				}),
 			setUserInfo: (userInfo) => set({ userInfo }),
 			logout: () => {
+				useBillingStore.getState().clearBilling();
+
 				set({
 					token: null,
 					refreshToken: null,

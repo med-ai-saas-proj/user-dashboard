@@ -44,6 +44,7 @@ let mockBillingSource: GetBillingSourceResponse["data"] = {
 		postal_code: "78701",
 		country: "US",
 	},
+	default_payment_method: "pm_mock_visa_01",
 };
 
 let mockPaymentMethods: GetPaymentMethod[] = [

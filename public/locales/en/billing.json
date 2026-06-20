@@ -83,7 +83,26 @@
         "billingPeriod": "Billing period",
         "paid": "Paid",
         "totalAmount": "Total Amount",
-        "usedCredits": "Used credits"
+        "usedCredits": "Used credits",
+        "viewDetails": "View details",
+        "payInvoice": "Pay invoice",
+        "payConfirm": {
+            "title": "Pay invoice",
+            "description": "You are about to pay this invoice. You will be redirected to Stripe to complete the payment.",
+            "confirm": "Confirm payment"
+        },
+        "details": {
+            "title": "Invoice details",
+            "billingPeriod": "Billing period",
+            "paidAt": "Paid at",
+            "totalAmount": "Total amount",
+            "usedCredits": "Used credits",
+            "lineItems": "Line items",
+            "description": "Description",
+            "project": "Project",
+            "amount": "Amount",
+            "total": "Total"
+        }
     },
     "paymentMethods": {
         "title": "Payment methods",
@@ -93,6 +112,11 @@
         "empty": {
             "title": "You have not added any payment methods yet",
             "description": "Go to the Billing overview page and select \"Add payment details\" to continue."
+        },
+        "actions": {
+            "delete": "Delete",
+            "setDefault": "Set as default",
+            "default": "Default"
         }
     },
     "sources": {
@@ -103,7 +127,10 @@
         },
         "title": "Billing source",
         "provider": "Provider",
-        "created": "Created"
+        "created": "Created",
+        "paymentMethod": {
+            "title": "Default Payment Method"
+        }
     },
     "intentActions": {
         "noPending": "You have no pending actions for your payment methods"
@@ -152,6 +179,13 @@
             "description": "This action will remove this payment method from your billing account. Are you sure you want to continue?",
             "actions": {
                 "delete": "Delete"
+            }
+        },
+        "setDefaultPaymentMethod": {
+            "title": "Set Default Payment Method",
+            "description": "This action will set this payment method as the default for your billing account. Are you sure you want to continue?",
+            "actions": {
+                "setDefault": "Set as Default"
             }
         }
     },

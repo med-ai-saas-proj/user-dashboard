@@ -17,6 +17,11 @@ import z from "zod";
 import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslation } from "react-i18next";
+import {
+	Tooltip,
+	TooltipContent,
+	TooltipTrigger,
+} from "@/components/shadcn/tooltip";
 
 const createUnarchiveProjectSchema = (messages: {
 	projectNameRequired: string;
@@ -130,12 +135,20 @@ const OrganizationProjectUnarchiveDialog = ({
 	projectId,
 	projectName,
 }: OrganizationProjectUnarchiveDialogProps) => {
+	const { t } = useTranslation("organization");
 	const [open, setOpen] = useState(false);
 
 	return (
 		<Dialog open={open} onOpenChange={setOpen}>
 			<DialogTrigger>
-				<ArchiveRestore size={"16"} className="text-foreground" />
+				<Tooltip>
+					<TooltipTrigger asChild>
+						<ArchiveRestore size={"16"} className="text-foreground" />
+					</TooltipTrigger>
+					<TooltipContent>
+						<p>{t("project.content.unarchive")}</p>
+					</TooltipContent>
+				</Tooltip>
 			</DialogTrigger>
 			{open && (
 				<UnarchiveProjectDialogContent

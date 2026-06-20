@@ -17,6 +17,11 @@ import z from "zod";
 import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslation } from "react-i18next";
+import {
+	Tooltip,
+	TooltipContent,
+	TooltipTrigger,
+} from "@/components/shadcn/tooltip";
 
 const createArchiveProjectSchema = (messages: {
 	projectNameRequired: string;
@@ -133,12 +138,20 @@ const OrganizationProjectArchiveDialog = ({
 	projectId,
 	projectName,
 }: OrganizationProjectArchiveDialogProps) => {
+	const { t } = useTranslation("organization");
 	const [open, setOpen] = useState(false);
 
 	return (
 		<Dialog open={open} onOpenChange={setOpen}>
 			<DialogTrigger>
-				<Archive size={"16"} className="text-destructive" />
+				<Tooltip>
+					<TooltipTrigger asChild>
+						<Archive size={"16"} className="text-destructive" />
+					</TooltipTrigger>
+					<TooltipContent>
+						<p>{t("project.content.archive")}</p>
+					</TooltipContent>
+				</Tooltip>
 			</DialogTrigger>
 			{open && (
 				<ArchiveProjectDialogContent

@@ -109,6 +109,7 @@
         "description": "Xem các thẻ đã liên kết với tài khoản thanh toán của tổ chức.",
         "added": "Đã thêm",
         "cardDetails": "Thông tin thẻ",
+        "bankDetails": "Thông tin tài khoản ngân hàng",
         "empty": {
             "title": "Bạn chưa thêm phương thức thanh toán nào",
             "description": "Vào trang Tổng quan thanh toán và chọn \"Thêm thông tin thanh toán\" để tiếp tục."

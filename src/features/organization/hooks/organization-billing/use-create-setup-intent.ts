@@ -5,8 +5,8 @@ export const useCreateSetupIntent = () => {
 	return useMutation({
 		mutationKey: ["organization-create-setup-intent"],
 		mutationFn: createSetupIntent,
-		onSuccess: (data) => {
-			console.log("Setup intent created successfully", data);
+		onSuccess: () => {
+			console.log("Setup intent created successfully");
 		},
 		onError: (error) => {
 			console.error("Failed to create setup intent:", error);

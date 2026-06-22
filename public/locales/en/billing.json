@@ -109,6 +109,7 @@
         "description": "Review the cards linked to your organization billing account.",
         "added": "Added",
         "cardDetails": "Card details",
+        "bankDetails": "Bank account details",
         "empty": {
             "title": "You have not added any payment methods yet",
             "description": "Go to the Billing overview page and select \"Add payment details\" to continue."

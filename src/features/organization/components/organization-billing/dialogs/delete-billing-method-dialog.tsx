@@ -11,19 +11,22 @@ import {
 	DialogTitle,
 } from "@/components/shadcn/dialog";
 import { useDeletePaymentMethod } from "../../../hooks/organization-billing/use-delete-payment-method";
+import { useBillingStore } from "@/features/organization/store/billing";
 
 type DeleteBillingMethodDialogProps = {
 	open: boolean;
 	paymentMethodId: string | null;
+	isDefaultPaymentMethod?: boolean;
 	onOpenChange: (open: boolean) => void;
 };
 
 const DeleteBillingMethodDialog = ({
 	open,
+	isDefaultPaymentMethod,
 	paymentMethodId,
 	onOpenChange,
 }: DeleteBillingMethodDialogProps) => {
-	const { t } = useTranslation("billing" as any);
+	const { t } = useTranslation("billing");
 	const { t: tCommon } = useTranslation("common");
 	const queryClient = useQueryClient();
 
@@ -41,6 +44,10 @@ const DeleteBillingMethodDialog = ({
 					queryKey: ["payment-methods"],
 				});
 				onOpenChange(false);
+
+				if (isDefaultPaymentMethod) {
+					useBillingStore.getState().setDefaultPaymentMethodId(null);
+				}
 			},
 			onError: () => {
 				toast.error(tCommon("error"));

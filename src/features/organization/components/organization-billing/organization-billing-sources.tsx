@@ -42,8 +42,11 @@ const OrganizationBillingSources = () => {
 		if (billingSource?.data) {
 			setBillingSourceId(billingSource.data.billing_source_uid);
 		}
+
 		if (billingSource?.data?.default_payment_method) {
 			setDefaultPaymentMethodId(billingSource.data.default_payment_method);
+		} else {
+			setDefaultPaymentMethodId(null);
 		}
 	}, [billingSource, setBillingSourceId, setDefaultPaymentMethodId]);
 
@@ -173,9 +176,9 @@ const OrganizationBillingSources = () => {
 						</div>
 					</div>
 				</div>
-				<div className="h-px w-full bg-border" />
 				{defaultPaymentMethod && (
 					<>
+						<div className="h-px w-full bg-border" />
 						<div className="px-4 py-2 rounded-md border-2 border-dashed bg-card-gradient w-fit">
 							<p className="text-sm font-medium">
 								{t("sources.paymentMethod.title")}

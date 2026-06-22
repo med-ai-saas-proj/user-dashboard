@@ -16,6 +16,11 @@ import APIKeyUpdateDialog from "./api-key-update-dialog";
 import ApiKeyUpdateStatusDialog from "./api-key-update-status-dialog";
 import { motion } from "framer-motion";
 import { itemVariants } from "@/lib/animations";
+import {
+	Tooltip,
+	TooltipContent,
+	TooltipTrigger,
+} from "@/components/shadcn/tooltip";
 
 const APIKeyTable = ({ apiKeys }: { apiKeys: APIKey[] }) => {
 	const { t } = useTranslation("api-keys");
@@ -84,37 +89,67 @@ const APIKeyTable = ({ apiKeys }: { apiKeys: APIKey[] }) => {
 							</TableCell>
 							<TableCell className="flex items-center justify-center gap-x-6">
 								{apiKey.disabled ? (
-									<EyeClosed
-										size={16}
-										className="cursor-pointer"
-										onClick={() => onOpenUpdateStatusDialog(apiKey)}
-									/>
+									<Tooltip>
+										<TooltipContent>
+											<p>{t("table.tooltip.enabled")}</p>
+										</TooltipContent>
+										<TooltipTrigger asChild>
+											<EyeClosed
+												size={16}
+												className="cursor-pointer"
+												onClick={() => onOpenUpdateStatusDialog(apiKey)}
+											/>
+										</TooltipTrigger>
+									</Tooltip>
 								) : (
-									<Eye
-										size={16}
-										className="cursor-pointer"
-										onClick={() => onOpenUpdateStatusDialog(apiKey)}
-									/>
+									<Tooltip>
+										<TooltipContent>
+											<p>{t("table.tooltip.disabled")}</p>
+										</TooltipContent>
+										<TooltipTrigger asChild>
+											<Eye
+												size={16}
+												className="cursor-pointer"
+												onClick={() => onOpenUpdateStatusDialog(apiKey)}
+											/>
+										</TooltipTrigger>
+									</Tooltip>
 								)}
-								<SquarePen
-									size={16}
-									className={cn(
-										"cursor-pointer",
-										apiKey.disabled && "opacity-50 pointer-events-none"
-									)}
-									onClick={() =>
-										onOpenUpdateAPIKeyDialog(apiKey, apiKey.disabled)
-									}
-								/>
-								<Trash
-									size={16}
-									color="#ce4034"
-									className={cn(
-										"cursor-pointer",
-										apiKey.disabled && "opacity-50 pointer-events-none"
-									)}
-									onClick={() => onOpenDeleteDialog(apiKey, apiKey.disabled)}
-								/>
+								<Tooltip>
+									<TooltipContent>
+										<p>{t("table.tooltip.edit")}</p>
+									</TooltipContent>
+									<TooltipTrigger asChild>
+										<SquarePen
+											size={16}
+											className={cn(
+												"cursor-pointer",
+												apiKey.disabled && "opacity-50 pointer-events-none"
+											)}
+											onClick={() =>
+												onOpenUpdateAPIKeyDialog(apiKey, apiKey.disabled)
+											}
+										/>
+									</TooltipTrigger>
+								</Tooltip>
+								<Tooltip>
+									<TooltipContent>
+										<p>{t("table.tooltip.delete")}</p>
+									</TooltipContent>
+									<TooltipTrigger asChild>
+										<Trash
+											size={16}
+											color="#ce4034"
+											className={cn(
+												"cursor-pointer",
+												apiKey.disabled && "opacity-50 pointer-events-none"
+											)}
+											onClick={() =>
+												onOpenDeleteDialog(apiKey, apiKey.disabled)
+											}
+										/>
+									</TooltipTrigger>
+								</Tooltip>
 							</TableCell>
 						</TableRow>
 					))}

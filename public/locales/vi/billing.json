@@ -83,7 +83,26 @@
         "billingPeriod": "Kỳ thanh toán",
         "paid": "Đã thanh toán",
         "totalAmount": "Tổng số tiền",
-        "usedCredits": "Credit đã dùng"
+        "usedCredits": "Credit đã dùng",
+        "viewDetails": "Xem chi tiết",
+        "payInvoice": "Thanh toán hóa đơn",
+        "payConfirm": {
+            "title": "Thanh toán hóa đơn",
+            "description": "Bạn sắp thanh toán hóa đơn này. Bạn sẽ được chuyển đến Stripe để hoàn tất thanh toán.",
+            "confirm": "Xác nhận thanh toán"
+        },
+        "details": {
+            "title": "Chi tiết hóa đơn",
+            "billingPeriod": "Kỳ thanh toán",
+            "paidAt": "Ngày thanh toán",
+            "totalAmount": "Tổng số tiền",
+            "usedCredits": "Credit đã dùng",
+            "lineItems": "Chi tiết dòng",
+            "description": "Mô tả",
+            "project": "Dự án",
+            "amount": "Số tiền",
+            "total": "Tổng cộng"
+        }
     },
     "paymentMethods": {
         "title": "Phương thức thanh toán",
@@ -93,6 +112,11 @@
         "empty": {
             "title": "Bạn chưa thêm phương thức thanh toán nào",
             "description": "Vào trang Tổng quan thanh toán và chọn \"Thêm thông tin thanh toán\" để tiếp tục."
+        },
+        "actions": {
+            "delete": "Xóa",
+            "setDefault": "Đặt làm mặc định",
+            "default": "Mặc định"
         }
     },
     "sources": {
@@ -103,7 +127,10 @@
         },
         "title": "Nguồn thanh toán",
         "provider": "Nhà cung cấp",
-        "created": "Ngày tạo"
+        "created": "Ngày tạo",
+        "paymentMethod": {
+            "title": "Phương thức thanh toán mặc định"
+        }
     },
     "intentActions": {
         "noPending": "Không có hành động chờ xử lý nào cho phương thức thanh toán"
@@ -152,6 +179,13 @@
             "description": "Hành động này sẽ xóa phương thức thanh toán khỏi tài khoản của bạn. Bạn có chắc chắn muốn tiếp tục?",
             "actions": {
                 "delete": "Xóa"
+            }
+        },
+        "setDefaultPaymentMethod": {
+            "title": "Đặt phương thức thanh toán mặc định",
+            "description": "Hành động này sẽ đặt phương thức thanh toán này làm mặc định cho tài khoản thanh toán của bạn. Bạn có chắc chắn muốn tiếp tục?",
+            "actions": {
+                "setDefault": "Đặt làm mặc định"
             }
         }
     },

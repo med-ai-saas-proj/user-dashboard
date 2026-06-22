@@ -1,9 +1,8 @@
-import { Languages } from "lucide-react";
-import * as React from "react";
 import { useTranslation } from "react-i18next";
-import { Button } from "@/components/shadcn/button";
 import { locales } from "@/config/i18n";
 import { cn } from "@/lib/utils";
+import { motion } from "framer-motion";
+import { Languages } from "lucide-react";
 
 export interface LocaleSwitcherProps
 	extends React.HTMLAttributes<HTMLDivElement> {
@@ -14,38 +13,47 @@ const LocaleSwitcher = ({ className, ref, ...props }: LocaleSwitcherProps) => {
 	const { i18n } = useTranslation();
 	const currentLocale = i18n.language;
 
-	const handleLocaleChange = (locale: string) => {
-		i18n.changeLanguage(locale);
-	};
-
 	return (
 		<div
 			ref={ref}
-			className={cn("flex items-center gap-2 px-2 py-2", className)}
+			className={cn("flex items-center gap-4", className)}
 			{...props}
 		>
-			<Languages className="size-4" />
-			<div className="flex items-center gap-1">
-				{locales.map((locale, index) => (
-					<React.Fragment key={locale.code}>
-						<Button
-							variant="ghost"
-							size="sm"
-							onClick={() => handleLocaleChange(locale.code)}
-							className={cn(
-								"h-6 px-2 py-0 text-xs",
-								currentLocale === locale.code
-									? "font-bold underline"
-									: "font-normal"
-							)}
+			<Languages className="size-5" />
+			<div className="flex items-center rounded-sm border border-muted-foreground/25 bg-white p-1 gap-1">
+				{locales.map((locale) => {
+					const isActive = currentLocale === locale.code;
+
+					return (
+						<button
+							key={locale.code}
+							type="button"
+							className="relative px-4 py-1 text-sm font-semibold cursor-pointer"
+							onClick={() => i18n.changeLanguage(locale.code)}
 						>
-							{locale.label}
-						</Button>
-						{index < locales.length - 1 && (
-							<span className="text-muted-foreground">|</span>
-						)}
-					</React.Fragment>
-				))}
+							{isActive && (
+								<motion.div
+									layoutId="active-locale"
+									transition={{
+										type: "spring",
+										stiffness: 400,
+										damping: 30,
+									}}
+									className="absolute inset-0 rounded-sm bg-black"
+								/>
+							)}
+
+							<span
+								className={cn(
+									"relative z-10 transition-colors duration-200",
+									isActive ? "text-white" : "text-black"
+								)}
+							>
+								{locale.label}
+							</span>
+						</button>
+					);
+				})}
 			</div>
 		</div>
 	);

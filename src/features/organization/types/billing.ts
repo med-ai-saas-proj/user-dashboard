@@ -61,7 +61,7 @@ export type GetBillingSourceResponse = {
 	};
 };
 
-export type GetPaymentMethod = {
+type BasePaymentMethod = {
 	id: string;
 	object: "payment_method";
 	allow_redisplay: string;
@@ -79,6 +79,15 @@ export type GetPaymentMethod = {
 		phone: string | null;
 		tax_id: string | null;
 	};
+	created: number;
+	customer: string | null;
+	customer_account: string | null;
+	livemode: boolean;
+	metadata: Record<string, unknown>;
+};
+
+export type CardPaymentMethod = BasePaymentMethod & {
+	type: "card";
 	card: {
 		brand: string;
 		checks: {
@@ -104,13 +113,27 @@ export type GetPaymentMethod = {
 		};
 		wallet: null;
 	};
-	created: number;
-	customer: string;
-	customer_account: string | null;
-	livemode: boolean;
-	metadata: Record<string, unknown>;
-	type: "card";
 };
+
+export type UsBankAccountPaymentMethod = BasePaymentMethod & {
+	type: "us_bank_account";
+	us_bank_account: {
+		account_holder_type: "individual" | "company";
+		account_type: "checking" | "savings";
+		bank_name: string;
+		financial_connections_account: string | null;
+		fingerprint: string;
+		last4: string;
+		networks: {
+			preferred: string | null;
+			supported: string[];
+		};
+		routing_number: string;
+		status_details: Record<string, unknown>;
+	};
+};
+
+export type GetPaymentMethod = CardPaymentMethod | UsBankAccountPaymentMethod;
 
 export type GetBillingHistoryResponse = {
 	success: boolean;

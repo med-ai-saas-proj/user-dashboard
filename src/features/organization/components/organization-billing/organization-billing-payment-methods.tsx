@@ -242,6 +242,13 @@ const OrganizationBillingPaymentMethods = () => {
 										)}
 										{isDefault && (
 											<CardFooter className="flex items-center justify-end gap-2 pb-6">
+												<Button
+													size="sm"
+													className="text-sm bg-destructive hover:bg-destructive/80"
+													onClick={() => openDeleteDialog(paymentMethod.id)}
+												>
+													{t("paymentMethods.actions.delete")}
+												</Button>
 												<p className="text-sm text-successful font-medium px-4 py-1 rounded-md border border-successful-status bg-successful-status/25">
 													{t("paymentMethods.actions.default")}
 												</p>
@@ -269,6 +276,9 @@ const OrganizationBillingPaymentMethods = () => {
 			<OrganizationBillingIntentActions />
 			<DeleteBillingMethodDialog
 				open={isDeleteDialogOpen}
+				isDefaultPaymentMethod={
+					selectedPaymentMethodId === defaultPaymentMethodId
+				}
 				paymentMethodId={selectedPaymentMethodId}
 				onOpenChange={(open) => {
 					setIsDeleteDialogOpen(open);

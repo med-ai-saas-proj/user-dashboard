@@ -46,3 +46,9 @@ coverage/
 build-output/
 todo.md
 api-1.yaml
+
+# wrangler files
+.wrangler
+.dev.vars*
+!.dev.vars.example
+!.env.example

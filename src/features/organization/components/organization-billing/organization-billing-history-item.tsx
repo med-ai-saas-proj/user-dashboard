@@ -21,12 +21,7 @@ import {
 import { useState } from "react";
 import { Button } from "@/components/shadcn/button";
 import { usePayInvoice } from "../../hooks/organization-billing/use-pay-invoice";
-
-const formatDate = (value: string, locale: string) => {
-	const date = new Date(value);
-
-	return Number.isNaN(date.getTime()) ? value : date.toLocaleDateString(locale);
-};
+import { formatIsoToLocaleDateTime } from "@/lib/utils";
 
 const formatAmount = (value: string, locale: string) => {
 	const amount = Number(value);
@@ -81,7 +76,7 @@ const InvoiceDetailsDialog = ({
 						</p>
 						<p className="text-sm font-medium">
 							{invoice?.billingPeriod
-								? formatDate(invoice.billingPeriod, locale)
+								? formatIsoToLocaleDateTime(invoice.billingPeriod, locale)
 								: "—"}
 						</p>
 					</div>
@@ -90,7 +85,9 @@ const InvoiceDetailsDialog = ({
 							{t("historyItem.details.paidAt")}
 						</p>
 						<p className="text-sm font-medium">
-							{invoice?.paidAt ? formatDate(invoice.paidAt, locale) : "—"}
+							{invoice?.paidAt
+								? formatIsoToLocaleDateTime(invoice.paidAt, locale)
+								: "—"}
 						</p>
 					</div>
 					<div className="rounded-md bg-muted p-3">
@@ -107,7 +104,9 @@ const InvoiceDetailsDialog = ({
 						<p className="text-xs text-muted-foreground mb-1">
 							{t("historyItem.details.usedCredits")}
 						</p>
-						<p className="text-sm font-medium">{invoice?.usedCredits ?? "—"}</p>
+						<p className="text-sm font-medium">
+							{invoice?.usedCredits !== undefined ? invoice.usedCredits : "—"}
+						</p>
 					</div>
 				</div>
 
@@ -132,7 +131,7 @@ const InvoiceDetailsDialog = ({
 								<TableBody>
 									{invoice.lineItems.map((item, index) => (
 										<TableRow key={item.projectUID ?? index}>
-											<TableCell className="truncate max-w-[160px]">
+											<TableCell className="truncate max-w-40">
 												{item.description}
 											</TableCell>
 											<TableCell className="text-muted-foreground truncate max-w-[120px]">
@@ -256,12 +255,15 @@ const OrganizationBillingHistoryItem = ({
 								</p>
 								<div className="flex items-center gap-x-4">
 									<p className="text-sm text-muted-foreground">
-										{t("historyItem.billingPeriod")}: {invoice.billingPeriod}
+										{t("historyItem.billingPeriod")}:{" "}
+										{formatIsoToLocaleDateTime(invoice.billingPeriod, locale)}
 									</p>
 									<div className="border-l h-4" />
 									<p className="text-sm text-muted-foreground">
 										{t("historyItem.paid")}:{" "}
-										{formatDate(invoice.paidAt, locale)}
+										{invoice.paidAt
+											? formatIsoToLocaleDateTime(invoice.paidAt, locale)
+											: "—"}
 									</p>
 								</div>
 							</div>

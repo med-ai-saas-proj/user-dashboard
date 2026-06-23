@@ -12,7 +12,9 @@
                 "disableApiKeys": "Disable API Keys"
             },
             "actions": {
-                "save": "Save"
+                "save": "Save",
+                "archive": "Archive Project",
+                "unarchive": "Unarchive Project"
             },
             "validation": {
                 "projectNameRequired": "Project name is required",

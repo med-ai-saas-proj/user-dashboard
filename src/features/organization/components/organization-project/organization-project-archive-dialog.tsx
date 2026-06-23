@@ -22,6 +22,8 @@ import {
 	TooltipContent,
 	TooltipTrigger,
 } from "@/components/shadcn/tooltip";
+import { useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 const createArchiveProjectSchema = (messages: {
 	projectNameRequired: string;
@@ -37,6 +39,9 @@ type ArchiveProjectFormData = z.infer<
 type OrganizationProjectArchiveDialogProps = {
 	projectId: string;
 	projectName: string;
+	open?: boolean;
+	onOpenChange?: (open: boolean) => void;
+	triggerButton?: React.ReactNode;
 };
 
 type ArchiveProjectDialogContentProps = {
@@ -49,6 +54,8 @@ const ArchiveProjectDialogContent = ({
 	projectName,
 }: ArchiveProjectDialogContentProps) => {
 	const { t } = useTranslation("organization");
+	const queryClient = useQueryClient();
+
 	const { mutate: archiveProject } = useArchiveProject();
 	const validationMessages = useMemo(
 		() => ({
@@ -83,7 +90,17 @@ const ArchiveProjectDialogContent = ({
 			return;
 		}
 
-		archiveProject({ projectId });
+		archiveProject(
+			{ projectId },
+			{
+				onSuccess: () => {
+					queryClient.invalidateQueries({
+						queryKey: ["project-details", projectId],
+					});
+					toast.success(t("project.toast.archiveSuccess"));
+				},
+			}
+		);
 	};
 
 	return (
@@ -137,22 +154,31 @@ const ArchiveProjectDialogContent = ({
 const OrganizationProjectArchiveDialog = ({
 	projectId,
 	projectName,
+	open: controlledOpen,
+	onOpenChange: controlledOnOpenChange,
 }: OrganizationProjectArchiveDialogProps) => {
 	const { t } = useTranslation("organization");
-	const [open, setOpen] = useState(false);
+	const [internalOpen, setInternalOpen] = useState(false);
+
+	const open = controlledOpen ?? internalOpen;
+	const onOpenChange = controlledOnOpenChange ?? setInternalOpen;
 
 	return (
-		<Dialog open={open} onOpenChange={setOpen}>
-			<DialogTrigger>
-				<Tooltip>
-					<TooltipTrigger asChild>
-						<Archive size={"16"} className="text-destructive" />
-					</TooltipTrigger>
-					<TooltipContent>
-						<p>{t("project.content.archive")}</p>
-					</TooltipContent>
-				</Tooltip>
-			</DialogTrigger>
+		<Dialog open={open} onOpenChange={onOpenChange}>
+			{controlledOpen === undefined && (
+				<DialogTrigger>
+					<Tooltip>
+						<TooltipTrigger asChild>
+							<button type="button">
+								<Archive size={"16"} className="text-destructive" />
+							</button>
+						</TooltipTrigger>
+						<TooltipContent>
+							<p>{t("project.content.archive")}</p>
+						</TooltipContent>
+					</Tooltip>
+				</DialogTrigger>
+			)}
 			{open && (
 				<ArchiveProjectDialogContent
 					projectId={projectId}

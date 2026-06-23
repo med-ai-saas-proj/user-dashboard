@@ -22,6 +22,8 @@ import {
 	TooltipContent,
 	TooltipTrigger,
 } from "@/components/shadcn/tooltip";
+import { useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 const createUnarchiveProjectSchema = (messages: {
 	projectNameRequired: string;
@@ -37,6 +39,9 @@ type UnarchiveProjectFormData = z.infer<
 type OrganizationProjectUnarchiveDialogProps = {
 	projectId: string;
 	projectName: string;
+	open?: boolean;
+	onOpenChange?: (open: boolean) => void;
+	triggerButton?: React.ReactNode;
 };
 
 type UnarchiveProjectDialogContentProps = {
@@ -49,6 +54,8 @@ const UnarchiveProjectDialogContent = ({
 	projectName,
 }: UnarchiveProjectDialogContentProps) => {
 	const { t } = useTranslation("organization");
+	const queryClient = useQueryClient();
+
 	const { mutate: unarchiveProject } = useUnarchiveProject();
 	const validationMessages = useMemo(
 		() => ({
@@ -85,7 +92,17 @@ const UnarchiveProjectDialogContent = ({
 			return;
 		}
 
-		unarchiveProject({ projectId });
+		unarchiveProject(
+			{ projectId },
+			{
+				onSuccess: () => {
+					queryClient.invalidateQueries({
+						queryKey: ["project-details", projectId],
+					});
+					toast.success(t("project.toast.unarchiveSuccess"));
+				},
+			}
+		);
 	};
 
 	return (
@@ -134,21 +151,30 @@ const UnarchiveProjectDialogContent = ({
 const OrganizationProjectUnarchiveDialog = ({
 	projectId,
 	projectName,
+	open: controlledOpen,
+	onOpenChange: controlledOnOpenChange,
 }: OrganizationProjectUnarchiveDialogProps) => {
 	const { t } = useTranslation("organization");
-	const [open, setOpen] = useState(false);
+	const [internalOpen, setInternalOpen] = useState(false);
+
+	const open = controlledOpen ?? internalOpen;
+	const onOpenChange = controlledOnOpenChange ?? setInternalOpen;
 
 	return (
-		<Dialog open={open} onOpenChange={setOpen}>
+		<Dialog open={open} onOpenChange={onOpenChange}>
 			<DialogTrigger>
-				<Tooltip>
-					<TooltipTrigger asChild>
-						<ArchiveRestore size={"16"} className="text-foreground" />
-					</TooltipTrigger>
-					<TooltipContent>
-						<p>{t("project.content.unarchive")}</p>
-					</TooltipContent>
-				</Tooltip>
+				{controlledOpen === undefined && (
+					<Tooltip>
+						<TooltipTrigger asChild>
+							<button type="button">
+								<ArchiveRestore size={"16"} className="text-foreground" />
+							</button>
+						</TooltipTrigger>
+						<TooltipContent>
+							<p>{t("project.content.unarchive")}</p>
+						</TooltipContent>
+					</Tooltip>
+				)}
 			</DialogTrigger>
 			{open && (
 				<UnarchiveProjectDialogContent

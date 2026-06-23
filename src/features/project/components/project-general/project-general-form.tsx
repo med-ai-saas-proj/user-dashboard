@@ -3,7 +3,7 @@ import { Field, FieldLabel } from "@/components/shadcn/field";
 import { Input } from "@/components/shadcn/input";
 import { Textarea } from "@/components/shadcn/textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useForm } from "react-hook-form";
 import z from "zod";
@@ -13,6 +13,8 @@ import { toast } from "sonner";
 import { useGetProjectDetails } from "../../hooks/project-general/use-get-project-details";
 import { motion } from "framer-motion";
 import { itemVariants } from "@/lib/animations";
+import OrganizationProjectArchiveDialog from "@/features/organization/components/organization-project/organization-project-archive-dialog";
+import OrganizationProjectUnarchiveDialog from "@/features/organization/components/organization-project/organization-project-unarchive-dialog";
 
 const createProjectGeneralSchema = (messages: {
 	projectNameRequired: string;
@@ -62,7 +64,11 @@ const ProjectGeneralForm = () => {
 		},
 	});
 
+	const [isArchiveDialogOpen, setIsArchiveDialogOpen] = useState(false);
+	const [isUnarchiveDialogOpen, setIsUnarchiveDialogOpen] = useState(false);
+
 	const onSubmit = (data: ProjectGeneralFormData) => {
+		console.log("Submitting project general form with data:", data);
 		updateProject(
 			{
 				projectId: data.projectId,
@@ -119,10 +125,48 @@ const ProjectGeneralForm = () => {
 						placeholder={t("general.form.fields.projectDescriptionPlaceholder")}
 					/>
 				</Field>
-				<Button type="submit" disabled={isPending}>
-					{t("general.form.actions.save")}
-				</Button>
+				<div className="w-full flex items-center justify-end gap-2">
+					{projectInfo?.archived ? (
+						<Button
+							type="button"
+							variant="outline"
+							className="border text-black hover:bg-black hover:text-white"
+							onClick={() => setIsUnarchiveDialogOpen(true)}
+						>
+							{t("general.form.actions.unarchive")}
+						</Button>
+					) : (
+						<Button
+							type="button"
+							variant="outline"
+							className="border-destructive text-destructive hover:bg-destructive hover:text-white"
+							onClick={() => setIsArchiveDialogOpen(true)}
+						>
+							{t("general.form.actions.archive")}
+						</Button>
+					)}
+					<Button type="submit" disabled={isPending}>
+						{t("general.form.actions.save")}
+					</Button>
+				</div>
 			</form>
+
+			{/* Dialogs rendered outside the form to prevent unintended form submission */}
+			{projectInfo?.archived ? (
+				<OrganizationProjectUnarchiveDialog
+					projectId={projectId}
+					projectName={projectInfo.name}
+					open={isUnarchiveDialogOpen}
+					onOpenChange={setIsUnarchiveDialogOpen}
+				/>
+			) : (
+				<OrganizationProjectArchiveDialog
+					projectId={projectId}
+					projectName={projectInfo?.name || ""}
+					open={isArchiveDialogOpen}
+					onOpenChange={setIsArchiveDialogOpen}
+				/>
+			)}
 		</motion.div>
 	);
 };

@@ -10,6 +10,9 @@ import {
 import { Separator } from "@/components/shadcn/separator";
 import { SidebarTrigger } from "@/components/shadcn/sidebar";
 import { cn } from "@/lib/utils";
+import { useProjectStore } from "@/features/project/store/project";
+import { useAuthStore } from "@/features/auth/store/auth-store";
+import { useParams } from "react-router-dom";
 
 const DashboardLayout = ({
 	children,
@@ -21,6 +24,10 @@ const DashboardLayout = ({
 	headerRight?: React.ReactNode;
 	className?: string;
 }>) => {
+	const params = useParams();
+	const projectInfo = useProjectStore((state) => state.projectInfo);
+	const organization = useAuthStore((state) => state.organization);
+
 	return (
 		<>
 			<header className="sticky top-0 bg-background z-50 flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">
@@ -33,7 +40,9 @@ const DashboardLayout = ({
 					<Breadcrumb>
 						<BreadcrumbList>
 							<BreadcrumbItem className="hidden md:block">
-								<BreadcrumbLink href="#">My Project</BreadcrumbLink>
+								<BreadcrumbLink href="#">
+									{params.projectId ? projectInfo.name : organization?.name}
+								</BreadcrumbLink>
 							</BreadcrumbItem>
 							<BreadcrumbSeparator className="hidden md:block" />
 							<BreadcrumbItem>

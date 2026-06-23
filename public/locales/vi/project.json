@@ -25,10 +25,6 @@
                 "title": "Thành công",
                 "updated": "Cài đặt dự án đã được cập nhật thành công"
             }
-        },
-        "toast": {
-            "archiveSuccess": "Dự án đã được lưu trữ thành công",
-            "unarchiveSuccess": "Dự án đã được hủy lưu trữ thành công"
         }
     },
     "people": {

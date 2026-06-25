@@ -14,7 +14,7 @@ export async function getAuthHeaders(
 		"Content-Type": "application/json",
 	};
 
-	// Handle authentication token
+	//   Handle authentication token
 	if (keycloak.authenticated && keycloak.token) {
 		try {
 			await keycloak.updateToken(30);
@@ -45,8 +45,7 @@ export async function getAuthHeaders(
  * This is shared between axios api-client and SSE requests
  */
 export function handleUnauthorized(): void {
+	console.log("Unauthorized access - logging out");
 	useAuthStore.getState().logout();
-	if (keycloak.authenticated) {
-		keycloak.logout();
-	}
+	keycloak.logout();
 }

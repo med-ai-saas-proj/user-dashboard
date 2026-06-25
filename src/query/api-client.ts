@@ -30,6 +30,7 @@ apiClient.interceptors.response.use(
 	(response) => response,
 	(error) => {
 		if (error.response?.status === 401) {
+			console.log("Unauthorized access - logging out");
 			handleUnauthorized();
 		}
 		return Promise.reject(error);

@@ -68,7 +68,6 @@ const ProjectGeneralForm = () => {
 	const [isUnarchiveDialogOpen, setIsUnarchiveDialogOpen] = useState(false);
 
 	const onSubmit = (data: ProjectGeneralFormData) => {
-		console.log("Submitting project general form with data:", data);
 		updateProject(
 			{
 				projectId: data.projectId,
@@ -152,14 +151,15 @@ const ProjectGeneralForm = () => {
 			</form>
 
 			{/* Dialogs rendered outside the form to prevent unintended form submission */}
-			{projectInfo?.archived ? (
+			{projectInfo?.archived && isUnarchiveDialogOpen && (
 				<OrganizationProjectUnarchiveDialog
 					projectId={projectId}
 					projectName={projectInfo.name}
 					open={isUnarchiveDialogOpen}
 					onOpenChange={setIsUnarchiveDialogOpen}
 				/>
-			) : (
+			)}
+			{!projectInfo?.archived && isArchiveDialogOpen && (
 				<OrganizationProjectArchiveDialog
 					projectId={projectId}
 					projectName={projectInfo?.name || ""}

@@ -20,6 +20,7 @@ import {
 	DialogTitle,
 } from "@/components/shadcn/dialog";
 import { useAuthStore } from "@/features/auth/store/auth-store";
+import { toast } from "sonner";
 
 const OrganizationPeopleInvitationItem = ({
 	invitation,
@@ -27,6 +28,7 @@ const OrganizationPeopleInvitationItem = ({
 	invitation: OrganizationInvitation;
 }) => {
 	const { t } = useTranslation("organization");
+	const { t: tCommon } = useTranslation("common");
 	const organizationId = useAuthStore((state) => state.organization?.id) || "";
 	const [isResendInvitation, setIsResendInvitation] = useState<boolean>(false);
 
@@ -34,17 +36,31 @@ const OrganizationPeopleInvitationItem = ({
 	const { mutate: deleteInvitation } = useDeleteInvitation();
 
 	const handleResendInvitation = (invitationId: string) => {
-		resendInvitation({
-			organizationId,
-			invitationId,
-		});
+		resendInvitation(
+			{
+				organizationId,
+				invitationId,
+			},
+			{
+				onSuccess: () => {
+					toast.success(tCommon("requestDone"));
+				},
+			}
+		);
 		setIsResendInvitation(true);
 	};
 	const handleDeleteInvitation = (invitationId: string) => {
-		deleteInvitation({
-			organizationId,
-			invitationId,
-		});
+		deleteInvitation(
+			{
+				organizationId,
+				invitationId,
+			},
+			{
+				onSuccess: () => {
+					toast.success(tCommon("requestDone"));
+				},
+			}
+		);
 	};
 
 	return (

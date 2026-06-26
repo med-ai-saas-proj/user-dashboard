@@ -150,7 +150,8 @@
         },
         "toast": {
             "archiveSuccess": "Dự án đã được lưu trữ thành công",
-            "unarchiveSuccess": "Dự án đã được hủy lưu trữ thành công"
+            "unarchiveSuccess": "Dự án đã được hủy lưu trữ thành công",
+            "createSuccess": "Dự án đã được tạo thành công"
         }
     },
     "billing": {

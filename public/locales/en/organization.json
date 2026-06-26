@@ -152,7 +152,8 @@
         },
         "toast": {
             "archiveSuccess": "Project was archived successfully",
-            "unarchiveSuccess": "Project was unarchived successfully"
+            "unarchiveSuccess": "Project was unarchived successfully",
+            "createSuccess": "Project was created successfully"
         }
     },
     "billing": {

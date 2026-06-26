@@ -15,6 +15,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslation } from "react-i18next";
 import { useSendInvitation } from "@/features/organization/hooks/organization-people/use-send-invitation";
 import { useAuthStore } from "@/features/auth/store/auth-store";
+import { toast } from "sonner";
 
 type AddMemeberFormData = {
 	email: string;
@@ -31,6 +32,7 @@ const InvitationDialog: React.FC<InvitationDialogProps> = ({
 }) => {
 	const organizationId = useAuthStore((state) => state.organization?.id) || "";
 	const { t } = useTranslation("organization");
+	const { t: tCommon } = useTranslation("common");
 
 	const { mutate: sendInvitation } = useSendInvitation();
 
@@ -55,6 +57,7 @@ const InvitationDialog: React.FC<InvitationDialogProps> = ({
 			{
 				onSuccess: () => {
 					onOpenChange(false);
+					toast.success(tCommon("requestDone"));
 				},
 			}
 		);

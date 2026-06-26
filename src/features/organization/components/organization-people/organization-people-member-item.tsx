@@ -25,6 +25,7 @@ import { useUpdateUserPermissions } from "../../hooks/organization-people/use-up
 import { EditIcon } from "lucide-react";
 import { useGetOrganizationPermissions } from "@/features/organization/hooks/organization-people/use-get-permissions";
 import { useAuthStore } from "@/features/auth/store/auth-store";
+import { toast } from "sonner";
 
 type OrganizationPeopleMemberItemProps =
 	React.HTMLAttributes<HTMLDivElement> & {
@@ -38,6 +39,7 @@ const OrganizationPeopleMemberItem: React.FC<
 	OrganizationPeopleMemberItemProps
 > = ({ id, username, email, imageSrc = "", ...props }) => {
 	const { t } = useTranslation("organization");
+	const { t: tCommon } = useTranslation("common");
 	const organizationId = useAuthStore((state) => state.organization?.id) || "";
 
 	const [currentPermissions, setCurrentPermissions] = useState<
@@ -54,21 +56,35 @@ const OrganizationPeopleMemberItem: React.FC<
 	const { mutate: updateUserPermissions } = useUpdateUserPermissions();
 
 	const handleRemoveUser = () => {
-		deleteUser({
-			organizationId: organizationId,
-			userId: id,
-		});
+		deleteUser(
+			{
+				organizationId: organizationId,
+				userId: id,
+			},
+			{
+				onSuccess: () => {
+					toast.success(tCommon("requestDone"));
+				},
+			}
+		);
 	};
 	const handleUpdatePermissions = () => {
 		const selectedPermissions = Array.from(currentPermissions.entries())
 			.filter(([, isAllowed]) => isAllowed)
 			.map(([permission]) => permission);
 
-		updateUserPermissions({
-			organizationId: organizationId,
-			userId: id,
-			permissions: selectedPermissions,
-		});
+		updateUserPermissions(
+			{
+				organizationId: organizationId,
+				userId: id,
+				permissions: selectedPermissions,
+			},
+			{
+				onSuccess: () => {
+					toast.success(tCommon("requestDone"));
+				},
+			}
+		);
 	};
 	const handleChangePermissions = (perm: string) => {
 		setCurrentPermissions((prev) => {

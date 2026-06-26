@@ -24,6 +24,7 @@ import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useAuthStore } from "@/features/auth/store/auth-store";
 import { PlusIcon } from "lucide-react";
+import { toast } from "sonner";
 
 const createProjectSchema = (messages: {
 	projectNameRequired: string;
@@ -81,6 +82,7 @@ const OrganizationProjectCreateDialog = () => {
 				onSuccess: () => {
 					reset();
 					setOpenDialog(false);
+					toast.success(t("project.toast.createSuccess"));
 				},
 			}
 		);

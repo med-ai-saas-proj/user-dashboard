@@ -2,6 +2,7 @@ import type React from "react";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useTranslation, Trans } from "react-i18next";
+import { toast } from "sonner";
 import {
 	Avatar,
 	AvatarFallback,
@@ -42,6 +43,7 @@ const ProjectPeopleMemberItem: React.FC<ProjectPeopleMemberItemProps> = ({
 	...props
 }) => {
 	const { t } = useTranslation("project");
+	const { t: tCommon } = useTranslation("common");
 	const params = useParams();
 	const projectId =
 		useProjectStore((state) => state.projectId) || params.projectId || "";
@@ -61,10 +63,17 @@ const ProjectPeopleMemberItem: React.FC<ProjectPeopleMemberItemProps> = ({
 	const { mutate: updatePermissions } = useUpdateProjectUserPermissions();
 
 	const handleRemoveUser = () => {
-		deleteUser({
-			projectId,
-			userId: id,
-		});
+		deleteUser(
+			{
+				projectId,
+				userId: id,
+			},
+			{
+				onSuccess: () => {
+					toast.success(tCommon("requestDone"));
+				},
+			}
+		);
 	};
 	const handleUpdatePermissions = () => {
 		const selectedPermissions = Array.from(currentPermissions.entries())
@@ -80,6 +89,7 @@ const ProjectPeopleMemberItem: React.FC<ProjectPeopleMemberItemProps> = ({
 			{
 				onSuccess: () => {
 					setOpenPermissionDialog(false);
+					toast.success(tCommon("requestDone"));
 
 					// optimistic update for permissions
 					if (!permissionsData) return;

@@ -25,6 +25,7 @@ import { useTranslation } from "react-i18next";
 import { useAddProjectUser } from "@/features/project/hooks/project-people/use-add-project-user";
 import { useProjectStore } from "@/features/project/store/project";
 import { useAuthStore } from "@/features/auth/store/auth-store";
+import { toast } from "sonner";
 
 const createAddMemberWithoutEmailDialogSchema = (messages: {
 	userInvalid: string;
@@ -51,6 +52,7 @@ const AddMemberWithoutEmailDialog = ({
 	ref,
 }: AddMemberWithoutEmailDialogProps) => {
 	const { t } = useTranslation("project");
+	const { t: tCommon } = useTranslation("common");
 	const portalContainerRef = useRef<HTMLDivElement | null>(null);
 	const organizationId = useAuthStore((state) => state.organization?.id) || "";
 	const fakeProjectId = useProjectStore((state) => state.projectId);
@@ -93,10 +95,17 @@ const AddMemberWithoutEmailDialog = ({
 	}, [users?.results]);
 
 	const onSubmit = (values: AddMemberWithoutEmailDialogFormValues) => {
-		addUser({
-			projectId: fakeProjectId,
-			userId: values.userId,
-		});
+		addUser(
+			{
+				projectId: fakeProjectId,
+				userId: values.userId,
+			},
+			{
+				onSuccess: () => {
+					toast.success(tCommon("requestDone"));
+				},
+			}
+		);
 		return true;
 	};
 

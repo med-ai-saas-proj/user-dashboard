@@ -11,6 +11,7 @@ import {
 import { useProjectStore } from "@/features/project/store/project";
 import { useDeleteRole } from "@/features/project/hooks/project-people/use-delete-role";
 import { Trans, useTranslation } from "react-i18next";
+import { toast } from "sonner";
 
 type ConfirmDeleteRoleDialogProps = {
 	roleId: string;
@@ -26,6 +27,7 @@ const ConfirmDeleteRoleDialog = ({
 	onOpenChange,
 }: ConfirmDeleteRoleDialogProps) => {
 	const { t } = useTranslation("project");
+	const { t: tCommon } = useTranslation("common");
 	const fakeProjectId = useProjectStore((state) => state.projectId);
 
 	const { mutate: deleteRole } = useDeleteRole();
@@ -39,6 +41,7 @@ const ConfirmDeleteRoleDialog = ({
 			{
 				onSuccess: () => {
 					onOpenChange(false);
+					toast.success(tCommon("requestDone"));
 				},
 			}
 		);

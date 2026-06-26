@@ -57,6 +57,10 @@
                 "permissionsDialog": {
                     "title": "Permissions"
                 }
+            },
+            "details": {
+                "title": "Member details",
+                "permissions": "Permissions"
             }
         },
         "role": {

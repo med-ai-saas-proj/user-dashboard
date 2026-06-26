@@ -51,7 +51,7 @@ const OrganizationPeopleMemberItem: React.FC<
 	const { data: organizationPermissions } = useGetOrganizationPermissions();
 	const { data: userPermissions } = useGetUserPermissions({
 		organizationId: organizationId,
-		userId: isPermissionsDialogOpen ? id : "",
+		userId: id || "",
 	});
 	const { mutate: updateUserPermissions } = useUpdateUserPermissions();
 
@@ -121,7 +121,24 @@ const OrganizationPeopleMemberItem: React.FC<
 					<AvatarFallback>{username[0].toUpperCase()}</AvatarFallback>
 				</Avatar>
 				<div>
-					<p className="font-medium">{username}</p>
+					<div className="flex items-center gap-6">
+						<p className="font-medium text-nowrap">{username}</p>
+						<div className="flex flex-wrap gap-2 max-w-fit">
+							{userPermissions?.permissions.slice(0, 3).map((permission) => (
+								<span
+									key={permission}
+									className="inline-flex items-center rounded-sm bg-primary/10 px-2.5 py-0.5 text-xs font-medium text-muted-foreground"
+								>
+									{permission}
+								</span>
+							))}
+							{userPermissions && userPermissions.permissions.length > 3 && (
+								<span className="inline-flex items-center rounded-sm bg-muted px-2.5 py-0.5 text-xs font-medium text-muted-foreground">
+									+{userPermissions.permissions.length - 3}
+								</span>
+							)}
+						</div>
+					</div>
 					<p className="text-sm text-muted-foreground">{email}</p>
 				</div>
 			</div>

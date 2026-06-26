@@ -42,7 +42,10 @@
                     "title": "Quyền hạn"
                 }
             },
-            "title": "Chi tiết thành viên"
+            "details": {
+                "title": "Chi tiết thành viên",
+                "permissions": "Quyền hạn"
+            }
         },
         "invitations": {
             "loading": "Đang tải danh sách lời mời...",

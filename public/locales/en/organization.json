@@ -43,7 +43,8 @@
                 }
             },
             "details": {
-                "title": "Member details"
+                "title": "Member details",
+                "permissions": "Permissions"
             }
         },
         "invitations": {

@@ -94,8 +94,8 @@ const OrganizationPeopleMember = () => {
 				open={openAddMemeberDialog}
 				onOpenChange={setOpenAddMemberDialog}
 			/>
-			<div className="flex gap-8 min-h-fit">
-				<div className="flex-7 flex-col border rounded-md">
+			<div className="flex items-stretch gap-16 min-h-fit">
+				<div className="flex-7 flex-col border rounded-md h-fit">
 					{isPending && (
 						<div className="flex items-center justify-center h-full">
 							<div className="flex items-center justify-center gap-2">
@@ -124,8 +124,11 @@ const OrganizationPeopleMember = () => {
 						onPageChange={setPage}
 					/>
 				</div>
+
+				<div className="w-px bg-border" />
+
 				{!isMobile && (
-					<div className="flex-3 border-l p-8 hidden md:block">
+					<div className="flex-3 hidden md:block">
 						{!selectedUser && (
 							<div className="flex items-center justify-center h-full">
 								<p className="text-center text-muted-foreground">

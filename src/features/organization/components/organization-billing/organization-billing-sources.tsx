@@ -42,8 +42,11 @@ const OrganizationBillingSources = () => {
 		if (billingSource?.data) {
 			setBillingSourceId(billingSource.data.billing_source_uid);
 		}
+
 		if (billingSource?.data?.default_payment_method) {
 			setDefaultPaymentMethodId(billingSource.data.default_payment_method);
+		} else {
+			setDefaultPaymentMethodId(null);
 		}
 	}, [billingSource, setBillingSourceId, setDefaultPaymentMethodId]);
 
@@ -173,9 +176,9 @@ const OrganizationBillingSources = () => {
 						</div>
 					</div>
 				</div>
-				<div className="h-px w-full bg-border" />
 				{defaultPaymentMethod && (
 					<>
+						<div className="h-px w-full bg-border" />
 						<div className="px-4 py-2 rounded-md border-2 border-dashed bg-card-gradient w-fit">
 							<p className="text-sm font-medium">
 								{t("sources.paymentMethod.title")}
@@ -194,11 +197,14 @@ const OrganizationBillingSources = () => {
 											</div>
 											<div>
 												<p className="text-base font-semibold capitalize">
-													{defaultPaymentMethod.card.brand} ending in{" "}
-													{defaultPaymentMethod.card.last4}
+													{defaultPaymentMethod.type === "card"
+														? `${defaultPaymentMethod.card.brand} ending in ${defaultPaymentMethod.card.last4}`
+														: `${defaultPaymentMethod.us_bank_account.bank_name} ending in ${defaultPaymentMethod.us_bank_account.last4}`}
 												</p>
 												<p className="text-sm text-muted-foreground">
-													{defaultPaymentMethod.type.toUpperCase()}{" "}
+													{defaultPaymentMethod.type === "card"
+														? "CARD"
+														: "BANK ACCOUNT"}{" "}
 													{t("common.method")}
 												</p>
 											</div>
@@ -264,14 +270,25 @@ const OrganizationBillingSources = () => {
 										/>
 										<div>
 											<p className="text-sm text-muted-foreground">
-												{t("paymentMethods.cardDetails")}
+												{defaultPaymentMethod.type === "card"
+													? t("paymentMethods.cardDetails")
+													: t("paymentMethods.bankDetails")}
 											</p>
-											<p className="font-medium capitalize text-nowrap">
-												{defaultPaymentMethod.card.brand} •{" "}
-												{defaultPaymentMethod.card.funding} • Exp{" "}
-												{defaultPaymentMethod.card.exp_month}/
-												{defaultPaymentMethod.card.exp_year}
-											</p>
+											{defaultPaymentMethod.type === "card" ? (
+												<p className="font-medium capitalize text-nowrap">
+													{defaultPaymentMethod.card.brand} •{" "}
+													{defaultPaymentMethod.card.funding} • Exp{" "}
+													{defaultPaymentMethod.card.exp_month}/
+													{defaultPaymentMethod.card.exp_year}
+												</p>
+											) : (
+												<p className="font-medium capitalize text-nowrap">
+													{defaultPaymentMethod.us_bank_account.bank_name} •{" "}
+													{defaultPaymentMethod.us_bank_account.account_type} •
+													Routing{" "}
+													{defaultPaymentMethod.us_bank_account.routing_number}
+												</p>
+											)}
 										</div>
 									</div>
 								</div>

@@ -202,7 +202,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 				{/* {state === "expanded" && (
 					<LocaleSwitcher className="mx-auto invisible sm:visible" />
 				)} */}
-				{data.user && <NavUser user={data.user} />}
+				{data.user && <NavUser user={data.user} info={data.info} />}
 			</SidebarFooter>
 			<SidebarRail />
 		</Sidebar>

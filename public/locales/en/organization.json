@@ -149,6 +149,10 @@
                 "cancel": "Cancel",
                 "unarchive": "Unarchive"
             }
+        },
+        "toast": {
+            "archiveSuccess": "Project was archived successfully",
+            "unarchiveSuccess": "Project was unarchived successfully"
         }
     },
     "billing": {

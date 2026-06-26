@@ -19,6 +19,7 @@ import {
 } from "@/components/shadcn/sidebar";
 import { useProjectStore } from "@/features/project/store/project";
 import { cn } from "@/lib/utils";
+import { useTranslation } from "react-i18next";
 
 export function TeamSwitcher({
 	info,
@@ -40,6 +41,7 @@ export function TeamSwitcher({
 }) {
 	const { isMobile } = useSidebar();
 	const navigate = useNavigate();
+	const { t } = useTranslation("sidebar");
 
 	const setProjectId = useProjectStore((state) => state.setProjectId);
 	const setProjectInfo = useProjectStore((state) => state.setProjectInfo);
@@ -73,10 +75,10 @@ export function TeamSwitcher({
 							</div>
 							<div className="grid flex-1 text-left text-sm leading-tight">
 								<span className="truncate font-medium">
-									{info.organization.name}
+									{info.organization.defaultProject?.name}
 								</span>
 								<span className="truncate text-xs">
-									{info.organization.defaultProject?.name}
+									{t("sidebar.project.title")}
 								</span>
 							</div>
 							<ChevronsUpDown className="ml-auto" />

@@ -1,68 +1,76 @@
 {
-  "playground": {
-    "title": "Sân chơi",
-    "ehrSummary": {
-      "title": "Tóm tắt EHR"
+    "sidebar": {
+        "project": {
+            "title": "Dự án"
+        },
+        "organization": {
+            "title": "Tổ chức"
+        }
     },
-    "rxAdvisor": {
-      "title": "Cố vấn Rx"
+    "playground": {
+        "title": "Sân chơi",
+        "ehrSummary": {
+            "title": "Tóm tắt EHR"
+        },
+        "rxAdvisor": {
+            "title": "Cố vấn Rx"
+        },
+        "chatBot": {
+            "title": "Chatbot"
+        },
+        "aiSearch": {
+            "title": "Tìm kiếm AI"
+        }
     },
-    "chatBot": {
-      "title": "Chatbot"
+    "management": {
+        "title": "Quản lý",
+        "dashboard": {
+            "title": "Tổng quan"
+        },
+        "apiKeys": {
+            "title": "Khóa API"
+        },
+        "apiReference": {
+            "title": "Tham chiếu API"
+        },
+        "settings": {
+            "title": "Cài đặt"
+        }
     },
-    "aiSearch": {
-      "title": "Tìm kiếm AI"
-    }
-  },
-  "management": {
-    "title": "Quản lý",
-    "dashboard": {
-      "title": "Tổng quan"
-    },
-    "apiKeys": {
-      "title": "Khóa API"
-    },
-    "apiReference": {
-      "title": "Tham chiếu API"
-    },
-    "settings": {
-      "title": "Cài đặt"
-    }
-  },
-  "organization": {
-    "title": "Tổ chức",
-    "general": {
-      "title": "Chung"
-    },
-    "people": {
-      "title": "Người dùng"
+    "organization": {
+        "title": "Tổ chức",
+        "general": {
+            "title": "Chung"
+        },
+        "people": {
+            "title": "Người dùng"
+        },
+        "project": {
+            "title": "Dự án"
+        },
+        "billing": {
+            "title": "Thanh toán"
+        },
+        "settings": {
+            "title": "Cài đặt"
+        }
     },
     "project": {
-      "title": "Dự án"
-    },
-    "billing": {
-      "title": "Thanh toán"
-    },
-    "settings": {
-      "title": "Cài đặt"
+        "title": "Dự án",
+        "general": {
+            "title": "Chung"
+        },
+        "apiKeys": {
+            "title": "Khóa API"
+        },
+        "people": {
+            "title": "Người dùng"
+        },
+        "buckets": {
+            "title": "Dữ liệu RAG"
+        },
+        "settings": {
+            "title": "Cài đặt"
+        }
     }
-  },
-  "project": {
-    "title": "Dự án",
-    "general": {
-      "title": "Chung"
-    },
-    "apiKeys": {
-      "title": "Khóa API"
-    },
-    "people": {
-      "title": "Người dùng"
-    },
-    "buckets": {
-      "title": "Dữ liệu RAG"
-    },
-    "settings": {
-      "title": "Cài đặt"
-    }
-  }
 }

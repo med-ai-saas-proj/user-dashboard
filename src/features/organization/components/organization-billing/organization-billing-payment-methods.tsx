@@ -122,6 +122,14 @@ const OrganizationBillingPaymentMethods = () => {
 
 								const isDefault = paymentMethod.id === defaultPaymentMethodId;
 
+								const isCard = paymentMethod.type === "card";
+
+								const methodTitle = isCard
+									? `${paymentMethod.card.brand} ending in ${paymentMethod.card.last4}`
+									: `${paymentMethod.us_bank_account.bank_name} ending in ${paymentMethod.us_bank_account.last4}`;
+
+								const methodTypeLabel = isCard ? "CARD" : "BANK ACCOUNT";
+
 								return (
 									<Card key={paymentMethod.id} className="w-full py-0">
 										<CardHeader className="border-b bg-muted/20 pt-6">
@@ -133,12 +141,10 @@ const OrganizationBillingPaymentMethods = () => {
 														</div>
 														<div>
 															<p className="text-base font-semibold capitalize">
-																{paymentMethod.card.brand} ending in{" "}
-																{paymentMethod.card.last4}
+																{methodTitle}
 															</p>
 															<p className="text-sm text-muted-foreground">
-																{paymentMethod.type.toUpperCase()}{" "}
-																{t("common.method")}
+																{methodTypeLabel} {t("common.method")}
 															</p>
 														</div>
 													</div>
@@ -209,14 +215,25 @@ const OrganizationBillingPaymentMethods = () => {
 													/>
 													<div>
 														<p className="text-sm text-muted-foreground">
-															{t("paymentMethods.cardDetails")}
+															{isCard
+																? t("paymentMethods.cardDetails")
+																: t("paymentMethods.bankDetails")}
 														</p>
-														<p className="font-medium capitalize text-nowrap">
-															{paymentMethod.card.brand} •{" "}
-															{paymentMethod.card.funding} • Exp{" "}
-															{paymentMethod.card.exp_month}/
-															{paymentMethod.card.exp_year}
-														</p>
+														{isCard ? (
+															<p className="font-medium capitalize text-nowrap">
+																{paymentMethod.card.brand} •{" "}
+																{paymentMethod.card.funding} • Exp{" "}
+																{paymentMethod.card.exp_month}/
+																{paymentMethod.card.exp_year}
+															</p>
+														) : (
+															<p className="font-medium capitalize text-nowrap">
+																{paymentMethod.us_bank_account.bank_name} •{" "}
+																{paymentMethod.us_bank_account.account_type} •
+																Routing{" "}
+																{paymentMethod.us_bank_account.routing_number}
+															</p>
+														)}
 													</div>
 												</div>
 											</div>
@@ -242,6 +259,13 @@ const OrganizationBillingPaymentMethods = () => {
 										)}
 										{isDefault && (
 											<CardFooter className="flex items-center justify-end gap-2 pb-6">
+												<Button
+													size="sm"
+													className="text-sm bg-destructive hover:bg-destructive/80"
+													onClick={() => openDeleteDialog(paymentMethod.id)}
+												>
+													{t("paymentMethods.actions.delete")}
+												</Button>
 												<p className="text-sm text-successful font-medium px-4 py-1 rounded-md border border-successful-status bg-successful-status/25">
 													{t("paymentMethods.actions.default")}
 												</p>
@@ -269,6 +293,9 @@ const OrganizationBillingPaymentMethods = () => {
 			<OrganizationBillingIntentActions />
 			<DeleteBillingMethodDialog
 				open={isDeleteDialogOpen}
+				isDefaultPaymentMethod={
+					selectedPaymentMethodId === defaultPaymentMethodId
+				}
 				paymentMethodId={selectedPaymentMethodId}
 				onOpenChange={(open) => {
 					setIsDeleteDialogOpen(open);

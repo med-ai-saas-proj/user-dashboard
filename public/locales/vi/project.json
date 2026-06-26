@@ -12,7 +12,9 @@
                 "disableApiKeys": "Vô hiệu hóa API Keys"
             },
             "actions": {
-                "save": "Lưu"
+                "save": "Lưu",
+                "archive": "Lưu trữ Dự án",
+                "unarchive": "Hủy lưu trữ Dự án"
             },
             "validation": {
                 "projectNameRequired": "Tên dự án là bắt buộc",

@@ -147,6 +147,10 @@
                 "cancel": "Hủy",
                 "unarchive": "Bỏ lưu trữ"
             }
+        },
+        "toast": {
+            "archiveSuccess": "Dự án đã được lưu trữ thành công",
+            "unarchiveSuccess": "Dự án đã được hủy lưu trữ thành công"
         }
     },
     "billing": {

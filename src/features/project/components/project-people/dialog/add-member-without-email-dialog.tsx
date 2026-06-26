@@ -3,14 +3,14 @@ import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Field, FieldGroup } from "@/components/shadcn/field";
-import {
-	Select,
-	SelectContent,
-	SelectGroup,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from "@/components/shadcn/select";
+// import {
+// 	Select,
+// 	SelectContent,
+// 	SelectGroup,
+// 	SelectItem,
+// 	SelectTrigger,
+// 	SelectValue,
+// } from "@/components/shadcn/select";
 import { Label } from "@/components/shadcn/label";
 import {
 	Combobox,
@@ -28,11 +28,11 @@ import { useAuthStore } from "@/features/auth/store/auth-store";
 
 const createAddMemberWithoutEmailDialogSchema = (messages: {
 	userInvalid: string;
-	roleInvalid: string;
+	// roleInvalid: string;
 }) =>
 	z.object({
 		userId: z.string().min(1, messages.userInvalid),
-		role: z.string().min(1, messages.roleInvalid),
+		// role: z.string().min(1, messages.roleInvalid),
 	});
 
 type AddMemberWithoutEmailDialogFormValues = z.infer<
@@ -74,7 +74,7 @@ const AddMemberWithoutEmailDialog = ({
 		resolver: zodResolver(addMemeberWithoutEmailDialogSchema),
 		defaultValues: {
 			userId: "",
-			role: "member",
+			// role: "member",
 		},
 	});
 
@@ -160,7 +160,7 @@ const AddMemberWithoutEmailDialog = ({
 						)}
 					/>
 				</Field>
-				<Field>
+				{/* <Field>
 					<Controller
 						name="role"
 						control={control}
@@ -218,7 +218,7 @@ const AddMemberWithoutEmailDialog = ({
 							</div>
 						)}
 					/>
-				</Field>
+				</Field> */}
 			</FieldGroup>
 		</form>
 	);

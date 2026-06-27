@@ -121,8 +121,13 @@ const OrganizationPeopleMemberItem: React.FC<
 					<AvatarFallback>{username[0].toUpperCase()}</AvatarFallback>
 				</Avatar>
 				<div>
-					<div className="flex items-center gap-6">
-						<p className="font-medium text-nowrap">{username}</p>
+					<div className="flex items-start gap-6">
+						<div>
+							<p className="font-medium text-nowrap">{username}</p>
+							<p className="text-sm text-nowrap text-muted-foreground">
+								{email}
+							</p>
+						</div>
 						<div className="flex flex-wrap gap-2 max-w-fit">
 							{userPermissions?.permissions.slice(0, 3).map((permission) => (
 								<span
@@ -139,7 +144,6 @@ const OrganizationPeopleMemberItem: React.FC<
 							)}
 						</div>
 					</div>
-					<p className="text-sm text-muted-foreground">{email}</p>
 				</div>
 			</div>
 			<div className="flex items-center gap-4">

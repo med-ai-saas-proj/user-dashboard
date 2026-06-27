@@ -55,7 +55,9 @@
                     "description": "Are you sure you want to remove <bold>{{username}}</bold> from this project?"
                 },
                 "permissionsDialog": {
-                    "title": "Permissions"
+                    "title": "Permissions",
+                    "ownerAllPermissions": "This user is an owner so they get all permissions.",
+                    "ownerNotUser": "This permission is reserved for owners."
                 }
             },
             "details": {

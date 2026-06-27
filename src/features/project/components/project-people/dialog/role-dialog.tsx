@@ -18,6 +18,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import { toast } from "sonner";
 import z from "zod";
 import { Textarea } from "@/components/shadcn/textarea";
 
@@ -48,6 +49,7 @@ const RoleDialog = ({
 	onOpenChange,
 }: RoleDialogProps) => {
 	const { t } = useTranslation("project");
+	const { t: tCommon } = useTranslation("common");
 	const fakeProjectId = useProjectStore((state) => state.projectId);
 	const validationMessages = useMemo(
 		() => ({
@@ -104,6 +106,7 @@ const RoleDialog = ({
 				{
 					onSuccess: () => {
 						onOpenChange(false);
+						toast.success(tCommon("requestDone"));
 					},
 				}
 			);
@@ -118,6 +121,7 @@ const RoleDialog = ({
 				{
 					onSuccess: () => {
 						onOpenChange(false);
+						toast.success(tCommon("requestDone"));
 					},
 				}
 			);

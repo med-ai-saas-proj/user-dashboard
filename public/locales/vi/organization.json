@@ -42,7 +42,10 @@
                     "title": "Quyền hạn"
                 }
             },
-            "title": "Chi tiết thành viên"
+            "details": {
+                "title": "Chi tiết thành viên",
+                "permissions": "Quyền hạn"
+            }
         },
         "invitations": {
             "loading": "Đang tải danh sách lời mời...",
@@ -150,7 +153,8 @@
         },
         "toast": {
             "archiveSuccess": "Dự án đã được lưu trữ thành công",
-            "unarchiveSuccess": "Dự án đã được hủy lưu trữ thành công"
+            "unarchiveSuccess": "Dự án đã được hủy lưu trữ thành công",
+            "createSuccess": "Dự án đã được tạo thành công"
         }
     },
     "billing": {

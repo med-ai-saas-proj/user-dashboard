@@ -25,6 +25,7 @@ import { useUpdateUserPermissions } from "../../hooks/organization-people/use-up
 import { EditIcon } from "lucide-react";
 import { useGetOrganizationPermissions } from "@/features/organization/hooks/organization-people/use-get-permissions";
 import { useAuthStore } from "@/features/auth/store/auth-store";
+import { toast } from "sonner";
 
 type OrganizationPeopleMemberItemProps =
 	React.HTMLAttributes<HTMLDivElement> & {
@@ -38,6 +39,7 @@ const OrganizationPeopleMemberItem: React.FC<
 	OrganizationPeopleMemberItemProps
 > = ({ id, username, email, imageSrc = "", ...props }) => {
 	const { t } = useTranslation("organization");
+	const { t: tCommon } = useTranslation("common");
 	const organizationId = useAuthStore((state) => state.organization?.id) || "";
 
 	const [currentPermissions, setCurrentPermissions] = useState<
@@ -49,26 +51,40 @@ const OrganizationPeopleMemberItem: React.FC<
 	const { data: organizationPermissions } = useGetOrganizationPermissions();
 	const { data: userPermissions } = useGetUserPermissions({
 		organizationId: organizationId,
-		userId: isPermissionsDialogOpen ? id : "",
+		userId: id || "",
 	});
 	const { mutate: updateUserPermissions } = useUpdateUserPermissions();
 
 	const handleRemoveUser = () => {
-		deleteUser({
-			organizationId: organizationId,
-			userId: id,
-		});
+		deleteUser(
+			{
+				organizationId: organizationId,
+				userId: id,
+			},
+			{
+				onSuccess: () => {
+					toast.success(tCommon("requestDone"));
+				},
+			}
+		);
 	};
 	const handleUpdatePermissions = () => {
 		const selectedPermissions = Array.from(currentPermissions.entries())
 			.filter(([, isAllowed]) => isAllowed)
 			.map(([permission]) => permission);
 
-		updateUserPermissions({
-			organizationId: organizationId,
-			userId: id,
-			permissions: selectedPermissions,
-		});
+		updateUserPermissions(
+			{
+				organizationId: organizationId,
+				userId: id,
+				permissions: selectedPermissions,
+			},
+			{
+				onSuccess: () => {
+					toast.success(tCommon("requestDone"));
+				},
+			}
+		);
 	};
 	const handleChangePermissions = (perm: string) => {
 		setCurrentPermissions((prev) => {
@@ -105,7 +121,24 @@ const OrganizationPeopleMemberItem: React.FC<
 					<AvatarFallback>{username[0].toUpperCase()}</AvatarFallback>
 				</Avatar>
 				<div>
-					<p className="font-medium">{username}</p>
+					<div className="flex items-center gap-6">
+						<p className="font-medium text-nowrap">{username}</p>
+						<div className="flex flex-wrap gap-2 max-w-fit">
+							{userPermissions?.permissions.slice(0, 3).map((permission) => (
+								<span
+									key={permission}
+									className="inline-flex items-center rounded-sm bg-primary/10 px-2.5 py-0.5 text-xs font-medium text-muted-foreground"
+								>
+									{permission}
+								</span>
+							))}
+							{userPermissions && userPermissions.permissions.length > 3 && (
+								<span className="inline-flex items-center rounded-sm bg-muted px-2.5 py-0.5 text-xs font-medium text-muted-foreground">
+									+{userPermissions.permissions.length - 3}
+								</span>
+							)}
+						</div>
+					</div>
 					<p className="text-sm text-muted-foreground">{email}</p>
 				</div>
 			</div>

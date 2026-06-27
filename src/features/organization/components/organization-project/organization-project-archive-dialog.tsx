@@ -47,11 +47,13 @@ type OrganizationProjectArchiveDialogProps = {
 type ArchiveProjectDialogContentProps = {
 	projectId: string;
 	projectName: string;
+	onOpenChange?: (open: boolean) => void;
 };
 
 const ArchiveProjectDialogContent = ({
 	projectId,
 	projectName,
+	onOpenChange,
 }: ArchiveProjectDialogContentProps) => {
 	const { t } = useTranslation("organization");
 	const queryClient = useQueryClient();
@@ -97,6 +99,7 @@ const ArchiveProjectDialogContent = ({
 					queryClient.invalidateQueries({
 						queryKey: ["project-details", projectId],
 					});
+					onOpenChange?.(false);
 					toast.success(t("project.toast.archiveSuccess"));
 				},
 			}
@@ -183,6 +186,7 @@ const OrganizationProjectArchiveDialog = ({
 				<ArchiveProjectDialogContent
 					projectId={projectId}
 					projectName={projectName}
+					onOpenChange={onOpenChange}
 				/>
 			)}
 		</Dialog>

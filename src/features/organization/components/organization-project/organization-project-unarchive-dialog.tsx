@@ -47,11 +47,13 @@ type OrganizationProjectUnarchiveDialogProps = {
 type UnarchiveProjectDialogContentProps = {
 	projectId: string;
 	projectName: string;
+	onOpenChange?: (open: boolean) => void;
 };
 
 const UnarchiveProjectDialogContent = ({
 	projectId,
 	projectName,
+	onOpenChange,
 }: UnarchiveProjectDialogContentProps) => {
 	const { t } = useTranslation("organization");
 	const queryClient = useQueryClient();
@@ -99,6 +101,7 @@ const UnarchiveProjectDialogContent = ({
 					queryClient.invalidateQueries({
 						queryKey: ["project-details", projectId],
 					});
+					onOpenChange?.(false);
 					toast.success(t("project.toast.unarchiveSuccess"));
 				},
 			}
@@ -180,6 +183,7 @@ const OrganizationProjectUnarchiveDialog = ({
 				<UnarchiveProjectDialogContent
 					projectId={projectId}
 					projectName={projectName}
+					onOpenChange={onOpenChange}
 				/>
 			)}
 		</Dialog>

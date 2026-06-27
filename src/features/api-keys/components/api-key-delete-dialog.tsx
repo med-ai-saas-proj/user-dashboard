@@ -10,6 +10,7 @@ import {
 import type { APIKey } from "@/features/api-keys/api-key.type";
 import { useDeleteApiKey } from "@/features/api-keys/hooks/use-delete-api-key";
 import { useTranslation } from "react-i18next";
+import { toast } from "sonner";
 
 type ApiKeyDeleteDialogProps = {
 	open: boolean;
@@ -31,7 +32,11 @@ const ApiKeyDeleteDialog = ({
 		if (!selectedApiKey) return;
 
 		onOpenChange(false);
-		deleteApiKeyMutation.mutate(selectedApiKey.id);
+		deleteApiKeyMutation.mutate(selectedApiKey.id, {
+			onSuccess: () => {
+				toast.success(tCommon("requestDone"));
+			},
+		});
 	};
 
 	return (

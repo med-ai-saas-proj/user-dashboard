@@ -4,7 +4,6 @@ import {
 	AvatarImage,
 } from "@/components/shadcn/avatar";
 import { Button } from "@/components/shadcn/button";
-import { Checkbox } from "@/components/shadcn/checkbox";
 import {
 	Dialog,
 	DialogClose,
@@ -15,17 +14,15 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "@/components/shadcn/dialog";
-import { Field } from "@/components/shadcn/field";
-import { Label } from "@/components/shadcn/label";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDeleteUser } from "../../hooks/organization-people/use-delete-user";
 import { useGetUserPermissions } from "../../hooks/organization-people/use-get-user-permissions";
 import { useUpdateUserPermissions } from "../../hooks/organization-people/use-update-user-permissions";
-import { EditIcon } from "lucide-react";
 import { useGetOrganizationPermissions } from "@/features/organization/hooks/organization-people/use-get-permissions";
 import { useAuthStore } from "@/features/auth/store/auth-store";
 import { toast } from "sonner";
+import OrganizationMemberItemPermissionsDialog from "./organization-member-item-permissions-dialog";
 
 type OrganizationPeopleMemberItemProps =
 	React.HTMLAttributes<HTMLDivElement> & {
@@ -46,6 +43,7 @@ const OrganizationPeopleMemberItem: React.FC<
 		Map<string, boolean>
 	>(new Map());
 	const [isPermissionsDialogOpen, setIsPermissionsDialogOpen] = useState(false);
+	const [isOwner, setIsOwner] = useState<boolean>(false);
 
 	const { mutate: deleteUser } = useDeleteUser();
 	const { data: organizationPermissions } = useGetOrganizationPermissions();
@@ -81,6 +79,7 @@ const OrganizationPeopleMemberItem: React.FC<
 			},
 			{
 				onSuccess: () => {
+					setIsPermissionsDialogOpen(false);
 					toast.success(tCommon("requestDone"));
 				},
 			}
@@ -99,12 +98,17 @@ const OrganizationPeopleMemberItem: React.FC<
 			return;
 		}
 
+		const viewedUserIsOwner =
+			userPermissions?.permissions?.some((p) => p.includes("owner")) ?? false;
+		setIsOwner(viewedUserIsOwner);
+
 		const permissionMap = new Map<string, boolean>();
 
 		organizationPermissions?.permissions?.forEach((permission) => {
 			permissionMap.set(
 				permission,
-				userPermissions?.permissions?.includes(permission) ?? false
+				viewedUserIsOwner ||
+					(userPermissions?.permissions?.includes(permission) ?? false)
 			);
 		});
 		setCurrentPermissions(permissionMap);
@@ -176,51 +180,15 @@ const OrganizationPeopleMemberItem: React.FC<
 						</DialogFooter>
 					</DialogContent>
 				</Dialog>
-				<Dialog
+				<OrganizationMemberItemPermissionsDialog
 					open={isPermissionsDialogOpen}
 					onOpenChange={setIsPermissionsDialogOpen}
-				>
-					<DialogTrigger asChild>
-						<Button variant="default" size="sm" className="ml-auto">
-							<EditIcon />
-							{t("people.members.item.actions.permissions")}
-						</Button>
-					</DialogTrigger>
-					{isPermissionsDialogOpen && (
-						<DialogContent>
-							<DialogHeader>
-								<DialogTitle>
-									{t("people.members.item.permissionsDialog.title")}
-								</DialogTitle>
-								<DialogDescription>
-									<div className="flex flex-col gap-4 mt-4">
-										{organizationPermissions?.permissions?.map((perm) => (
-											<Field orientation={"horizontal"} key={perm}>
-												<Checkbox
-													id={perm}
-													name={perm}
-													checked={currentPermissions.get(perm) === true}
-													onCheckedChange={() => handleChangePermissions(perm)}
-												/>
-												<Label htmlFor={perm}>{perm}</Label>
-											</Field>
-										))}
-									</div>
-								</DialogDescription>
-							</DialogHeader>
-							<DialogFooter>
-								<DialogClose asChild>
-									<Button type="button" variant="outline">
-										{t("people.members.item.actions.close")}
-									</Button>
-								</DialogClose>
-								<Button variant="default" onClick={handleUpdatePermissions}>
-									{t("people.members.item.actions.save")}
-								</Button>
-							</DialogFooter>
-						</DialogContent>
-					)}
-				</Dialog>
+					organizationPermissions={organizationPermissions?.permissions}
+					currentPermissions={currentPermissions}
+					isOwner={isOwner}
+					onUpdatePermissions={handleUpdatePermissions}
+					onChangePermission={handleChangePermissions}
+				/>
 			</div>
 		</div>
 	);

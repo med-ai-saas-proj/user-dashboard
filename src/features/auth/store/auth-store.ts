@@ -3,6 +3,7 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
 export type UserInfo = {
+	sub: string;
 	name: string;
 	email: string;
 	preferred_username?: string;

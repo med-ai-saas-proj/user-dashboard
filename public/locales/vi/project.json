@@ -55,7 +55,9 @@
                     "description": "Bạn có chắc chắn muốn xóa <bold>{{username}}</bold> khỏi dự án này không?"
                 },
                 "permissionsDialog": {
-                    "title": "Quyền hạn"
+                    "title": "Quyền hạn",
+                    "ownerAllPermissions": "Người dùng này là chủ sở hữu nên có tất cả quyền.",
+                    "ownerNotUser": "Quyền này chỉ dành cho chủ sở hữu."
                 }
             },
             "details": {

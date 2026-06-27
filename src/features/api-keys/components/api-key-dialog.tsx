@@ -130,7 +130,7 @@ const APIKeyDialog = ({
 									name="permissions"
 									control={control}
 									render={({ field }) => (
-										<div className="space-y-2">
+										<div className="space-y-2 max-h-48 overflow-auto">
 											{apiKeyPermissions?.results?.map((permission) => {
 												const isChecked =
 													field.value?.includes(permission.id) ?? false;

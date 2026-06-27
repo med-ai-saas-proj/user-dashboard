@@ -115,20 +115,20 @@ const OrganizationPeopleMemberItem: React.FC<
 			className="p-4 border-b last:border-b-0 flex items-center justify-between"
 			{...props}
 		>
-			<div className="flex items-center gap-4 hover:cursor-pointer">
-				<Avatar>
+			<div className="flex items-start gap-4 hover:cursor-pointer">
+				<Avatar className="mt-1">
 					<AvatarImage src={imageSrc} alt={username} />
 					<AvatarFallback>{username[0].toUpperCase()}</AvatarFallback>
 				</Avatar>
 				<div>
 					<div className="flex items-start gap-6">
 						<div>
-							<p className="font-medium text-nowrap">{username}</p>
+							<p className="font-medium text-nowrap text-start">{username}</p>
 							<p className="text-sm text-nowrap text-muted-foreground">
 								{email}
 							</p>
 						</div>
-						<div className="flex flex-wrap gap-2 max-w-fit">
+						<div className="flex flex-wrap gap-2 max-w-fit mt-1">
 							{userPermissions?.permissions.slice(0, 3).map((permission) => (
 								<span
 									key={permission}

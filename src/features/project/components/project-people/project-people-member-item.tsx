@@ -140,13 +140,13 @@ const ProjectPeopleMemberItem: React.FC<ProjectPeopleMemberItemProps> = ({
 				</Avatar>
 				<div>
 					<div className="flex items-start gap-6">
-						<div>
+						<div className="mt-1">
 							<p className="font-medium text-nowrap">{username}</p>
 							<p className="text-sm text-nowrap text-muted-foreground">
 								{email}
 							</p>
 						</div>
-						<div className="flex flex-wrap gap-2 max-w-fit">
+						<div className="flex flex-wrap gap-2 max-w-fit mt-1">
 							{permissionsData?.permissions.slice(0, 3).map((permission) => (
 								<span
 									key={permission}

@@ -21,30 +21,27 @@ export const API_ROUTES = {
 		).toString(),
 	},
 	RAG: {
-		USER_BASE: new URL(
-			`service/${API_VERSION}/rag/user`,
-			BASE_API_URL
-		).toString(),
+		USER_BASE: new URL(`api/${API_VERSION}/rag/user`, BASE_API_URL).toString(),
 		USER_FILES: new URL(
-			`service/${API_VERSION}/rag/user/files`,
+			`api/${API_VERSION}/rag/user/files`,
 			BASE_API_URL
 		).toString(),
 		USER_FILE_TASK: new URL(
-			`service/${API_VERSION}/rag/user/files/`,
+			`api/${API_VERSION}/rag/user/files/`,
 			BASE_API_URL
 		).toString(),
 		USER_QUERY_TEXT: new URL(
-			`service/${API_VERSION}/rag/user/query/text`,
+			`api/${API_VERSION}/rag/user/query/text`,
 			BASE_API_URL
 		).toString(),
 	},
 	FILE_STORAGE: {
 		USER: new URL(
-			`service/${API_VERSION}/file-storage/user/`,
+			`api/${API_VERSION}/file-storage/user/`,
 			BASE_API_URL
 		).toString(),
 		SERVICE: new URL(
-			`service/${API_VERSION}/file-storage/service/`,
+			`api/${API_VERSION}/file-storage/service/`,
 			BASE_API_URL
 		).toString(),
 	},
@@ -76,22 +73,16 @@ export const API_ROUTES = {
 	},
 	SERVICES: {
 		EHR_SUMMARIZE: new URL(
-			`service/${API_VERSION}/ehr_summarize`,
+			`api/${API_VERSION}/ehr_summarize`,
 			BASE_API_URL
 		).toString(),
 		RX_ADVISOR: new URL(
-			`service/${API_VERSION}/rx_advisor`,
+			`api/${API_VERSION}/rx_advisor`,
 			BASE_API_URL
 		).toString(),
-		AI_SEARCH: new URL(
-			`service/${API_VERSION}/ai_search`,
-			BASE_API_URL
-		).toString(),
-		CHAT: new URL(`service/${API_VERSION}/chat`, BASE_API_URL).toString(),
-		DASHBOARD: new URL(
-			`service/${API_VERSION}/dashboard`,
-			BASE_API_URL
-		).toString(),
+		AI_SEARCH: new URL(`api/${API_VERSION}/ai_search`, BASE_API_URL).toString(),
+		CHAT: new URL(`api/${API_VERSION}/chat`, BASE_API_URL).toString(),
+		DASHBOARD: new URL(`api/${API_VERSION}/dashboard`, BASE_API_URL).toString(),
 	},
 } as const;
 

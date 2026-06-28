@@ -15,6 +15,7 @@ import { motion } from "framer-motion";
 import { itemVariants } from "@/lib/animations";
 import OrganizationProjectArchiveDialog from "@/features/organization/components/organization-project/organization-project-archive-dialog";
 import OrganizationProjectUnarchiveDialog from "@/features/organization/components/organization-project/organization-project-unarchive-dialog";
+import { Spinner } from "@/components/shadcn/spinner";
 
 const createProjectGeneralSchema = (messages: {
 	projectNameRequired: string;
@@ -144,7 +145,12 @@ const ProjectGeneralForm = () => {
 							{t("general.form.actions.archive")}
 						</Button>
 					)}
-					<Button type="submit" disabled={isPending}>
+					<Button
+						type="submit"
+						disabled={isPending}
+						className="flex items-center gap-2"
+					>
+						{isPending && <Spinner />}
 						{t("general.form.actions.save")}
 					</Button>
 				</div>

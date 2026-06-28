@@ -24,6 +24,7 @@ import {
 } from "@/components/shadcn/tooltip";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { Spinner } from "@/components/shadcn/spinner";
 
 const createUnarchiveProjectSchema = (messages: {
 	projectNameRequired: string;
@@ -58,7 +59,7 @@ const UnarchiveProjectDialogContent = ({
 	const { t } = useTranslation("organization");
 	const queryClient = useQueryClient();
 
-	const { mutate: unarchiveProject } = useUnarchiveProject();
+	const { mutate: unarchiveProject, isPending } = useUnarchiveProject();
 	const validationMessages = useMemo(
 		() => ({
 			projectNameRequired: t(
@@ -142,7 +143,13 @@ const UnarchiveProjectDialogContent = ({
 							{t("project.unarchiveDialog.actions.cancel")}
 						</Button>
 					</DialogClose>
-					<Button type="submit" variant="default" disabled={!isConfirmed}>
+					<Button
+						type="submit"
+						variant="default"
+						disabled={!isConfirmed || isPending}
+						className="flex items-center gap-2"
+					>
+						{isPending && <Spinner />}
 						{t("project.unarchiveDialog.actions.unarchive")}
 					</Button>
 				</DialogFooter>

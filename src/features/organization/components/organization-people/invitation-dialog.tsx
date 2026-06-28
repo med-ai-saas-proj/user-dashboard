@@ -16,6 +16,7 @@ import { useTranslation } from "react-i18next";
 import { useSendInvitation } from "@/features/organization/hooks/organization-people/use-send-invitation";
 import { useAuthStore } from "@/features/auth/store/auth-store";
 import { toast } from "sonner";
+import { Spinner } from "@/components/shadcn/spinner";
 
 type AddMemeberFormData = {
 	email: string;
@@ -34,7 +35,7 @@ const InvitationDialog: React.FC<InvitationDialogProps> = ({
 	const { t } = useTranslation("organization");
 	const { t: tCommon } = useTranslation("common");
 
-	const { mutate: sendInvitation } = useSendInvitation();
+	const { mutate: sendInvitation, isPending } = useSendInvitation();
 
 	const addMemeberFormSchema = z.object({
 		email: z.email(t("people.dialog.emailInvalid")),
@@ -90,7 +91,12 @@ const InvitationDialog: React.FC<InvitationDialogProps> = ({
 							)}
 						</Field>
 					</FieldGroup>
-					<Button type="submit" className="mt-4 ml-auto block">
+					<Button
+						type="submit"
+						className="mt-4 ml-auto flex items-center gap-2"
+						disabled={isPending}
+					>
+						{isPending && <Spinner />}
 						{t("people.dialog.submit")}
 					</Button>
 				</form>

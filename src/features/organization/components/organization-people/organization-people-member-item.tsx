@@ -23,6 +23,7 @@ import { useGetOrganizationPermissions } from "@/features/organization/hooks/org
 import { useAuthStore } from "@/features/auth/store/auth-store";
 import { toast } from "sonner";
 import OrganizationMemberItemPermissionsDialog from "./organization-member-item-permissions-dialog";
+import { Spinner } from "@/components/shadcn/spinner";
 
 type OrganizationPeopleMemberItemProps =
 	React.HTMLAttributes<HTMLDivElement> & {
@@ -45,13 +46,14 @@ const OrganizationPeopleMemberItem: React.FC<
 	const [isPermissionsDialogOpen, setIsPermissionsDialogOpen] = useState(false);
 	const [isOwner, setIsOwner] = useState<boolean>(false);
 
-	const { mutate: deleteUser } = useDeleteUser();
+	const { mutate: deleteUser, isPending: isDeletingUser } = useDeleteUser();
 	const { data: organizationPermissions } = useGetOrganizationPermissions();
 	const { data: userPermissions } = useGetUserPermissions({
 		organizationId: organizationId,
 		userId: id || "",
 	});
-	const { mutate: updateUserPermissions } = useUpdateUserPermissions();
+	const { mutate: updateUserPermissions, isPending: isUpdatingPermissions } =
+		useUpdateUserPermissions();
 
 	const handleRemoveUser = () => {
 		deleteUser(
@@ -174,7 +176,13 @@ const OrganizationPeopleMemberItem: React.FC<
 									{t("people.members.item.actions.close")}
 								</Button>
 							</DialogClose>
-							<Button variant="destructive" onClick={handleRemoveUser}>
+							<Button
+								variant="destructive"
+								onClick={handleRemoveUser}
+								disabled={isDeletingUser}
+								className="flex items-center gap-2"
+							>
+								{isDeletingUser && <Spinner />}
 								{t("people.members.item.actions.remove")}
 							</Button>
 						</DialogFooter>
@@ -186,6 +194,7 @@ const OrganizationPeopleMemberItem: React.FC<
 					organizationPermissions={organizationPermissions?.permissions}
 					currentPermissions={currentPermissions}
 					isOwner={isOwner}
+					isPending={isUpdatingPermissions}
 					onUpdatePermissions={handleUpdatePermissions}
 					onChangePermission={handleChangePermissions}
 				/>

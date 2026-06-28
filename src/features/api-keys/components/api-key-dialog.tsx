@@ -22,6 +22,7 @@ import { useServiceApiKeyStore } from "@/features/api-keys/store/service-api-key
 import { APIKeySaveDialog } from "./api-key-save-dialog";
 import { useParams } from "react-router-dom";
 import { useGetApiKeyPermissions } from "../hooks/use-get-api-key-permissions";
+import { Spinner } from "@/components/shadcn/spinner";
 
 const apiCreationSchema = z.object({
 	name: z.string().min(1, "Name must be at least 1 character long"),
@@ -182,9 +183,14 @@ const APIKeyDialog = ({
 								<Button variant="outline">{tCommon("action.cancel")}</Button>
 							</DialogClose>
 							<Button type="submit" disabled={createApiKeyMutation.isPending}>
-								{createApiKeyMutation.isPending
-									? tApiKeys("dialog.form.action.creating")
-									: tApiKeys("dialog.form.action.create")}
+								{createApiKeyMutation.isPending ? (
+									<>
+										<Spinner className="mr-2" />
+										{tApiKeys("dialog.form.action.creating")}
+									</>
+								) : (
+									tApiKeys("dialog.form.action.create")
+								)}
 							</Button>
 						</DialogFooter>
 					</form>

@@ -22,6 +22,7 @@ import { useUpdateApiKey } from "@/features/api-keys/hooks/use-update-api-key";
 import { useGetApiKeyPermissions } from "../hooks/use-get-api-key-permissions";
 import { toast } from "sonner";
 import type { ApiPermission } from "../services/api-key.dto";
+import { Spinner } from "@/components/shadcn/spinner";
 
 const apiUpdateSchema = z.object({
 	name: z.string().min(1, "Name must be at least 1 character long"),
@@ -46,7 +47,7 @@ const APIKeyUpdateDialog = ({
 	const { t: tCommon } = useTranslation("common");
 
 	const { data: apiPermissions } = useGetApiKeyPermissions();
-	const apiKeyUpdateMutation = useUpdateApiKey();
+	const { mutate: apiKeyUpdateMutation, isPending } = useUpdateApiKey();
 
 	const {
 		control,
@@ -78,7 +79,7 @@ const APIKeyUpdateDialog = ({
 	const onSubmit = (data: ApiUpdateFormData) => {
 		onOpenChange(false);
 
-		apiKeyUpdateMutation.mutate(
+		apiKeyUpdateMutation(
 			{
 				apikeyId: apikey.id,
 				name: data.name,
@@ -192,7 +193,14 @@ const APIKeyUpdateDialog = ({
 						<DialogClose asChild>
 							<Button variant="outline">{tCommon("action.cancel")}</Button>
 						</DialogClose>
-						<Button type="submit">{tCommon("action.save")}</Button>
+						<Button
+							type="submit"
+							disabled={isPending}
+							className="flex items-center gap-2"
+						>
+							{isPending && <Spinner />}
+							{tCommon("action.save")}
+						</Button>
 					</DialogFooter>
 				</form>
 			</DialogContent>

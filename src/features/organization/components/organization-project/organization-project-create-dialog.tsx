@@ -25,6 +25,7 @@ import { useTranslation } from "react-i18next";
 import { useAuthStore } from "@/features/auth/store/auth-store";
 import { PlusIcon } from "lucide-react";
 import { toast } from "sonner";
+import { Spinner } from "@/components/shadcn/spinner";
 
 const createProjectSchema = (messages: {
 	projectNameRequired: string;
@@ -68,7 +69,7 @@ const OrganizationProjectCreateDialog = () => {
 		},
 	});
 
-	const { mutate: createProject } = useCreateProject();
+	const { mutate: createProject, isPending } = useCreateProject();
 	const [openDialog, setOpenDialog] = useState(false);
 
 	const onSubmit = (data: CreateProjectFormData) => {
@@ -148,7 +149,13 @@ const OrganizationProjectCreateDialog = () => {
 								{t("project.createDialog.actions.cancel")}
 							</Button>
 						</DialogClose>
-						<Button variant="default" type="submit">
+						<Button
+							variant="default"
+							type="submit"
+							disabled={isPending}
+							className="flex items-center gap-2"
+						>
+							{isPending && <Spinner />}
 							{t("project.createDialog.actions.create")}
 						</Button>
 					</DialogFooter>

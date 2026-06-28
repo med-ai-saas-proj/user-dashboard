@@ -12,6 +12,7 @@ import type { APIKey } from "../api-key.type";
 import { useEnableApiKey } from "../hooks/use-enable-api-key";
 import { useDisableApiKey } from "../hooks/use-disable-api-key";
 import { toast } from "sonner";
+import { Spinner } from "@/components/shadcn/spinner";
 
 type ApiKeyUpdateStatusDialogProps = {
 	open: boolean;
@@ -83,7 +84,12 @@ const ApiKeyUpdateStatusDialog = ({
 					>
 						{tCommon("action.cancel")}
 					</Button>
-					<Button onClick={onAgreeUpdateApiKeyStatus} disabled={isSubmitting}>
+					<Button
+						onClick={onAgreeUpdateApiKeyStatus}
+						disabled={isSubmitting}
+						className="flex items-center justify-center gap-2"
+					>
+						{isSubmitting && <Spinner />}
 						{tApiKeys("statusDialog.agree")}
 					</Button>
 				</DialogFooter>

@@ -14,6 +14,7 @@ import { Field } from "@/components/shadcn/field";
 import { Label } from "@/components/shadcn/label";
 import { Button } from "@/components/shadcn/button";
 import { useTranslation } from "react-i18next";
+import { Spinner } from "@/components/shadcn/spinner";
 
 type ProjectPeopleMemberItemPermissionsDialogProps = {
 	open: boolean;
@@ -21,6 +22,7 @@ type ProjectPeopleMemberItemPermissionsDialogProps = {
 	projectPermissions: string[] | undefined;
 	currentPermissions: Map<string, boolean>;
 	isOwner: boolean;
+	isPending: boolean;
 	onUpdatePermissions: () => void;
 	onChangePermission: (perm: string) => void;
 };
@@ -33,6 +35,7 @@ const ProjectPeopleMemberItemPermissionsDialog: React.FC<
 	projectPermissions,
 	currentPermissions,
 	isOwner,
+	isPending,
 	onUpdatePermissions,
 	onChangePermission,
 }) => {
@@ -92,7 +95,13 @@ const ProjectPeopleMemberItemPermissionsDialog: React.FC<
 								{t("people.members.item.actions.close")}
 							</Button>
 						</DialogClose>
-						<Button variant="default" onClick={onUpdatePermissions}>
+						<Button
+							variant="default"
+							onClick={onUpdatePermissions}
+							disabled={isPending}
+							className="flex items-center gap-2"
+						>
+							{isPending && <Spinner />}
 							{t("people.members.item.actions.save")}
 						</Button>
 					</DialogFooter>

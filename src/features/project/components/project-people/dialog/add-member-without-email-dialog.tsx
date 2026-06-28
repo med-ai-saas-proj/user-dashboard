@@ -1,4 +1,4 @@
-import { useImperativeHandle, useMemo, useRef } from "react";
+import { useEffect, useImperativeHandle, useMemo, useRef } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -46,10 +46,12 @@ type AddMemberWithoutEmailDialogRef = {
 
 type AddMemberWithoutEmailDialogProps = {
 	ref?: React.Ref<AddMemberWithoutEmailDialogRef>;
+	setIsAddingMember?: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const AddMemberWithoutEmailDialog = ({
 	ref,
+	setIsAddingMember,
 }: AddMemberWithoutEmailDialogProps) => {
 	const { t } = useTranslation("project");
 	const { t: tCommon } = useTranslation("common");
@@ -83,7 +85,7 @@ const AddMemberWithoutEmailDialog = ({
 	const { data: users } = useGetUsers({
 		organizationId,
 	});
-	const { mutate: addUser } = useAddProjectUser();
+	const { mutate: addUser, isPending } = useAddProjectUser();
 
 	const userLabelById = useMemo(() => {
 		return Object.fromEntries(
@@ -103,6 +105,7 @@ const AddMemberWithoutEmailDialog = ({
 			{
 				onSuccess: () => {
 					toast.success(tCommon("requestDone"));
+					setIsAddingMember?.(false);
 				},
 			}
 		);
@@ -119,6 +122,14 @@ const AddMemberWithoutEmailDialog = ({
 			});
 		},
 	}));
+
+	useEffect(() => {
+		if (isPending) {
+			setIsAddingMember?.(true);
+		} else {
+			setIsAddingMember?.(false);
+		}
+	}, [isPending, setIsAddingMember]);
 
 	return (
 		<form className="w-full mt-2">

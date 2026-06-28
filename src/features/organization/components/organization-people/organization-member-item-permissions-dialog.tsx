@@ -14,6 +14,7 @@ import { Label } from "@/components/shadcn/label";
 import { Button } from "@/components/shadcn/button";
 import { EditIcon } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { Spinner } from "@/components/shadcn/spinner";
 
 type OrganizationMemberItemPermissionsDialogProps = {
 	open: boolean;
@@ -21,6 +22,7 @@ type OrganizationMemberItemPermissionsDialogProps = {
 	organizationPermissions: string[] | undefined;
 	currentPermissions: Map<string, boolean>;
 	isOwner: boolean;
+	isPending: boolean;
 	onUpdatePermissions: () => void;
 	onChangePermission: (perm: string) => void;
 };
@@ -33,6 +35,7 @@ const OrganizationMemberItemPermissionsDialog: React.FC<
 	organizationPermissions,
 	currentPermissions,
 	isOwner,
+	isPending,
 	onUpdatePermissions,
 	onChangePermission,
 }) => {
@@ -93,7 +96,13 @@ const OrganizationMemberItemPermissionsDialog: React.FC<
 								{t("people.members.item.actions.close")}
 							</Button>
 						</DialogClose>
-						<Button variant="default" onClick={onUpdatePermissions}>
+						<Button
+							variant="default"
+							onClick={onUpdatePermissions}
+							disabled={isPending}
+							className="flex items-center gap-2"
+						>
+							{isPending && <Spinner />}
 							{t("people.members.item.actions.save")}
 						</Button>
 					</DialogFooter>

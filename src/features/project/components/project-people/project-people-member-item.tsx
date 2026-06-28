@@ -25,6 +25,7 @@ import { useGetProjectUserPermissions } from "../../hooks/project-people/use-get
 import { useUpdateProjectUserPermissions } from "../../hooks/project-people/use-update-project-user-permissions";
 import { useGetProjectPermissions } from "../../hooks/project-people/use-get-project-permissions";
 import ProjectPeopleMemberItemPermissionsDialog from "./dialog/project-people-member-item-permissions-dialog";
+import { Spinner } from "@/components/shadcn/spinner";
 
 type ProjectPeopleMemberItemProps = React.HTMLAttributes<HTMLDivElement> & {
 	id: string;
@@ -53,13 +54,15 @@ const ProjectPeopleMemberItem: React.FC<ProjectPeopleMemberItemProps> = ({
 		useState<boolean>(false);
 	const [isOwner, setIsOwner] = useState<boolean>(false);
 
-	const { mutate: deleteUser } = useDeleteProjectUser();
+	const { mutate: deleteUser, isPending: isDeletingUser } =
+		useDeleteProjectUser();
 	const { data: projectPermissionsData } = useGetProjectPermissions();
 	const { data: permissionsData } = useGetProjectUserPermissions({
 		projectId,
 		userId: id,
 	});
-	const { mutate: updatePermissions } = useUpdateProjectUserPermissions();
+	const { mutate: updatePermissions, isPending: isUpdatingPermissions } =
+		useUpdateProjectUserPermissions();
 
 	const handleRemoveUser = () => {
 		deleteUser(
@@ -199,7 +202,13 @@ const ProjectPeopleMemberItem: React.FC<ProjectPeopleMemberItemProps> = ({
 									{t("people.members.item.actions.close")}
 								</Button>
 							</DialogClose>
-							<Button variant="destructive" onClick={handleRemoveUser}>
+							<Button
+								variant="destructive"
+								onClick={handleRemoveUser}
+								disabled={isDeletingUser}
+								className="flex items-center gap-2"
+							>
+								{isDeletingUser && <Spinner />}
 								{t("people.members.item.actions.remove")}
 							</Button>
 						</DialogFooter>
@@ -211,6 +220,7 @@ const ProjectPeopleMemberItem: React.FC<ProjectPeopleMemberItemProps> = ({
 					projectPermissions={projectPermissionsData?.permissions}
 					currentPermissions={currentPermissions}
 					isOwner={isOwner}
+					isPending={isUpdatingPermissions}
 					onUpdatePermissions={handleUpdatePermissions}
 					onChangePermission={handleChangePermissions}
 				/>

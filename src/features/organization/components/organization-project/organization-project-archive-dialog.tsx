@@ -24,6 +24,7 @@ import {
 } from "@/components/shadcn/tooltip";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
+import { Spinner } from "@/components/shadcn/spinner";
 
 const createArchiveProjectSchema = (messages: {
 	projectNameRequired: string;
@@ -58,7 +59,7 @@ const ArchiveProjectDialogContent = ({
 	const { t } = useTranslation("organization");
 	const queryClient = useQueryClient();
 
-	const { mutate: archiveProject } = useArchiveProject();
+	const { mutate: archiveProject, isPending } = useArchiveProject();
 	const validationMessages = useMemo(
 		() => ({
 			projectNameRequired: t(
@@ -143,9 +144,10 @@ const ArchiveProjectDialogContent = ({
 					<Button
 						type="submit"
 						variant="default"
-						disabled={!isConfirmed}
-						className="bg-destructive"
+						disabled={!isConfirmed || isPending}
+						className="bg-destructive flex items-center gap-2"
 					>
+						{isPending && <Spinner />}
 						{t("project.archiveDialog.actions.archive")}
 					</Button>
 				</DialogFooter>

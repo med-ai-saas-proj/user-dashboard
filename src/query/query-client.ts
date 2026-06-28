@@ -1,6 +1,6 @@
 import { QueryClient, QueryCache, MutationCache } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { getApiErrorMessage } from "@/lib/error";
+import { getApiErrorMessage, isApiErrorResponse } from "@/lib/error";
 
 export const query_client = new QueryClient({
 	// TODO: Set using ENV for dev and production values
@@ -14,9 +14,17 @@ export const query_client = new QueryClient({
 	// Automatically handle all Query errors
 	queryCache: new QueryCache({
 		onError: (error, query) => {
-			// Optional: Only show toast for background refetches or when stale data exists
-			if (query.state.data !== undefined) {
-				toast.error(getApiErrorMessage(error));
+			if (isApiErrorResponse(error)) {
+				const isPermissionError = error.response.data.status === 403;
+				// Always notify for permission/forbidden errors, OR for background failures
+				if (isPermissionError || query.state.data !== undefined) {
+					toast.error(
+						isPermissionError
+							? error.response.data.detail ||
+									"You do not have permission to perform this action."
+							: getApiErrorMessage(error)
+					);
+				}
 			}
 		},
 	}),

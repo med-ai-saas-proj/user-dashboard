@@ -1,4 +1,4 @@
-import { Eye, EyeClosed, SquarePen, Trash } from "lucide-react";
+import { Power, RotateCcw, SquarePen, Trash } from "lucide-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
@@ -94,7 +94,7 @@ const APIKeyTable = ({ apiKeys }: { apiKeys: APIKey[] }) => {
 											<p>{t("table.tooltip.enabled")}</p>
 										</TooltipContent>
 										<TooltipTrigger asChild>
-											<EyeClosed
+											<RotateCcw
 												size={16}
 												className="cursor-pointer"
 												onClick={() => onOpenUpdateStatusDialog(apiKey)}
@@ -107,7 +107,7 @@ const APIKeyTable = ({ apiKeys }: { apiKeys: APIKey[] }) => {
 											<p>{t("table.tooltip.disabled")}</p>
 										</TooltipContent>
 										<TooltipTrigger asChild>
-											<Eye
+											<Power
 												size={16}
 												className="cursor-pointer"
 												onClick={() => onOpenUpdateStatusDialog(apiKey)}

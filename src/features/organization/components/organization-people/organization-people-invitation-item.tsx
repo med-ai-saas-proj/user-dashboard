@@ -38,6 +38,8 @@ const OrganizationPeopleInvitationItem = ({
 	const { mutate: deleteInvitation, isPending: isDeletingInvitation } =
 		useDeleteInvitation();
 
+	const [invitationId, setInvitationId] = useState<string | null>(null);
+
 	const handleResendInvitation = (invitationId: string) => {
 		resendInvitation(
 			{
@@ -45,7 +47,8 @@ const OrganizationPeopleInvitationItem = ({
 				invitationId,
 			},
 			{
-				onSuccess: () => {
+				onSuccess: (data) => {
+					setInvitationId(data.id);
 					toast.success(tCommon("requestDone"));
 				},
 			}
@@ -121,7 +124,13 @@ const OrganizationPeopleInvitationItem = ({
 							<Button
 								variant="destructive"
 								size="sm"
-								onClick={() => handleDeleteInvitation(invitation.id)}
+								onClick={() =>
+									handleDeleteInvitation(
+										isResendInvitation
+											? invitationId || invitation.id
+											: invitation.id
+									)
+								}
 								disabled={isDeletingInvitation}
 								className="flex items-center gap-2"
 							>

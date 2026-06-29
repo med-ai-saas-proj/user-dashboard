@@ -11,6 +11,7 @@ import {
 	type UserInfo,
 	useAuthStore,
 } from "@/features/auth/store/auth-store";
+import { useTranslation } from "react-i18next";
 
 interface KeycloakContextType {
 	keycloak: typeof keycloak;
@@ -56,6 +57,7 @@ export const KeycloakProvider = ({ children }: { children: ReactNode }) => {
 	const [initialized, setInitialized] = useState(false);
 	const [authenticated, setAuthenticated] = useState(false);
 	const { setAuth, setUserInfo, setOrganization, logout } = useAuthStore();
+	const { t } = useTranslation("common");
 
 	// biome-ignore lint/correctness/useExhaustiveDependencies: This is intended to run only once on mount
 	useEffect(() => {
@@ -111,7 +113,14 @@ export const KeycloakProvider = ({ children }: { children: ReactNode }) => {
 
 	return (
 		<KeycloakContext.Provider value={{ keycloak, initialized, authenticated }}>
-			{initialized ? children : <div>Loading...</div>}
+			{initialized ? (
+				children
+			) : (
+				<div className="fixed inset-0 bg-white z-50 flex flex-col items-center justify-center">
+					<div className="animate-spin size-10 border-4 rounded-full border-muted-foreground border-t-transparent"></div>
+					<p className="mt-4 text-muted-foreground">{t("loading")}</p>
+				</div>
+			)}
 		</KeycloakContext.Provider>
 	);
 };

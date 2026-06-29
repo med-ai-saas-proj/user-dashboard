@@ -1,5 +1,6 @@
 {
   "error": "Có lỗi xảy ra. Vui lòng thử lại sau.",
+  "loading": "Vui lòng đợi một chút...",
   "requestDone": "Yêu cầu đã hoàn tất!",
   "action": {
     "close": "Đóng",

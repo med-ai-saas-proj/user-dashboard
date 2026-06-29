@@ -13,6 +13,7 @@ import AddMemberWithoutEmailDialog, {
 import { DialogClose, DialogFooter } from "@/components/shadcn/dialog";
 import { Button } from "@/components/shadcn/button";
 import { useTranslation } from "react-i18next";
+import { Spinner } from "@/components/shadcn/spinner";
 
 type AddMemberDialogProps = {
 	openDialog: (success: boolean) => void;
@@ -25,6 +26,7 @@ const AddMemberDialog = ({ openDialog }: AddMemberDialogProps) => {
 		useRef<AddMemberWithoutEmailDialogRef>(null);
 
 	const [activeTab, setActiveTab] = useState<string>("without-email");
+	const [isAddingMember, setIsAddingMember] = useState<boolean>(false);
 
 	const handleAddNewMemberForm = async () => {
 		let success = false;
@@ -57,7 +59,10 @@ const AddMemberDialog = ({ openDialog }: AddMemberDialogProps) => {
 					</TabsTrigger> */}
 				</TabsList>
 				<TabsContent value="without-email">
-					<AddMemberWithoutEmailDialog ref={addMemberWithoutEmailDialogRef} />
+					<AddMemberWithoutEmailDialog
+						ref={addMemberWithoutEmailDialogRef}
+						setIsAddingMember={setIsAddingMember}
+					/>
 				</TabsContent>
 				{/* <TabsContent value="with-email">
 					<AddMemberWithEmailDialog ref={addMemberWithEmailDialogRef} />
@@ -67,7 +72,12 @@ const AddMemberDialog = ({ openDialog }: AddMemberDialogProps) => {
 				<DialogClose asChild>
 					<Button variant="outline">{t("people.dialog.actions.close")}</Button>
 				</DialogClose>
-				<Button onClick={handleAddNewMemberForm}>
+				<Button
+					onClick={handleAddNewMemberForm}
+					disabled={isAddingMember}
+					className="flex items-center gap-2"
+				>
+					{isAddingMember && <Spinner />}
 					{t("people.dialog.actions.addMember")}
 				</Button>
 			</DialogFooter>

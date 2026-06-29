@@ -4,7 +4,6 @@ import {
 	AvatarImage,
 } from "@/components/shadcn/avatar";
 import { Button } from "@/components/shadcn/button";
-import { Checkbox } from "@/components/shadcn/checkbox";
 import {
 	Dialog,
 	DialogClose,
@@ -15,17 +14,16 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "@/components/shadcn/dialog";
-import { Field } from "@/components/shadcn/field";
-import { Label } from "@/components/shadcn/label";
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDeleteUser } from "../../hooks/organization-people/use-delete-user";
 import { useGetUserPermissions } from "../../hooks/organization-people/use-get-user-permissions";
 import { useUpdateUserPermissions } from "../../hooks/organization-people/use-update-user-permissions";
-import { EditIcon } from "lucide-react";
 import { useGetOrganizationPermissions } from "@/features/organization/hooks/organization-people/use-get-permissions";
 import { useAuthStore } from "@/features/auth/store/auth-store";
 import { toast } from "sonner";
+import OrganizationMemberItemPermissionsDialog from "./organization-member-item-permissions-dialog";
+import { Spinner } from "@/components/shadcn/spinner";
 
 type OrganizationPeopleMemberItemProps =
 	React.HTMLAttributes<HTMLDivElement> & {
@@ -46,14 +44,16 @@ const OrganizationPeopleMemberItem: React.FC<
 		Map<string, boolean>
 	>(new Map());
 	const [isPermissionsDialogOpen, setIsPermissionsDialogOpen] = useState(false);
+	const [isOwner, setIsOwner] = useState<boolean>(false);
 
-	const { mutate: deleteUser } = useDeleteUser();
+	const { mutate: deleteUser, isPending: isDeletingUser } = useDeleteUser();
 	const { data: organizationPermissions } = useGetOrganizationPermissions();
 	const { data: userPermissions } = useGetUserPermissions({
 		organizationId: organizationId,
 		userId: id || "",
 	});
-	const { mutate: updateUserPermissions } = useUpdateUserPermissions();
+	const { mutate: updateUserPermissions, isPending: isUpdatingPermissions } =
+		useUpdateUserPermissions();
 
 	const handleRemoveUser = () => {
 		deleteUser(
@@ -81,6 +81,7 @@ const OrganizationPeopleMemberItem: React.FC<
 			},
 			{
 				onSuccess: () => {
+					setIsPermissionsDialogOpen(false);
 					toast.success(tCommon("requestDone"));
 				},
 			}
@@ -99,12 +100,17 @@ const OrganizationPeopleMemberItem: React.FC<
 			return;
 		}
 
+		const viewedUserIsOwner =
+			userPermissions?.permissions?.some((p) => p.includes("owner")) ?? false;
+		setIsOwner(viewedUserIsOwner);
+
 		const permissionMap = new Map<string, boolean>();
 
 		organizationPermissions?.permissions?.forEach((permission) => {
 			permissionMap.set(
 				permission,
-				userPermissions?.permissions?.includes(permission) ?? false
+				viewedUserIsOwner ||
+					(userPermissions?.permissions?.includes(permission) ?? false)
 			);
 		});
 		setCurrentPermissions(permissionMap);
@@ -115,15 +121,20 @@ const OrganizationPeopleMemberItem: React.FC<
 			className="p-4 border-b last:border-b-0 flex items-center justify-between"
 			{...props}
 		>
-			<div className="flex items-center gap-4 hover:cursor-pointer">
-				<Avatar>
+			<div className="flex items-start gap-4 hover:cursor-pointer">
+				<Avatar className="mt-1">
 					<AvatarImage src={imageSrc} alt={username} />
 					<AvatarFallback>{username[0].toUpperCase()}</AvatarFallback>
 				</Avatar>
 				<div>
-					<div className="flex items-center gap-6">
-						<p className="font-medium text-nowrap">{username}</p>
-						<div className="flex flex-wrap gap-2 max-w-fit">
+					<div className="flex items-start gap-6">
+						<div>
+							<p className="font-medium text-nowrap text-start">{username}</p>
+							<p className="text-sm text-nowrap text-muted-foreground">
+								{email}
+							</p>
+						</div>
+						<div className="flex flex-wrap gap-2 max-w-fit mt-1">
 							{userPermissions?.permissions.slice(0, 3).map((permission) => (
 								<span
 									key={permission}
@@ -139,7 +150,6 @@ const OrganizationPeopleMemberItem: React.FC<
 							)}
 						</div>
 					</div>
-					<p className="text-sm text-muted-foreground">{email}</p>
 				</div>
 			</div>
 			<div className="flex items-center gap-4">
@@ -166,57 +176,28 @@ const OrganizationPeopleMemberItem: React.FC<
 									{t("people.members.item.actions.close")}
 								</Button>
 							</DialogClose>
-							<Button variant="destructive" onClick={handleRemoveUser}>
+							<Button
+								variant="destructive"
+								onClick={handleRemoveUser}
+								disabled={isDeletingUser}
+								className="flex items-center gap-2"
+							>
+								{isDeletingUser && <Spinner />}
 								{t("people.members.item.actions.remove")}
 							</Button>
 						</DialogFooter>
 					</DialogContent>
 				</Dialog>
-				<Dialog
+				<OrganizationMemberItemPermissionsDialog
 					open={isPermissionsDialogOpen}
 					onOpenChange={setIsPermissionsDialogOpen}
-				>
-					<DialogTrigger asChild>
-						<Button variant="default" size="sm" className="ml-auto">
-							<EditIcon />
-							{t("people.members.item.actions.permissions")}
-						</Button>
-					</DialogTrigger>
-					{isPermissionsDialogOpen && (
-						<DialogContent>
-							<DialogHeader>
-								<DialogTitle>
-									{t("people.members.item.permissionsDialog.title")}
-								</DialogTitle>
-								<DialogDescription>
-									<div className="flex flex-col gap-4 mt-4">
-										{organizationPermissions?.permissions?.map((perm) => (
-											<Field orientation={"horizontal"} key={perm}>
-												<Checkbox
-													id={perm}
-													name={perm}
-													checked={currentPermissions.get(perm) === true}
-													onCheckedChange={() => handleChangePermissions(perm)}
-												/>
-												<Label htmlFor={perm}>{perm}</Label>
-											</Field>
-										))}
-									</div>
-								</DialogDescription>
-							</DialogHeader>
-							<DialogFooter>
-								<DialogClose asChild>
-									<Button type="button" variant="outline">
-										{t("people.members.item.actions.close")}
-									</Button>
-								</DialogClose>
-								<Button variant="default" onClick={handleUpdatePermissions}>
-									{t("people.members.item.actions.save")}
-								</Button>
-							</DialogFooter>
-						</DialogContent>
-					)}
-				</Dialog>
+					organizationPermissions={organizationPermissions?.permissions}
+					currentPermissions={currentPermissions}
+					isOwner={isOwner}
+					isPending={isUpdatingPermissions}
+					onUpdatePermissions={handleUpdatePermissions}
+					onChangePermission={handleChangePermissions}
+				/>
 			</div>
 		</div>
 	);

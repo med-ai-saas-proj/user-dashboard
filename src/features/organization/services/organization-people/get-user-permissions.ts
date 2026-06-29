@@ -14,6 +14,6 @@ export const getUserPermissions = async (
 	const response = await apiClient.get(
 		`${API_ROUTES.MANAGEMENT.ORGANIZATION}/${organizationId}/users/${userId}/permissions`
 	);
-	console.log(response.data, "response.data");
+
 	return response.data;
 };

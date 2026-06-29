@@ -21,6 +21,7 @@ import {
 } from "@/components/shadcn/dialog";
 import { useAuthStore } from "@/features/auth/store/auth-store";
 import { toast } from "sonner";
+import { Spinner } from "@/components/shadcn/spinner";
 
 const OrganizationPeopleInvitationItem = ({
 	invitation,
@@ -32,8 +33,12 @@ const OrganizationPeopleInvitationItem = ({
 	const organizationId = useAuthStore((state) => state.organization?.id) || "";
 	const [isResendInvitation, setIsResendInvitation] = useState<boolean>(false);
 
-	const { mutate: resendInvitation } = useResendInvitation();
-	const { mutate: deleteInvitation } = useDeleteInvitation();
+	const { mutate: resendInvitation, isPending: isResendingInvitation } =
+		useResendInvitation();
+	const { mutate: deleteInvitation, isPending: isDeletingInvitation } =
+		useDeleteInvitation();
+
+	const [invitationId, setInvitationId] = useState<string | null>(null);
 
 	const handleResendInvitation = (invitationId: string) => {
 		resendInvitation(
@@ -42,7 +47,8 @@ const OrganizationPeopleInvitationItem = ({
 				invitationId,
 			},
 			{
-				onSuccess: () => {
+				onSuccess: (data) => {
+					setInvitationId(data.id);
 					toast.success(tCommon("requestDone"));
 				},
 			}
@@ -80,9 +86,17 @@ const OrganizationPeopleInvitationItem = ({
 					variant="secondary"
 					size="sm"
 					onClick={() => handleResendInvitation(invitation.id)}
-					disabled={isResendInvitation}
+					disabled={isResendInvitation || isResendingInvitation}
+					className="flex items-center gap-2"
 				>
-					{t("people.invitations.item.actions.resend")}
+					{isResendingInvitation ? (
+						<>
+							<Spinner />
+							{t("people.invitations.item.actions.resend")}
+						</>
+					) : (
+						t("people.invitations.item.actions.resend")
+					)}
 				</Button>
 				<Dialog>
 					<DialogTrigger asChild>
@@ -110,9 +124,24 @@ const OrganizationPeopleInvitationItem = ({
 							<Button
 								variant="destructive"
 								size="sm"
-								onClick={() => handleDeleteInvitation(invitation.id)}
+								onClick={() =>
+									handleDeleteInvitation(
+										isResendInvitation
+											? invitationId || invitation.id
+											: invitation.id
+									)
+								}
+								disabled={isDeletingInvitation}
+								className="flex items-center gap-2"
 							>
-								{t("people.invitations.item.actions.remove")}
+								{isDeletingInvitation ? (
+									<>
+										<Spinner />
+										{t("people.invitations.item.actions.remove")}
+									</>
+								) : (
+									t("people.invitations.item.actions.remove")
+								)}
 							</Button>
 						</DialogFooter>
 					</DialogContent>

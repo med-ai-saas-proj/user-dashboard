@@ -7,6 +7,7 @@ import {
 	DialogHeader,
 	DialogTitle,
 } from "@/components/shadcn/dialog";
+import { Spinner } from "@/components/shadcn/spinner";
 import type { APIKey } from "@/features/api-keys/api-key.type";
 import { useDeleteApiKey } from "@/features/api-keys/hooks/use-delete-api-key";
 import { useTranslation } from "react-i18next";
@@ -26,13 +27,13 @@ const ApiKeyDeleteDialog = ({
 	const { t: tApiKeys } = useTranslation("api-keys");
 	const { t: tCommon } = useTranslation("common");
 
-	const deleteApiKeyMutation = useDeleteApiKey();
+	const { mutate: deleteApiKeyMutation, isPending } = useDeleteApiKey();
 
 	const onDeleteApiKey = () => {
 		if (!selectedApiKey) return;
 
 		onOpenChange(false);
-		deleteApiKeyMutation.mutate(selectedApiKey.id, {
+		deleteApiKeyMutation(selectedApiKey.id, {
 			onSuccess: () => {
 				toast.success(tCommon("requestDone"));
 			},
@@ -52,7 +53,13 @@ const ApiKeyDeleteDialog = ({
 					<Button variant="outline" onClick={() => onOpenChange(false)}>
 						{tCommon("action.cancel")}
 					</Button>
-					<Button variant="destructive" onClick={onDeleteApiKey}>
+					<Button
+						variant="destructive"
+						onClick={onDeleteApiKey}
+						disabled={isPending}
+						className="flex items-center justify-center gap-2"
+					>
+						{isPending && <Spinner />}
 						{tApiKeys("table.actions.delete")}
 					</Button>
 				</DialogFooter>

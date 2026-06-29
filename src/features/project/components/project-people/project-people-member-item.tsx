@@ -21,12 +21,11 @@ import {
 import { Button } from "@/components/shadcn/button";
 import { useDeleteProjectUser } from "../../hooks/project-people/use-delete-project-user";
 import { useProjectStore } from "../../store/project";
-import { Field } from "@/components/shadcn/field";
-import { Checkbox } from "@/components/shadcn/checkbox";
 import { useGetProjectUserPermissions } from "../../hooks/project-people/use-get-project-user-permissions";
 import { useUpdateProjectUserPermissions } from "../../hooks/project-people/use-update-project-user-permissions";
-import { Label } from "@/components/shadcn/label";
 import { useGetProjectPermissions } from "../../hooks/project-people/use-get-project-permissions";
+import ProjectPeopleMemberItemPermissionsDialog from "./dialog/project-people-member-item-permissions-dialog";
+import { Spinner } from "@/components/shadcn/spinner";
 
 type ProjectPeopleMemberItemProps = React.HTMLAttributes<HTMLDivElement> & {
 	id: string;
@@ -53,14 +52,17 @@ const ProjectPeopleMemberItem: React.FC<ProjectPeopleMemberItemProps> = ({
 	>(new Map());
 	const [openPermissionDialog, setOpenPermissionDialog] =
 		useState<boolean>(false);
+	const [isOwner, setIsOwner] = useState<boolean>(false);
 
-	const { mutate: deleteUser } = useDeleteProjectUser();
+	const { mutate: deleteUser, isPending: isDeletingUser } =
+		useDeleteProjectUser();
 	const { data: projectPermissionsData } = useGetProjectPermissions();
 	const { data: permissionsData } = useGetProjectUserPermissions({
 		projectId,
 		userId: id,
 	});
-	const { mutate: updatePermissions } = useUpdateProjectUserPermissions();
+	const { mutate: updatePermissions, isPending: isUpdatingPermissions } =
+		useUpdateProjectUserPermissions();
 
 	const handleRemoveUser = () => {
 		deleteUser(
@@ -118,15 +120,24 @@ const ProjectPeopleMemberItem: React.FC<ProjectPeopleMemberItemProps> = ({
 	};
 
 	useEffect(() => {
+		if (!openPermissionDialog) {
+			return;
+		}
+
+		const viewedUserIsOwner =
+			permissionsData?.permissions?.some((p) => p.includes("owner")) ?? false;
+		setIsOwner(viewedUserIsOwner);
+
 		const permissionsMap = new Map<string, boolean>();
 		projectPermissionsData?.permissions.forEach((permission) => {
 			permissionsMap.set(
 				permission,
-				permissionsData?.permissions.includes(permission) || false
+				viewedUserIsOwner ||
+					(permissionsData?.permissions.includes(permission) ?? false)
 			);
 		});
 		setCurrentPermissions(permissionsMap);
-	}, [projectPermissionsData, permissionsData]);
+	}, [projectPermissionsData, permissionsData, openPermissionDialog]);
 
 	return (
 		<div
@@ -139,9 +150,14 @@ const ProjectPeopleMemberItem: React.FC<ProjectPeopleMemberItemProps> = ({
 					<AvatarFallback>{username[0].toUpperCase()}</AvatarFallback>
 				</Avatar>
 				<div>
-					<div className="flex items-center gap-6">
-						<p className="font-medium text-nowrap">{username}</p>
-						<div className="flex flex-wrap gap-2 max-w-fit">
+					<div className="flex items-start gap-6">
+						<div className="mt-1">
+							<p className="font-medium text-nowrap">{username}</p>
+							<p className="text-sm text-nowrap text-muted-foreground">
+								{email}
+							</p>
+						</div>
+						<div className="flex flex-wrap gap-2 max-w-fit mt-1">
 							{permissionsData?.permissions.slice(0, 3).map((permission) => (
 								<span
 									key={permission}
@@ -157,7 +173,6 @@ const ProjectPeopleMemberItem: React.FC<ProjectPeopleMemberItemProps> = ({
 							)}
 						</div>
 					</div>
-					<p className="text-sm text-muted-foreground">{email}</p>
 				</div>
 			</div>
 			<div className="flex items-center gap-4">
@@ -187,57 +202,28 @@ const ProjectPeopleMemberItem: React.FC<ProjectPeopleMemberItemProps> = ({
 									{t("people.members.item.actions.close")}
 								</Button>
 							</DialogClose>
-							<Button variant="destructive" onClick={handleRemoveUser}>
+							<Button
+								variant="destructive"
+								onClick={handleRemoveUser}
+								disabled={isDeletingUser}
+								className="flex items-center gap-2"
+							>
+								{isDeletingUser && <Spinner />}
 								{t("people.members.item.actions.remove")}
 							</Button>
 						</DialogFooter>
 					</DialogContent>
 				</Dialog>
-				<Dialog
+				<ProjectPeopleMemberItemPermissionsDialog
 					open={openPermissionDialog}
 					onOpenChange={setOpenPermissionDialog}
-				>
-					<DialogTrigger asChild>
-						<Button variant="default" size="sm" className="ml-auto">
-							{t("people.members.item.actions.permissions")}
-						</Button>
-					</DialogTrigger>
-					<DialogContent>
-						<DialogHeader>
-							<DialogTitle>
-								{t("people.members.item.permissionsDialog.title")}
-							</DialogTitle>
-							<DialogDescription>
-								<div className="flex flex-col gap-4 mt-4">
-									{projectPermissionsData?.permissions.map((permission) => (
-										<Field orientation="horizontal" key={permission}>
-											<Checkbox
-												id={permission}
-												name={permission}
-												checked={currentPermissions.get(permission) === true}
-												onCheckedChange={() =>
-													handleChangePermissions(permission)
-												}
-											/>
-
-											<Label htmlFor={permission}>{permission}</Label>
-										</Field>
-									))}
-								</div>
-							</DialogDescription>
-						</DialogHeader>
-						<DialogFooter>
-							<DialogClose asChild>
-								<Button type="button" variant="outline">
-									{t("people.members.item.actions.close")}
-								</Button>
-							</DialogClose>
-							<Button variant="default" onClick={handleUpdatePermissions}>
-								{t("people.members.item.actions.save")}
-							</Button>
-						</DialogFooter>
-					</DialogContent>
-				</Dialog>
+					projectPermissions={projectPermissionsData?.permissions}
+					currentPermissions={currentPermissions}
+					isOwner={isOwner}
+					isPending={isUpdatingPermissions}
+					onUpdatePermissions={handleUpdatePermissions}
+					onChangePermission={handleChangePermissions}
+				/>
 			</div>
 		</div>
 	);

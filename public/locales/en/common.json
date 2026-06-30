@@ -1,5 +1,6 @@
 {
   "error": "Something went wrong. Please try again later.",
+  "loading": "Please wait a moment...",
   "requestDone": "Request completed!",
   "action": {
     "close": "Close",

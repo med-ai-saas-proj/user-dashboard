@@ -1,6 +1,7 @@
 import { Navigate, Outlet } from "react-router-dom";
 import { useGetOrganizationProjects } from "@/features/organization/hooks/organization-projects/use-get-projects";
 import { useAuthStore } from "@/features/auth/store/auth-store";
+import LoadingPage from "@/components/loading-page";
 
 const ProjectRouteGuard = () => {
 	const organizationId = useAuthStore((state) => state.organization?.id) || "";
@@ -11,14 +12,7 @@ const ProjectRouteGuard = () => {
 	});
 
 	if (isLoading) {
-		return (
-			<div className="flex min-h-screen items-center justify-center">
-				<div className="text-center">
-					<div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto" />
-					<p className="mt-4 text-muted-foreground">Loading...</p>
-				</div>
-			</div>
-		);
+		return <LoadingPage />;
 	}
 
 	if ((data?.total ?? 0) === 0) {

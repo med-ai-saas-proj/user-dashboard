@@ -1,3 +1,10 @@
+import LoadingPage from "@/components/loading-page";
+import keycloak, { initKeycloak } from "@/config/keycloak";
+import {
+	type OrganizationInfo,
+	useAuthStore,
+	type UserInfo,
+} from "@/features/auth/store/auth-store";
 import {
 	createContext,
 	type ReactNode,
@@ -5,12 +12,6 @@ import {
 	useEffect,
 	useState,
 } from "react";
-import keycloak, { initKeycloak } from "@/config/keycloak";
-import {
-	type OrganizationInfo,
-	type UserInfo,
-	useAuthStore,
-} from "@/features/auth/store/auth-store";
 
 interface KeycloakContextType {
 	keycloak: typeof keycloak;
@@ -111,7 +112,7 @@ export const KeycloakProvider = ({ children }: { children: ReactNode }) => {
 
 	return (
 		<KeycloakContext.Provider value={{ keycloak, initialized, authenticated }}>
-			{initialized ? children : <div>Loading...</div>}
+			{initialized ? children : <LoadingPage />}
 		</KeycloakContext.Provider>
 	);
 };

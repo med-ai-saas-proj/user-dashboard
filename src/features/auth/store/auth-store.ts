@@ -9,6 +9,7 @@ export type UserInfo = {
 	preferred_username?: string;
 	given_name?: string;
 	family_name?: string;
+	exp?: number;
 };
 
 export type OrganizationInfo = {

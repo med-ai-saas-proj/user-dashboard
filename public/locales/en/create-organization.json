@@ -1,0 +1,23 @@
+{
+  "title": "You are not in an organization",
+  "description": "You need to be part of an organization before you can continue. Wait for an invitation or create a new organization below.",
+  "form": {
+    "fields": {
+      "name": {
+        "label": "Organization name",
+        "description": "This is the display name for your new organization.",
+        "placeholder": "Enter organization name"
+      }
+    },
+    "validation": {
+      "organizationNameRequired": "Organization name is required"
+    },
+    "actions": {
+      "create": "Create organization"
+    }
+  },
+  "toast": {
+    "success": "Organization created successfully",
+    "error": "Could not create the organization"
+  }
+}

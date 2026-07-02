@@ -6,6 +6,7 @@ import { query_client } from "@/query/query-client";
 import APIKeysPage from "@/routes/api-keys";
 import APIReferencePage from "@/routes/api-reference";
 import DashboardPage from "@/routes/dashboard";
+import CreateOrganizationPage from "@/routes/create-organization";
 import LoginPage from "@/routes/login";
 import OrganizationPeoplePage from "@/routes/organization-people";
 import { ProtectedRoute } from "@/routes/protected-route";
@@ -46,6 +47,15 @@ function App() {
 								<PublicRoute>
 									<LoginPage />
 								</PublicRoute>
+							}
+						/>
+
+						<Route
+							path="/create-organization"
+							element={
+								<ProtectedRoute>
+									<CreateOrganizationPage />
+								</ProtectedRoute>
 							}
 						/>
 

@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { AlertCircle, Plus } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import z from "zod";
 
@@ -25,6 +25,7 @@ import {
 import { Input } from "@/components/shadcn/input";
 import { Spinner } from "@/components/shadcn/spinner";
 import { LocaleSwitcher } from "@/components/sidebar/locale-switcher";
+import { useAuthStore } from "@/features/auth/store/auth-store";
 import { useCreateOrganization } from "@/features/create-organization/hooks/use-create-organization";
 
 const createOrganizationSchema = (messages: {
@@ -51,6 +52,7 @@ const CreateOrganization = () => {
 	const { t: translation } = useTranslation("create-organization" as never);
 	const t = translation as unknown as (key: string) => string;
 	const navigate = useNavigate();
+	const organization = useAuthStore((state) => state.organization);
 	const { mutate: createOrganization, isPending } = useCreateOrganization();
 
 	const validationMessages = useMemo(
@@ -93,6 +95,10 @@ const CreateOrganization = () => {
 			}
 		);
 	};
+
+	if (organization) {
+		return <Navigate to="/dashboard" replace />;
+	}
 
 	return (
 		<div className="relative flex min-h-screen items-center justify-center bg-background px-4 py-10">

@@ -25,8 +25,10 @@ import {
 import { Input } from "@/components/shadcn/input";
 import { Spinner } from "@/components/shadcn/spinner";
 import { LocaleSwitcher } from "@/components/sidebar/locale-switcher";
+import keycloak from "@/config/keycloak";
 import { useAuthStore } from "@/features/auth/store/auth-store";
 import { useCreateOrganization } from "@/features/create-organization/hooks/use-create-organization";
+import { syncAuthStateFromKeycloakToken } from "@/features/auth/utils/sync-auth-state";
 
 const createOrganizationSchema = (messages: {
 	organizationNameRequired: string;
@@ -85,9 +87,15 @@ const CreateOrganization = () => {
 				alias: toAlias(data.name),
 			},
 			{
-				onSuccess: () => {
-					toast.success(t("toast.success"));
-					navigate("/dashboard", { replace: true });
+				onSuccess: async () => {
+					try {
+						await keycloak.updateToken(-1);
+						syncAuthStateFromKeycloakToken();
+						toast.success(t("toast.success"));
+						navigate("/dashboard", { replace: true });
+					} catch {
+						toast.error(t("toast.error"));
+					}
 				},
 				onError: () => {
 					toast.error(t("toast.error"));

@@ -87,7 +87,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 	const data = {
 		info: {
 			organization: {
-				name: organization?.name || "Acme Inc",
+				name: organization?.name || "",
 				logo: GalleryVerticalEnd,
 				defaultProject: {
 					name: selectedProjectName || "Choose a Project",

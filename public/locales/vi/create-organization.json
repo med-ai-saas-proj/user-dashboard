@@ -1,0 +1,23 @@
+{
+  "title": "Bạn chưa thuộc tổ chức nào",
+  "description": "Bạn cần là thành viên của một tổ chức trước khi tiếp tục. Hãy chờ lời mời hoặc tạo một tổ chức mới bên dưới.",
+  "form": {
+    "fields": {
+      "name": {
+        "label": "Tên tổ chức",
+        "description": "Đây là tên hiển thị cho tổ chức mới của bạn.",
+        "placeholder": "Nhập tên tổ chức"
+      }
+    },
+    "validation": {
+      "organizationNameRequired": "Tên tổ chức là bắt buộc"
+    },
+    "actions": {
+      "create": "Tạo tổ chức"
+    }
+  },
+  "toast": {
+    "success": "Tạo tổ chức thành công",
+    "error": "Không thể tạo tổ chức"
+  }
+}

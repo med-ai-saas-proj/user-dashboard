@@ -11,5 +11,7 @@
   "apiDocs": {
     "management": "Management",
     "service": "Service"
-  }
+  },
+  "api-reference": "API Reference",
+  "no-api-reference": "No API reference available."
 }

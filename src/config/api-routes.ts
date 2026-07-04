@@ -72,6 +72,10 @@ export const API_ROUTES = {
 		).toString(),
 	},
 	SERVICES: {
+		AVAILABLE: new URL(
+			`service/${API_VERSION}/available`,
+			BASE_API_URL
+		).toString(),
 		EHR_SUMMARIZE: new URL(
 			`api/${API_VERSION}/ehr_summarize`,
 			BASE_API_URL
@@ -115,3 +119,6 @@ export const isServiceEndpoint = (url?: string): boolean => {
 		(Boolean(fileStorageService) && url.includes(fileStorageService))
 	);
 };
+
+export const getServiceOpenApiUrl = (serviceName: string): string =>
+	new URL(`service/${serviceName}/openapi.json`, BASE_API_URL).toString();

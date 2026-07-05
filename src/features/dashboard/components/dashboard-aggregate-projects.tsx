@@ -16,6 +16,7 @@ import type { ChartConfiguration } from "../dashboard.type";
 import { useChartTimePickerStore } from "../store/chart-time-picker";
 import DashboardAggregateProjectFilter from "./dashboard-aggregate-projects-filter";
 import { useAuthStore } from "@/features/auth/store/auth-store";
+import PermissionDeniedBlock from "@/components/permission-block/permission-denied-block";
 
 const DashboardAggregateProjects = () => {
     const { t } = useTranslation("dashboard");
@@ -57,7 +58,7 @@ const DashboardAggregateProjects = () => {
         organizationId,
     ]);
 
-    const { data: aggregateProjectsData } =
+    const { data: aggregateProjectsData, isError } =
         useGetAggregateByProjects(aggregateParams);
 
     const normalizedAggregateData = useMemo(
@@ -131,6 +132,10 @@ const DashboardAggregateProjects = () => {
             ) ?? 0,
         [aggregateProjectsData?.data],
     );
+
+    if (isError) {
+        return <PermissionDeniedBlock />;
+    }
 
     return (
         <div className="px-6 flex flex-col gap-6 w-full">

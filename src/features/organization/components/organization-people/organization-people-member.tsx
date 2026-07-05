@@ -18,6 +18,7 @@ import type { OrganizationUser } from "../../organization.type";
 import InvitationDialog from "./invitation-dialog";
 import OrganizationPeopleMemberDetails from "./organization-people-member-details";
 import OrganizationPeopleMemberItem from "./organization-people-member-item";
+import PermissionDeniedBlock from "@/components/permission-block/permission-denied-block";
 
 const OrganizationPeopleMember = () => {
 	const organizationId = useAuthStore((state) => state.organization?.id) || "";
@@ -27,7 +28,11 @@ const OrganizationPeopleMember = () => {
 	const [searchQuery, setSearchQuery] = useState<string>("");
 	const limit = 10;
 	const [page, setPage] = useState<number>(1);
-	const { data: users, isPending } = useGetUsers({
+	const {
+		data: users,
+		isPending,
+		isError,
+	} = useGetUsers({
 		organizationId,
 		offset: (page - 1) * limit,
 		limit,
@@ -61,6 +66,10 @@ const OrganizationPeopleMember = () => {
 			setSelectedUser(null);
 		}
 	};
+
+	if (isError) {
+		return <PermissionDeniedBlock />;
+	}
 
 	return (
 		<motion.div initial="hidden" animate="visible" variants={itemVariants}>

@@ -18,6 +18,7 @@ import { Button } from "@/components/shadcn/button";
 import { Spinner } from "@/components/shadcn/spinner";
 import { motion } from "framer-motion";
 import { itemVariants } from "@/lib/animations";
+import PermissionDeniedBlock from "@/components/permission-block/permission-denied-block";
 
 const OrganizationBillingCreditGrants = () => {
 	const { t, i18n } = useTranslation("billing");
@@ -31,6 +32,7 @@ const OrganizationBillingCreditGrants = () => {
 		data: creditTransactions,
 		isPending,
 		isFetching,
+		isError,
 	} = useGetCreditTransactions({
 		offset: 0,
 		limit: page * limit,
@@ -50,6 +52,10 @@ const OrganizationBillingCreditGrants = () => {
 
 		setPage((prev) => prev + 1);
 	};
+
+	if (isError) {
+		return <PermissionDeniedBlock />;
+	}
 
 	return (
 		<motion.div

@@ -41,12 +41,14 @@ export default function ProjectBucketsPage() {
 		data: files = [],
 		isLoading,
 		isFetching,
+		isError: isFilesError,
 	} = useGetProjectStorageFiles(projectId);
 
 	const {
 		data: ragFiles = [],
 		isLoading: isRagLoading,
 		isFetching: isRagFetching,
+		isError: isRagError,
 	} = useGetProjectRagFiles(projectId);
 
 	const uploadMutation = useUploadProjectStorageFile();
@@ -129,7 +131,9 @@ export default function ProjectBucketsPage() {
 			}
 
 			toast.success(
-				t("bucket:messages.uploadSuccess", { count: validFiles.length })
+				t("bucket:messages.uploadSuccess", {
+					count: validFiles.length,
+				})
 			);
 		} catch (error) {
 			toast.error(
@@ -309,6 +313,8 @@ export default function ProjectBucketsPage() {
 					isRagLoading={isRagLoading}
 					isRagFetching={isRagFetching}
 					isAddToRagDisabled={addRagFileMutation.isPending}
+					isFilesError={isFilesError}
+					isRagError={isRagError}
 					onOpenFilePicker={openFilePicker}
 					onSearchQueryChange={setSearchQuery}
 					onOpenQueryDialog={() => setQueryDialogOpen(true)}

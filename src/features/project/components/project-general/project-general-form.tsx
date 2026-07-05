@@ -16,6 +16,7 @@ import { itemVariants } from "@/lib/animations";
 import OrganizationProjectArchiveDialog from "@/features/organization/components/organization-project/organization-project-archive-dialog";
 import OrganizationProjectUnarchiveDialog from "@/features/organization/components/organization-project/organization-project-unarchive-dialog";
 import { Spinner } from "@/components/shadcn/spinner";
+import PermissionDeniedBlock from "@/components/permission-block/permission-denied-block";
 
 const createProjectGeneralSchema = (messages: {
 	projectNameRequired: string;
@@ -47,7 +48,7 @@ const ProjectGeneralForm = () => {
 		[t]
 	);
 
-	const { data: projectInfo } = useGetProjectDetails(projectId);
+	const { data: projectInfo, isError } = useGetProjectDetails(projectId);
 	const { mutate: updateProject, isPending } = useUpdateProject();
 
 	const projectGeneralSchema = useMemo(
@@ -91,6 +92,10 @@ const ProjectGeneralForm = () => {
 				projectInfo?.description || "Default project description",
 		});
 	}, [projectInfo, projectId, reset]);
+
+	if (isError) {
+		return <PermissionDeniedBlock />;
+	}
 
 	return (
 		<motion.div

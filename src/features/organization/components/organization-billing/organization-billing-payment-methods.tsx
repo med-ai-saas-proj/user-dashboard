@@ -24,6 +24,7 @@ import { Button } from "@/components/shadcn/button";
 import SetDefaultBillingMethodDialog from "./dialogs/set-default-payment-method";
 import { useBillingStore } from "../../store/billing";
 import { cn } from "@/lib/utils";
+import PermissionDeniedBlock from "@/components/permission-block/permission-denied-block";
 
 const OrganizationBillingPaymentMethods = () => {
 	const { t, i18n } = useTranslation("billing");
@@ -35,7 +36,7 @@ const OrganizationBillingPaymentMethods = () => {
 		(state) => state.setDefaultPaymentMethodId
 	);
 
-	const { data: paymentMethods, isLoading } = useGetPaymentMethods();
+	const { data: paymentMethods, isLoading, isError } = useGetPaymentMethods();
 	const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
 	const [isSetDefaultDialogOpen, setIsSetDefaultDialogOpen] = useState(false);
 	const [selectedPaymentMethodId, setSelectedPaymentMethodId] = useState<
@@ -68,6 +69,10 @@ const OrganizationBillingPaymentMethods = () => {
 
 		return methodsCopy;
 	}, [paymentMethods, defaultPaymentMethodId]);
+
+	if (isError) {
+		return <PermissionDeniedBlock />;
+	}
 
 	return (
 		<motion.div

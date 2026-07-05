@@ -36,6 +36,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Pencil } from "lucide-react";
 import DashboardLayout from "@/layouts/dashboard-layout";
+import PermissionDeniedBlock from "@/components/permission-block/permission-denied-block";
 
 const MotionCard = motion.create(Card);
 
@@ -204,10 +205,21 @@ const OrganizationSettings = (): React.JSX.Element => {
 	const { t } = useTranslation("setting");
 
 	const organizationId = useAuthStore((state) => state.organization?.id) || "";
-	const { data: setting, isLoading } =
-		useGetOrganizationSettings(organizationId);
+	const {
+		data: setting,
+		isLoading,
+		isError,
+	} = useGetOrganizationSettings(organizationId);
 	const { mutate: updateSettings, isPending } =
 		useUpdateOrganizationSettings(organizationId);
+
+	if (isError) {
+		return (
+			<DashboardLayout pageTitle={t("organization.title")}>
+				<PermissionDeniedBlock />
+			</DashboardLayout>
+		);
+	}
 
 	return (
 		<DashboardLayout pageTitle={t("organization.title")}>

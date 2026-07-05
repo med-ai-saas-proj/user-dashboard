@@ -8,6 +8,7 @@ import { useGetTransactionList } from "../../hooks/organization-billing/use-get-
 import type { DateRange } from "react-day-picker";
 import { motion } from "framer-motion";
 import { itemVariants } from "@/lib/animations";
+import PermissionDeniedBlock from "@/components/permission-block/permission-denied-block";
 
 function OrganizationBillingActivityLog() {
 	const { t, i18n } = useTranslation("billing");
@@ -24,6 +25,7 @@ function OrganizationBillingActivityLog() {
 		data: billingTransactions,
 		isPending,
 		isFetching,
+		isError,
 	} = useGetTransactionList({
 		offset: 0,
 		limit: page * limit,
@@ -54,6 +56,10 @@ function OrganizationBillingActivityLog() {
 
 		setPage((prev) => prev + 1);
 	};
+
+	if (isError) {
+		return <PermissionDeniedBlock />;
+	}
 
 	return (
 		<motion.div

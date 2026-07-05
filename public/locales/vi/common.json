@@ -1,18 +1,21 @@
 {
-  "error": "Có lỗi xảy ra. Vui lòng thử lại sau.",
-  "loading": "Vui lòng đợi một chút...",
-  "requestDone": "Yêu cầu đã hoàn tất!",
-  "action": {
-    "close": "Đóng",
-    "cancel": "Hủy",
-    "done": "Hoàn tất",
-    "save": "Lưu"
-  },
-  "apiDocs": {
-    "management": "Management",
-    "service": "Service"
-  },
-  "logout": "Đăng xuất",
-  "api-reference": "API Reference",
-  "no-api-reference": "Không có tài liệu API nào."
+    "error": "Có lỗi xảy ra. Vui lòng thử lại sau.",
+    "loading": "Vui lòng đợi một chút...",
+    "requestDone": "Yêu cầu đã hoàn tất!",
+    "action": {
+        "close": "Đóng",
+        "cancel": "Hủy",
+        "done": "Hoàn tất",
+        "save": "Lưu"
+    },
+    "apiDocs": {
+        "management": "Management",
+        "service": "Service"
+    },
+    "api-reference": "API Reference",
+    "no-api-reference": "Không có tài liệu API nào.",
+    "permission-denied": {
+        "title": "Không có quyền truy cập",
+        "description": "Bạn không có quyền cần thiết để xem phần này."
+    }
 }

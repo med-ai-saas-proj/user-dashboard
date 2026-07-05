@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 // import AddMemberWithEmailDialog from "./add-member-with-email-dialog";
-import type { AddMemberWithEmailDialogRef } from "./add-member-with-email-dialog";
+// import type { AddMemberWithEmailDialogRef } from "./add-member-with-email-dialog";
 import AddMemberWithoutEmailDialog, {
 	type AddMemberWithoutEmailDialogRef,
 } from "./add-member-without-email-dialog";
@@ -15,7 +15,7 @@ type AddMemberDialogProps = {
 
 const AddMemberDialog = ({ openDialog }: AddMemberDialogProps) => {
 	const { t } = useTranslation("project");
-	const addMemberWithEmailDialogRef = useRef<AddMemberWithEmailDialogRef>(null);
+	// const addMemberWithEmailDialogRef = useRef<AddMemberWithEmailDialogRef>(null);
 	const addMemberWithoutEmailDialogRef =
 		useRef<AddMemberWithoutEmailDialogRef>(null);
 

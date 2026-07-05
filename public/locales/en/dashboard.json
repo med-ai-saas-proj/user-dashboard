@@ -57,6 +57,15 @@
             "total": "Total"
         }
     },
+    "projectFilter": {
+        "noProjects": "No projects selected",
+        "allProjects": "All projects ({{count}})",
+        "overflow": "+{{count}}",
+        "dialogTitle": "Select Projects",
+        "selectAll": "Select All",
+        "filterLabel": "Filter projects",
+        "selectLabel": "Select"
+    },
     "kpiSection": {
         "title": "Key Performance Indicators",
         "description": "Track your system's performance with real-time metrics. Monitor total requests and costs to optimize your usage and budget allocation."

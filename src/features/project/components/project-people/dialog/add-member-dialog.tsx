@@ -19,17 +19,27 @@ const AddMemberDialog = ({ openDialog }: AddMemberDialogProps) => {
 	const addMemberWithoutEmailDialogRef =
 		useRef<AddMemberWithoutEmailDialogRef>(null);
 
-	const [activeTab, setActiveTab] = useState<string>("without-email");
+	// const [activeTab, setActiveTab] = useState<string>("without-email");
 	const [isAddingMember, setIsAddingMember] = useState<boolean>(false);
+
+	// const handleAddNewMemberForm = async () => {
+	// 	let success = false;
+	// 	if (activeTab === "with-email" && addMemberWithEmailDialogRef.current) {
+	// 		success = await addMemberWithEmailDialogRef.current.submit();
+	// 	} else if (
+	// 		activeTab === "without-email" &&
+	// 		addMemberWithoutEmailDialogRef.current
+	// 	) {
+	// 		success = await addMemberWithoutEmailDialogRef.current.submit();
+	// 	}
+	// 	if (success) {
+	// 		openDialog(false);
+	// 	}
+	// };
 
 	const handleAddNewMemberForm = async () => {
 		let success = false;
-		if (activeTab === "with-email" && addMemberWithEmailDialogRef.current) {
-			success = await addMemberWithEmailDialogRef.current.submit();
-		} else if (
-			activeTab === "without-email" &&
-			addMemberWithoutEmailDialogRef.current
-		) {
+		if (addMemberWithoutEmailDialogRef.current) {
 			success = await addMemberWithoutEmailDialogRef.current.submit();
 		}
 		if (success) {

@@ -133,13 +133,13 @@ const AddMemberWithoutEmailDialog = ({
 
 	return (
 		<form className="w-full mt-2">
-			<FieldGroup ref={portalContainerRef} className="w-full max-w-sm gap-y-2">
+			<FieldGroup ref={portalContainerRef} className="w-full gap-y-2">
 				<Field>
 					<Controller
 						name="userId"
 						control={control}
 						render={({ field }) => (
-							<div className="space-y-2">
+							<div className="w-full space-y-2">
 								<Label htmlFor="userId">
 									{t("people.dialog.without-email.userLabel")}
 								</Label>

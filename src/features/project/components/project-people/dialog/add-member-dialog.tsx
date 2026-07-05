@@ -1,10 +1,4 @@
 import { useRef, useState } from "react";
-import {
-	Tabs,
-	TabsContent,
-	TabsList,
-	TabsTrigger,
-} from "@/components/shadcn/tabs";
 // import AddMemberWithEmailDialog from "./add-member-with-email-dialog";
 import type { AddMemberWithEmailDialogRef } from "./add-member-with-email-dialog";
 import AddMemberWithoutEmailDialog, {
@@ -45,7 +39,7 @@ const AddMemberDialog = ({ openDialog }: AddMemberDialogProps) => {
 
 	return (
 		<>
-			<Tabs
+			{/* <Tabs
 				defaultValue={activeTab}
 				onValueChange={setActiveTab}
 				className="w-[400px]"
@@ -54,9 +48,9 @@ const AddMemberDialog = ({ openDialog }: AddMemberDialogProps) => {
 					<TabsTrigger value="without-email">
 						{t("people.dialog.tabs.selectUser")}
 					</TabsTrigger>
-					{/* <TabsTrigger value="with-email">
+					<TabsTrigger value="with-email">
 						{t("people.dialog.tabs.enterUserEmail")}
-					</TabsTrigger> */}
+					</TabsTrigger>
 				</TabsList>
 				<TabsContent value="without-email">
 					<AddMemberWithoutEmailDialog
@@ -64,10 +58,14 @@ const AddMemberDialog = ({ openDialog }: AddMemberDialogProps) => {
 						setIsAddingMember={setIsAddingMember}
 					/>
 				</TabsContent>
-				{/* <TabsContent value="with-email">
+				<TabsContent value="with-email">
 					<AddMemberWithEmailDialog ref={addMemberWithEmailDialogRef} />
-				</TabsContent> */}
-			</Tabs>
+				</TabsContent>
+			</Tabs> */}
+			<AddMemberWithoutEmailDialog
+				ref={addMemberWithoutEmailDialogRef}
+				setIsAddingMember={setIsAddingMember}
+			/>
 			<DialogFooter>
 				<DialogClose asChild>
 					<Button variant="outline">{t("people.dialog.actions.close")}</Button>

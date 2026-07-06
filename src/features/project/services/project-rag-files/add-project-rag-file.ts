@@ -10,7 +10,7 @@ const DEFAULT_CHUNK_SPLITTER: ProjectRagFileCreateInput["chunkSplitter"] =
 	"recursive";
 const DEFAULT_CHUNK_SIZE = 1000;
 const DEFAULT_CHUNK_OVERLAP = 150;
-const TASK_POLL_INTERVAL_MS = 1500;
+const TASK_POLL_INTERVAL_MS = 5000;
 const TASK_POLL_TIMEOUT_MS = 5 * 60 * 1000;
 
 const sleep = (ms: number) =>

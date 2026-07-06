@@ -14,10 +14,9 @@ import { useGetAggregateByProjects } from "../hooks/use-get-aggregate-by-project
 import type { ChartConfig } from "@/components/shadcn/chart";
 import type { ChartConfiguration } from "../dashboard.type";
 import { useChartTimePickerStore } from "../store/chart-time-picker";
-import { getOrganizationProjects } from "@/features/organization/services/organization-projects/get-projects";
-import { useOrganizationStore } from "@/features/organization/store/organization";
 import type { OrganizationProject } from "@/features/organization/organization.type";
-import { useQuery } from "@tanstack/react-query";
+import { useGetOrganizationProjects } from "@/features/organization/hooks/organization-projects/use-get-projects";
+import { useAuthStore } from "@/features/auth/store/auth-store";
 
 const DashboardAggregateProjects = () => {
 	const { t } = useTranslation("dashboard");
@@ -25,19 +24,13 @@ const DashboardAggregateProjects = () => {
 	const endDate = useChartTimePickerStore((state) => state.endDate);
 	const selectedPeriod = useChartTimePickerStore((state) => state.period);
 	const scale = useChartTimePickerStore((state) => state.scale);
-	const organizationId =
-		useOrganizationStore((state) => state.organizationId) || "";
+	const organizationId = useAuthStore((state) => state.organization?.id) || "";
 
 	// Fetch organization projects
-	const { data: projectsData } = useQuery({
-		queryKey: ["organization-projects", organizationId],
-		queryFn: () =>
-			getOrganizationProjects({
-				organizationId,
-				offset: 0,
-				limit: 100,
-			}),
-		enabled: !!organizationId,
+	const { data: projectsData } = useGetOrganizationProjects({
+		organizationId,
+		offset: 0,
+		limit: 100,
 	});
 
 	// Extract project UIDs

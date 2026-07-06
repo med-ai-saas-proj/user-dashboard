@@ -58,6 +58,7 @@
     "uploadSuccess": "{{count}} tệp đã được đưa vào hàng đợi xử lý.",
     "uploadError": "Không thể tải lên các tệp đã chọn.",
     "downloadError": "Không thể chuẩn bị liên kết tải xuống.",
+    "downloadSuccess": "Đã tải xuống {{fileName}} thành công.",
     "deleteConfirm": "Xóa {{fileName}} khỏi dự án?",
     "deleteError": "Không thể xóa tệp.",
     "deleted": "Đã xóa tệp.",

@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { AlertCircle, Plus } from "lucide-react";
+import { AlertCircle, LogOutIcon, Plus } from "lucide-react";
 import { Navigate, useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 import z from "zod";
@@ -51,11 +51,12 @@ const toAlias = (name: string) =>
 		.replace(/^-|-$/g, "");
 
 const CreateOrganization = () => {
-	const { t: translation } = useTranslation("create-organization" as never);
-	const t = translation as unknown as (key: string) => string;
+	const { t } = useTranslation("create-organization");
+	const { t: tCommon } = useTranslation("common");
 	const navigate = useNavigate();
 	const organization = useAuthStore((state) => state.organization);
 	const { mutate: createOrganization, isPending } = useCreateOrganization();
+	const logout = useAuthStore((state) => state.logout);
 
 	const validationMessages = useMemo(
 		() => ({
@@ -142,7 +143,19 @@ const CreateOrganization = () => {
 							</Field>
 						</FieldGroup>
 
-						<div className="flex items-center justify-end gap-3">
+						<div className="flex items-center justify-between gap-3">
+							<Button
+								className="flex gap-2 items-center"
+								type="button"
+								variant="outline"
+								onClick={() => {
+									logout();
+									navigate("/login", { replace: true });
+								}}
+							>
+								<LogOutIcon className="size-4" />
+								{tCommon("logout")}
+							</Button>
 							<Button type="submit" disabled={isPending} className="min-w-44">
 								{isPending && <Spinner />}
 								<Plus className="size-4" />

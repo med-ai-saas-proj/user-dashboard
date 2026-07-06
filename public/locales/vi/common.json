@@ -12,6 +12,7 @@
     "management": "Management",
     "service": "Service"
   },
+  "logout": "Đăng xuất",
   "api-reference": "API Reference",
   "no-api-reference": "Không có tài liệu API nào."
 }

@@ -45,6 +45,7 @@ export function NavUser({
 	const { isMobile } = useSidebar();
 	const { mutate: signOut } = useSignOut();
 	const { t, i18n } = useTranslation("sidebar");
+	const { t: tCommon } = useTranslation("common");
 	const currentLocale = i18n.language;
 
 	const avatarText = user.preferred_username
@@ -130,7 +131,7 @@ export function NavUser({
 						<DropdownMenuSeparator />
 						<DropdownMenuItem onClick={() => signOut()}>
 							<LogOut />
-							Log out
+							{tCommon("logout")}
 						</DropdownMenuItem>
 					</DropdownMenuContent>
 				</DropdownMenu>

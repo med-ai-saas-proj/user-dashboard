@@ -1,5 +1,5 @@
-import { useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { CustomPagination } from "@/components/pagination/pagination";
+import { Spinner } from "@/components/shadcn/spinner";
 import {
 	Table,
 	TableBody,
@@ -8,17 +8,14 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/shadcn/table";
+import { useAuthStore } from "@/features/auth/store/auth-store";
+import { useProjectStore } from "@/features/project/store/project";
+import { useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import { useGetOrganizationProjects } from "../../hooks/organization-projects/use-get-projects";
-import { Settings } from "lucide-react";
 import OrganizationProjectArchiveDialog from "./organization-project-archive-dialog";
 import OrganizationProjectUnarchiveDialog from "./organization-project-unarchive-dialog";
-import { Spinner } from "@/components/shadcn/spinner";
-import { useTranslation } from "react-i18next";
-import { useProjectStore } from "@/features/project/store/project";
-import { useAuthStore } from "@/features/auth/store/auth-store";
-import { CustomPagination } from "@/components/pagination/pagination";
-import { Tooltip, TooltipContent } from "@/components/shadcn/tooltip";
-import { TooltipTrigger } from "@radix-ui/react-tooltip";
 
 type OrganizationProjectContentProps = {
 	isArchived: boolean;
@@ -91,7 +88,11 @@ const OrganizationProjectContent = ({
 				</TableHeader>
 				<TableBody>
 					{filteredProjects.map((project, index) => (
-						<TableRow key={project.project_uuid}>
+						<TableRow
+							key={project.project_uuid}
+							onClick={() => handleNavigateToProject(project.project_uuid)}
+							className="cursor-pointer"
+						>
 							<TableCell>
 								<p className="text-muted-foreground">
 									{(page - 1) * limit + index + 1}
@@ -102,19 +103,6 @@ const OrganizationProjectContent = ({
 							<TableCell>{project.description}</TableCell>
 							<TableCell>
 								<div className="flex items-center gap-x-6 justify-end">
-									<Tooltip>
-										<TooltipTrigger asChild>
-											<Settings
-												size={"16"}
-												onClick={() =>
-													handleNavigateToProject(project.project_uuid)
-												}
-											/>
-										</TooltipTrigger>
-										<TooltipContent>
-											<p>{t("project.content.settings")}</p>
-										</TooltipContent>
-									</Tooltip>
 									{!project.archived && (
 										<OrganizationProjectArchiveDialog
 											projectId={project.project_uuid}

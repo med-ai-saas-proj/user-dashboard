@@ -2,6 +2,7 @@ import axios from "axios";
 import { BASE_API_URL } from "@/config/api-routes";
 import { getAuthHeaders, handleUnauthorized } from "@/lib/auth-headers";
 import { useAuthStore } from "@/features/auth/store/auth-store";
+import { useProjectStore } from "@/features/project/store/project";
 
 const apiClient = axios.create({
 	baseURL: BASE_API_URL,
@@ -35,6 +36,7 @@ apiClient.interceptors.response.use(
 
 			if (errorCode === "missing_organization_claim") {
 				useAuthStore.getState().setOrganization(null);
+				useProjectStore.getState().resetProject();
 				window.location.replace("/create-organization");
 				return Promise.reject(error);
 			}

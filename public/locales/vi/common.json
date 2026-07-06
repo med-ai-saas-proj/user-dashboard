@@ -13,6 +13,7 @@
         "service": "Service"
     },
     "api-reference": "API Reference",
+    "logout": "Đăng xuất",
     "no-api-reference": "Không có tài liệu API nào.",
     "permission-denied": {
         "title": "Không có quyền truy cập",

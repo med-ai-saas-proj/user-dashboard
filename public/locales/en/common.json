@@ -13,6 +13,7 @@
         "service": "Service"
     },
     "api-reference": "API Reference",
+    "logout": "Logout",
     "no-api-reference": "No API reference available.",
     "permission-denied": {
         "title": "Permission Denied",

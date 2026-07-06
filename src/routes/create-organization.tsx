@@ -148,7 +148,10 @@ const CreateOrganization = () => {
 								className="flex gap-2 items-center"
 								type="button"
 								variant="outline"
-								onClick={logout}
+								onClick={() => {
+									logout();
+									navigate("/login", { replace: true });
+								}}
 							>
 								<LogOutIcon className="size-4" />
 								{tCommon("logout")}

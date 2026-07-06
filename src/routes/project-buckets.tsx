@@ -180,8 +180,38 @@ export default function ProjectBucketsPage() {
 			const response = await fetch(downloadUrl);
 			if (!response.ok) throw new Error("Failed to fetch file content");
 			const blob = await response.blob();
-			const url = window.URL.createObjectURL(blob);
 
+			// Use the File System Access API when available so the user gets
+			// a native "Save As" dialog and can choose where to save the file.
+			if ("showSaveFilePicker" in window) {
+				try {
+					const handle = await (window as any).showSaveFilePicker({
+						suggestedName: file.filename,
+					});
+					const writable = await handle.createWritable();
+					await writable.write(blob);
+					await writable.close();
+					toast.dismiss("downloading");
+					toast.success(
+						t("bucket:messages.downloadSuccess", { fileName: file.filename })
+					);
+					return;
+				} catch (error) {
+					// User cancelled the save dialog — don't treat as an error,
+					// just stop silently.
+					if (error instanceof DOMException && error.name === "AbortError") {
+						toast.dismiss("downloading");
+						return;
+					}
+					// Any other failure (e.g. permissions) — fall through to the
+					// legacy download method below.
+				}
+			}
+
+			// Fallback for browsers without File System Access API support
+			// (Firefox, Safari, etc.) — downloads straight to the default
+			// downloads folder.
+			const url = window.URL.createObjectURL(blob);
 			const link = document.createElement("a");
 			link.href = url;
 			link.download = file.filename;
@@ -192,6 +222,9 @@ export default function ProjectBucketsPage() {
 			document.body.removeChild(link);
 			window.URL.revokeObjectURL(url);
 			toast.dismiss("downloading");
+			toast.success(
+				t("bucket:messages.downloadSuccess", { fileName: file.filename })
+			);
 		} catch (error) {
 			toast.dismiss("downloading");
 			toast.error(

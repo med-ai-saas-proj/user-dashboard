@@ -58,6 +58,7 @@
     "uploadSuccess": "{{count}} file(s) were queued for processing.",
     "uploadError": "Failed to upload the selected file(s).",
     "downloadError": "Unable to prepare the download link.",
+    "downloadSuccess": "Downloaded {{fileName}} successfully.",
     "deleteConfirm": "Delete {{fileName}} from the project?",
     "deleteError": "Failed to delete the file.",
     "deleted": "File deleted.",

@@ -18,6 +18,7 @@ import type projectEN from "../public/locales/en/project.json";
 import type billingEN from "../public/locales/en/billing.json";
 import type bucketEN from "../public/locales/en/bucket.json";
 import type createOrganizationEN from "../public/locales/en/create-organization.json";
+import type loggingEN from "../public/locales/en/logging.json";
 
 declare module "i18next" {
 	interface CustomTypeOptions {
@@ -42,6 +43,7 @@ declare module "i18next" {
 			billing: typeof billingEN;
 			bucket: typeof bucketEN;
 			"create-organization": typeof createOrganizationEN;
+			logging: typeof loggingEN;
 		};
 	}
 }

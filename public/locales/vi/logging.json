@@ -1,0 +1,34 @@
+{
+    "pageTitle": "Nhật ký",
+    "heading": "Nhật ký",
+    "dateRange": {
+        "label": "Khoảng thời gian",
+        "placeholder": "Chọn khoảng thời gian"
+    },
+    "limit": {
+        "label": "Giới hạn"
+    },
+    "direction": {
+        "label": "Hướng",
+        "forward": "Mới nhất",
+        "backward": "Cũ nhất"
+    },
+    "level": {
+        "label": "Cấp độ",
+        "info": "Info",
+        "warn": "Warn",
+        "error": "Error",
+        "debug": "Debug"
+    },
+    "keyword": {
+        "placeholder": "Tìm kiếm từ khóa..."
+    },
+    "filter": {
+        "button": "Bộ lọc",
+        "dialogTitle": "Bộ lọc nhật ký",
+        "projects": "Dự án",
+        "levels": "Cấp độ",
+        "cancel": "Hủy",
+        "save": "Lưu bộ lọc"
+    }
+}

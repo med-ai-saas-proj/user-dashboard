@@ -70,6 +70,10 @@ export const API_ROUTES = {
 			`management/${API_VERSION}/billing`,
 			BASE_API_URL
 		).toString(),
+		LOGGING: new URL(
+			`management/${API_VERSION}/logging`,
+			BASE_API_URL
+		).toString(),
 	},
 	SERVICES: {
 		AVAILABLE: new URL(

@@ -1,0 +1,34 @@
+{
+    "pageTitle": "Logging",
+    "heading": "Logging",
+    "dateRange": {
+        "label": "Date Range",
+        "placeholder": "Select date range"
+    },
+    "limit": {
+        "label": "Limit"
+    },
+    "direction": {
+        "label": "Direction",
+        "forward": "Forward",
+        "backward": "Backward"
+    },
+    "level": {
+        "label": "Level",
+        "info": "Info",
+        "warn": "Warn",
+        "error": "Error",
+        "debug": "Debug"
+    },
+    "keyword": {
+        "placeholder": "Search keyword..."
+    },
+    "filter": {
+        "button": "Filters",
+        "dialogTitle": "Log Filters",
+        "projects": "Projects",
+        "levels": "Levels",
+        "cancel": "Cancel",
+        "save": "Save Filters"
+    }
+}

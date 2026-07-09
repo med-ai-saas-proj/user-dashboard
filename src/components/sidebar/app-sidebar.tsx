@@ -9,6 +9,7 @@ import {
 	UserRound,
 	KeyRound,
 	Database,
+	ClipboardClock,
 } from "lucide-react";
 import type * as React from "react";
 import { useEffect } from "react";
@@ -129,6 +130,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 				name: t("organization.billing.title"),
 				url: "/organization/billing",
 				icon: CreditCard,
+			},
+			{
+				name: t("organization.logging.title"),
+				url: "/organization/logging",
+				icon: ClipboardClock,
 			},
 			{
 				name: t("organization.settings.title"),

@@ -53,6 +53,9 @@
         },
         "settings": {
             "title": "Cài đặt"
+        },
+        "logging": {
+            "title": "Ghi nhật ký"
         }
     },
     "project": {

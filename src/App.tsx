@@ -33,6 +33,7 @@ import ProjectPeople from "./routes/project-people";
 import ProjectRouteGuard from "./routes/project-route-guard";
 import OrganizationSettings from "./features/organization/components/organization-settings/organization-settings";
 import ProjectSettings from "./features/project/components/project-settings/project-settings";
+import LoggingPage from "./routes/logging";
 
 function App() {
 	return (
@@ -119,6 +120,7 @@ function App() {
 									/>
 								</Route>
 								<Route path="settings" element={<OrganizationSettings />} />
+								<Route path="logging" element={<LoggingPage />} />
 							</Route>
 
 							<Route path="/project/:projectId">

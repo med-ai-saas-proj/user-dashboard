@@ -13,12 +13,17 @@ import {
 	SelectValue,
 } from "@/components/shadcn/select";
 import { Label } from "@/components/shadcn/label";
+import PermissionDeniedBlock from "@/components/permission-block/permission-denied-block";
 
 const OrganizationBillingHistory = () => {
 	const { t } = useTranslation("billing");
 	const [paid, setPaid] = useState(false);
 
-	const { data: invoices } = useGetInvoices({ paid });
+	const { data: invoices, isError } = useGetInvoices({ paid });
+
+	if (isError) {
+		return <PermissionDeniedBlock />;
+	}
 
 	return (
 		<motion.div

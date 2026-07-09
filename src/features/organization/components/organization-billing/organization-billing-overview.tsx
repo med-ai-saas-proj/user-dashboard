@@ -11,6 +11,7 @@ import { useTranslation } from "react-i18next";
 import { useGetCredits } from "../../hooks/organization-billing/use-get-credit";
 import { motion } from "framer-motion";
 import { itemVariants } from "@/lib/animations";
+import PermissionDeniedBlock from "@/components/permission-block/permission-denied-block";
 
 const OrganizationBillingOverview = () => {
 	const { t } = useTranslation("billing");
@@ -21,7 +22,11 @@ const OrganizationBillingOverview = () => {
 	const [stripePay, setStripePay] = useState(false);
 
 	const billingSourceId = useBillingStore((state) => state.billingSourceId);
-	const { data: currentCreditsInOrganization } = useGetCredits();
+	const { data: currentCreditsInOrganization, isError } = useGetCredits();
+
+	if (isError) {
+		return <PermissionDeniedBlock />;
+	}
 
 	return (
 		<motion.div

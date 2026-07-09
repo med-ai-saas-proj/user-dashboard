@@ -25,6 +25,7 @@ import { useProjectStore } from "../../store/project";
 import AddMemberDialog from "./dialog/add-member-dialog";
 import ProjectPeopleMemberDetails from "./project-people-member-details";
 import ProjectPeopleMemberItem from "./project-people-member-item";
+import PermissionDeniedBlock from "@/components/permission-block/permission-denied-block";
 
 const ProjectPeopleMember = () => {
 	const params = useParams();
@@ -36,7 +37,11 @@ const ProjectPeopleMember = () => {
 	const [searchQuery, setSearchQuery] = useState<string>("");
 	const limit = 10;
 	const [page, setPage] = useState<number>(1);
-	const { data: users, isPending } = useGetProjectUsers({
+	const {
+		data: users,
+		isPending,
+		isError,
+	} = useGetProjectUsers({
 		projectId,
 		offset: (page - 1) * limit,
 		limit,
@@ -56,6 +61,10 @@ const ProjectPeopleMember = () => {
 		if (!user) return;
 		setSelectedUser(user);
 	};
+
+	if (isError) {
+		return <PermissionDeniedBlock />;
+	}
 
 	return (
 		<motion.div variants={itemVariants} initial="hidden" animate="visible">

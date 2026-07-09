@@ -146,7 +146,7 @@ const AreaChartDashboard = ({
 					<Area
 						key={s.dataKey + idx}
 						dataKey={s.dataKey}
-						type="natural"
+						type="linear"
 						dot={s.dot ?? false}
 						stroke={s.stroke ?? `var(--chart-${(idx % 6) + 1})`}
 						fill={s.stroke ?? `var(--chart-${(idx % 6) + 1})`}

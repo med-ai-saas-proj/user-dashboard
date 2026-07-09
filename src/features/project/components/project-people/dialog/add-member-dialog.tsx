@@ -1,12 +1,6 @@
 import { useRef, useState } from "react";
-import {
-	Tabs,
-	TabsContent,
-	TabsList,
-	TabsTrigger,
-} from "@/components/shadcn/tabs";
 // import AddMemberWithEmailDialog from "./add-member-with-email-dialog";
-import type { AddMemberWithEmailDialogRef } from "./add-member-with-email-dialog";
+// import type { AddMemberWithEmailDialogRef } from "./add-member-with-email-dialog";
 import AddMemberWithoutEmailDialog, {
 	type AddMemberWithoutEmailDialogRef,
 } from "./add-member-without-email-dialog";
@@ -21,21 +15,31 @@ type AddMemberDialogProps = {
 
 const AddMemberDialog = ({ openDialog }: AddMemberDialogProps) => {
 	const { t } = useTranslation("project");
-	const addMemberWithEmailDialogRef = useRef<AddMemberWithEmailDialogRef>(null);
+	// const addMemberWithEmailDialogRef = useRef<AddMemberWithEmailDialogRef>(null);
 	const addMemberWithoutEmailDialogRef =
 		useRef<AddMemberWithoutEmailDialogRef>(null);
 
-	const [activeTab, setActiveTab] = useState<string>("without-email");
+	// const [activeTab, setActiveTab] = useState<string>("without-email");
 	const [isAddingMember, setIsAddingMember] = useState<boolean>(false);
+
+	// const handleAddNewMemberForm = async () => {
+	// 	let success = false;
+	// 	if (activeTab === "with-email" && addMemberWithEmailDialogRef.current) {
+	// 		success = await addMemberWithEmailDialogRef.current.submit();
+	// 	} else if (
+	// 		activeTab === "without-email" &&
+	// 		addMemberWithoutEmailDialogRef.current
+	// 	) {
+	// 		success = await addMemberWithoutEmailDialogRef.current.submit();
+	// 	}
+	// 	if (success) {
+	// 		openDialog(false);
+	// 	}
+	// };
 
 	const handleAddNewMemberForm = async () => {
 		let success = false;
-		if (activeTab === "with-email" && addMemberWithEmailDialogRef.current) {
-			success = await addMemberWithEmailDialogRef.current.submit();
-		} else if (
-			activeTab === "without-email" &&
-			addMemberWithoutEmailDialogRef.current
-		) {
+		if (addMemberWithoutEmailDialogRef.current) {
 			success = await addMemberWithoutEmailDialogRef.current.submit();
 		}
 		if (success) {
@@ -45,7 +49,7 @@ const AddMemberDialog = ({ openDialog }: AddMemberDialogProps) => {
 
 	return (
 		<>
-			<Tabs
+			{/* <Tabs
 				defaultValue={activeTab}
 				onValueChange={setActiveTab}
 				className="w-[400px]"
@@ -54,9 +58,9 @@ const AddMemberDialog = ({ openDialog }: AddMemberDialogProps) => {
 					<TabsTrigger value="without-email">
 						{t("people.dialog.tabs.selectUser")}
 					</TabsTrigger>
-					{/* <TabsTrigger value="with-email">
+					<TabsTrigger value="with-email">
 						{t("people.dialog.tabs.enterUserEmail")}
-					</TabsTrigger> */}
+					</TabsTrigger>
 				</TabsList>
 				<TabsContent value="without-email">
 					<AddMemberWithoutEmailDialog
@@ -64,10 +68,14 @@ const AddMemberDialog = ({ openDialog }: AddMemberDialogProps) => {
 						setIsAddingMember={setIsAddingMember}
 					/>
 				</TabsContent>
-				{/* <TabsContent value="with-email">
+				<TabsContent value="with-email">
 					<AddMemberWithEmailDialog ref={addMemberWithEmailDialogRef} />
-				</TabsContent> */}
-			</Tabs>
+				</TabsContent>
+			</Tabs> */}
+			<AddMemberWithoutEmailDialog
+				ref={addMemberWithoutEmailDialogRef}
+				setIsAddingMember={setIsAddingMember}
+			/>
 			<DialogFooter>
 				<DialogClose asChild>
 					<Button variant="outline">{t("people.dialog.actions.close")}</Button>

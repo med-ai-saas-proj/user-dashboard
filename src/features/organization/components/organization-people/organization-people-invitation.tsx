@@ -15,15 +15,24 @@ import { Plus, Search } from "lucide-react";
 import { useAuthStore } from "@/features/auth/store/auth-store";
 import { motion } from "framer-motion";
 import { itemVariants } from "@/lib/animations";
+import PermissionDeniedBlock from "@/components/permission-block/permission-denied-block";
 
 const OrganizationPeopleInvitation = () => {
 	const { t } = useTranslation("organization");
 	const organizationId = useAuthStore((state) => state.organization?.id) || "";
 	const [openInviteDialog, setOpenInviteDialog] = useState<boolean>(false);
 
-	const { data: invitations, isPending } = useGetInvitations({
+	const {
+		data: invitations,
+		isPending,
+		isError,
+	} = useGetInvitations({
 		organizationId,
 	});
+
+	if (isError) {
+		return <PermissionDeniedBlock />;
+	}
 
 	return (
 		<motion.div initial="hidden" animate="visible" variants={itemVariants}>

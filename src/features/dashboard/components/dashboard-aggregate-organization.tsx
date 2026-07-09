@@ -14,6 +14,7 @@ import { useGetAggregateByOrganization } from "../hooks/use-get-aggregate-by-org
 import type { ChartConfig } from "@/components/shadcn/chart";
 import type { ChartConfiguration } from "../dashboard.type";
 import { useChartTimePickerStore } from "../store/chart-time-picker";
+import PermissionDeniedBlock from "@/components/permission-block/permission-denied-block";
 
 const DashboardAggregateOrganization = () => {
 	const { t } = useTranslation("dashboard");
@@ -39,7 +40,7 @@ const DashboardAggregateOrganization = () => {
 		};
 	}, [startDate, endDate, selectedPeriod, scale]);
 
-	const { data: aggregateOrganizationData } =
+	const { data: aggregateOrganizationData, isError } =
 		useGetAggregateByOrganization(aggregateParams);
 
 	const normalizedAggregateData = useMemo(
@@ -113,6 +114,10 @@ const DashboardAggregateOrganization = () => {
 			) ?? 0,
 		[aggregateOrganizationData?.data]
 	);
+
+	if (isError) {
+		return <PermissionDeniedBlock />;
+	}
 
 	return (
 		<div className="px-6 flex flex-col gap-6 w-full">

@@ -57,6 +57,15 @@
             "total": "Tổng"
         }
     },
+    "projectFilter": {
+        "noProjects": "Chưa chọn dự án nào",
+        "allProjects": "Tất cả dự án ({{count}})",
+        "overflow": "+{{count}}",
+        "dialogTitle": "Chọn dự án",
+        "selectAll": "Chọn tất cả",
+        "filterLabel": "Lọc dự án",
+        "selectLabel": "Chọn"
+    },
     "kpiSection": {
         "title": "Chỉ số hiệu suất chính",
         "description": "Theo dõi hiệu suất hệ thống của bạn với các chỉ số thời gian thực. Giám sát tổng số yêu cầu và chi phí để tối ưu hóa việc sử dụng và phân bổ ngân sách."

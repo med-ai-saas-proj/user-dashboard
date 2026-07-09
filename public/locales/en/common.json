@@ -1,18 +1,22 @@
 {
-  "error": "Something went wrong. Please try again later.",
-  "loading": "Please wait a moment...",
-  "requestDone": "Request completed!",
-  "action": {
-    "close": "Close",
-    "cancel": "Cancel",
-    "done": "Done",
-    "save": "Save"
-  },
-  "apiDocs": {
-    "management": "Management",
-    "service": "Service"
-  },
-  "logout": "Logout",
-  "api-reference": "API Reference",
-  "no-api-reference": "No API reference available."
+    "error": "Something went wrong. Please try again later.",
+    "loading": "Please wait a moment...",
+    "requestDone": "Request completed!",
+    "action": {
+        "close": "Close",
+        "cancel": "Cancel",
+        "done": "Done",
+        "save": "Save"
+    },
+    "apiDocs": {
+        "management": "Management",
+        "service": "Service"
+    },
+    "api-reference": "API Reference",
+    "logout": "Logout",
+    "no-api-reference": "No API reference available.",
+    "permission-denied": {
+        "title": "Permission Denied",
+        "description": "You do not have the required permissions to view this section."
+    }
 }

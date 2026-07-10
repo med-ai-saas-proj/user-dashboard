@@ -22,7 +22,6 @@ const Logging = (): React.JSX.Element => {
 
 	const [limit, setLimit] = useState("100");
 	const [direction, setDirection] = useState("backward");
-	const [level, setLevel] = useState("info");
 	const [keyword, setKeyword] = useState("");
 	const [filters, setFilters] = useState("");
 
@@ -41,7 +40,6 @@ const Logging = (): React.JSX.Element => {
 		end: dateRange.end,
 		limit: limit ? Number(limit) : undefined,
 		direction: direction as "forward" | "backward" | undefined,
-		level: level as "info" | "warn" | "error" | "debug" | undefined,
 		keyword: keyword || undefined,
 		filters: filters || undefined,
 	});
@@ -76,8 +74,6 @@ const Logging = (): React.JSX.Element => {
 				onLimitChange={setLimit}
 				direction={direction}
 				onDirectionChange={setDirection}
-				level={level}
-				onLevelChange={setLevel}
 				keyword={keyword}
 				onKeywordChange={setKeyword}
 				filters={filters}

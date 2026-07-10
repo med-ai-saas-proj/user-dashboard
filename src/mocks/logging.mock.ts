@@ -90,7 +90,9 @@ const parseNumberParam = (value: string | null, fallback: number) => {
 const parseFilterEntries = (value: string | null) => {
 	if (!value) return [] as Array<{ type: string; value: string }>;
 
-	return value
+	const decoded = decodeURIComponent(value);
+
+	return decoded
 		.split(",")
 		.map((item) => item.trim())
 		.filter(Boolean)
@@ -122,13 +124,22 @@ const buildMockResponse = (options: { url: string }) => {
 	const level = url.searchParams.get("level") ?? "";
 	const keyword = url.searchParams.get("keyword") ?? "";
 	const filters = parseFilterEntries(url.searchParams.get("filters"));
+	const levelFilters = [
+		level,
+		...parseFilterEntries(url.searchParams.get("level"))
+			.filter((entry) => entry.type === "level")
+			.map((entry) => entry.value),
+	].filter(Boolean);
 
 	const filterProjectIds = filters
 		.filter((entry) => entry.type === "projectId")
 		.map((entry) => entry.value);
-	const filterLevels = filters
-		.filter((entry) => entry.type === "level")
-		.map((entry) => entry.value);
+	const filterLevels = [
+		...filters
+			.filter((entry) => entry.type === "level")
+			.map((entry) => entry.value),
+		...levelFilters,
+	];
 
 	const filtered = loggingMockData.filter((log) => {
 		if (start !== null && log.timestamp < start) return false;

@@ -22,8 +22,6 @@ interface LoggingHeaderProps {
 	onLimitChange: (value: string) => void;
 	direction: string;
 	onDirectionChange: (value: string) => void;
-	level: string;
-	onLevelChange: (value: string) => void;
 	keyword: string;
 	onKeywordChange: (value: string) => void;
 	filters: string;
@@ -38,8 +36,6 @@ const LoggingHeader = ({
 	onLimitChange,
 	direction,
 	onDirectionChange,
-	level,
-	onLevelChange,
 	keyword,
 	onKeywordChange,
 	filters,
@@ -99,24 +95,6 @@ const LoggingHeader = ({
 					<SelectContent>
 						<SelectItem value="forward">{t("direction.forward")}</SelectItem>
 						<SelectItem value="backward">{t("direction.backward")}</SelectItem>
-					</SelectContent>
-				</Select>
-			</div>
-
-			{/* Level */}
-			<div className="flex flex-col gap-1.5">
-				<span className="text-sm font-medium" id="logging-level-label">
-					{t("level.label")}
-				</span>
-				<Select value={level} onValueChange={(val) => onLevelChange(val)}>
-					<SelectTrigger className="w-28" aria-labelledby="logging-level-label">
-						<SelectValue />
-					</SelectTrigger>
-					<SelectContent>
-						<SelectItem value="info">{t("level.info")}</SelectItem>
-						<SelectItem value="warn">{t("level.warn")}</SelectItem>
-						<SelectItem value="error">{t("level.error")}</SelectItem>
-						<SelectItem value="debug">{t("level.debug")}</SelectItem>
 					</SelectContent>
 				</Select>
 			</div>

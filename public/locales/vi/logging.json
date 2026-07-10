@@ -30,5 +30,16 @@
         "levels": "Cấp độ",
         "cancel": "Hủy",
         "save": "Lưu bộ lọc"
+    },
+    "table": {
+        "date": "Thời gian",
+        "level": "Cấp độ",
+        "content": "Nội dung",
+        "actions": "Hành động"
+    },
+    "detail": {
+        "title": "Chi tiết nhật ký",
+        "copy": "Sao chép",
+        "copied": "Đã sao chép!"
     }
 }

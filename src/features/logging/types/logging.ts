@@ -8,3 +8,20 @@ export type LoggingParams = {
 	filters?: string;
 	customQuery?: string;
 };
+
+export type LoggingResponse = {
+	projectId: string;
+	orgId: string;
+	event: string;
+	pathname: string;
+	lineno: number;
+	func_name: string;
+	level: string;
+	timestamp: number;
+	requestId: string | null;
+	span: {
+		span_id: string;
+		trace_id: string;
+		parent_span_id: string;
+	};
+};

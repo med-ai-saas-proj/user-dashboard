@@ -4,10 +4,12 @@ import { useGetLog } from "../hooks/use-get-log";
 import { useGetOrganizationProjects } from "@/features/organization/hooks/organization-projects/use-get-projects";
 import { useAuthStore } from "@/features/auth/store/auth-store";
 import type { OrganizationProject } from "@/features/organization/organization.type";
+import type { LoggingResponse } from "../types/logging";
 import LoggingHeader from "./logging-header";
+import LoggingTable from "./logging-table";
 
 const Logging = (): React.JSX.Element => {
-	const { t } = useTranslation("logging");
+	const { t, i18n } = useTranslation("logging");
 	const organizationId = useAuthStore((state) => state?.organization?.id ?? "");
 
 	const [dateRange, setDateRange] = useState<{
@@ -34,7 +36,7 @@ const Logging = (): React.JSX.Element => {
 		[projectsData?.results]
 	);
 
-	const { data: _data } = useGetLog({
+	const { data: logs } = useGetLog({
 		start: dateRange.start,
 		end: dateRange.end,
 		limit: limit ? Number(limit) : undefined,
@@ -43,6 +45,11 @@ const Logging = (): React.JSX.Element => {
 		keyword: keyword || undefined,
 		filters: filters || undefined,
 	});
+
+	const logData = useMemo(
+		() => (logs as LoggingResponse[] | undefined) ?? [],
+		[logs]
+	);
 
 	return (
 		<div>
@@ -77,6 +84,8 @@ const Logging = (): React.JSX.Element => {
 				onFiltersChange={setFilters}
 				projects={projects}
 			/>
+
+			<LoggingTable data={logData} locale={i18n.language || "en"} />
 		</div>
 	);
 };

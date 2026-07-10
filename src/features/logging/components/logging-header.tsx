@@ -121,23 +121,6 @@ const LoggingHeader = ({
 				</Select>
 			</div>
 
-			{/* Keyword */}
-			<div className="flex flex-col gap-1.5">
-				<span className="text-sm font-medium" id="logging-keyword-label">
-					{t("keyword.placeholder")}
-				</span>
-				<div className="relative">
-					<SearchIcon className="absolute left-2.5 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
-					<Input
-						id="logging-keyword-input"
-						placeholder={t("keyword.placeholder")}
-						value={keyword}
-						onChange={(e) => onKeywordChange(e.target.value)}
-						className="pl-8 w-48"
-					/>
-				</div>
-			</div>
-
 			{/* Filter Button */}
 			<div className="flex flex-col gap-1.5">
 				<Button
@@ -152,6 +135,23 @@ const LoggingHeader = ({
 						<span className="size-2 rounded-full bg-primary" />
 					)}
 				</Button>
+			</div>
+
+			{/* Keyword */}
+			<div className="flex flex-col gap-1.5 ml-auto">
+				<span className="text-sm font-medium" id="logging-keyword-label">
+					{t("keyword.placeholder")}
+				</span>
+				<div className="relative">
+					<SearchIcon className="absolute left-2.5 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+					<Input
+						id="logging-keyword-input"
+						placeholder={t("keyword.placeholder")}
+						value={keyword}
+						onChange={(e) => onKeywordChange(e.target.value)}
+						className="pl-8 w-48"
+					/>
+				</div>
 			</div>
 
 			{/* Filter Dialog */}

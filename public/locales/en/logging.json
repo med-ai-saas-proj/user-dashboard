@@ -30,5 +30,16 @@
         "levels": "Levels",
         "cancel": "Cancel",
         "save": "Save Filters"
+    },
+    "table": {
+        "date": "Date",
+        "level": "Level",
+        "content": "Content",
+        "actions": "Actions"
+    },
+    "detail": {
+        "title": "Log Details",
+        "copy": "Copy",
+        "copied": "Copied!"
     }
 }

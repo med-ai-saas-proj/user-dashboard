@@ -53,6 +53,9 @@
         },
         "settings": {
             "title": "Settings"
+        },
+        "logging": {
+            "title": "Logging"
         }
     },
     "project": {

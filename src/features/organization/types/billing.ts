@@ -158,7 +158,7 @@ export type BillingHistory = {
 		invoiceUID: string;
 		billingPeriod: string;
 		totalAmount: string;
-		paidAt: string;
+		paidAt: string | null;
 		details: {
 			additionalProperty: string;
 		};

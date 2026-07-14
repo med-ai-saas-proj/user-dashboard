@@ -25,7 +25,8 @@ export const getInvoiceDetails = async (
 			lineItems: response.data.data.line_items.map((item) => ({
 				description: item.description,
 				amount: item.amount,
-				projectUID: item.project_uid,
+				projectUID: item.project_uuid,
+				projectName: item.project_name,
 			})),
 		},
 	};

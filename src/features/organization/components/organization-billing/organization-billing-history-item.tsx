@@ -63,7 +63,7 @@ const InvoiceDetailsDialog = ({
 
 	return (
 		<Dialog open={open} onOpenChange={onOpenChange}>
-			<DialogContent className="sm:max-w-lg">
+			<DialogContent className="sm:max-w-xl">
 				<DialogHeader>
 					<DialogTitle>{t("historyItem.details.title")}</DialogTitle>
 					<p className="text-xs text-muted-foreground font-mono">
@@ -107,7 +107,9 @@ const InvoiceDetailsDialog = ({
 							{t("historyItem.details.usedCredits")}
 						</p>
 						<p className="text-sm font-medium">
-							{invoice?.usedCredits !== undefined ? invoice.usedCredits : "—"}
+							{invoice?.usedCredits !== undefined
+								? Number(invoice.usedCredits).toFixed(5)
+								: "—"}
 						</p>
 					</div>
 				</div>
@@ -124,7 +126,10 @@ const InvoiceDetailsDialog = ({
 										<TableHead>
 											{t("historyItem.details.description")}
 										</TableHead>
-										<TableHead>{t("historyItem.details.project")}</TableHead>
+										<TableHead>{t("historyItem.details.projectId")}</TableHead>
+										<TableHead>
+											{t("historyItem.details.projectName")}
+										</TableHead>
 										<TableHead className="text-right">
 											{t("historyItem.details.amount")}
 										</TableHead>
@@ -138,6 +143,9 @@ const InvoiceDetailsDialog = ({
 											</TableCell>
 											<TableCell className="text-muted-foreground truncate max-w-[120px]">
 												{item.projectUID}
+											</TableCell>
+											<TableCell className="text-muted-foreground truncate max-w-[120px]">
+												{item.projectName}
 											</TableCell>
 											<TableCell className="text-right">
 												{formatAmount(item.amount, locale)}

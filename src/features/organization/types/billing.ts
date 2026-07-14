@@ -197,7 +197,8 @@ export type InvoiceDetailsResponse = {
 		line_items: {
 			description: string;
 			amount: string;
-			project_uid: string;
+			project_uuid: string;
+			project_name: string;
 		}[];
 	};
 };
@@ -217,6 +218,7 @@ export type InvoiceDetails = {
 			description: string;
 			amount: string;
 			projectUID: string;
+			projectName: string;
 		}[];
 	};
 };

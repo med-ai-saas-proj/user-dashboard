@@ -99,7 +99,8 @@
             "usedCredits": "Credit đã dùng",
             "lineItems": "Chi tiết dòng",
             "description": "Mô tả",
-            "project": "Dự án",
+            "projectId": "Mã dự án",
+            "projectName": "Tên dự án",
             "amount": "Số tiền",
             "total": "Tổng cộng"
         }

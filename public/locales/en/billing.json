@@ -99,7 +99,8 @@
             "usedCredits": "Used credits",
             "lineItems": "Line items",
             "description": "Description",
-            "project": "Project",
+            "projectId": "Project ID",
+            "projectName": "Project Name",
             "amount": "Amount",
             "total": "Total"
         }

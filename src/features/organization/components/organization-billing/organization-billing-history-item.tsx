@@ -155,7 +155,7 @@ const InvoiceDetailsDialog = ({
 								</TableBody>
 								<TableFooterComp>
 									<TableRow>
-										<TableCell colSpan={2} className="font-medium">
+										<TableCell colSpan={3} className="font-medium">
 											{t("historyItem.details.total")}
 										</TableCell>
 										<TableCell className="text-right font-medium">

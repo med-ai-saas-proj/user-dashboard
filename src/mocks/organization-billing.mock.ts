@@ -123,12 +123,14 @@ const mockInvoices: InvoiceDetailsResponse["data"][] = Array.from(
 			{
 				description: "Model usage",
 				amount: (80 + index * 4).toFixed(2),
-				project_uid: "project_mock_alpha",
+				project_uuid: "project_mock_alpha",
+				project_name: "Project Alpha",
 			},
 			{
 				description: "Storage",
 				amount: (60 + index * 2).toFixed(2),
-				project_uid: "project_mock_beta",
+				project_uuid: "project_mock_beta",
+				project_name: "Project Beta",
 			},
 		],
 	})

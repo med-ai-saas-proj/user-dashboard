@@ -33,6 +33,8 @@ const formatAmount = (value: string, locale: string) => {
 	return new Intl.NumberFormat(locale, {
 		style: "currency",
 		currency: "USD",
+		minimumFractionDigits: 5,
+		maximumFractionDigits: 5,
 	}).format(amount);
 };
 
@@ -273,7 +275,8 @@ const OrganizationBillingHistoryItem = ({
 									{formatAmount(invoice.totalAmount, locale)}
 								</p>
 								<p className="text-sm font-semibold text-nowrap">
-									{t("historyItem.usedCredits")}: {invoice.usedCredits}
+									{t("historyItem.usedCredits")}:{" "}
+									{Number(invoice.usedCredits).toFixed(5)}
 								</p>
 							</div>
 						</div>
@@ -292,13 +295,15 @@ const OrganizationBillingHistoryItem = ({
 					>
 						{t("historyItem.viewDetails")}
 					</Button>
-					<Button
-						type="button"
-						size="sm"
-						onClick={() => setPayConfirmOpen(true)}
-					>
-						{t("historyItem.payInvoice")}
-					</Button>
+					{!invoice.paidAt && (
+						<Button
+							type="button"
+							size="sm"
+							onClick={() => setPayConfirmOpen(true)}
+						>
+							{t("historyItem.payInvoice")}
+						</Button>
+					)}
 				</div>
 			</div>
 			{detailsOpen && (

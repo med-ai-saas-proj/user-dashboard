@@ -11,7 +11,7 @@ if (import.meta.env.DEV) {
 	// import("@/mocks/project-roles.mock");
 	// import("@/mocks/dashboard.mock");
 	// import("@/mocks/organization-billing.mock");
-	import("@/mocks/logging.mock");
+	// import("@/mocks/logging.mock");
 }
 
 createRoot(document.getElementById("root")!).render(

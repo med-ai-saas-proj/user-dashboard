@@ -6,6 +6,9 @@ import { useProjectStore } from "@/features/project/store/project";
 
 const apiClient = axios.create({
 	baseURL: BASE_API_URL,
+	paramsSerializer: {
+		indexes: null,
+	},
 	headers: {
 		"Content-Type": "application/json",
 	},

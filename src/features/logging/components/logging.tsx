@@ -45,7 +45,7 @@ const Logging = (): React.JSX.Element => {
 	});
 
 	const logData = useMemo(
-		() => (logs as LoggingResponse[] | undefined) ?? [],
+		() => (logs as LoggingResponse | undefined) ?? [],
 		[logs]
 	);
 

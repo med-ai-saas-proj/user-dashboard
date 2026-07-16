@@ -11,3 +11,5 @@ export const useGetLog = (params: LoggingParams) => {
 		queryFn: () => getLog(params),
 	});
 };
+
+export type UseGetLogReturn = ReturnType<typeof useGetLog>;

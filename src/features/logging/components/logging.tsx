@@ -35,7 +35,11 @@ const Logging = (): React.JSX.Element => {
 		[projectsData?.results]
 	);
 
-	const { data: logs } = useGetLog({
+	const {
+		data: logs,
+		refetch,
+		isFetching,
+	} = useGetLog({
 		start: dateRange.start,
 		end: dateRange.end,
 		limit: limit ? Number(limit) : undefined,
@@ -79,6 +83,8 @@ const Logging = (): React.JSX.Element => {
 				filters={filters}
 				onFiltersChange={setFilters}
 				projects={projects}
+				isRefreshing={isFetching}
+				onRefresh={() => refetch()}
 			/>
 
 			<LoggingTable data={logData} locale={i18n.language || "en"} />

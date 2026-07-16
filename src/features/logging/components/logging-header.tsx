@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import type { DateRange } from "react-day-picker";
-import { FilterIcon, SearchIcon } from "lucide-react";
+import { FilterIcon, SearchIcon, RefreshCcw, Loader2 } from "lucide-react";
 import { Button } from "@/components/shadcn/button";
 import { Input } from "@/components/shadcn/input";
 import {
@@ -27,6 +27,8 @@ interface LoggingHeaderProps {
 	filters: string;
 	onFiltersChange: (value: string) => void;
 	projects: OrganizationProject[];
+	isRefreshing: boolean;
+	onRefresh: () => void;
 }
 
 const LoggingHeader = ({
@@ -41,13 +43,15 @@ const LoggingHeader = ({
 	filters,
 	onFiltersChange,
 	projects,
+	isRefreshing,
+	onRefresh,
 }: LoggingHeaderProps): React.JSX.Element => {
 	const { t, i18n } = useTranslation("logging");
 	const currentLocale = i18n.language || "en-US";
 	const [filterDialogOpen, setFilterDialogOpen] = useState(false);
 
 	return (
-		<div className="flex flex-wrap items-end gap-4 mb-6">
+		<div className="flex items-end gap-4 mb-6">
 			{/* Date Range */}
 			<div className="flex flex-col gap-1.5">
 				<span className="text-sm font-medium" id="logging-date-range-label">
@@ -115,20 +119,43 @@ const LoggingHeader = ({
 				</Button>
 			</div>
 
-			{/* Keyword */}
-			<div className="flex flex-col gap-1.5 ml-auto">
-				<span className="text-sm font-medium" id="logging-keyword-label">
-					{t("keyword.placeholder")}
-				</span>
-				<div className="relative">
-					<SearchIcon className="absolute left-2.5 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
-					<Input
-						id="logging-keyword-input"
-						placeholder={t("keyword.placeholder")}
-						value={keyword}
-						onChange={(e) => onKeywordChange(e.target.value)}
-						className="pl-8 w-48"
-					/>
+			<div className="w-full flex items-center justify-end gap-4">
+				{/* Refresh Button */}
+				<div className="flex flex-col gap-1.5">
+					<span className="text-sm font-medium invisible">
+						{t("filter.button")}
+					</span>
+					<Button
+						variant="outline"
+						onClick={onRefresh}
+						disabled={isRefreshing}
+						className="gap-2"
+						aria-label={t("refresh.button")}
+					>
+						{isRefreshing ? (
+							<Loader2 className="size-4 animate-spin" />
+						) : (
+							<RefreshCcw className="size-4" />
+						)}
+						{t("refresh.button")}
+					</Button>
+				</div>
+
+				{/* Keyword */}
+				<div className="flex flex-col gap-1.5">
+					<span className="text-sm font-medium" id="logging-keyword-label">
+						{t("keyword.placeholder")}
+					</span>
+					<div className="relative">
+						<SearchIcon className="absolute left-2.5 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+						<Input
+							id="logging-keyword-input"
+							placeholder={t("keyword.placeholder")}
+							value={keyword}
+							onChange={(e) => onKeywordChange(e.target.value)}
+							className="pl-8 w-48"
+						/>
+					</div>
 				</div>
 			</div>
 

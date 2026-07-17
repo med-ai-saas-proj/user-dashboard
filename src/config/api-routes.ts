@@ -76,10 +76,7 @@ export const API_ROUTES = {
 		).toString(),
 	},
 	SERVICES: {
-		AVAILABLE: new URL(
-			`service/${API_VERSION}/available`,
-			BASE_API_URL
-		).toString(),
+		AVAILABLE: new URL(`service/available`, BASE_API_URL).toString(),
 		EHR_SUMMARIZE: new URL(
 			`api/${API_VERSION}/ehr_summarize`,
 			BASE_API_URL

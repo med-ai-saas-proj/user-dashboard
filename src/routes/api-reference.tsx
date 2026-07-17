@@ -16,7 +16,6 @@ export default function APIReferencePage() {
 		() => [...(availableServices ?? [])],
 		[availableServices]
 	);
-	console.log(availableServices, docTabs, selectedDoc);
 
 	useEffect(() => {
 		if (docTabs.length === 0) {
@@ -38,8 +37,19 @@ export default function APIReferencePage() {
 		);
 	}
 
-	const docUrl = getServiceOpenApiUrl(selectedDoc);
+	// Guard against the "not yet initialized" render
+	if (!selectedDoc) {
+		return (
+			<DashboardLayout pageTitle={t("api-reference")}>
+				<div className="bg-white flex flex-col h-full items-center justify-center">
+					<div className="animate-spin size-10 border-4 rounded-full border-muted-foreground border-t-transparent"></div>
+					<p className="mt-4 text-muted-foreground">{t("loading")}</p>
+				</div>
+			</DashboardLayout>
+		);
+	}
 
+	const docUrl = getServiceOpenApiUrl(selectedDoc);
 	const selectedDocLabel =
 		selectedDoc.charAt(0).toUpperCase() + selectedDoc.slice(1);
 
@@ -65,6 +75,7 @@ export default function APIReferencePage() {
 			{!isLoading && !isError && (
 				<div>
 					<ApiReferenceReact
+						key={selectedDoc} // force full remount when the doc/url changes
 						configuration={{
 							url: docUrl,
 							theme: "default",

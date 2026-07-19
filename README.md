@@ -1,4 +1,4 @@
-# User Dashboard
+# Gantry User Dashboard
 
 The frontend user dashboard for Gantry, where users can access the provided services through means provided by Gantry's API Gateway.
 

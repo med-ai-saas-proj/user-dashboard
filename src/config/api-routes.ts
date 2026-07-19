@@ -71,7 +71,7 @@ export const API_ROUTES = {
 			BASE_API_URL
 		).toString(),
 		LOGGING: new URL(
-			`management/${API_VERSION}/logging`,
+			`management/${API_VERSION}/logging/`,
 			BASE_API_URL
 		).toString(),
 	},

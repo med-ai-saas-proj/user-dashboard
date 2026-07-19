@@ -26,7 +26,7 @@ The frontend user dashboard for Gantry, where users can access the provided serv
 pnpm install
 ```
 
-- Set up the required `env` variables, following `env.example`
+- Set up the required `.env` variables, following `.env.example`
 
 ## Development
 

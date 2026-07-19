@@ -1,6 +1,6 @@
 # User Dashboard
 
-An OpenAI-esque dashboard application built with React.
+The frontend user dashboard for Gantry, where users can access the provided services through means provided by Gantry's API Gateway.
 
 ## Stack
 
@@ -26,6 +26,8 @@ An OpenAI-esque dashboard application built with React.
 pnpm install
 ```
 
+- Set up the required `env` variables, following `env.example`
+
 ## Development
 
 Start the development server:
@@ -49,6 +51,7 @@ pnpm preview
 ```
 
 ## Code Quality
+
 **Note:** All for the following steps are done automatically when you make a commit, handled by `husky` and `lint-staged`.
 
 **Recommended:** Install the [Biome](https://biomejs.dev/reference/vscode/) extension for auto formatting and error highlighting.

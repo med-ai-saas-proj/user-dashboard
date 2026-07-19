@@ -11,13 +11,14 @@ import LoggingTable from "./logging-table";
 const Logging = (): React.JSX.Element => {
 	const { t, i18n } = useTranslation("logging");
 	const organizationId = useAuthStore((state) => state?.organization?.id ?? "");
+	const currentDateIso = new Date().toISOString();
 
 	const [dateRange, setDateRange] = useState<{
 		start: string;
 		end: string;
 	}>({
-		start: "2026-07-09T23:20:00Z",
-		end: "2026-07-09T23:23:42Z",
+		start: currentDateIso,
+		end: currentDateIso,
 	});
 
 	const [limit, setLimit] = useState("100");

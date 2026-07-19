@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { EyeIcon, CopyIcon, CheckIcon } from "lucide-react";
-import type { LoggingResponse } from "../types/logging";
+import type { LoggingResponse, LoggingResponseItem } from "../types/logging";
 import { Button } from "@/components/shadcn/button";
 import {
 	Table,
@@ -23,11 +23,11 @@ import { formatIsoToLocaleDateTime } from "@/lib/utils";
 import { useCopyToClipboard } from "@/hooks/use-copy-to-clipboard";
 
 interface LoggingTableProps {
-	data?: LoggingResponse[];
+	data?: LoggingResponse;
 	locale?: string;
 }
 
-const buildContentPreview = (log: LoggingResponse): string => {
+const buildContentPreview = (log: LoggingResponseItem): string => {
 	const preview: Record<string, unknown> = {
 		event: log.event,
 		pathname: log.pathname,
@@ -62,10 +62,12 @@ const LoggingTable = ({
 	const { t, i18n } = useTranslation("logging");
 	const currentLocale = locale || i18n.language || "en";
 	const { copy, isCopied } = useCopyToClipboard();
-	const [selectedLog, setSelectedLog] = useState<LoggingResponse | null>(null);
+	const [selectedLog, setSelectedLog] = useState<LoggingResponseItem | null>(
+		null
+	);
 	const [sheetOpen, setSheetOpen] = useState(false);
 
-	const handleViewLog = (log: LoggingResponse) => {
+	const handleViewLog = (log: LoggingResponseItem) => {
 		setSelectedLog(log);
 		setSheetOpen(true);
 	};

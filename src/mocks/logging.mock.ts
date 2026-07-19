@@ -1,13 +1,16 @@
 import Mock from "mockjs";
 import { API_ROUTES } from "@/config/api-routes";
-import type { LoggingResponse } from "@/features/logging/types/logging";
+import type {
+	LoggingResponse,
+	LoggingResponseItem,
+} from "@/features/logging/types/logging";
 
 const levels = ["info", "warn", "error", "debug"] as const;
 
 const escapeRegExp = (value: string) =>
 	value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
-const baseLogs: LoggingResponse[] = [
+const baseLogs: LoggingResponse = [
 	{
 		projectId: "00000000-0000-0000-0000-000000000000",
 		orgId: "test_org1",
@@ -106,13 +109,13 @@ const parseFilterEntries = (value: string | null) => {
 		.filter((entry) => entry.type && entry.value);
 };
 
-const includesKeyword = (log: LoggingResponse, keyword: string) => {
+const includesKeyword = (log: LoggingResponseItem, keyword: string) => {
 	const normalized = keyword.trim().toLowerCase();
 	if (!normalized) return true;
 
 	return [log.event, log.pathname, log.func_name, log.level, log.projectId]
 		.filter(Boolean)
-		.some((item) => item.toLowerCase().includes(normalized));
+		.some((item) => item?.toLowerCase().includes(normalized));
 };
 
 const buildMockResponse = (options: { url: string }) => {
@@ -147,7 +150,7 @@ const buildMockResponse = (options: { url: string }) => {
 		if (level && log.level !== level) return false;
 		if (
 			filterProjectIds.length > 0 &&
-			!filterProjectIds.includes(log.projectId)
+			!filterProjectIds.includes(log.projectId || "")
 		) {
 			return false;
 		}
@@ -167,7 +170,7 @@ const buildMockResponse = (options: { url: string }) => {
 	return sorted.slice(0, limit);
 };
 
-const buildLog = (index: number): LoggingResponse => {
+const buildLog = (index: number): LoggingResponseItem => {
 	const template = baseLogs[index % baseLogs.length];
 	const level = levels[index % levels.length];
 	const timestamp = 1783653469000 + index * 173;
@@ -201,7 +204,7 @@ const buildLog = (index: number): LoggingResponse => {
 	};
 };
 
-export const loggingMockData: LoggingResponse[] = Array.from(
+export const loggingMockData: LoggingResponse = Array.from(
 	{ length: 50 },
 	(_, index) => buildLog(index)
 );

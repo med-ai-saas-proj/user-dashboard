@@ -23,6 +23,9 @@
     "keyword": {
         "placeholder": "Search keyword..."
     },
+    "refresh": {
+        "button": "Refresh"
+    },
     "filter": {
         "button": "Filters",
         "dialogTitle": "Log Filters",

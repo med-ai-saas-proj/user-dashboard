@@ -3,7 +3,7 @@ import apiClient from "@/query/api-client";
 import type { LoggingParams, LoggingResponse } from "../types/logging";
 
 export const getLog = async (params: LoggingParams) => {
-	const response = await apiClient.get<LoggingResponse[]>(
+	const response = await apiClient.get<LoggingResponse>(
 		API_ROUTES.MANAGEMENT.LOGGING,
 		{
 			params: {
@@ -14,7 +14,7 @@ export const getLog = async (params: LoggingParams) => {
 				level: params.level,
 				keyword: params.keyword,
 				filters: params.filters,
-				custom_query: params.customQuery,
+				custom_query: params.custom_query,
 			},
 		}
 	);

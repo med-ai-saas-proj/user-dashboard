@@ -23,6 +23,9 @@
     "keyword": {
         "placeholder": "Tìm kiếm từ khóa..."
     },
+    "refresh": {
+        "button": "Làm mới"
+    },
     "filter": {
         "button": "Bộ lọc",
         "dialogTitle": "Bộ lọc nhật ký",

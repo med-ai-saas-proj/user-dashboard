@@ -114,7 +114,7 @@ const LoggingTable = ({
 									<TableRow key={log.timestamp + (log.requestId ?? "") + index}>
 										<TableCell className="whitespace-nowrap text-xs font-mono">
 											{formatIsoToLocaleDateTime(
-												new Date(log.timestamp * 1000).toISOString(),
+												new Date(log.timestamp).toISOString(),
 												currentLocale
 											)}
 										</TableCell>

@@ -109,13 +109,29 @@ const parseFilterEntries = (value: string | null) => {
 		.filter((entry) => entry.type && entry.value);
 };
 
-const includesKeyword = (log: LoggingResponseItem, keyword: string) => {
-	const normalized = keyword.trim().toLowerCase();
-	if (!normalized) return true;
+const extractCustomQueryValue = (customQuery: string): string => {
+	// Try to extract the value from common Loki Label Filter patterns:
+	//   |= "value"   -> contains "value"
+	//   != "value"   -> not contains
+	//   = "value"    -> exact match
+	//   !="value"    -> not exact match
+	//   =~ "regex"   -> regex match
+	//   !~ "regex"   -> not regex match
+	const match = customQuery.match(/[|!=~]+\s*"([^"]*)"/);
+	if (match) return match[1].trim().toLowerCase();
+	return customQuery.trim().toLowerCase();
+};
+
+const matchesCustomQuery = (
+	log: LoggingResponseItem,
+	customQuery: string
+): boolean => {
+	const value = extractCustomQueryValue(customQuery);
+	if (!value) return true;
 
 	return [log.event, log.pathname, log.func_name, log.level, log.projectId]
 		.filter(Boolean)
-		.some((item) => item?.toLowerCase().includes(normalized));
+		.some((item) => item?.toLowerCase().includes(value));
 };
 
 const buildMockResponse = (options: { url: string }) => {
@@ -125,7 +141,7 @@ const buildMockResponse = (options: { url: string }) => {
 	const limit = parseNumberParam(url.searchParams.get("limit"), 100);
 	const direction = url.searchParams.get("direction") ?? "backward";
 	const level = url.searchParams.get("level") ?? "";
-	const keyword = url.searchParams.get("keyword") ?? "";
+	const customQuery = url.searchParams.get("custom_query") ?? "";
 	const filters = parseFilterEntries(url.searchParams.get("filters"));
 	const levelFilters = [
 		level,
@@ -157,7 +173,7 @@ const buildMockResponse = (options: { url: string }) => {
 		if (filterLevels.length > 0 && !filterLevels.includes(log.level)) {
 			return false;
 		}
-		if (!includesKeyword(log, keyword)) return false;
+		if (!matchesCustomQuery(log, customQuery)) return false;
 		return true;
 	});
 

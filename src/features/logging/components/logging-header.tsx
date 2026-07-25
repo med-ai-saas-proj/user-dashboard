@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import type { DateRange } from "react-day-picker";
-import { FilterIcon, SearchIcon, RefreshCcw, Loader2 } from "lucide-react";
+import { FilterIcon, RefreshCcw, Loader2 } from "lucide-react";
 import { Button } from "@/components/shadcn/button";
 import { Input } from "@/components/shadcn/input";
 import {
@@ -22,8 +22,8 @@ interface LoggingHeaderProps {
 	onLimitChange: (value: string) => void;
 	direction: string;
 	onDirectionChange: (value: string) => void;
-	keyword: string;
-	onKeywordChange: (value: string) => void;
+	customQuery: string;
+	onCustomQueryChange: (value: string) => void;
 	filters: string;
 	onFiltersChange: (value: string) => void;
 	projects: OrganizationProject[];
@@ -38,8 +38,8 @@ const LoggingHeader = ({
 	onLimitChange,
 	direction,
 	onDirectionChange,
-	keyword,
-	onKeywordChange,
+	customQuery,
+	onCustomQueryChange,
 	filters,
 	onFiltersChange,
 	projects,
@@ -141,21 +141,18 @@ const LoggingHeader = ({
 					</Button>
 				</div>
 
-				{/* Keyword */}
+				{/* Custom Query */}
 				<div className="flex flex-col gap-1.5">
-					<span className="text-sm font-medium" id="logging-keyword-label">
-						{t("keyword.placeholder")}
+					<span className="text-sm font-medium" id="logging-custom-query-label">
+						{t("custom_query.label")}
 					</span>
-					<div className="relative">
-						<SearchIcon className="absolute left-2.5 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
-						<Input
-							id="logging-keyword-input"
-							placeholder={t("keyword.placeholder")}
-							value={keyword}
-							onChange={(e) => onKeywordChange(e.target.value)}
-							className="pl-8 w-48"
-						/>
-					</div>
+					<Input
+						id="logging-custom-query-input"
+						placeholder={t("custom_query.placeholder")}
+						value={customQuery}
+						onChange={(e) => onCustomQueryChange(e.target.value)}
+						className="w-64 font-mono text-xs"
+					/>
 				</div>
 			</div>
 

@@ -20,8 +20,9 @@
         "error": "Error",
         "debug": "Debug"
     },
-    "keyword": {
-        "placeholder": "Tìm kiếm từ khóa..."
+    "custom_query": {
+        "label": "Truy vấn tùy chỉnh",
+        "placeholder": "Tìm kiếm sự kiện, đường dẫn…"
     },
     "refresh": {
         "button": "Làm mới"

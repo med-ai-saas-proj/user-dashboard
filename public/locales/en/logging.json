@@ -20,8 +20,9 @@
         "error": "Error",
         "debug": "Debug"
     },
-    "keyword": {
-        "placeholder": "Search keyword..."
+    "custom_query": {
+        "label": "Custom Query",
+        "placeholder": "Search event, pathname…"
     },
     "refresh": {
         "button": "Refresh"

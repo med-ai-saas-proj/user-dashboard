@@ -12,7 +12,6 @@ export const getLog = async (params: LoggingParams) => {
 				limit: params.limit,
 				direction: params.direction,
 				level: params.level,
-				keyword: params.keyword,
 				filters: params.filters,
 				custom_query: params.custom_query,
 			},

@@ -4,7 +4,6 @@ export type LoggingParams = {
 	limit?: number;
 	direction?: "forward" | "backward";
 	level?: "debug" | "info" | "warn" | "error";
-	keyword?: string | null;
 	filters?: string | null;
 	custom_query?: string | null;
 };

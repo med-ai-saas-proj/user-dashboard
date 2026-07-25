@@ -1,8 +1,10 @@
 import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useDebounce } from "@/hooks/use-debounce";
 import { useGetLog } from "../hooks/use-get-log";
 import { useGetOrganizationProjects } from "@/features/organization/hooks/organization-projects/use-get-projects";
 import { useAuthStore } from "@/features/auth/store/auth-store";
+import { toLokiQuery } from "../utils/loki";
 import type { OrganizationProject } from "@/features/organization/organization.type";
 import type { LoggingResponse } from "../types/logging";
 import LoggingHeader from "./logging-header";
@@ -23,7 +25,9 @@ const Logging = (): React.JSX.Element => {
 
 	const [limit, setLimit] = useState("100");
 	const [direction, setDirection] = useState("backward");
-	const [keyword, setKeyword] = useState("");
+	const [customQuery, setCustomQuery] = useState("");
+	const debouncedQuery = useDebounce(customQuery, 300);
+	const lokiQuery = toLokiQuery(debouncedQuery);
 	const [filters, setFilters] = useState("");
 
 	const { data: projectsData } = useGetOrganizationProjects({
@@ -45,7 +49,7 @@ const Logging = (): React.JSX.Element => {
 		end: dateRange.end,
 		limit: limit ? Number(limit) : undefined,
 		direction: direction as "forward" | "backward" | undefined,
-		keyword: keyword || undefined,
+		custom_query: lokiQuery,
 		filters: filters || undefined,
 	});
 
@@ -79,8 +83,8 @@ const Logging = (): React.JSX.Element => {
 				onLimitChange={setLimit}
 				direction={direction}
 				onDirectionChange={setDirection}
-				keyword={keyword}
-				onKeywordChange={setKeyword}
+				customQuery={customQuery}
+				onCustomQueryChange={setCustomQuery}
 				filters={filters}
 				onFiltersChange={setFilters}
 				projects={projects}

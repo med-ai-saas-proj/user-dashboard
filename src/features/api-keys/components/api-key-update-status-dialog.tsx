@@ -1,4 +1,5 @@
 import { useTranslation } from "react-i18next";
+import { toast } from "sonner";
 import { Button } from "@/components/shadcn/button";
 import {
 	Dialog,
@@ -8,11 +9,10 @@ import {
 	DialogHeader,
 	DialogTitle,
 } from "@/components/shadcn/dialog";
-import type { APIKey } from "../api-key.type";
-import { useEnableApiKey } from "../hooks/use-enable-api-key";
-import { useDisableApiKey } from "../hooks/use-disable-api-key";
-import { toast } from "sonner";
 import { Spinner } from "@/components/shadcn/spinner";
+import type { APIKey } from "../api-key.type";
+import { useDisableApiKey } from "../hooks/use-disable-api-key";
+import { useEnableApiKey } from "../hooks/use-enable-api-key";
 
 type ApiKeyUpdateStatusDialogProps = {
 	open: boolean;

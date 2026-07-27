@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import { Power, RotateCcw, SquarePen, Trash } from "lucide-react";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -9,18 +10,18 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/shadcn/table";
-import type { APIKey } from "@/features/api-keys/api-key.type";
-import { cn } from "@/lib/utils";
-import ApiKeyDeleteDialog from "./api-key-delete-dialog";
-import APIKeyUpdateDialog from "./api-key-update-dialog";
-import ApiKeyUpdateStatusDialog from "./api-key-update-status-dialog";
-import { motion } from "framer-motion";
-import { itemVariants } from "@/lib/animations";
 import {
 	Tooltip,
 	TooltipContent,
 	TooltipTrigger,
 } from "@/components/shadcn/tooltip";
+import type { APIKey } from "@/features/api-keys/api-key.type";
+import { API_KEY_HIDDEN_PERMISSIONS } from "@/features/api-keys/api-key-permission.constants";
+import { itemVariants } from "@/lib/animations";
+import { cn } from "@/lib/utils";
+import ApiKeyDeleteDialog from "./api-key-delete-dialog";
+import APIKeyUpdateDialog from "./api-key-update-dialog";
+import ApiKeyUpdateStatusDialog from "./api-key-update-status-dialog";
 
 const APIKeyTable = ({ apiKeys }: { apiKeys: APIKey[] }) => {
 	const { t } = useTranslation("api-keys");
@@ -77,14 +78,21 @@ const APIKeyTable = ({ apiKeys }: { apiKeys: APIKey[] }) => {
 							<TableCell>{apiKey.createdAt.toLocaleDateString()}</TableCell>
 							<TableCell>
 								<div className="flex flex-wrap items-center gap-2 max-w-[400px]">
-									{apiKey.permissions.map((permission) => (
-										<span
-											key={permission}
-											className="inline-flex items-center bg-primary text-secondary text-xs leading-none px-2 pt-1 pb-1.5 rounded-md whitespace-nowrap"
-										>
-											{permission}
-										</span>
-									))}
+									{apiKey.permissions
+										.filter(
+											(p) =>
+												!API_KEY_HIDDEN_PERMISSIONS.includes(
+													p as (typeof API_KEY_HIDDEN_PERMISSIONS)[number]
+												)
+										)
+										.map((permission) => (
+											<span
+												key={permission}
+												className="inline-flex items-center bg-primary text-secondary text-xs leading-none px-2 pt-1 pb-1.5 rounded-md whitespace-nowrap"
+											>
+												{permission}
+											</span>
+										))}
 								</div>
 							</TableCell>
 							<TableCell className="flex items-center justify-center gap-x-6">

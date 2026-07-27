@@ -2,6 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import { toast } from "sonner";
 import z from "zod";
 import { Button } from "@/components/shadcn/button";
 import { Checkbox } from "@/components/shadcn/checkbox";
@@ -16,13 +17,15 @@ import {
 } from "@/components/shadcn/dialog";
 import { Input } from "@/components/shadcn/input";
 import { Label } from "@/components/shadcn/label";
+import { Spinner } from "@/components/shadcn/spinner";
 import { Textarea } from "@/components/shadcn/textarea";
 import type { APIKey } from "@/features/api-keys/api-key.type";
+import { API_KEY_HIDDEN_PERMISSIONS } from "@/features/api-keys/api-key-permission.constants";
 import { useUpdateApiKey } from "@/features/api-keys/hooks/use-update-api-key";
 import { useGetApiKeyPermissions } from "../hooks/use-get-api-key-permissions";
-import { toast } from "sonner";
 import type { ApiPermission } from "../services/api-key.dto";
-import { Spinner } from "@/components/shadcn/spinner";
+
+const hiddenPermissionsSet = new Set<string>(API_KEY_HIDDEN_PERMISSIONS);
 
 const apiUpdateSchema = z.object({
 	name: z.string().min(1, "Name must be at least 1 character long"),
@@ -60,7 +63,9 @@ const APIKeyUpdateDialog = ({
 		defaultValues: {
 			name: apikey.name,
 			description: apikey.description,
-			permissions: apikey.permissions,
+			permissions: apikey.permissions.filter(
+				(p) => !hiddenPermissionsSet.has(p)
+			),
 		},
 	});
 
@@ -72,19 +77,23 @@ const APIKeyUpdateDialog = ({
 		reset({
 			name: apikey.name,
 			description: apikey.description,
-			permissions: apikey.permissions,
+			permissions: apikey.permissions.filter(
+				(p) => !hiddenPermissionsSet.has(p)
+			),
 		});
 	}, [apikey, open, reset]);
 
 	const onSubmit = (data: ApiUpdateFormData) => {
 		onOpenChange(false);
 
+		const allPermissions = [...data.permissions, ...API_KEY_HIDDEN_PERMISSIONS];
+
 		apiKeyUpdateMutation(
 			{
 				apikeyId: apikey.id,
 				name: data.name,
 				description: data.description,
-				permissions: data.permissions,
+				permissions: allPermissions,
 			},
 			{
 				onSuccess: () => {
@@ -141,8 +150,12 @@ const APIKeyUpdateDialog = ({
 								control={control}
 								render={({ field }) => (
 									<div className="space-y-2">
-										{apiPermissions?.results?.map(
-											(permission: ApiPermission) => {
+										{apiPermissions?.results
+											?.filter(
+												(permission: ApiPermission) =>
+													!hiddenPermissionsSet.has(permission.id)
+											)
+											.map((permission: ApiPermission) => {
 												const isChecked =
 													field.value?.includes(permission.id) ?? false;
 
@@ -175,8 +188,7 @@ const APIKeyUpdateDialog = ({
 														</Label>
 													</div>
 												);
-											}
-										)}
+											})}
 									</div>
 								)}
 							/>

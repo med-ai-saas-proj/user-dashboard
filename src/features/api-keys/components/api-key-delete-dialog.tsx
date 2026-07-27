@@ -1,3 +1,5 @@
+import { useTranslation } from "react-i18next";
+import { toast } from "sonner";
 import { Button } from "@/components/shadcn/button";
 import {
 	Dialog,
@@ -10,8 +12,6 @@ import {
 import { Spinner } from "@/components/shadcn/spinner";
 import type { APIKey } from "@/features/api-keys/api-key.type";
 import { useDeleteApiKey } from "@/features/api-keys/hooks/use-delete-api-key";
-import { useTranslation } from "react-i18next";
-import { toast } from "sonner";
 
 type ApiKeyDeleteDialogProps = {
 	open: boolean;

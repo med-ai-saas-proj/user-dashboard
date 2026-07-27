@@ -1,7 +1,6 @@
-import { useMutation } from "@tanstack/react-query";
-import { updateApiKey } from "@/features/api-keys/services/update-api-key";
-import { useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { APIKey } from "@/features/api-keys/api-key.type";
+import { updateApiKey } from "@/features/api-keys/services/update-api-key";
 
 export const useUpdateApiKey = () => {
 	const queryClient = useQueryClient();

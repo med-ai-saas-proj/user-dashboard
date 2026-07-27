@@ -2,6 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useTranslation } from "react-i18next";
+import { useParams } from "react-router-dom";
 import { z } from "zod";
 import { Button } from "@/components/shadcn/button";
 import { Checkbox } from "@/components/shadcn/checkbox";
@@ -16,13 +17,13 @@ import {
 } from "@/components/shadcn/dialog";
 import { Input } from "@/components/shadcn/input";
 import { Label } from "@/components/shadcn/label";
+import { Spinner } from "@/components/shadcn/spinner";
 import { Textarea } from "@/components/shadcn/textarea";
+import { API_KEY_HIDDEN_PERMISSIONS } from "@/features/api-keys/api-key-permission.constants";
 import { useCreateApiKey } from "@/features/api-keys/hooks/use-create-api-key";
 import { useServiceApiKeyStore } from "@/features/api-keys/store/service-api-key.store";
-import { APIKeySaveDialog } from "./api-key-save-dialog";
-import { useParams } from "react-router-dom";
 import { useGetApiKeyPermissions } from "../hooks/use-get-api-key-permissions";
-import { Spinner } from "@/components/shadcn/spinner";
+import { APIKeySaveDialog } from "./api-key-save-dialog";
 
 const apiCreationSchema = z.object({
 	name: z.string().min(1, "Name must be at least 1 character long"),
@@ -53,6 +54,8 @@ const APIKeyDialog = ({
 	const createApiKeyMutation = useCreateApiKey();
 	const { data: apiKeyPermissions } = useGetApiKeyPermissions();
 
+	const hiddenPermissionsSet = new Set<string>(API_KEY_HIDDEN_PERMISSIONS);
+
 	const [openSave, setOpenSave] = useState(false);
 	const [createdKey, setCreatedKey] = useState<string>("");
 
@@ -71,11 +74,12 @@ const APIKeyDialog = ({
 	});
 
 	const onSubmit = async (data: ApiCreationFormData) => {
+		const allPermissions = [...data.permissions, ...API_KEY_HIDDEN_PERMISSIONS];
 		const response = await createApiKeyMutation.mutateAsync({
 			name: data.name,
 			description: data.description,
 			project_id: projectId || "",
-			permissions: data.permissions,
+			permissions: allPermissions,
 		});
 
 		// Automatically set this as the service API key
@@ -132,40 +136,45 @@ const APIKeyDialog = ({
 									control={control}
 									render={({ field }) => (
 										<div className="space-y-2 max-h-48 overflow-auto">
-											{apiKeyPermissions?.results?.map((permission) => {
-												const isChecked =
-													field.value?.includes(permission.id) ?? false;
+											{apiKeyPermissions?.results
+												?.filter(
+													(permission) =>
+														!hiddenPermissionsSet.has(permission.id)
+												)
+												.map((permission) => {
+													const isChecked =
+														field.value?.includes(permission.id) ?? false;
 
-												return (
-													<div
-														key={permission.id}
-														className="flex items-center gap-2"
-													>
-														<Checkbox
-															id={permission.id}
-															checked={isChecked}
-															onCheckedChange={(checked) => {
-																if (checked) {
-																	field.onChange([
-																		...(field.value ?? []),
-																		permission.id,
-																	]);
-																	return;
-																}
+													return (
+														<div
+															key={permission.id}
+															className="flex items-center gap-2"
+														>
+															<Checkbox
+																id={permission.id}
+																checked={isChecked}
+																onCheckedChange={(checked) => {
+																	if (checked) {
+																		field.onChange([
+																			...(field.value ?? []),
+																			permission.id,
+																		]);
+																		return;
+																	}
 
-																field.onChange(
-																	(field.value ?? []).filter(
-																		(value) => value !== permission.id
-																	)
-																);
-															}}
-														/>
-														<Label htmlFor={permission.id}>
-															{permission.name}
-														</Label>
-													</div>
-												);
-											})}
+																	field.onChange(
+																		(field.value ?? []).filter(
+																			(value) => value !== permission.id
+																		)
+																	);
+																}}
+															/>
+															<Label htmlFor={permission.id}>
+																{permission.name}
+															</Label>
+														</div>
+													);
+												})}
 										</div>
 									)}
 								/>

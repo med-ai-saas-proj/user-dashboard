@@ -20,6 +20,7 @@ import OrganizationBillingActivityLog from "./features/organization/components/o
 import OrganizationBillingCreditGrants from "./features/organization/components/organization-billing/organization-billing-credit-grants";
 import OrganizationBillingHistory from "./features/organization/components/organization-billing/organization-billing-history";
 import OrganizationBillingOverview from "./features/organization/components/organization-billing/organization-billing-overview";
+import OrganizationBillingUsage from "./features/organization/components/organization-billing/organization-billing-usage";
 import OrganizationBillingPaymentMethods from "./features/organization/components/organization-billing/organization-billing-payment-methods";
 import OrganizationPeopleInvitation from "./features/organization/components/organization-people/organization-people-invitation";
 import OrganizationPeopleMember from "./features/organization/components/organization-people/organization-people-member";
@@ -114,6 +115,7 @@ function App() {
 										path="credit-grants"
 										element={<OrganizationBillingCreditGrants />}
 									/>
+									<Route path="usage" element={<OrganizationBillingUsage />} />
 									<Route
 										path="activity-log"
 										element={<OrganizationBillingActivityLog />}

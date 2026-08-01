@@ -13,7 +13,21 @@
         },
         "loading": "Loading...",
         "loadMore": "Load More",
-        "noTransactions": "No credit transactions found."
+        "noTransactions": "No more credit transactions found."
+    },
+    "usage": {
+        "empty": {
+            "title": "You have no usage yet",
+            "description": "Usage will appear here when your organization starts using services"
+        },
+        "table": {
+            "received": "DATE",
+            "amount": "AMOUNT",
+            "description": "DESCRIPTION"
+        },
+        "loading": "Loading...",
+        "loadMore": "Load More",
+        "noTransactions": "No usage transactions found."
     },
     "activityLog": {
         "empty": "No transactions found.",

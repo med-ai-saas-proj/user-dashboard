@@ -27,7 +27,7 @@
         },
         "loading": "Đang tải...",
         "loadMore": "Tải thêm",
-        "noTransactions": "Không tìm thấy giao dịch sử dụng."
+        "noTransactions": "Không tìm thấy giao dịch mức sử dụng nào khác."
     },
     "activityLog": {
         "empty": "Không tìm thấy giao dịch.",

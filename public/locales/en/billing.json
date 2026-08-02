@@ -27,7 +27,7 @@
         },
         "loading": "Loading...",
         "loadMore": "Load More",
-        "noTransactions": "No usage transactions found."
+        "noTransactions": "No more usage transactions found."
     },
     "activityLog": {
         "empty": "No transactions found.",

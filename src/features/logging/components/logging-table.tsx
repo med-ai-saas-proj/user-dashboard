@@ -25,6 +25,7 @@ import { useCopyToClipboard } from "@/hooks/use-copy-to-clipboard";
 interface LoggingTableProps {
 	data?: LoggingResponse;
 	locale?: string;
+	isRefreshing?: boolean;
 }
 
 const buildContentPreview = (log: LoggingResponseItem): string => {
@@ -58,6 +59,7 @@ const levelBadgeClass = (level: string): string => {
 const LoggingTable = ({
 	data,
 	locale = "en",
+	isRefreshing = false,
 }: LoggingTableProps): React.JSX.Element => {
 	const { t, i18n } = useTranslation("logging");
 	const currentLocale = locale || i18n.language || "en";
@@ -107,7 +109,11 @@ const LoggingTable = ({
 						</Table>
 					</div>
 
-					<div className="flex-1 overflow-y-auto">
+					<div
+						className={`flex-1 overflow-y-auto transition-opacity duration-300 ${
+							isRefreshing ? "opacity-50" : ""
+						}`}
+					>
 						<Table className="w-full border-separate border-spacing-0 [&_td]:border-border [&_tr:not(:last-child)_td]:border-b">
 							<TableBody>
 								{data.map((log, index) => (
@@ -135,6 +141,7 @@ const LoggingTable = ({
 												variant="ghost"
 												size="icon"
 												onClick={() => handleViewLog(log)}
+												disabled={isRefreshing}
 												aria-label={t("table.actions")}
 											>
 												<EyeIcon className="size-4" />

@@ -93,7 +93,11 @@ const Logging = (): React.JSX.Element => {
 				isRefreshing={isFetching}
 				onRefresh={() => refetch()}
 			/>
-			<LoggingTable data={logData} locale={i18n.language || "en"} />
+			<LoggingTable
+				data={logData}
+				locale={i18n.language || "en"}
+				isRefreshing={isFetching}
+			/>
 		</div>
 	);
 };

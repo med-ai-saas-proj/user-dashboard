@@ -64,6 +64,9 @@
             "addPaymentDetails": "Thêm thông tin thanh toán",
             "viewUsage": "Xem mức sử dụng"
         },
+        "messages": {
+            "noDefaultPaymentMethod": "Không có phương thức thanh toán mặc định nào được thiết lập. Vui lòng thêm một phương thức thanh toán để tránh các vấn đề thanh toán."
+        },
         "cards": {
             "paymentMethod": {
                 "title": "Phương thức thanh toán",

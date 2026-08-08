@@ -64,6 +64,12 @@
             "addPaymentDetails": "Add payment details",
             "viewUsage": "View usage"
         },
+        "messages": {
+            "noDefaultPaymentMethod": {
+                "title": "No default payment method is set.",
+                "description": "Please add a payment method to avoid any billing issues."
+            }
+        },
         "cards": {
             "paymentMethod": {
                 "title": "Payment method",

@@ -1,5 +1,5 @@
 import { Power, RotateCcw, SquarePen, Trash } from "lucide-react";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
 	Table,
@@ -10,6 +10,7 @@ import {
 	TableRow,
 } from "@/components/shadcn/table";
 import type { APIKey } from "@/features/api-keys/api-key.type";
+import { useGetApiKeyPermissions } from "@/features/api-keys/hooks/use-get-api-key-permissions";
 import { cn } from "@/lib/utils";
 import ApiKeyDeleteDialog from "./api-key-delete-dialog";
 import APIKeyUpdateDialog from "./api-key-update-dialog";
@@ -29,6 +30,14 @@ const APIKeyTable = ({ apiKeys }: { apiKeys: APIKey[] }) => {
 	const [openUpdateStatusDialog, setOpenUpdateStatusDialog] = useState(false);
 	const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
 	const [selectedApiKey, setSelectedApiKey] = useState<APIKey | null>(null);
+
+	const { data: apiKeyPermissions } = useGetApiKeyPermissions();
+
+	const permissionNameById = useMemo(
+		() =>
+			new Map(apiKeyPermissions?.results?.map((p) => [p.id, p.name] as const)),
+		[apiKeyPermissions]
+	);
 
 	const onOpenUpdateStatusDialog = (apiKey: APIKey) => {
 		setSelectedApiKey(apiKey);
@@ -82,7 +91,7 @@ const APIKeyTable = ({ apiKeys }: { apiKeys: APIKey[] }) => {
 											key={permission}
 											className="inline-flex items-center bg-primary text-secondary text-xs leading-none px-2 pt-1 pb-1.5 rounded-md whitespace-nowrap"
 										>
-											{permission}
+											{permissionNameById.get(permission) ?? permission}
 										</span>
 									))}
 								</div>

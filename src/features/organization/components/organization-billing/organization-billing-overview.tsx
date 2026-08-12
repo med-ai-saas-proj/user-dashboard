@@ -1,7 +1,13 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/shadcn/button";
-import { CreditCard } from "lucide-react";
+import {
+	CreditCard,
+	ReceiptText,
+	TriangleAlert,
+	ChartNoAxesCombined,
+	Gauge,
+} from "lucide-react";
 import AddPaymentDetailsDialog from "./dialogs/add-payment-details-dialog";
 import UpdatePaymentDetailsDialog from "./dialogs/update-payment-details-dialog";
 import { useBillingStore } from "../../store/billing";
@@ -22,6 +28,9 @@ const OrganizationBillingOverview = () => {
 	const [stripePay, setStripePay] = useState(false);
 
 	const billingSourceId = useBillingStore((state) => state.billingSourceId);
+	const defaultPaymentMethodId = useBillingStore(
+		(state) => state.defaultPaymentMethodId
+	);
 	const { data: currentCreditsInOrganization, isError } = useGetCredits();
 
 	if (isError) {
@@ -95,6 +104,19 @@ const OrganizationBillingOverview = () => {
 							/>
 						)}
 					</div>
+					{!defaultPaymentMethodId && (
+						<div className="flex items-center gap-4 border border-alert rounded-lg p-4">
+							<TriangleAlert size={20} className="text-alert" />
+							<div className="flex flex-col gap-1 text-alert">
+								<p className="font-semibold text-sm">
+									{t("overview.messages.noDefaultPaymentMethod.title")}
+								</p>
+								<p className="font-normal text-sm">
+									{t("overview.messages.noDefaultPaymentMethod.description")}
+								</p>
+							</div>
+						</div>
+					)}
 					<OrganizationBillingSources />
 					<div className="grid grid-cols-2 gap-x-36 gap-y-10 w-fit">
 						<Link
@@ -118,7 +140,7 @@ const OrganizationBillingOverview = () => {
 							to="/organization/billing/billing-history"
 						>
 							<div className="p-4 rounded-md border bg-card-gradient">
-								<CreditCard size={20} />
+								<ReceiptText size={20} />
 							</div>
 							<div>
 								<p className="font-medium">
@@ -134,7 +156,7 @@ const OrganizationBillingOverview = () => {
 							to="/organization/dashboard"
 						>
 							<div className="p-4 rounded-md border bg-card-gradient">
-								<CreditCard size={20} />
+								<ChartNoAxesCombined size={20} />
 							</div>
 							<div>
 								<p className="font-medium">
@@ -150,7 +172,7 @@ const OrganizationBillingOverview = () => {
 							to="/dashboard"
 						>
 							<div className="p-4 rounded-md border bg-card-gradient">
-								<CreditCard size={20} />
+								<Gauge size={20} />
 							</div>
 							<div>
 								<p className="font-medium">

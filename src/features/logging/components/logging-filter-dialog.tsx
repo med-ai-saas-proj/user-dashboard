@@ -57,23 +57,29 @@ const LoggingFilterDialog = ({
 	const [selectedProjectIds, setSelectedProjectIds] = useState<string[]>([]);
 	const [selectedLevels, setSelectedLevels] = useState<string[]>([]);
 
-	// Sync internal state when dialog opens
-	useEffect(() => {
-		if (open) {
-			const entries = parseFilterString(currentFilters);
-			setSelectedProjectIds(
-				entries.filter((e) => e.type === "projectId").map((e) => e.value)
-			);
-			setSelectedLevels(
-				entries.filter((e) => e.type === "level").map((e) => e.value)
-			);
-		}
-	}, [open, currentFilters]);
-
 	const allProjectIds = useMemo(
 		() => projects.map((p) => p.project_uuid),
 		[projects]
 	);
+
+	// Sync internal state when dialog opens
+	useEffect(() => {
+		if (open) {
+			const entries = parseFilterString(currentFilters);
+			const savedProjects = entries
+				.filter((e) => e.type === "projectId")
+				.map((e) => e.value);
+			const savedLevels = entries
+				.filter((e) => e.type === "level")
+				.map((e) => e.value);
+			// Không có filter lưu -> mặc định chọn tất cả projects & levels
+			setSelectedProjectIds(
+				savedProjects.length > 0 ? savedProjects : allProjectIds
+			);
+			setSelectedLevels(savedLevels.length > 0 ? savedLevels : [...LEVELS]);
+		}
+	}, [open, currentFilters, allProjectIds]);
+
 	const isAllProjectsSelected =
 		projects.length > 0 && selectedProjectIds.length === projects.length;
 

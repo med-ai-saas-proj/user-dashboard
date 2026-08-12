@@ -13,7 +13,21 @@
         },
         "loading": "Loading...",
         "loadMore": "Load More",
-        "noTransactions": "No credit transactions found."
+        "noTransactions": "No more credit transactions found."
+    },
+    "usage": {
+        "empty": {
+            "title": "You have no usage yet",
+            "description": "Usage will appear here when your organization starts using services"
+        },
+        "table": {
+            "received": "DATE",
+            "amount": "AMOUNT",
+            "description": "DESCRIPTION"
+        },
+        "loading": "Loading...",
+        "loadMore": "Load More",
+        "noTransactions": "No more usage transactions found."
     },
     "activityLog": {
         "empty": "No transactions found.",
@@ -49,6 +63,12 @@
             "updatePaymentDetails": "Update payment details",
             "addPaymentDetails": "Add payment details",
             "viewUsage": "View usage"
+        },
+        "messages": {
+            "noDefaultPaymentMethod": {
+                "title": "No default payment method is set.",
+                "description": "Please add a payment method to avoid any billing issues."
+            }
         },
         "cards": {
             "paymentMethod": {

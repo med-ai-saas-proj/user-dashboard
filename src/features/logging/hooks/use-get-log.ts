@@ -3,12 +3,15 @@ import { getLog } from "../services/get-log";
 import type { LoggingParams } from "../types/logging";
 
 export const useGetLog = (params: LoggingParams) => {
-	if (!params.limit) params.limit = 100;
-	if (!params.direction) params.direction = "backward";
+	const normalized: LoggingParams = {
+		...params,
+		limit: params.limit ?? 100,
+		direction: params.direction ?? "backward",
+	};
 
 	return useQuery({
-		queryKey: ["logging", params],
-		queryFn: () => getLog(params),
+		queryKey: ["logging", normalized],
+		queryFn: () => getLog(normalized),
 	});
 };
 

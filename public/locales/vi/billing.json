@@ -13,7 +13,21 @@
         },
         "loading": "Đang tải...",
         "loadMore": "Tải thêm",
-        "noTransactions": "Không tìm thấy giao dịch credit."
+        "noTransactions": "Không tìm thấy giao dịch credit nào khác."
+    },
+    "usage": {
+        "empty": {
+            "title": "Bạn chưa có mức sử dụng nào",
+            "description": "Mức sử dụng sẽ xuất hiện tại đây khi tổ chức của bạn bắt đầu sử dụng dịch vụ"
+        },
+        "table": {
+            "received": "NGÀY",
+            "amount": "SỐ TIỀN",
+            "description": "MÔ TẢ"
+        },
+        "loading": "Đang tải...",
+        "loadMore": "Tải thêm",
+        "noTransactions": "Không tìm thấy giao dịch mức sử dụng nào khác."
     },
     "activityLog": {
         "empty": "Không tìm thấy giao dịch.",
@@ -49,6 +63,9 @@
             "updatePaymentDetails": "Cập nhật thông tin thanh toán",
             "addPaymentDetails": "Thêm thông tin thanh toán",
             "viewUsage": "Xem mức sử dụng"
+        },
+        "messages": {
+            "noDefaultPaymentMethod": "Không có phương thức thanh toán mặc định nào được thiết lập. Vui lòng thêm một phương thức thanh toán để tránh các vấn đề thanh toán."
         },
         "cards": {
             "paymentMethod": {

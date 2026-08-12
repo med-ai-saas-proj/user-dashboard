@@ -6,5 +6,6 @@ export const useGetApiKeyPermissions = () => {
 	return useQuery<ApiPermissions>({
 		queryKey: ["api-keys-permissions"],
 		queryFn: () => getAPIKeyPermissions(),
+		staleTime: 1000 * 60 * 60,
 	});
 };

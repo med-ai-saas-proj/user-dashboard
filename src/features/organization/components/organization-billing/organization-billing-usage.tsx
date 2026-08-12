@@ -14,16 +14,14 @@ import {
 } from "@/components/shadcn/table";
 import { itemVariants } from "@/lib/animations";
 import { formatIsoToLocaleDateTime } from "@/lib/utils";
-import { useGetCredits } from "../../hooks/organization-billing/use-get-credit";
 import { useGetCreditAndUsage } from "../../hooks/organization-billing/use-get-credit-and-usage";
 
-const OrganizationBillingCreditGrants = () => {
+const OrganizationBillingUsage = () => {
 	const { t, i18n } = useTranslation("billing");
 	const lang = i18n.language;
 
-	const { data: currentCreditsInOrganization } = useGetCredits();
 	const {
-		credits,
+		usage,
 		hasLoaded,
 		isLoading,
 		isFetching,
@@ -32,11 +30,9 @@ const OrganizationBillingCreditGrants = () => {
 		hasMore,
 	} = useGetCreditAndUsage();
 
-	const haveCredits =
-		currentCreditsInOrganization?.data &&
-		Number(currentCreditsInOrganization.data.amount) > 0;
 	const isInitialLoading = isLoading && !hasLoaded;
 	const isLoadingMore = isFetching && hasLoaded;
+	const hasUsage = usage.length > 0;
 
 	if (isError) {
 		return <PermissionDeniedBlock />;
@@ -51,55 +47,46 @@ const OrganizationBillingCreditGrants = () => {
 		>
 			<div className="max-w-4xl mx-auto">
 				<div className="flex flex-col gap-6">
-					{!haveCredits && (
+					{!isInitialLoading && !hasUsage && (
 						<div className="flex items-center gap-4 border border-alert rounded-lg p-4">
 							<TriangleAlert size={20} className="text-alert" />
 							<div className="flex flex-col gap-1 text-alert">
 								<p className="font-semibold text-sm">
-									{t("creditGrants.empty.title")}
+									{t("usage.empty.title")}
 								</p>
-								<p className="text-sm">{t("creditGrants.empty.description")}</p>
+								<p className="text-sm">{t("usage.empty.description")}</p>
 							</div>
 						</div>
 					)}
-					{haveCredits && (
+					{!isInitialLoading && hasUsage && (
 						<>
-							<div className="flex items-center gap-x-4">
-								<p className="uppercase font-semibold">
-									{t("creditGrants.currentCredits")}
-								</p>
-								<p className="font-semibold px-2 py-1 bg-successful-status text-successful rounded-sm">
-									${Number(currentCreditsInOrganization.data.amount).toFixed(2)}
-								</p>
-							</div>
 							<Table>
 								<TableHeader>
 									<TableRow>
-										<TableHead>{t("creditGrants.table.received")}</TableHead>
-										<TableHead>{t("creditGrants.table.amount")}</TableHead>
-										<TableHead>{t("creditGrants.table.description")}</TableHead>
+										<TableHead>{t("usage.table.received")}</TableHead>
+										<TableHead>{t("usage.table.amount")}</TableHead>
+										<TableHead>{t("usage.table.description")}</TableHead>
 									</TableRow>
 								</TableHeader>
 								<TableBody>
-									{credits.map((credit) => (
+									{usage.map((item) => (
 										<TableRow
-											key={
-												credit.amount + credit.created_at + credit.description
-											}
+											key={item.amount + item.created_at + item.description}
 										>
 											<TableCell>
 												{formatIsoToLocaleDateTime(
-													credit.created_at,
+													item.created_at,
 													lang,
 													"long"
 												)}
 											</TableCell>
 											<TableCell>
-												<p className="font-semibold text-successful bg-successful-status w-fit px-2 py-1 rounded-sm">
-													${Number(credit.amount).toFixed(2)}
+												<p className="font-semibold text-alert bg-alert/10 w-fit px-2 py-1 rounded-sm">
+													-$
+													{Math.abs(Number(item.amount)).toFixed(2)}
 												</p>
 											</TableCell>
-											<TableCell>{credit.description}</TableCell>
+											<TableCell>{item.description}</TableCell>
 										</TableRow>
 									))}
 								</TableBody>
@@ -113,14 +100,12 @@ const OrganizationBillingCreditGrants = () => {
 										disabled={isLoadingMore}
 									>
 										{isLoadingMore && <Spinner className="mr-2" />}
-										{isLoadingMore
-											? t("creditGrants.loading")
-											: t("creditGrants.loadMore")}
+										{isLoadingMore ? t("usage.loading") : t("usage.loadMore")}
 									</Button>
 								)}
 								{!isInitialLoading && !isLoadingMore && !hasMore && (
 									<p className="text-sm text-muted-foreground">
-										{t("creditGrants.noTransactions")}
+										{t("usage.noTransactions")}
 									</p>
 								)}
 							</div>
@@ -132,4 +117,4 @@ const OrganizationBillingCreditGrants = () => {
 	);
 };
 
-export default OrganizationBillingCreditGrants;
+export default OrganizationBillingUsage;
